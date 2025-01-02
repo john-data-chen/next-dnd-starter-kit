@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@/components/ui/sidebar';
-import { navItems } from '@/constants/data';
+import { navItems } from '@/constants/demo-data';
 import { ChevronRight, GalleryVerticalEnd } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

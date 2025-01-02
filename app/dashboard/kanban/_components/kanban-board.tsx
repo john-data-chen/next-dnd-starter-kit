@@ -21,7 +21,6 @@ import type { Column } from './board-column';
 import { BoardColumn, BoardContainer } from './board-column';
 import NewSectionDialog from './new-section-dialog';
 import { TaskCard } from './task-card';
-// import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 
 const defaultCols = [
   {

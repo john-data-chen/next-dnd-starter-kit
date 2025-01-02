@@ -10,3 +10,5 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   }
 ];
+
+export const demoProject = [];

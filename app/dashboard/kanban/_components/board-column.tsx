@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ColumnActions } from './column-action';
 import { TaskCard } from './task-card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import NewTaskDialog from './new-task-dialog';
 
 export interface Column {
   id: UniqueIdentifier;
@@ -71,40 +72,38 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
   );
 
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      className={variants({
-        dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined
-      })}
-    >
-      <CardHeader className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold">
-        <Button
-          variant={'ghost'}
-          {...attributes}
-          {...listeners}
-          className=" relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
-        >
-          <span className="sr-only">{`Move column: ${column.title}`}</span>
-          <GripVertical />
-        </Button>
-        {/* <span className="mr-auto !mt-0"> {column.title}</span> */}
-        {/* <Input
-          defaultValue={column.title}
-          className="text-base !mt-0 mr-auto"
-        /> */}
-        <ColumnActions id={column.id} title={column.title} />
-      </CardHeader>
-      <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
-        <ScrollArea className="h-full">
-          <SortableContext items={tasksIds}>
-            {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
-            ))}
-          </SortableContext>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+    <>
+      <Card
+        ref={setNodeRef}
+        style={style}
+        className={variants({
+          dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined
+        })}
+      >
+        <CardHeader className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold">
+          <Button
+            variant={'ghost'}
+            {...attributes}
+            {...listeners}
+            className=" relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
+          >
+            <span className="sr-only">{`Move column: ${column.title}`}</span>
+            <GripVertical />
+          </Button>
+          <ColumnActions id={column.id} title={column.title} />
+        </CardHeader>
+        <NewTaskDialog />
+        <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
+          <ScrollArea className="h-full">
+            <SortableContext items={tasksIds}>
+              {tasks.map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+            </SortableContext>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+    </>
   );
 }
 

@@ -1,5 +1,5 @@
 'use client';
-import { navItems } from '@/constants/data';
+import { navItems } from '@/constants/demo-data';
 import {
   KBarAnimator,
   KBarPortal,
