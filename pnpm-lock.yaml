@@ -163,10 +163,10 @@ importers:
         specifier: ^5.2.1
         version: 5.2.1(@types/eslint@9.6.1)(eslint-config-prettier@9.1.0(eslint@9.17.0(jiti@1.21.7)))(eslint@9.17.0(jiti@1.21.7))(prettier@3.4.2)
       husky:
-        specifier: ^9.0.11
+        specifier: ^9.1.7
         version: 9.1.7
       lint-staged:
-        specifier: ^15.2.7
+        specifier: ^15.3.0
         version: 15.3.0
       match-sorter:
         specifier: ^8.0.0
