@@ -3,43 +3,13 @@ import { v4 as uuid } from 'uuid';
 import { persist } from 'zustand/middleware';
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { Column } from '@/app/dashboard/kanban/_components/board-column';
-
-export type Status = 'TODO' | 'IN_PROGRESS' | 'DONE';
-
-const defaultCols = [
-  {
-    id: 'TODO' as const,
-    title: 'Todo'
-  }
-] satisfies Column[];
-
-export type ColumnId = (typeof defaultCols)[number]['id'];
-
-export type Task = {
-  id: string;
-  title: string;
-  description?: string;
-  status: Status;
-};
+import { Task } from '@/types/tasks';
 
 export type State = {
   tasks: Task[];
   columns: Column[];
   draggedTask: string | null;
 };
-
-const initialTasks: Task[] = [
-  {
-    id: 'task1',
-    status: 'TODO',
-    title: 'Project initiation and planning'
-  },
-  {
-    id: 'task2',
-    status: 'TODO',
-    title: 'Gather requirements from stakeholders'
-  }
-];
 
 export type Actions = {
   addTask: (title: string, description?: string) => void;
@@ -55,8 +25,8 @@ export type Actions = {
 export const useTaskStore = create<State & Actions>()(
   persist(
     (set) => ({
-      tasks: initialTasks,
-      columns: defaultCols,
+      tasks: [],
+      columns: [],
       draggedTask: null,
       addTask: (title: string, description?: string) =>
         set((state) => ({

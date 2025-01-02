@@ -1,4 +1,3 @@
-import { Task } from '@/lib/store';
 import { useDndContext, type UniqueIdentifier } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -11,6 +10,7 @@ import { ColumnActions } from './column-action';
 import { TaskCard } from './task-card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import NewTaskDialog from './new-task-dialog';
+import { Task } from '@/types/tasks';
 
 export interface Column {
   id: UniqueIdentifier;
