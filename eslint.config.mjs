@@ -2,6 +2,8 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
+import ts from 'typescript-eslint';
+import prettierConfigRecommended from 'eslint-plugin-prettier/recommended';
 import { FlatCompat } from '@eslint/eslintrc';
 import { fixupConfigRules } from '@eslint/compat';
 
@@ -20,6 +22,8 @@ const patchedConfig = fixupConfigRules([
 const config = [
   ...patchedConfig,
   // Add more flat configs here
+  ...ts.configs.recommended,
+  prettierConfigRecommended,
   { ignores: ['.next/*'] }
 ];
 
