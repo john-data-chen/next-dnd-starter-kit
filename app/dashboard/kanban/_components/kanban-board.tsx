@@ -1,7 +1,7 @@
 'use client';
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Task, useTaskStore } from '@/lib/store';
+import { useTaskStore } from '@/lib/store';
 import { hasDraggableData } from '@/lib/utils';
 import {
   Announcements,
@@ -21,6 +21,7 @@ import type { Column } from './board-column';
 import { BoardColumn, BoardContainer } from './board-column';
 import NewSectionDialog from './new-section-dialog';
 import { TaskCard } from './task-card';
+import { Task } from '@/types/tasks';
 
 const defaultCols = [
   {
