@@ -19,12 +19,14 @@ const useThemeSwitching = () => {
     {
       id: 'setLightTheme',
       name: 'Set Light Theme',
+      shortcut: ['t', 'l'],
       section: 'Theme',
       perform: () => setTheme('light')
     },
     {
       id: 'setDarkTheme',
       name: 'Set Dark Theme',
+      shortcut: ['t', 'd'],
       section: 'Theme',
       perform: () => setTheme('dark')
     }
