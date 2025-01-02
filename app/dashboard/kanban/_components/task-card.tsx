@@ -7,12 +7,6 @@ import { cva } from 'class-variance-authority';
 import { GripVertical } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-// export interface Task {
-//   id: UniqueIdentifier;
-//   columnId: ColumnId;
-//   content: string;
-// }
-
 interface TaskCardProps {
   task: Task;
   isOverlay?: boolean;
