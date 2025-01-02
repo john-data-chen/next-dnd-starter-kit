@@ -68,7 +68,7 @@ export function ColumnActions({
             onSelect={() => {
               setIsEditDisable(!editDisable);
               setTimeout(() => {
-                inputRef.current && inputRef.current?.focus();
+                inputRef.current?.focus();
               }, 500);
             }}
           >

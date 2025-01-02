@@ -85,7 +85,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
             variant={'ghost'}
             {...attributes}
             {...listeners}
-            className=" relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
+            className="relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
           >
             <span className="sr-only">{`Move column: ${column.title}`}</span>
             <GripVertical />
