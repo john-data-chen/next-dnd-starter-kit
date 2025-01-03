@@ -57,8 +57,9 @@ export default function NewSectionDialog() {
             <Input
               id="title"
               name="title"
-              placeholder="Project title..."
+              placeholder="Project title is required"
               className="col-span-4"
+              autoFocus
               required
               value={inputValue}
               onChange={handleInputChange}
