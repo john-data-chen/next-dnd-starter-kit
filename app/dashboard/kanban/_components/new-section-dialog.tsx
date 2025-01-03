@@ -10,11 +10,14 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-
 import { useTaskStore } from '@/lib/store';
+
+import React from 'react';
 
 export default function NewSectionDialog() {
   const addCol = useTaskStore((state) => state.addCol);
+  const [inputValue, setInputValue] = React.useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,19 +30,23 @@ export default function NewSectionDialog() {
     addCol(title);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setInputValue(inputValue);
+    setIsButtonDisabled(!inputValue.trim()); // disable button if input is empty
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="secondary" size="lg" className="w-full">
-          ＋ Add New Section
+          ＋ Add New Project
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Section</DialogTitle>
-          <DialogDescription>
-            What section you want to add today?
-          </DialogDescription>
+          <DialogTitle>Add New Project</DialogTitle>
+          <DialogDescription>What project you want to add?</DialogDescription>
         </DialogHeader>
         <form
           id="todo-form"
@@ -50,15 +57,23 @@ export default function NewSectionDialog() {
             <Input
               id="title"
               name="title"
-              placeholder="Section title..."
+              placeholder="Project title..."
               className="col-span-4"
+              required
+              value={inputValue}
+              onChange={handleInputChange}
             />
           </div>
         </form>
         <DialogFooter>
           <DialogTrigger asChild>
-            <Button type="submit" size="sm" form="todo-form">
-              Add Section
+            <Button
+              type="submit"
+              size="sm"
+              form="todo-form"
+              disabled={isButtonDisabled}
+            >
+              Add Project
             </Button>
           </DialogTrigger>
         </DialogFooter>
