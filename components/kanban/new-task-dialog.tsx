@@ -22,15 +22,15 @@ export default function NewTaskDialog({ columnId }: { columnId: string }) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const form = e.currentTarget;
-    console.log(form);
     const formData = new FormData(form);
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
 
     if (typeof title !== 'string') return;
     addTask(columnId, title, description);
+    // reset
+    setTitleValue('');
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +84,7 @@ export default function NewTaskDialog({ columnId }: { columnId: string }) {
             <Button
               type="submit"
               size="sm"
-              form="task-form "
+              form="task-form"
               disabled={isButtonDisabled}
             >
               Add Task
