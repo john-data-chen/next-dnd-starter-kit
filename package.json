@@ -12,12 +12,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "format": "prettier . --write",
+    "format": "prettier --write .",
     "prepare": "husky"
   },
   "lint-staged": {
-    "**/*": [
-      "prettier --write --ignore-unknown"
+    "**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
+      "prettier --write --no-error-on-unmatched-pattern"
     ]
   },
   "dependencies": {
