@@ -19,7 +19,7 @@ import {
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import type { Column } from './board-column';
 import { BoardColumn, BoardContainer } from './board-column';
-import NewSectionDialog from './new-section-dialog';
+import NewProjectDialog from './new-project-dialog';
 import { TaskCard } from './task-card';
 import { Task } from '@/types/tasks';
 
@@ -198,12 +198,12 @@ export function KanbanBoard() {
               />
               {index === columns?.length - 1 && (
                 <div className="w-[300px]">
-                  <NewSectionDialog />
+                  <NewProjectDialog />
                 </div>
               )}
             </Fragment>
           ))}
-          {!columns.length && <NewSectionDialog />}
+          {!columns.length && <NewProjectDialog />}
         </SortableContext>
       </BoardContainer>
 
