@@ -14,7 +14,7 @@ import { useTaskStore } from '@/lib/store';
 
 import React from 'react';
 
-export default function NewSectionDialog() {
+export default function NewProjectDialog() {
   const addCol = useTaskStore((state) => state.addCol);
   const [inputValue, setInputValue] = React.useState('');
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
