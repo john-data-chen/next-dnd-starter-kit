@@ -24,9 +24,12 @@ export default function NewTaskDialog({ columnId }: { columnId: string }) {
     e.preventDefault();
 
     const form = e.currentTarget;
+    console.log(form);
     const formData = new FormData(form);
-    const title = formData.get('title')!.toString();
-    const description = formData.get('description')?.toString() || '';
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
+
+    if (typeof title !== 'string') return;
     addTask(columnId, title, description);
   };
 
@@ -51,7 +54,7 @@ export default function NewTaskDialog({ columnId }: { columnId: string }) {
           </DialogDescription>
         </DialogHeader>
         <form
-          id="todo-form"
+          id="task-form"
           className="grid gap-4 py-4"
           onSubmit={handleSubmit}
         >
@@ -81,7 +84,7 @@ export default function NewTaskDialog({ columnId }: { columnId: string }) {
             <Button
               type="submit"
               size="sm"
-              form="todo-form "
+              form="task-form "
               disabled={isButtonDisabled}
             >
               Add Task

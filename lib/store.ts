@@ -7,10 +7,7 @@ import { Task, Column, State } from '@/types/tasks';
 export type Actions = {
   addTask: (columnId: string, title: string, description?: string) => void;
   addCol: (title: string) => void;
-  dragTask: (id: string | null) => void;
-  removeTask: (title: string) => void;
   removeCol: (id: UniqueIdentifier) => void;
-  setTasks: (updatedTask: Task[]) => void;
   setCols: (cols: Column[]) => void;
   updateCol: (id: UniqueIdentifier, newName: string) => void;
 };
@@ -18,23 +15,15 @@ export type Actions = {
 export const useTaskStore = create<State & Actions>()(
   persist(
     (set) => ({
-      tasks: [],
       columns: [] as Column[],
       draggedTask: null,
       addTask: (columnId: string, title: string, description?: string) =>
         set((state) => ({
           columns: state.columns.map((col) => {
-            if (col.id) {
+            if (col.id === columnId) {
               return {
                 ...col,
-                tasks: [
-                  ...col.tasks,
-                  {
-                    id: uuid(),
-                    title,
-                    description
-                  }
-                ]
+                tasks: [...col.tasks, { id: uuid(), title, description }]
               };
             }
             return col;
@@ -54,15 +43,10 @@ export const useTaskStore = create<State & Actions>()(
           ]
         })),
       dragTask: (id: string | null) => set({ draggedTask: id }),
-      removeTask: (id: string) =>
-        set((state) => ({
-          tasks: state.tasks.filter((task) => task.id !== id)
-        })),
       removeCol: (id: UniqueIdentifier) =>
         set((state) => ({
           columns: state.columns.filter((col) => col.id !== id)
         })),
-      setTasks: (newTasks: Task[]) => set({ tasks: newTasks }),
       setCols: (newCols: Column[]) => set({ columns: newCols })
     }),
     { name: 'task-store', skipHydration: true }

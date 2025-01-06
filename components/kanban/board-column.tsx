@@ -26,8 +26,8 @@ interface BoardColumnProps {
 
 export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
-    return tasks.map((task) => task.id);
-  }, [tasks]);
+    return column.tasks.map((task) => task.id);
+  }, [column.tasks]);
 
   const {
     setNodeRef,

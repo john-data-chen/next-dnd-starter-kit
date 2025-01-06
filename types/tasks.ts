@@ -11,7 +11,6 @@ export type Task = {
 };
 
 export type State = {
-  tasks: Task[];
   columns: Column[];
   draggedTask: string | null;
 };
