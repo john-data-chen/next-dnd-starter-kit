@@ -2,17 +2,10 @@ import { create } from 'zustand';
 import { v4 as uuid } from 'uuid';
 import { persist } from 'zustand/middleware';
 import { UniqueIdentifier } from '@dnd-kit/core';
-import { Column } from '@/components/kanban/board-column';
-import { Task } from '@/types/tasks';
-
-export type State = {
-  tasks: Task[];
-  columns: Column[];
-  draggedTask: string | null;
-};
+import { Task, Column, State } from '@/types/tasks';
 
 export type Actions = {
-  addTask: (title: string, description?: string) => void;
+  addTask: (columnId: string, title: string, description?: string) => void;
   addCol: (title: string) => void;
   dragTask: (id: string | null) => void;
   removeTask: (title: string) => void;
@@ -26,14 +19,26 @@ export const useTaskStore = create<State & Actions>()(
   persist(
     (set) => ({
       tasks: [],
-      columns: [],
+      columns: [] as Column[],
       draggedTask: null,
-      addTask: (title: string, description?: string) =>
+      addTask: (columnId: string, title: string, description?: string) =>
         set((state) => ({
-          tasks: [
-            ...state.tasks,
-            { id: uuid(), title, description, status: 'TODO' }
-          ]
+          columns: state.columns.map((col) => {
+            if (col.id) {
+              return {
+                ...col,
+                tasks: [
+                  ...col.tasks,
+                  {
+                    id: uuid(),
+                    title,
+                    description
+                  }
+                ]
+              };
+            }
+            return col;
+          })
         })),
       updateCol: (id: UniqueIdentifier, newName: string) =>
         set((state) => ({
@@ -45,7 +50,7 @@ export const useTaskStore = create<State & Actions>()(
         set((state) => ({
           columns: [
             ...state.columns,
-            { title, id: state.columns.length ? title.toUpperCase() : 'TODO' }
+            { title, id: uuid(), tasks: [] as Task[] }
           ]
         })),
       dragTask: (id: string | null) => set({ draggedTask: id }),

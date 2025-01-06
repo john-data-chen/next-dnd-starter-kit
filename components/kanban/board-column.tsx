@@ -1,5 +1,5 @@
 import { Task } from '@/types/tasks';
-import { useDndContext, type UniqueIdentifier } from '@dnd-kit/core';
+import { useDndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
@@ -10,16 +10,11 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ColumnActions } from './column-action';
 import { TaskCard } from './task-card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-
-export interface Column {
-  id: UniqueIdentifier;
-  title: string;
-}
-
-export type ColumnType = 'Column';
+import NewTaskDialog from './new-task-dialog';
+import { Column } from '@/types/tasks';
 
 export interface ColumnDragData {
-  type: ColumnType;
+  type: 'Column';
   column: Column;
 }
 
@@ -88,15 +83,11 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
           <span className="sr-only">{`Move column: ${column.title}`}</span>
           <GripVertical />
         </Button>
-        {/* <span className="mr-auto !mt-0"> {column.title}</span> */}
-        {/* <Input
-          defaultValue={column.title}
-          className="text-base !mt-0 mr-auto"
-        /> */}
         <ColumnActions id={column.id} title={column.title} />
       </CardHeader>
       <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
+          <NewTaskDialog columnId={column.id} />
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
               <TaskCard key={task.id} task={task} />
