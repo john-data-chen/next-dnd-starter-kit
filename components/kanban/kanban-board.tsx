@@ -9,7 +9,6 @@ import {
   DragOverlay,
   MouseSensor,
   TouchSensor,
-  UniqueIdentifier,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -23,7 +22,6 @@ import { TaskCard } from './task-card';
 import { Task, Column } from '@/types/tasks';
 
 export function KanbanBoard() {
-  // const [columns, setColumns] = useState<Column[]>(defaultCols);
   const columns = useTaskStore((state) => state.columns);
   const setColumns = useTaskStore((state) => state.setCols);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
@@ -74,9 +72,7 @@ export function KanbanBoard() {
               <BoardColumn
                 isOverlay
                 column={activeColumn}
-                tasks={activeColumn.tasks.filter(
-                  (task) => task.status === activeColumn.id
-                )}
+                tasks={activeColumn.tasks}
               />
             )}
             {activeTask && <TaskCard task={activeTask} isOverlay />}
@@ -95,6 +91,7 @@ export function KanbanBoard() {
     }
 
     if (data?.type === 'Task') {
+      setActiveColumn(data.column);
       setActiveTask(data.task);
       return;
     }
