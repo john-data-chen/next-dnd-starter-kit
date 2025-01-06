@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { v4 as uuid } from 'uuid';
 import { persist } from 'zustand/middleware';
 import { UniqueIdentifier } from '@dnd-kit/core';
-import { Column } from '@/app/dashboard/kanban/_components/board-column';
+import { Column } from '@/components/kanban/board-column';
 import { Task } from '@/types/tasks';
 
 export type State = {

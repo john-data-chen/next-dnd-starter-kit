@@ -53,7 +53,7 @@ export function KanbanBoard() {
   const tasks = useTaskStore((state) => state.tasks);
   const setTasks = useTaskStore((state) => state.setTasks);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
-  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<Boolean>(false);
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
