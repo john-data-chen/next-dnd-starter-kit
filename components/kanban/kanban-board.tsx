@@ -136,7 +136,30 @@ export function KanbanBoard() {
     }
   }
 
-  // function onDragEnd() {}
+  function onDragEnd(event: DragEndEvent) {
+    setActiveColumn(null);
+    setActiveTask(null);
+
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (!hasDraggableData(active)) return;
+
+    const activeData = active.data.current;
+
+    if (activeId === overId) return;
+
+    const isActiveAColumn = activeData?.type === 'Column';
+    if (!isActiveAColumn) return;
+    const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+
+    const overColumnIndex = columns.findIndex((col) => col.id === overId);
+
+    setColumns(arrayMove(columns, activeColumnIndex, overColumnIndex));
+  }
 
   const announcements: Announcements = {
     onDragStart({ active }) {
@@ -236,7 +259,7 @@ export function KanbanBoard() {
       }}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
-      // onDragEnd={onDragEnd}
+      onDragEnd={onDragEnd}
     >
       <BoardContainer>
         <SortableContext items={columnsId}>
