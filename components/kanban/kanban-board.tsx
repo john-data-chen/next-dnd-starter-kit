@@ -189,8 +189,42 @@ export function KanbanBoard() {
           tasksInColumn.length
         } in column ${column?.title}`;
       }
+    },
+    onDragEnd({ active, over }) {
+      if (!hasDraggableData(active) || !hasDraggableData(over)) {
+        pickedUpTaskColumn.current = null;
+        return;
+      }
+      if (
+        active.data.current?.type === 'Column' &&
+        over.data.current?.type === 'Column'
+      ) {
+        const overColumnPosition = columnsId.findIndex((id) => id === over.id);
+
+        return `Column ${
+          active.data.current.column.title
+        } was dropped into position ${overColumnPosition + 1} of ${
+          columnsId.length
+        }`;
+      } else if (
+        active.data.current?.type === 'Task' &&
+        over.data.current?.type === 'Task'
+      ) {
+        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+          over.data.current.task.id,
+          over.data.current.task.columnId
+        );
+        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+          return `Task was dropped into column ${column?.title} in position ${
+            taskPosition + 1
+          } of ${tasksInColumn.length}`;
+        }
+        return `Task was dropped into position ${taskPosition + 1} of ${
+          tasksInColumn.length
+        } in column ${column?.title}`;
+      }
+      pickedUpTaskColumn.current = null;
     }
-    // onDragEnd({ active, over }) {},
     // onDragCancel({ active }) {}
   };
 
