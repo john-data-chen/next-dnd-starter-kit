@@ -24,23 +24,9 @@ import { TaskCard } from './task-card';
 import { Task, Column } from '@/types/tasks';
 import DraggableData from '@/types/drag&drop';
 
-function hasDraggableData<T extends Active | Over>(
-  entry: T | null | undefined
-): entry is T & {
-  data: DataRef<DraggableData>;
-} {
-  if (!entry) {
-    return false;
-  }
-  const data = entry.data.current;
-  if (data?.type === 'Column' || data?.type === 'Task') {
-    return true;
-  }
-  return false;
-}
-
 export function KanbanBoard() {
   const columns = useTaskStore((state) => state.columns);
+  const pickedUpTaskColumn = useRef<string | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
@@ -48,8 +34,87 @@ export function KanbanBoard() {
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
+  function hasDraggableData<T extends Active | Over>(
+    entry: T | null | undefined
+  ): entry is T & {
+    data: DataRef<DraggableData>;
+  } {
+    if (!entry) {
+      return false;
+    }
+    const data = entry.data.current;
+    if (data?.type === 'Column' || data?.type === 'Task') {
+      return true;
+    }
+    return false;
+  }
+
+  function getDraggingTaskData(taskId: string, columnId: string) {
+    const column = columns.find((col) => col.id === columnId);
+    const tasksInColumn = column!.tasks.filter(
+      (task) => task.columnId === columnId
+    );
+    const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);
+    return {
+      tasksInColumn,
+      taskPosition,
+      column
+    };
+  }
+
+  function onDragStart(event: DragStartEvent) {
+    if (!hasDraggableData(event.active)) return;
+    const data = event.active.data.current;
+    if (data?.type === 'Column') {
+      setActiveColumn(data?.column);
+      return;
+    }
+    if (data?.type === 'Task') {
+      setActiveTask(data?.task);
+      return;
+    }
+  }
+
+  // function onDragEnd() {}
+  // function onDragOver() {}
+
+  const announcements: Announcements = {
+    onDragStart({ active }) {
+      if (!hasDraggableData(active)) return;
+      if (active.data.current?.type === 'Column') {
+        const startColumnIdx = columnsId.findIndex((id) => id === active.id);
+        const startColumn = columns[startColumnIdx];
+        return `Picked up Column ${startColumn?.title} at position: ${
+          startColumnIdx + 1
+        } of ${columnsId.length}`;
+      } else if (active.data.current?.type === 'Task') {
+        pickedUpTaskColumn.current = active.data.current.task.columnId;
+        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+          active.data.current.task.id,
+          pickedUpTaskColumn.current
+        );
+        return `Picked up Task ${
+          active.data.current.task.title
+        } at position: ${taskPosition + 1} of ${
+          tasksInColumn.length
+        } in column ${column?.title}`;
+      }
+    }
+    // onDragOver({ active, over }) {},
+    // onDragEnd({ active, over }) {},
+    // onDragCancel({ active }) {}
+  };
+
   return (
-    <DndContext sensors={sensors}>
+    <DndContext
+      sensors={sensors}
+      accessibility={{
+        announcements
+      }}
+      onDragStart={onDragStart}
+      // onDragEnd={onDragEnd}
+      // onDragOver={onDragOver}
+    >
       <BoardContainer>
         <SortableContext items={columnsId}>
           {columns?.map((col, index) => (
