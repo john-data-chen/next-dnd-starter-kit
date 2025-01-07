@@ -1,5 +1,5 @@
 'use client';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTaskStore } from '@/lib/store';
 import {
@@ -247,8 +247,11 @@ export function KanbanBoard() {
         } in column ${column?.title}`;
       }
       pickedUpTaskColumn.current = null;
+    },
+    onDragCancel({ active }) {
+      if (!hasDraggableData(active)) return;
+      return `Dragging ${active.data.current?.type} cancelled.`;
     }
-    // onDragCancel({ active }) {}
   };
 
   return (
