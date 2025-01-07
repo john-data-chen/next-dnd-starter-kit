@@ -26,6 +26,7 @@ import DraggableData from '@/types/drag&drop';
 
 export function KanbanBoard() {
   const columns = useTaskStore((state) => state.columns);
+  const setColumns = useTaskStore((state) => state.setCols);
   const pickedUpTaskColumn = useRef<string | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
@@ -75,8 +76,52 @@ export function KanbanBoard() {
     }
   }
 
+  function onDragOver(event: DragOverEvent) {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    if (!hasDraggableData(active) || !hasDraggableData(over)) return;
+
+    const activeData = active.data.current;
+    const overData = over.data.current;
+
+    const isActiveATask = activeData?.type === 'Task';
+    const isOverATask = overData?.type === 'Task';
+
+    if (!isActiveATask) return;
+
+    // dropping a Task over another Task in different column
+    if (isActiveATask && isOverATask) {
+      const activeColumn = columns.find(
+        (col) => col.id === activeData.task.columnId
+      );
+      const activeIndex = activeColumn!.tasks.findIndex(
+        (task) => task.id === activeId
+      );
+      const activeTask = activeColumn!.tasks[activeIndex];
+      const overColumn = columns.find(
+        (col) => col.id === overData.task.columnId
+      );
+      const overIndex = overColumn!.tasks.findIndex(
+        (task) => task.id === overId
+      );
+      const overTask = overColumn!.tasks[overIndex];
+      if (activeTask && overTask && activeTask.columnId !== overTask.columnId) {
+        activeTask.columnId = overTask.columnId;
+        overColumn!.tasks.push(activeTask);
+        activeColumn!.tasks.filter(
+          (task) => task.columnId === overTask.columnId
+        );
+      }
+    }
+  }
+
   // function onDragEnd() {}
-  // function onDragOver() {}
 
   const announcements: Announcements = {
     onDragStart({ active }) {
@@ -99,8 +144,37 @@ export function KanbanBoard() {
           tasksInColumn.length
         } in column ${column?.title}`;
       }
+    },
+    onDragOver({ active, over }) {
+      if (!hasDraggableData(active) || !hasDraggableData(over)) return;
+      if (
+        active.data.current?.type === 'Column' &&
+        over.data.current?.type === 'Column'
+      ) {
+        const overColumnIdx = columnsId.findIndex((id) => id === over.id);
+        return `Column ${active.data.current.column.title} was moved over ${
+          over.data.current.column.title
+        } at position ${overColumnIdx + 1} of ${columnsId.length}`;
+      } else if (
+        active.data.current?.type === 'Task' &&
+        over.data.current?.type === 'Task'
+      ) {
+        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+          over.data.current.task.id,
+          over.data.current.task.columnId
+        );
+        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+          return `Task ${
+            active.data.current.task.title
+          } was moved over column ${column?.title} in position ${
+            taskPosition + 1
+          } of ${tasksInColumn.length}`;
+        }
+        return `Task was moved over position ${taskPosition + 1} of ${
+          tasksInColumn.length
+        } in column ${column?.title}`;
+      }
     }
-    // onDragOver({ active, over }) {},
     // onDragEnd({ active, over }) {},
     // onDragCancel({ active }) {}
   };
@@ -112,8 +186,8 @@ export function KanbanBoard() {
         announcements
       }}
       onDragStart={onDragStart}
+      onDragOver={onDragOver}
       // onDragEnd={onDragEnd}
-      // onDragOver={onDragOver}
     >
       <BoardContainer>
         <SortableContext items={columnsId}>
