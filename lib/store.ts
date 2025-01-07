@@ -5,11 +5,6 @@ import { Task, Column, State } from '@/types/tasks';
 
 export type Actions = {
   addTask: (columnId: string, title: string, description?: string) => void;
-  dragTask: (
-    oldColumnId: string,
-    newColumnId: string,
-    draggedTask: Task
-  ) => void;
   addCol: (title: string) => void;
   removeCol: (id: string) => void;
   setCols: (cols: Column[]) => void;
@@ -27,25 +22,10 @@ export const useTaskStore = create<State & Actions>()(
             if (col.id === columnId) {
               return {
                 ...col,
-                tasks: [...col.tasks, { id: uuid(), title, description }]
-              };
-            }
-            return col;
-          })
-        })),
-      dragTask: (oldColumnId: string, newColumnId: string, draggedTask: Task) =>
-        set((state) => ({
-          columns: state.columns.map((col) => {
-            if (col.id === oldColumnId) {
-              return {
-                ...col,
-                tasks: col.tasks.filter((task) => task.id !== draggedTask.id)
-              };
-            }
-            if (col.id === newColumnId) {
-              return {
-                ...col,
-                tasks: [...col.tasks, { ...draggedTask }]
+                tasks: [
+                  ...col.tasks,
+                  { columnId, id: uuid(), title, description }
+                ]
               };
             }
             return col;
