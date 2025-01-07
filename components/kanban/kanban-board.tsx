@@ -119,6 +119,21 @@ export function KanbanBoard() {
         );
       }
     }
+    // dropping a Task over the same column
+    const isOverAColumn = overData?.type === 'Column';
+    if (isActiveATask && isOverAColumn) {
+      const activeColumn = columns.find(
+        (col) => col.id === activeData.task.columnId
+      );
+      const activeIndex = activeColumn!.tasks.findIndex(
+        (task) => task.id === activeId
+      );
+      const activeTask = activeColumn!.tasks[activeIndex];
+      if (activeTask) {
+        activeTask.columnId = overId as Column['id'];
+        return arrayMove(activeColumn!.tasks, activeIndex, activeIndex);
+      }
+    }
   }
 
   // function onDragEnd() {}
