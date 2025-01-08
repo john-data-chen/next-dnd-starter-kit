@@ -23,7 +23,6 @@ import NewProjectDialog from './new-project-dialog';
 import { TaskCard } from './task-card';
 import { Task, Column } from '@/types/tasks';
 import DraggableData from '@/types/drag&drop';
-import { set } from 'react-hook-form';
 
 export function KanbanBoard() {
   const columns = useTaskStore((state) => state.columns);
