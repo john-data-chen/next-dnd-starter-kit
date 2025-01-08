@@ -10,8 +10,3 @@ export type Task = {
   title: string;
   description?: string;
 };
-
-export type State = {
-  columns: Column[];
-  draggedTask: string | null;
-};
