@@ -23,6 +23,7 @@ import NewProjectDialog from './new-project-dialog';
 import { TaskCard } from './task-card';
 import { Task, Column } from '@/types/tasks';
 import DraggableData from '@/types/drag&drop';
+import { set } from 'react-hook-form';
 
 export function KanbanBoard() {
   const columns = useTaskStore((state) => state.columns);
@@ -77,63 +78,39 @@ export function KanbanBoard() {
   }
 
   function onDragOver(event: DragOverEvent) {
+    const updatedColumns = [...columns];
     const { active, over } = event;
+    // stop if no over data
     if (!over) return;
-
+    // stop if active and over are the same
     const activeId = active.id;
     const overId = over.id;
-
     if (activeId === overId) return;
-
+    // stop if no draggable data
     if (!hasDraggableData(active) || !hasDraggableData(over)) return;
-
-    const activeData = active.data.current;
-    const overData = over.data.current;
-
-    const isActiveATask = activeData?.type === 'Task';
-    const isOverATask = overData?.type === 'Task';
-
-    if (!isActiveATask) return;
-
-    // dropping a Task over another Task in different column
-    if (isActiveATask && isOverATask) {
-      const activeColumn = columns.find(
-        (col) => col.id === activeData.task.columnId
+    // stop if active is a column
+    if (active.data.current!.type === 'Column') return;
+    // get active task
+    const activeTask = active.data.current!.task;
+    const activeColumn = updatedColumns.find(
+      (col) => col.id === active.data.current!.task.columnId
+    );
+    const activeTaskIdx = activeColumn!.tasks.findIndex(
+      (task) => task.id === activeTask.id
+    );
+    if (over.data.current!.type === 'Column') {
+      console.log('over column');
+      const overColumn = updatedColumns.find(
+        (col) => col.id === over.data.current!.column.id
       );
-      const activeIndex = activeColumn!.tasks.findIndex(
-        (task) => task.id === activeId
-      );
-      const activeTask = activeColumn!.tasks[activeIndex];
-      const overColumn = columns.find(
-        (col) => col.id === overData.task.columnId
-      );
-      const overIndex = overColumn!.tasks.findIndex(
-        (task) => task.id === overId
-      );
-      const overTask = overColumn!.tasks[overIndex];
-      if (activeTask && overTask && activeTask.columnId !== overTask.columnId) {
-        activeTask.columnId = overTask.columnId;
-        overColumn!.tasks.push(activeTask);
-        activeColumn!.tasks.filter(
-          (task) => task.columnId === overTask.columnId
-        );
-      }
+      activeTask.columnId = overColumn!.id;
+      overColumn!.tasks.push(activeTask);
+      activeColumn!.tasks.splice(activeTaskIdx, 1);
     }
-    // dropping a Task over the same column
-    const isOverAColumn = overData?.type === 'Column';
-    if (isActiveATask && isOverAColumn) {
-      const activeColumn = columns.find(
-        (col) => col.id === activeData.task.columnId
-      );
-      const activeIndex = activeColumn!.tasks.findIndex(
-        (task) => task.id === activeId
-      );
-      const activeTask = activeColumn!.tasks[activeIndex];
-      if (activeTask) {
-        activeTask.columnId = overId as Column['id'];
-        return arrayMove(activeColumn!.tasks, activeIndex, activeIndex);
-      }
+    if (over.data.current!.type === 'Task') {
+      console.log('over task');
     }
+    setColumns(updatedColumns);
   }
 
   function onDragEnd(event: DragEndEvent) {
