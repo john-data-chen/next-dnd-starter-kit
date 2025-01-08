@@ -98,8 +98,8 @@ export function KanbanBoard() {
     const activeTaskIdx = activeColumn!.tasks.findIndex(
       (task) => task.id === activeTask.id
     );
+    // drag a task over a column
     if (over.data.current!.type === 'Column') {
-      console.log('over column');
       const overColumn = updatedColumns.find(
         (col) => col.id === over.data.current!.column.id
       );
@@ -107,8 +107,27 @@ export function KanbanBoard() {
       overColumn!.tasks.push(activeTask);
       activeColumn!.tasks.splice(activeTaskIdx, 1);
     }
+    // drag a task over a task
     if (over.data.current!.type === 'Task') {
-      console.log('over task');
+      const overTask = over.data.current!.task;
+      const overColumn = updatedColumns.find(
+        (col) => col.id === overTask.columnId
+      );
+      let overTaskIdx = overColumn!.tasks.findIndex(
+        (task) => task.id === overTask.id
+      );
+      // move task to a different column
+      if (overTask.columnId !== activeTask.columnId) {
+        activeTask.columnId = overTask.columnId;
+        overColumn!.tasks.splice(overTaskIdx, 0, activeTask);
+        activeColumn!.tasks.splice(activeTaskIdx, 1);
+      }
+      // move task to the same column
+      else {
+        const tempTask = activeTask;
+        activeColumn!.tasks.splice(activeTaskIdx, 1);
+        overColumn!.tasks.splice(overTaskIdx, 0, tempTask);
+      }
     }
     setColumns(updatedColumns);
   }
