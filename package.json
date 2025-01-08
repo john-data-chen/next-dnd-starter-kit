@@ -17,8 +17,7 @@
   },
   "lint-staged": {
     "**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
-      "prettier --write --no-error-on-unmatched-pattern",
-      "lint . --fix"
+      "prettier --write --no-error-on-unmatched-pattern"
     ]
   },
   "dependencies": {
