@@ -1,6 +1,5 @@
 'use client';
 import { Fragment, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { useTaskStore } from '@/lib/store';
 import {
   Announcements,
@@ -274,21 +273,16 @@ export function KanbanBoard() {
           {!columns.length && <NewProjectDialog />}
         </SortableContext>
       </BoardContainer>
-
-      {'document' in window &&
-        createPortal(
-          <DragOverlay>
-            {activeColumn && (
-              <BoardColumn
-                isOverlay
-                column={activeColumn}
-                tasks={activeColumn.tasks}
-              />
-            )}
-            {activeTask && <TaskCard task={activeTask} isOverlay />}
-          </DragOverlay>,
-          document.body
+      <DragOverlay>
+        {activeColumn && (
+          <BoardColumn
+            isOverlay
+            column={activeColumn}
+            tasks={activeColumn.tasks}
+          />
         )}
+        {activeTask && <TaskCard task={activeTask} isOverlay />}
+      </DragOverlay>
     </DndContext>
   );
 }
