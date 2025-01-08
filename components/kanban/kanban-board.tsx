@@ -112,7 +112,7 @@ export function KanbanBoard() {
       const overColumn = updatedColumns.find(
         (col) => col.id === overTask.columnId
       );
-      let overTaskIdx = overColumn!.tasks.findIndex(
+      const overTaskIdx = overColumn!.tasks.findIndex(
         (task) => task.id === overTask.id
       );
       // move task to a different column
