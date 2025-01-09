@@ -23,7 +23,15 @@ import { useTaskStore } from '@/lib/store';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
-export function ColumnActions({ title, id }: { title: string; id: string }) {
+export function ColumnActions({
+  title,
+  id,
+  onActionPress
+}: {
+  title: string;
+  id: string;
+  onActionPress: () => void;
+}) {
   const [name, setName] = React.useState(title);
   const updateCol = useTaskStore((state) => state.updateCol);
   const removeCol = useTaskStore((state) => state.removeCol);
@@ -51,7 +59,7 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
       </form>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" className="ml-1">
+          <Button variant="secondary" className="ml-1" onClick={onActionPress}>
             <span className="sr-only">Actions</span>
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
@@ -80,11 +88,10 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Are you sure want to delete Project?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Are you sure to delete Project?</AlertDialogTitle>
             <AlertDialogDescription>
-              NOTE: All tasks related to this Project will also be deleted.
+              NOTE: All tasks related to this Project will also be deleted. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -97,7 +104,7 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
 
                 setShowDeleteDialog(false);
                 removeCol(id);
-                toast('This project has been deleted.');
+                toast('Project: ' + title + ' has been deleted.');
               }}
             >
               Delete
