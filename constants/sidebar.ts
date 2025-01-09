@@ -1,4 +1,4 @@
-import { NavItem } from '@/types';
+import { NavItem } from '@/types/sidebar';
 
 export const navItems: NavItem[] = [
   {
@@ -6,9 +6,7 @@ export const navItems: NavItem[] = [
     url: '/dashboard/kanban',
     icon: 'kanban',
     shortcut: ['k', 'k'],
-    isActive: false,
+    isActive: true,
     items: [] // No child items
   }
 ];
-
-export const demoProject = [];

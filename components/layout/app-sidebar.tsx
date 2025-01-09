@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@/components/ui/sidebar';
-import { navItems } from '@/constants/demo-data';
+import { navItems } from '@/constants/sidebar';
 import { ChevronRight, GalleryVerticalEnd } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -25,9 +25,8 @@ import * as React from 'react';
 import { Icons } from '../icons';
 
 export const company = {
-  name: 'Acme Inc',
-  logo: GalleryVerticalEnd,
-  plan: 'Enterprise'
+  name: 'Next Shadcn',
+  logo: GalleryVerticalEnd
 };
 
 export default function AppSidebar() {
@@ -42,7 +41,6 @@ export default function AppSidebar() {
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{company.name}</span>
-            <span className="truncate text-xs">{company.plan}</span>
           </div>
         </div>
       </SidebarHeader>
