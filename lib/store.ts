@@ -10,6 +10,8 @@ interface State {
   removeCol: (id: string) => void;
   setCols: (cols: Column[]) => void;
   addTask: (columnId: string, title: string, description?: string) => void;
+  updateTask: (taskId: string, title: string) => void;
+  removeTask: (taskId: string) => void;
 }
 
 export const useTaskStore = create<State>()(
@@ -49,6 +51,22 @@ export const useTaskStore = create<State>()(
               }
               return col;
             })
+          })),
+        updateTask: (taskId: string, title: string) =>
+          set((state) => ({
+            columns: state.columns.map((col) => ({
+              ...col,
+              tasks: col.tasks.map((task) =>
+                task.id === taskId ? { ...task, title } : task
+              )
+            }))
+          })),
+        removeTask: (taskId: string) =>
+          set((state) => ({
+            columns: state.columns.map((col) => ({
+              ...col,
+              tasks: col.tasks.filter((task) => task.id !== taskId)
+            }))
           }))
       }),
       { name: 'tasks-store' }

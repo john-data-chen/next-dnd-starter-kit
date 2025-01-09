@@ -5,7 +5,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { GripVertical } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { TaskActions } from './task-action';
 
 interface TaskCardProps {
   task: Task;
@@ -70,12 +70,10 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           <span className="sr-only">Move task</span>
           <GripVertical />
         </Button>
-        <Badge variant={'outline'} className="ml-auto font-semibold">
-          Task
-        </Badge>
+        <TaskActions title={task.title} id={task.id} />
       </CardHeader>
       <CardContent className="whitespace-pre-wrap px-3 pb-6 pt-3 text-left">
-        {task.title}
+        <p className="text-sl text-muted-foreground">{task.description}</p>
       </CardContent>
     </Card>
   );

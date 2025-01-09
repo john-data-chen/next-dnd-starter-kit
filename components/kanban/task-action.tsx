@@ -25,8 +25,8 @@ import { toast } from 'sonner';
 
 export function TaskActions({ title, id }: { title: string; id: string }) {
   const [name, setName] = React.useState(title);
-  const updateTask = useTaskStore((state) => state.updateCol);
-  const removeTask = useTaskStore((state) => state.removeCol);
+  const updateTask = useTaskStore((state) => state.updateTask);
+  const removeTask = useTaskStore((state) => state.removeTask);
   const [editDisable, setIsEditDisable] = React.useState(true);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -38,7 +38,7 @@ export function TaskActions({ title, id }: { title: string; id: string }) {
           e.preventDefault();
           setIsEditDisable(!editDisable);
           updateTask(id, name);
-          toast(`${title} updated to ${name}`);
+          toast(`Task ${title} updated to ${name}`);
         }}
       >
         <Input
@@ -73,16 +73,19 @@ export function TaskActions({ title, id }: { title: string; id: string }) {
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
           >
-            Delete Task
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure to delete Task?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Are you sure to delete Task: {title}?
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              NOTE: This action cannot be undone.
+              NOTE: Task: {title} will also be deleted. This action can not be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -95,7 +98,7 @@ export function TaskActions({ title, id }: { title: string; id: string }) {
 
                 setShowDeleteDialog(false);
                 removeTask(id);
-                toast('Task: ' + title + ' has been deleted.');
+                toast('Task has been deleted.');
               }}
             >
               Delete
