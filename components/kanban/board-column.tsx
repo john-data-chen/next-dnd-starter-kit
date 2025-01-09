@@ -3,9 +3,7 @@ import { useDndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
-import { GripVertical } from 'lucide-react';
 import { useMemo } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ColumnActions } from './column-action';
 import { TaskCard } from './task-card';
@@ -69,20 +67,13 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
     <Card
       ref={setNodeRef}
       style={style}
+      {...attributes}
+      {...listeners}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined
       })}
     >
       <CardHeader className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold">
-        <Button
-          variant={'ghost'}
-          {...attributes}
-          {...listeners}
-          className="relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
-        >
-          <span className="sr-only">{`Move column: ${column.title}`}</span>
-          <GripVertical />
-        </Button>
         <ColumnActions id={column.id} title={column.title} />
       </CardHeader>
       <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
