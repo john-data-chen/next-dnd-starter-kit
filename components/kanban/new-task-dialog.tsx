@@ -15,13 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
 import React from 'react';
 
-export default function NewTaskDialog({
-  columnId,
-  onActionPress
-}: {
-  columnId: string;
-  onActionPress: () => void;
-}) {
+export default function NewTaskDialog({ columnId }: { columnId: string }) {
   const addTask = useTaskStore((state) => state.addTask);
   const [titleValue, setTitleValue] = React.useState('');
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
@@ -48,7 +42,7 @@ export default function NewTaskDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" onClick={onActionPress}>
+        <Button variant="secondary" size="sm">
           ＋ Add New Task
         </Button>
       </DialogTrigger>
@@ -92,7 +86,6 @@ export default function NewTaskDialog({
               size="sm"
               form="task-form"
               disabled={isButtonDisabled}
-              onClick={onActionPress}
             >
               Add Task
             </Button>

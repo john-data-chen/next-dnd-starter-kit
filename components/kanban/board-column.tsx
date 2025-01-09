@@ -24,6 +24,9 @@ interface BoardColumnProps {
 
 export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
   const [disableDnD, setDisableDnD] = useState(false);
+  const handleOpenChange = (isOpen: boolean) => {
+    setDisableDnD(isOpen);
+  };
   const tasksIds = useMemo(() => {
     return column.tasks.map((task) => task.id);
   }, [column.tasks]);
@@ -81,15 +84,12 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         <ColumnActions
           id={column.id}
           title={column.title}
-          onActionPress={() => setDisableDnD(true)}
+          onOpenChange={handleOpenChange}
         />
       </CardHeader>
       <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
-          <NewTaskDialog
-            columnId={column.id}
-            onActionPress={() => setDisableDnD(!disableDnD)}
-          />
+          <NewTaskDialog columnId={column.id} />
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
               <TaskCard key={task.id} task={task} />

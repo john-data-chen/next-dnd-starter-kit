@@ -26,11 +26,11 @@ import { toast } from 'sonner';
 export function ColumnActions({
   title,
   id,
-  onActionPress
+  onOpenChange
 }: {
   title: string;
   id: string;
-  onActionPress: () => void;
+  onOpenChange: (isOpen: boolean) => void;
 }) {
   const [name, setName] = React.useState(title);
   const updateCol = useTaskStore((state) => state.updateCol);
@@ -57,9 +57,9 @@ export function ColumnActions({
           ref={inputRef}
         />
       </form>
-      <DropdownMenu modal={false}>
+      <DropdownMenu modal={false} onOpenChange={onOpenChange}>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" className="ml-1" onClick={onActionPress}>
+          <Button variant="secondary" className="ml-1">
             <span className="sr-only">Actions</span>
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
