@@ -23,15 +23,7 @@ import { useTaskStore } from '@/lib/store';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
-export function ColumnActions({
-  title,
-  id,
-  onOpenChange
-}: {
-  title: string;
-  id: string;
-  onOpenChange: (isOpen: boolean) => void;
-}) {
+export function ColumnActions({ title, id }: { title: string; id: string }) {
   const [name, setName] = React.useState(title);
   const updateCol = useTaskStore((state) => state.updateCol);
   const removeCol = useTaskStore((state) => state.removeCol);
@@ -57,7 +49,7 @@ export function ColumnActions({
           ref={inputRef}
         />
       </form>
-      <DropdownMenu modal={false} onOpenChange={onOpenChange}>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" className="ml-1">
             <span className="sr-only">Actions</span>
@@ -81,17 +73,18 @@ export function ColumnActions({
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
           >
-            Delete Project
+            Delete Section
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure to delete Project?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Are you sure want to delete column?
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              NOTE: All tasks related to this Project will also be deleted. This
-              action cannot be undone.
+              NOTE: All tasks related to this category will also be deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -104,7 +97,7 @@ export function ColumnActions({
 
                 setShowDeleteDialog(false);
                 removeCol(id);
-                toast('Project: ' + title + ' has been deleted.');
+                toast('This column has been deleted.');
               }}
             >
               Delete
