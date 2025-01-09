@@ -38,7 +38,7 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
           e.preventDefault();
           setIsEditDisable(!editDisable);
           updateCol(id, name);
-          toast(`${title} updated to ${name}`);
+          toast(`Project ${title} updated to ${name}`);
         }}
       >
         <Input
@@ -73,7 +73,7 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
           >
-            Delete Section
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -81,10 +81,11 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure want to delete column?
+              Are you sure to delete Project: {title}?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              NOTE: All tasks related to this category will also be deleted.
+              NOTE: All tasks related to project: {title} will also be deleted.
+              This action can not be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -97,7 +98,7 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
 
                 setShowDeleteDialog(false);
                 removeCol(id);
-                toast('This column has been deleted.');
+                toast('Project has been deleted.');
               }}
             >
               Delete
