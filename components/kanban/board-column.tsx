@@ -69,13 +69,15 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
     <Card
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined
       })}
     >
-      <CardHeader className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold">
+      <CardHeader
+        className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold"
+        {...attributes}
+        {...listeners}
+      >
         <ColumnActions
           id={column.id}
           title={column.title}
@@ -84,7 +86,10 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
       </CardHeader>
       <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
-          <NewTaskDialog columnId={column.id} />
+          <NewTaskDialog
+            columnId={column.id}
+            onActionPress={() => setDisableDnD(!disableDnD)}
+          />
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
               <TaskCard key={task.id} task={task} />
