@@ -1,10 +1,8 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Task } from '@/types/tasks';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
-import { GripVertical } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface TaskCardProps {
@@ -56,20 +54,13 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     <Card
       ref={setNodeRef}
       style={style}
+      {...attributes}
+      {...listeners}
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined
       })}
     >
       <CardHeader className="space-between relative flex flex-row border-b-2 border-secondary px-3 py-3">
-        <Button
-          variant={'ghost'}
-          {...attributes}
-          {...listeners}
-          className="-ml-2 h-auto cursor-grab p-1 text-secondary-foreground/50"
-        >
-          <span className="sr-only">Move task</span>
-          <GripVertical />
-        </Button>
         <Badge variant={'outline'} className="ml-auto font-semibold">
           Task
         </Badge>
