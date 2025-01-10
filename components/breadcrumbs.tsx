@@ -8,8 +8,8 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
-import { Slash } from 'lucide-react';
 import { Fragment } from 'react';
+import { SlashIcon } from '@radix-ui/react-icons';
 
 export function Breadcrumbs() {
   const items = useBreadcrumbs();
@@ -27,7 +27,7 @@ export function Breadcrumbs() {
             )}
             {index < items.length - 1 && (
               <BreadcrumbSeparator className="hidden md:block">
-                <Slash />
+                <SlashIcon />
               </BreadcrumbSeparator>
             )}
             {index === items.length - 1 && (

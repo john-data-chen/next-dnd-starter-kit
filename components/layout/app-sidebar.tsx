@@ -18,7 +18,10 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar';
 import { navItems } from '@/constants/sidebar';
-import { ChevronRight, LoaderPinwheel } from 'lucide-react';
+import {
+  IconSquareChevronsRightFilled,
+  IconTopologyStar3
+} from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -35,7 +38,7 @@ export default function AppSidebar() {
       <SidebarHeader>
         <div className="flex gap-2 py-2 text-sidebar-accent-foreground">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <LoaderPinwheel className="animate-spin" />
+            <IconTopologyStar3 className="animate-spin" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{company.name}</span>
@@ -61,7 +64,7 @@ export default function AppSidebar() {
                         isActive={pathname === item.url}
                       >
                         <span>{item.title}</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        <IconSquareChevronsRightFilled className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>

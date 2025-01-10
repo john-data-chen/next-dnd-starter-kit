@@ -4,7 +4,7 @@ import { Task } from '@/types/tasks';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
-import { GripVertical } from 'lucide-react';
+import { IconDragDrop } from '@tabler/icons-react';
 import { TaskActions } from './task-action';
 
 interface TaskCardProps {
@@ -68,7 +68,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           className="-ml-2 h-auto cursor-grab p-1 text-secondary-foreground/50"
         >
           <span className="sr-only">Move task</span>
-          <GripVertical />
+          <IconDragDrop />
         </Button>
         <TaskActions title={task.title} id={task.id} />
       </CardHeader>
