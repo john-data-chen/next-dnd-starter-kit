@@ -2,7 +2,7 @@
 import tailwindcssAnimate from 'tailwindcss-animate';
 
 module.exports = {
-  darkMode: ['class'],
+  darkMode: ['selector'],
   content: [
     './components/**/*.{ts,tsx}',
     './constants/**/*.{ts,tsx}',
