@@ -1,4 +1,4 @@
-import UserAuthForm from './user-auth-form';
+import UserAuthForm from './UserAuthForm';
 import { IconPresentationAnalytics } from '@tabler/icons-react';
 
 export default function SignInViewPage() {
