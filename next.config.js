@@ -1,23 +1,11 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'utfs.io',
-        port: ''
-      },
-      {
-        protocol: 'https',
-        hostname: 'api.slingacademy.com',
-        port: ''
-      }
-    ]
-  },
-  transpilePackages: ['geist'],
-  eslint: {
-    ignoreDuringBuilds: true
+module.exports = {
+  compiler: {
+    relay: {
+      // This should match relay.config.js
+      src: './',
+      artifactDirectory: './__generated__',
+      language: 'typescript',
+      eagerEsModules: false
+    }
   }
 };
-
-module.exports = nextConfig;
