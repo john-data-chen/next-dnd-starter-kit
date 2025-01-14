@@ -1,13 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 import tailwindcssAnimate from 'tailwindcss-animate';
 
-module.exports = {
-  darkMode: ['selector'],
-  content: [
-    './components/**/*.{ts,tsx}',
-    './constants/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}'
-  ],
+export default {
+  darkMode: 'selector',
+  content: ['./components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}'],
   theme: {
     container: {
       center: 'true',

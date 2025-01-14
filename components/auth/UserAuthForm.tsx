@@ -25,7 +25,7 @@ type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
+  const callbackUrl = searchParams?.get('callbackUrl');
   const [loading, startTransition] = useTransition();
   const defaultValues = {
     email: 'demo@example.com'

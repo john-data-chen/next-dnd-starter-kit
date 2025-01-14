@@ -1,19 +1,33 @@
+import { render, screen } from '@testing-library/react';
+import SignInViewPage from '@/components/auth/SignInView';
+import UserAuthForm from '@/components/auth/UserAuthForm';
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
-import Page from '@/app/(auth)/(signin)/page';
 
-describe('SignIn Page', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe('SignInViewPage', () => {
+  test('test_responsive_layout_rendering', () => {
+    const { container } = render(<SignInViewPage />);
+
+    expect(container.firstChild).toHaveClass(
+      'relative',
+      'min-h-screen',
+      'flex-col',
+      'items-center',
+      'justify-center'
+    );
+
+    const desktopContainer = screen.getByRole('main');
+    expect(desktopContainer).toHaveClass(
+      'lg:max-w-none',
+      'lg:grid-cols-2',
+      'lg:px-0'
+    );
   });
 
-  it('test_signin_page_renders_signin_view_with_Meta', () => {
-    render(<Page />);
+  test('test_accessibility_attributes', () => {
+    render(<SignInViewPage />);
+    const mainContainer = screen.getByRole('main');
 
-    expect(document.title).toBe('Next Board');
-    expect(document.querySelector('meta[name="description"]')).toHaveProperty(
-      'content',
-      'A demo project of project management tool'
-    );
+    expect(mainContainer).toHaveAttribute('role', 'main');
+    expect(mainContainer).toHaveAttribute('aria-label', 'Sign in page');
   });
 });
