@@ -16,6 +16,7 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { defaultEmail } from '@/constants/demoUserAuth';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' })
@@ -27,9 +28,11 @@ export default function UserAuthForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams?.get('callbackUrl');
   const [loading, startTransition] = useTransition();
+
   const defaultValues = {
-    email: 'demo@example.com'
+    email: defaultEmail
   };
+
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues
@@ -37,11 +40,15 @@ export default function UserAuthForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     startTransition(() => {
-      signIn('credentials', {
-        email: data.email,
-        callbackUrl: callbackUrl ?? '/dashboard'
-      });
-      toast.success('Signed In Successfully!');
+      try {
+        signIn('credentials', {
+          email: data.email,
+          callbackUrl: callbackUrl ?? '/dashboard'
+        });
+        toast.success('Signed In Successfully!');
+      } catch (error) {
+        toast.error('Failed to sign in. Please try again.');
+      }
     });
   };
 
@@ -53,6 +60,7 @@ export default function UserAuthForm() {
           className="w-full space-y-2"
           aria-label="Sign in form"
           role="form"
+          data-testid="auth-form"
         >
           <FormField
             control={form.control}
@@ -65,6 +73,7 @@ export default function UserAuthForm() {
                     type="email"
                     placeholder="Enter your email..."
                     disabled={loading}
+                    data-testid="email-input"
                     {...field}
                   />
                 </FormControl>
@@ -73,7 +82,12 @@ export default function UserAuthForm() {
             )}
           />
 
-          <Button disabled={loading} className="ml-auto w-full" type="submit">
+          <Button
+            disabled={loading}
+            className="ml-auto w-full"
+            type="submit"
+            data-testid="submit-button"
+          >
             Continue With Email
           </Button>
         </form>
