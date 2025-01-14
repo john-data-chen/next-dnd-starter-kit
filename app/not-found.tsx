@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants/auth';
 
 interface NotFoundProps {
   onBack?: () => void;
@@ -58,7 +59,7 @@ export default function NotFound() {
   return (
     <NotFoundContent
       onBack={() => router.back()}
-      onHome={() => router.push('/dashboard')}
+      onHome={() => router.push(ROUTES.HOME)}
     />
   );
 }
