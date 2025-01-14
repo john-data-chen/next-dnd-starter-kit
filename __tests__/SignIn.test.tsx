@@ -30,4 +30,10 @@ describe('SignInViewPage', () => {
     expect(mainContainer).toHaveAttribute('role', 'main');
     expect(mainContainer).toHaveAttribute('aria-label', 'Sign in page');
   });
+
+  test('test_form_rendering', () => {
+    render(<UserAuthForm />);
+    expect(screen.getByRole('form')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
 });
