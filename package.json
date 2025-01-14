@@ -16,6 +16,10 @@
     "prepare": "husky",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
   "lint-staged": {
     "**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
       "prettier --write --no-error-on-unmatched-pattern"
