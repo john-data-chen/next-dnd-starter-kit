@@ -1,9 +1,14 @@
-import KanbanViewPage from '@/components/kanban/kanban-view-page';
+import KanbanViewPage from '@/components/kanban/KanbanViewPage';
 
 export const metadata = {
-  title: 'Dashboard : Kanban view'
+  title: 'Dashboard : Kanban',
+  description: 'Support Drag and Drop to manage projects and tasks'
 };
 
-export default function page() {
-  return <KanbanViewPage />;
+export default function KanbanPage(): JSX.Element {
+  return (
+    <div data-testid="kanban-page-container">
+      <KanbanViewPage />;
+    </div>
+  );
 }
