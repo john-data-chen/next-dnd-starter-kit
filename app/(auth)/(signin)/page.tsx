@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description: 'A demo project of project management tool'
 };
 
-export default function Page() {
-  return <SignInViewPage />;
+export default function SignInPage(): JSX.Element {
+  return (
+    <div data-testid="signin-page-container">
+      <SignInViewPage />
+    </div>
+  );
 }

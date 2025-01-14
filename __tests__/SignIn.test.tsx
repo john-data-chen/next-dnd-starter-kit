@@ -1,7 +1,26 @@
 import { render, screen } from '@testing-library/react';
+import SignInPage, { metadata } from '@/app/(auth)/(signin)/page';
 import SignInViewPage from '@/components/auth/SignInView';
 import UserAuthForm from '@/components/auth/UserAuthForm';
 import '@testing-library/jest-dom';
+
+describe('SignInPage', () => {
+  it('renders sign in page', () => {
+    render(<SignInPage />);
+    const container = screen.getByTestId('signin-page-container');
+    expect(container).toBeInTheDocument();
+  });
+
+  it('should have correct title', () => {
+    expect(metadata.title).toBe('Next Board');
+  });
+
+  it('should have correct description', () => {
+    expect(metadata.description).toBe(
+      'A demo project of project management tool'
+    );
+  });
+});
 
 describe('SignInViewPage', () => {
   test('test_responsive_layout_rendering', () => {
