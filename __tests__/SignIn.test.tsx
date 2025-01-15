@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import SignInPage, { metadata } from '@/app/(auth)/(signin)/page';
+import SignInPage, { metadata } from '@/app/(auth)/login/page';
 import SignInViewPage from '@/components/auth/SignInView';
 import UserAuthForm from '@/components/auth/UserAuthForm';
 import '@testing-library/jest-dom';

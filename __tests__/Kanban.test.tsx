@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import KanbanPage, { metadata } from '@/app/dashboard/kanban/page';
+import KanbanPage, { metadata } from '@/app/kanban/page';
 import '@testing-library/jest-dom';
 
 describe('KanbanPage', () => {
@@ -8,7 +8,7 @@ describe('KanbanPage', () => {
     const container = screen.getByTestId('kanban-page-container');
     expect(container).toBeInTheDocument();
 
-    expect(metadata.title).toBe('Dashboard : Kanban');
+    expect(metadata.title).toBe('Kanban');
     expect(metadata.description).toBe(
       'Support Drag and Drop to manage projects and tasks'
     );

@@ -2,10 +2,10 @@ import { auth } from '@/utils/auth';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 
-export default async function Dashboard() {
+export default async function RootPage() {
   const session = await auth();
 
-  if (!session) {
-    redirect(ROUTES.HOME);
-  }
+  if (!session) redirect(ROUTES.AUTH.LOGIN);
+
+  return redirect(ROUTES.KANBAN);
 }

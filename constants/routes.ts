@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: '/',
-  DASHBOARD: '/dashboard',
-  KANBAN: '/dashboard/kanban',
-  PATH_MATCHER: '/dashboard/:path*'
+  KANBAN: '/kanban',
+  AUTH: {
+    LOGIN: '/login'
+  }
 } as const;

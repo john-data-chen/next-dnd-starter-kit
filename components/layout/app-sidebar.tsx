@@ -27,7 +27,7 @@ import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
 export const company = {
-  name: 'Next Dashboard Starter'
+  name: 'Next.js Template'
 };
 
 export default function AppSidebar() {

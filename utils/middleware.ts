@@ -11,4 +11,9 @@ export default auth((req) => {
   }
 });
 
-export const config = { matcher: [ROUTES.PATH_MATCHER] };
+export const config = {
+  matcher: [
+    '/kanban/:path*', // Protect kanban routes
+    '/((?!login).*)' // Protect all routes except auth
+  ]
+};

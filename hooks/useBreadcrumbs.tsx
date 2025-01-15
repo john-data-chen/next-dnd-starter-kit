@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
+import { ROUTES } from '@/constants/routes';
 
 type BreadcrumbItem = {
   title: string;
@@ -10,8 +11,7 @@ type BreadcrumbItem = {
 
 // This allows to add custom title as well
 const routeMapping: Record<string, BreadcrumbItem[]> = {
-  '/dashboard': [{ title: 'Dashboard', link: '/dashboard' }]
-  // Add more custom mappings as needed
+  [ROUTES.HOME]: [{ title: 'Next Board', link: ROUTES.HOME }]
 };
 
 export function useBreadcrumbs() {

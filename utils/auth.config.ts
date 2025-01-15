@@ -1,5 +1,6 @@
 import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
+import { ROUTES } from '@/constants/routes';
 
 const authConfig = {
   providers: [
@@ -31,7 +32,7 @@ const authConfig = {
     })
   ],
   pages: {
-    signIn: '/' //sigin page
+    signIn: ROUTES.AUTH.LOGIN
   }
 } satisfies NextAuthConfig;
 

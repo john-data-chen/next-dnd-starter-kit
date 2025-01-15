@@ -25,7 +25,7 @@ export default function useAuthForm() {
       try {
         signIn('credentials', {
           email: data.email,
-          callbackUrl: callbackUrl ?? ROUTES.DASHBOARD
+          callbackUrl: callbackUrl ?? ROUTES.KANBAN
         });
         toast.success('Signed In Successfully!');
       } catch (error) {
