@@ -10,7 +10,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { useTaskStore } from '@/lib/store';
+import { useTaskStore } from '@/utils/store';
 
 import React from 'react';
 

@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/utils/auth';
 import Providers from '@/components/layout/providers';
 import { Toaster } from '@/components/ui/sonner';
 import { Lato } from 'next/font/google';

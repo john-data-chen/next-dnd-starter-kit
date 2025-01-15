@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/utils/auth';
 import { redirect } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 

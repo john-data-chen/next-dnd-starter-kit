@@ -1,6 +1,6 @@
 'use client';
 import { Fragment, useMemo, useRef, useState } from 'react';
-import { useTaskStore } from '@/lib/store';
+import { useTaskStore } from '@/utils/store';
 import {
   Announcements,
   DndContext,

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useTaskStore } from '@/lib/store';
+import { useTaskStore } from '@/utils/store';
 import React from 'react';
 
 export default function NewTaskDialog({ columnId }: { columnId: string }) {
