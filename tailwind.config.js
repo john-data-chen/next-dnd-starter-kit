@@ -2,7 +2,7 @@
 import tailwindcssAnimate from 'tailwindcss-animate';
 
 export default {
-  darkMode: ['selector', 'class'],
+  darkMode: 'selector',
   content: ['./components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}'],
   theme: {
     container: {
