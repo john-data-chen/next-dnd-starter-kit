@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -9,89 +10,49 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import * as z from 'zod';
-import { defaultEmail } from '@/constants/auth';
-
-const formSchema = z.object({
-  email: z.string().email({ message: 'Enter a valid email address' })
-});
-
-type UserFormValue = z.infer<typeof formSchema>;
+import useAuthForm from '@/hooks/useAuthForm';
 
 export default function UserAuthForm() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams?.get('callbackUrl');
-  const [loading, startTransition] = useTransition();
-
-  const defaultValues = {
-    email: defaultEmail
-  };
-
-  const form = useForm<UserFormValue>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  });
-
-  const onSubmit = async (data: UserFormValue) => {
-    startTransition(() => {
-      try {
-        signIn('credentials', {
-          email: data.email,
-          callbackUrl: callbackUrl ?? '/dashboard'
-        });
-        toast.success('Signed In Successfully!');
-      } catch (error) {
-        toast.error('Failed to sign in. Please try again.');
-      }
-    });
-  };
+  const { form, loading, onSubmit } = useAuthForm();
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-2"
-          aria-label="Sign in form"
-          role="form"
-          data-testid="auth-form"
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email..."
-                    disabled={loading}
-                    data-testid="email-input"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-2"
+        aria-label="Sign in form"
+        role="form"
+        data-testid="auth-form"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="Enter your email..."
+                  disabled={loading}
+                  data-testid="email-input"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button
-            disabled={loading}
-            className="ml-auto w-full"
-            type="submit"
-            data-testid="submit-button"
-          >
-            Continue With Email
-          </Button>
-        </form>
-      </Form>
-    </>
+        <Button
+          disabled={loading}
+          className="ml-auto w-full"
+          type="submit"
+          data-testid="submit-button"
+        >
+          Continue With Email
+        </Button>
+      </form>
+    </Form>
   );
 }
