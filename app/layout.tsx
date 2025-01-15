@@ -1,6 +1,5 @@
 import { auth } from '@/utils/auth';
 import Providers from '@/components/layout/providers';
-import RootWrapper from '@/components/layout/root-wrapper';
 import { Lato } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import '@/styles/globals.css';
@@ -26,9 +25,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={lato.className + ' overflow-hidden'}>
         <NextTopLoader showSpinner={false} />
-        <Providers session={session}>
-          <RootWrapper>{children}</RootWrapper>
-        </Providers>
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   );
