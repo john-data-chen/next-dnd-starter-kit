@@ -7,7 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
-import { useBreadcrumbs } from '@/hooks/use-breadcrumbs';
+import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
 import { Fragment } from 'react';
 import { SlashIcon } from '@radix-ui/react-icons';
 
