@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { signOut, useSession } from 'next-auth/react';
+import { ROUTES } from '@/constants/routes';
 export function UserNav() {
   const { data: session } = useSession();
   if (session) {
@@ -44,7 +45,9 @@ export function UserNav() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
+          <DropdownMenuItem
+            onClick={() => signOut({ callbackUrl: ROUTES.HOME })}
+          >
             Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
