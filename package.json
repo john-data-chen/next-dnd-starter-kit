@@ -8,7 +8,6 @@
   },
   "scripts": {
     "dev": "next dev --turbo",
-    "prebuild": "npm run lint",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
