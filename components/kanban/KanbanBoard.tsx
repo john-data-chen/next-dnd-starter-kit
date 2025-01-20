@@ -18,7 +18,7 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { BoardProject, BoardContainer } from './Project';
-import NewProjectDialog from './new-project-dialog';
+import NewProjectDialog from './BewProjectDialog';
 import { TaskCard } from './task-card';
 import { Task, Project } from '@/types/tasks';
 import DraggableData from '@/types/drag&drop';
