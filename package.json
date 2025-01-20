@@ -18,8 +18,8 @@
     "commit": "git-cz"
   },
   "engines": {
-    "node": ">=22.0.0",
-    "pnpm": ">=10.0.0"
+    "node": "==22.0.0",
+    "pnpm": ">=9.0.0"
   },
   "lint-staged": {
     "./src/**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
