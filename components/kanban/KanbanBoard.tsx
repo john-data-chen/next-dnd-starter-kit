@@ -249,40 +249,42 @@ export function KanbanBoard() {
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      accessibility={{
-        announcements
-      }}
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDragEnd={onDragEnd}
-    >
-      <BoardContainer>
-        <SortableContext items={columnsId}>
-          {columns?.map((col, index) => (
-            <Fragment key={col.id}>
-              <BoardColumn column={col} tasks={col.tasks} />
-              {index === columns?.length - 1 && (
-                <div className="w-[300px]">
-                  <NewProjectDialog />
-                </div>
-              )}
-            </Fragment>
-          ))}
-          {!columns.length && <NewProjectDialog />}
-        </SortableContext>
-      </BoardContainer>
-      <DragOverlay>
-        {activeColumn && (
-          <BoardColumn
-            isOverlay
-            column={activeColumn}
-            tasks={activeColumn.tasks}
-          />
-        )}
-        {activeTask && <TaskCard task={activeTask} isOverlay />}
-      </DragOverlay>
-    </DndContext>
+    <div data-testid="kanban-board">
+      <DndContext
+        sensors={sensors}
+        accessibility={{
+          announcements
+        }}
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragEnd={onDragEnd}
+      >
+        <BoardContainer>
+          <SortableContext items={columnsId}>
+            {columns?.map((col, index) => (
+              <Fragment key={col.id}>
+                <BoardColumn column={col} tasks={col.tasks} />
+                {index === columns?.length - 1 && (
+                  <div className="w-[300px]">
+                    <NewProjectDialog />
+                  </div>
+                )}
+              </Fragment>
+            ))}
+            {!columns.length && <NewProjectDialog />}
+          </SortableContext>
+        </BoardContainer>
+        <DragOverlay>
+          {activeColumn && (
+            <BoardColumn
+              isOverlay
+              column={activeColumn}
+              tasks={activeColumn.tasks}
+            />
+          )}
+          {activeTask && <TaskCard task={activeTask} isOverlay />}
+        </DragOverlay>
+      </DndContext>
+    </div>
   );
 }
