@@ -1,76 +1,91 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/9113740/201498864-2a900c64-d88f-4ed4-b5cf-770bcb57e1f5.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/9113740/201498152-b171abb8-9225-487a-821c-6ff49ee48579.png">
-</picture>
+# Production-Ready Next.js TypeScript Template | Drag & Drop Support <br>
 
-<div align="center"><strong>Next.js Admin Dashboard Starter Template With Shadcn-ui</strong></div>
-<div align="center">Built with the Next.js App Router</div>
-<br />
-<div align="center">
-<a href="https://next-shadcn-dashboard-starter.vercel.app">View Demo</a>
-<span>
-</div>
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-## Overview
+## ✨ Why Choose This Template:
 
-This is a starter template using the following stack:
+The **Enterprise-grade Next.js TypeScript template** featuring drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
-- Framework - [Next.js (14 | 15) ](https://nextjs.org/13)
-- Language - [TypeScript](https://www.typescriptlang.org)
-- Styling - [Tailwind CSS](https://tailwindcss.com)
-- Components - [Shadcn-ui](https://ui.shadcn.com)
-- Schema Validations - [Zod](https://zod.dev)
-- State Management - [Zustand](https://zustand-demo.pmnd.rs)
-- Search params state manager - [Nuqs](https://nuqs.47ng.com/)
-- Auth - [Auth.js](https://authjs.dev/)
-- Tables - [Tanstack Tables](https://ui.shadcn.com/docs/components/data-table)
-- Forms - [React Hook Form](https://ui.shadcn.com/docs/components/form)
-- Command+k interface - [kbar](https://kbar.vercel.app/)
-- Linting - [ESLint](https://eslint.org)
-- Pre-commit Hooks - [Husky](https://typicode.github.io/husky/)
-- Formatting - [Prettier](https://prettier.io)
+- 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
+- 💪 Professional Setup: CI/CD, Testing, and Code Quality tools pre-configured
+- 🎯 Developer-Friendly: Clear documentation and best practices built-in
+- 🎨 Modern UX: Drag-and-drop, animations, and dark mode included
+- 💾 Persistent data: via local storage
 
-_If you are looking for a React admin dashboard starter, here is the [repo](https://github.com/Kiranism/react-shadcn-dashboard-starter)._
+---
 
-## Pages
+⭐ **Love this template?**
+If you like it, don't forget to [give it a star](https://github.com/john-data-chen/next-board) today!
+Every star motivates me to deliver more high-quality templates. 🚀
 
-| Pages                                                                                   | Specifications                                                                                                                      |
-| :-------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| [Signup](https://next-shadcn-dashboard-starter.vercel.app/)                             | Authentication with **NextAuth** supports Social logins and email logins (Enter dummy email for demo).                              |
-| [Dashboard](https://next-shadcn-dashboard-starter.vercel.app/dashboard)                 | Cards with recharts graphs for analytics.                                                                                           |
-| [Employee](https://next-shadcn-dashboard-starter.vercel.app/dashboard/employee)         | Tanstack tables with server side searching, filter, pagination by Nuqs which is a Type-safe search params state manager in nextjs). |
-| [Employee/new](https://next-shadcn-dashboard-starter.vercel.app/dashboard/employee/new) | A Employee Form with shadcn form (react-hook-form + zod).                                                                           |
-| [Product](https://next-shadcn-dashboard-starter.vercel.app/dashboard/product)           | Tanstack tables with server side searching, filter, pagination by Nuqs which is a Type-safe search params state manager in nextjs   |
-| [Product/new](https://next-shadcn-dashboard-starter.vercel.app/dashboard/product/new)   | A Product Form with shadcn form (react-hook-form + zod).                                                                            |
-| [Profile](https://next-shadcn-dashboard-starter.vercel.app/dashboard/profile)           | Mutistep dynamic forms using react-hook-form and zod for form validation.                                                           |
-| [Kanban Board](https://next-shadcn-dashboard-starter.vercel.app/dashboard/kanban)       | A Drag n Drop task management board with dnd-kit and zustand to persist state locally.                                              |
-| [Not Found](https://next-shadcn-dashboard-starter.vercel.app/dashboard/notfound)        | Not Found Page Added in the root level                                                                                              |
-| -                                                                                       | -                                                                                                                                   |
+---
 
-## Getting Started
+**Key Accomplishments**:
 
-Follow these steps to clone the repository and start the development server:
+- **Cross-browser Testing**: for both desktop and mobile devices.
+- **CI/CD automation**: in GitHub actions.
 
-> [!NOTE]  
-> If you want to use the starter with  **Next 15** with **React 19**, follow these steps:
-> - Clone only the `next-15` branch:
->   ```bash
->   git clone --branch next-15 --single-branch https://github.com/Kiranism/next-shadcn-dashboard-starter.git
+## 🛠️ Technical Stack
 
-- Clone the repo:
-```bash 
-git clone https://github.com/Kiranism/next-shadcn-dashboard-starter.git 
+- **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.13.0 or higher
+- **Frontend**: [Next.js](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Zustand](https://zustand-demo.pmnd.rs/)
+- **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [husky](https://github.com/typicode/husky)
+- **Styling**: [Taliwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/)
+- **Testing**: [Jest](https://jestjs.io/), [Playwright](https://playwright.dev/)
+- **Drag and Drop**: [dnd-kit](https://dndkit.com/)
+- **CI/CD**: [GitHub Actions](https://github.com/features/actions)
+
+## 🚀 Getting Started
+
+- Press **Use this template** to create a new repository.
+
+### PNPM commands
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm run dev
+
+# Run unit and integration tests by Jest
+pnpm run test
+
+# Run E2E tests by Playwright
+pnpm run playwright
 ```
 
-- `npm install`
-- Create a `.env.local` file by copying the example environment file:
-  `cp env.example.txt .env.local`
-- Add the required environment variables to the `.env.local` file.
-- `npm run dev`
+## 🔜 Roadmap
 
-You should now be able to access the application at http://localhost:3000.
+- [x] Full-stack support using Next.js
+- [x] Enhanced accessibility with Shadcn UI
+- [x] Drag and drop supports
+- [ ] Persistent data into Database
+- [ ] User authentication for secure project/task management
 
-> [!WARNING]  
-> After cloning or forking the repository, be cautious when pulling or syncing with the latest changes, as this may result in breaking conflicts.
+and more...
 
-Cheers! 🥂
+## 📖 Detailed Technical Documentation
+
+### 📊 Testing Strategy
+
+- Cross-browser testing ensures functionality across desktop and mobile.
+
+### Project Structure
+
+```
+__tests__/ # Test cases
+src/
+├── assets/ # Static files such as images
+├── components/ # Reusable React components
+├── constants/ # Application-wide constants
+├── hooks/ # Custom React hooks
+├── styles/ # Light and dark theme configurations
+├── types/ # TypeScript type definitions
+└── utils/ # Utility functions
+```
+
+### 📃 License
+
+This project is licensed under the [MIT License](https://opensource.org/license/mit/).
