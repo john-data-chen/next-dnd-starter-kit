@@ -1,6 +1,6 @@
-import { ColumnDragData } from '@/components/kanban/board-column';
+import { ProjectDragData } from '@/components/kanban/Project';
 import { TaskDragData } from '@/components/kanban/task-card';
 
-type DraggableData = ColumnDragData | TaskDragData;
+type DraggableData = ProjectDragData | TaskDragData;
 
 export default DraggableData;

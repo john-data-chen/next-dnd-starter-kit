@@ -23,10 +23,10 @@ import { useTaskStore } from '@/utils/store';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
-export function ColumnActions({ title, id }: { title: string; id: string }) {
+export function ProjectActions({ title, id }: { title: string; id: string }) {
   const [name, setName] = React.useState(title);
-  const updateCol = useTaskStore((state) => state.updateCol);
-  const removeCol = useTaskStore((state) => state.removeCol);
+  const updateProject = useTaskStore((state) => state.updateProject);
+  const removeProject = useTaskStore((state) => state.removeProject);
   const [editDisable, setIsEditDisable] = React.useState(true);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -37,7 +37,7 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
         onSubmit={(e) => {
           e.preventDefault();
           setIsEditDisable(!editDisable);
-          updateCol(id, name);
+          updateProject(id, name);
           toast(`Project ${title} updated to ${name}`);
         }}
       >
@@ -97,7 +97,7 @@ export function ColumnActions({ title, id }: { title: string; id: string }) {
                 setTimeout(() => (document.body.style.pointerEvents = ''), 100);
 
                 setShowDeleteDialog(false);
-                removeCol(id);
+                removeProject(id);
                 toast('Project has been deleted.');
               }}
             >

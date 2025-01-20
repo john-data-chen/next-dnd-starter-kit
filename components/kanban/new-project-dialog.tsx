@@ -15,7 +15,7 @@ import { useTaskStore } from '@/utils/store';
 import React from 'react';
 
 export default function NewProjectDialog() {
-  const addCol = useTaskStore((state) => state.addCol);
+  const addProject = useTaskStore((state) => state.addProject);
   const [inputValue, setInputValue] = React.useState('');
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
 
@@ -27,7 +27,7 @@ export default function NewProjectDialog() {
     const { title } = Object.fromEntries(formData);
 
     if (typeof title !== 'string') return;
-    addCol(title);
+    addProject(title);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

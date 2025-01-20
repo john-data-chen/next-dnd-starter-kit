@@ -17,19 +17,22 @@ import {
   Over
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
-import { BoardColumn, BoardContainer } from './board-column';
+import { BoardProject, BoardContainer } from './Project';
 import NewProjectDialog from './new-project-dialog';
 import { TaskCard } from './task-card';
-import { Task, Column } from '@/types/tasks';
+import { Task, Project } from '@/types/tasks';
 import DraggableData from '@/types/drag&drop';
 
 export function KanbanBoard() {
-  const columns = useTaskStore((state) => state.columns);
-  const setColumns = useTaskStore((state) => state.setCols);
-  const pickedUpTaskColumn = useRef<string | null>(null);
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+  const projects = useTaskStore((state) => state.projects);
+  const setProjects = useTaskStore((state) => state.setProjects);
+  const pickedUpTaskProject = useRef<string | null>(null);
+  const projectsId = useMemo(
+    () => projects.map((project: Project) => project.id),
+    [projects]
+  );
 
-  const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
@@ -43,30 +46,34 @@ export function KanbanBoard() {
       return false;
     }
     const data = entry.data.current;
-    if (data?.type === 'Column' || data?.type === 'Task') {
+    if (data?.type === 'Project' || data?.type === 'Task') {
       return true;
     }
     return false;
   }
 
-  function getDraggingTaskData(taskId: string, columnId: string) {
-    const column = columns.find((col) => col.id === columnId);
-    const tasksInColumn = column!.tasks.filter(
-      (task) => task.columnId === columnId
+  function getDraggingTaskData(taskId: string, projectId: string) {
+    const project = projects.find(
+      (project: Project) => project.id === projectId
     );
-    const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);
+    const tasksInProject = project!.tasks.filter(
+      (task: { projectId: string }) => task.projectId === projectId
+    );
+    const taskPosition = tasksInProject.findIndex(
+      (task: { id: string }) => task.id === taskId
+    );
     return {
-      tasksInColumn,
+      tasksInProject,
       taskPosition,
-      column
+      project
     };
   }
 
   function onDragStart(event: DragStartEvent) {
     if (!hasDraggableData(event.active)) return;
     const data = event.active.data.current;
-    if (data?.type === 'Column') {
-      setActiveColumn(data?.column);
+    if (data?.type === 'Project') {
+      setActiveProject(data?.project);
       return;
     }
     if (data?.type === 'Task') {
@@ -76,7 +83,7 @@ export function KanbanBoard() {
   }
 
   function onDragOver(event: DragOverEvent) {
-    const updatedColumns = [...columns];
+    const updatedProjects = [...projects];
     const { active, over } = event;
     // stop if no over data
     if (!over) return;
@@ -86,52 +93,52 @@ export function KanbanBoard() {
     if (activeId === overId) return;
     // stop if no draggable data
     if (!hasDraggableData(active) || !hasDraggableData(over)) return;
-    // stop if active is a column
-    if (active.data.current!.type === 'Column') return;
+    // stop if active is a project
+    if (active.data.current!.type === 'Project') return;
     // get active task
     const activeTask = active.data.current!.task;
-    const activeColumn = updatedColumns.find(
-      (col) => col.id === active.data.current!.task.columnId
+    const activeProject = updatedProjects.find(
+      (project: Project) => project.id === active.data.current!.task.projectId
     );
-    const activeTaskIdx = activeColumn!.tasks.findIndex(
-      (task) => task.id === activeTask.id
+    const activeTaskIdx = activeProject!.tasks.findIndex(
+      (task: Task) => task.id === activeTask.id
     );
-    // drag a task over a column
-    if (over.data.current!.type === 'Column') {
-      const overColumn = updatedColumns.find(
-        (col) => col.id === over.data.current!.column.id
+    // drag a task over a project
+    if (over.data.current!.type === 'Project') {
+      const overProject = updatedProjects.find(
+        (project: Project) => project.id === over.data.current!.project.id
       );
-      activeTask.columnId = overColumn!.id;
-      overColumn!.tasks.push(activeTask);
-      activeColumn!.tasks.splice(activeTaskIdx, 1);
+      activeTask.projectId = overProject!.id;
+      overProject!.tasks.push(activeTask);
+      activeProject!.tasks.splice(activeTaskIdx, 1);
     }
     // drag a task over a task
     if (over.data.current!.type === 'Task') {
       const overTask = over.data.current!.task;
-      const overColumn = updatedColumns.find(
-        (col) => col.id === overTask.columnId
+      const overProject = updatedProjects.find(
+        (project: Project) => project.id === overTask.projectId
       );
-      const overTaskIdx = overColumn!.tasks.findIndex(
-        (task) => task.id === overTask.id
+      const overTaskIdx = overProject!.tasks.findIndex(
+        (task: Task) => task.id === overTask.id
       );
-      // move task to a different column
-      if (overTask.columnId !== activeTask.columnId) {
-        activeTask.columnId = overTask.columnId;
-        overColumn!.tasks.splice(overTaskIdx, 0, activeTask);
-        activeColumn!.tasks.splice(activeTaskIdx, 1);
+      // move task to a different project
+      if (overTask.projectId !== activeTask.projectId) {
+        activeTask.projectId = overTask.projectId;
+        overProject!.tasks.splice(overTaskIdx, 0, activeTask);
+        activeProject!.tasks.splice(activeTaskIdx, 1);
       }
-      // move task to the same column
+      // move task to the same project
       else {
         const tempTask = activeTask;
-        activeColumn!.tasks.splice(activeTaskIdx, 1);
-        overColumn!.tasks.splice(overTaskIdx, 0, tempTask);
+        activeProject!.tasks.splice(activeTaskIdx, 1);
+        overProject!.tasks.splice(overTaskIdx, 0, tempTask);
       }
     }
-    setColumns(updatedColumns);
+    setProjects(updatedProjects);
   }
 
   function onDragEnd(event: DragEndEvent) {
-    setActiveColumn(null);
+    setActiveProject(null);
     setActiveTask(null);
 
     const { active, over } = event;
@@ -146,101 +153,111 @@ export function KanbanBoard() {
 
     if (activeId === overId) return;
 
-    const isActiveAColumn = activeData?.type === 'Column';
-    if (!isActiveAColumn) return;
-    const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+    const isActiveAProject = activeData?.type === 'Project';
+    if (!isActiveAProject) return;
+    const activeProjectIndex = projects.findIndex(
+      (project: Project) => project.id === activeId
+    );
 
-    const overColumnIndex = columns.findIndex((col) => col.id === overId);
+    const overProjectIndex = projects.findIndex(
+      (project: Project) => project.id === overId
+    );
 
-    setColumns(arrayMove(columns, activeColumnIndex, overColumnIndex));
+    setProjects(arrayMove(projects, activeProjectIndex, overProjectIndex));
   }
 
   const announcements: Announcements = {
     onDragStart({ active }) {
       if (!hasDraggableData(active)) return;
-      if (active.data.current?.type === 'Column') {
-        const startColumnIdx = columnsId.findIndex((id) => id === active.id);
-        const startColumn = columns[startColumnIdx];
-        return `Picked up Column ${startColumn?.title} at position: ${
-          startColumnIdx + 1
-        } of ${columnsId.length}`;
+      if (active.data.current?.type === 'Project') {
+        const startProjectIdx = projectsId.findIndex(
+          (id: string) => id === active.id
+        );
+        const startProject = projects[startProjectIdx];
+        return `Picked up Project ${startProject?.title} at position: ${
+          startProjectIdx + 1
+        } of ${projectsId.length}`;
       } else if (active.data.current?.type === 'Task') {
-        pickedUpTaskColumn.current = active.data.current.task.columnId;
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+        pickedUpTaskProject.current = active.data.current.task.projectId;
+        const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           active.data.current.task.id,
-          pickedUpTaskColumn.current
+          pickedUpTaskProject.current
         );
         return `Picked up Task ${
           active.data.current.task.title
         } at position: ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`;
+          tasksInProject.length
+        } in project ${project?.title}`;
       }
     },
     onDragOver({ active, over }) {
       if (!hasDraggableData(active) || !hasDraggableData(over)) return;
       if (
-        active.data.current?.type === 'Column' &&
-        over.data.current?.type === 'Column'
+        active.data.current?.type === 'Project' &&
+        over.data.current?.type === 'Project'
       ) {
-        const overColumnIdx = columnsId.findIndex((id) => id === over.id);
-        return `Column ${active.data.current.column.title} was moved over ${
-          over.data.current.column.title
-        } at position ${overColumnIdx + 1} of ${columnsId.length}`;
+        const overProjectIdx = projectsId.findIndex(
+          (id: string) => id === over.id
+        );
+        return `Project ${active.data.current.project.title} was moved over ${
+          over.data.current.project.title
+        } at position ${overProjectIdx + 1} of ${projectsId.length}`;
       } else if (
         active.data.current?.type === 'Task' &&
         over.data.current?.type === 'Task'
       ) {
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+        const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           over.data.current.task.id,
-          over.data.current.task.columnId
+          over.data.current.task.projectId
         );
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+        if (over.data.current.task.projectId !== pickedUpTaskProject.current) {
           return `Task ${
             active.data.current.task.title
-          } was moved over column ${column?.title} in position ${
+          } was moved over project ${project?.title} in position ${
             taskPosition + 1
-          } of ${tasksInColumn.length}`;
+          } of ${tasksInProject.length}`;
         }
         return `Task was moved over position ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`;
+          tasksInProject.length
+        } in project ${project?.title}`;
       }
     },
     onDragEnd({ active, over }) {
       if (!hasDraggableData(active) || !hasDraggableData(over)) {
-        pickedUpTaskColumn.current = null;
+        pickedUpTaskProject.current = null;
         return;
       }
       if (
-        active.data.current?.type === 'Column' &&
-        over.data.current?.type === 'Column'
+        active.data.current?.type === 'Project' &&
+        over.data.current?.type === 'Project'
       ) {
-        const overColumnPosition = columnsId.findIndex((id) => id === over.id);
+        const overProjectPosition = projectsId.findIndex(
+          (id: string) => id === over.id
+        );
 
-        return `Column ${
-          active.data.current.column.title
-        } was dropped into position ${overColumnPosition + 1} of ${
-          columnsId.length
+        return `Project ${
+          active.data.current.project.title
+        } was dropped into position ${overProjectPosition + 1} of ${
+          projectsId.length
         }`;
       } else if (
         active.data.current?.type === 'Task' &&
         over.data.current?.type === 'Task'
       ) {
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+        const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           over.data.current.task.id,
-          over.data.current.task.columnId
+          over.data.current.task.projectId
         );
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
-          return `Task was dropped into column ${column?.title} in position ${
+        if (over.data.current.task.projectId !== pickedUpTaskProject.current) {
+          return `Task was dropped into project ${project?.title} in position ${
             taskPosition + 1
-          } of ${tasksInColumn.length}`;
+          } of ${tasksInProject.length}`;
         }
         return `Task was dropped into position ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`;
+          tasksInProject.length
+        } in project ${project?.title}`;
       }
-      pickedUpTaskColumn.current = null;
+      pickedUpTaskProject.current = null;
     },
     onDragCancel({ active }) {
       if (!hasDraggableData(active)) return;
@@ -260,26 +277,26 @@ export function KanbanBoard() {
         onDragEnd={onDragEnd}
       >
         <BoardContainer>
-          <SortableContext items={columnsId}>
-            {columns?.map((col, index) => (
-              <Fragment key={col.id}>
-                <BoardColumn column={col} tasks={col.tasks} />
-                {index === columns?.length - 1 && (
+          <SortableContext items={projectsId}>
+            {projects?.map((project: Project, index: number) => (
+              <Fragment key={project.id}>
+                <BoardProject project={project} tasks={project.tasks} />
+                {index === projects?.length - 1 && (
                   <div className="w-[300px]">
                     <NewProjectDialog />
                   </div>
                 )}
               </Fragment>
             ))}
-            {!columns.length && <NewProjectDialog />}
+            {!projects.length && <NewProjectDialog />}
           </SortableContext>
         </BoardContainer>
         <DragOverlay>
-          {activeColumn && (
-            <BoardColumn
+          {activeProject && (
+            <BoardProject
               isOverlay
-              column={activeColumn}
-              tasks={activeColumn.tasks}
+              project={activeProject}
+              tasks={activeProject.tasks}
             />
           )}
           {activeTask && <TaskCard task={activeTask} isOverlay />}

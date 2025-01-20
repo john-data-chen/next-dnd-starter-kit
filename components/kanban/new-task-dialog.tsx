@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/utils/store';
 import React from 'react';
 
-export default function NewTaskDialog({ columnId }: { columnId: string }) {
+export default function NewTaskDialog({ projectId }: { projectId: string }) {
   const addTask = useTaskStore((state) => state.addTask);
   const [titleValue, setTitleValue] = React.useState('');
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
@@ -28,7 +28,7 @@ export default function NewTaskDialog({ columnId }: { columnId: string }) {
     const description = formData.get('description') as string;
 
     if (typeof title !== 'string') return;
-    addTask(columnId, title, description);
+    addTask(projectId, title, description);
     // reset
     setTitleValue('');
   };

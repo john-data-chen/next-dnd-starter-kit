@@ -7,27 +7,27 @@ import { IconDragDrop } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ColumnActions } from './column-action';
+import { ProjectActions } from './ProjectAction';
 import { TaskCard } from './task-card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import NewTaskDialog from './new-task-dialog';
-import { Column } from '@/types/tasks';
+import { Project } from '@/types/tasks';
 
-export interface ColumnDragData {
-  type: 'Column';
-  column: Column;
+export interface ProjectDragData {
+  type: 'Project';
+  project: Project;
 }
 
-interface BoardColumnProps {
-  column: Column;
+interface BoardProjectProps {
+  project: Project;
   tasks: Task[];
   isOverlay?: boolean;
 }
 
-export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   const tasksIds = useMemo(() => {
-    return column.tasks.map((task) => task.id);
-  }, [column.tasks]);
+    return project.tasks.map((task: { id: string }) => task.id);
+  }, [project.tasks]);
 
   const {
     setNodeRef,
@@ -37,13 +37,13 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
     transition,
     isDragging
   } = useSortable({
-    id: column.id,
+    id: project.id,
     data: {
-      type: 'Column',
-      column
-    } satisfies ColumnDragData,
+      type: 'Project',
+      project
+    } satisfies ProjectDragData,
     attributes: {
-      roleDescription: `Column: ${column.title}`
+      roleDescription: `Project: ${project.title}`
     }
   });
 
@@ -80,14 +80,14 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
           {...listeners}
           className="relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
         >
-          <span className="sr-only">{`Move column: ${column.title}`}</span>
+          <span className="sr-only">{`Move project: ${project.title}`}</span>
           <IconDragDrop />
         </Button>
-        <ColumnActions id={column.id} title={column.title} />
+        <ProjectActions id={project.id} title={project.title} />
       </CardHeader>
       <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
-          <NewTaskDialog columnId={column.id} />
+          <NewTaskDialog projectId={project.id} />
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
               <TaskCard key={task.id} task={task} />
