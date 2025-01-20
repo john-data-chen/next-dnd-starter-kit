@@ -19,7 +19,7 @@ import {
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { BoardProject, BoardContainer } from './Project';
 import NewProjectDialog from './NewProjectDialog';
-import { TaskCard } from './task-card';
+import { TaskCard } from './TaskCard';
 import { Task, Project } from '@/types/tasks';
 import DraggableData from '@/types/drag&drop';
 

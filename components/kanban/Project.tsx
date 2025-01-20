@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ProjectActions } from './ProjectAction';
-import { TaskCard } from './task-card';
+import { TaskCard } from './TaskCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import NewTaskDialog from './NewTaskDialog';
 import { Project } from '@/types/tasks';
