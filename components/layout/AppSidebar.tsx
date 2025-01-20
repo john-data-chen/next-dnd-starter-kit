@@ -24,7 +24,6 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import * as React from 'react';
 
 export const company = {
   name: 'Next.js Template'
