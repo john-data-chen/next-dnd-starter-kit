@@ -1,4 +1,4 @@
-import PageContainer from '@/components/layout/page-container';
+import PageContainer from '@/components/layout/PageContainer';
 import { KanbanBoard } from './kanban-board';
 
 export default function KanbanViewPage() {
