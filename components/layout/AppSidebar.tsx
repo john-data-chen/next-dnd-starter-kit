@@ -17,17 +17,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@/components/ui/sidebar';
-import { navItems } from '@/constants/sidebar';
+import { navItems, companyInfo } from '@/constants/sidebar';
 import {
   IconSquareChevronsRightFilled,
   IconTopologyStar3
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-export const company = {
-  name: 'Next.js Template'
-};
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -40,7 +36,7 @@ export default function AppSidebar() {
             <IconTopologyStar3 className="animate-spin" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{company.name}</span>
+            <span className="truncate font-semibold">{companyInfo.name}</span>
           </div>
         </div>
       </SidebarHeader>
