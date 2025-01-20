@@ -5,7 +5,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { IconDragDrop } from '@tabler/icons-react';
-import { TaskActions } from './task-action';
+import { TaskActions } from './TaskAction';
 
 interface TaskCardProps {
   task: Task;

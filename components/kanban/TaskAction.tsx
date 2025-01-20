@@ -23,7 +23,19 @@ import { useTaskStore } from '@/utils/store';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
-export function TaskActions({ title, id }: { title: string; id: string }) {
+export interface TaskActionsProps {
+  title: string;
+  id: string;
+  onUpdate?: (id: string, newTitle: string) => void;
+  onDelete?: (id: string) => void;
+}
+
+export function TaskActions({
+  title,
+  id,
+  onUpdate,
+  onDelete
+}: TaskActionsProps) {
   const [name, setName] = React.useState(title);
   const updateTask = useTaskStore((state) => state.updateTask);
   const removeTask = useTaskStore((state) => state.removeTask);
@@ -31,35 +43,52 @@ export function TaskActions({ title, id }: { title: string; id: string }) {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
+  const handleUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+
+    setIsEditDisable(true);
+    updateTask(id, name);
+    onUpdate?.(id, name);
+    toast(`Task ${title} updated to ${name}`);
+  };
+
+  const handleDelete = () => {
+    setTimeout(() => (document.body.style.pointerEvents = ''), 100);
+    setShowDeleteDialog(false);
+    removeTask(id);
+    onDelete?.(id);
+    toast('Task has been deleted.');
+  };
+
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setIsEditDisable(!editDisable);
-          updateTask(id, name);
-          toast(`Task ${title} updated to ${name}`);
-        }}
-      >
+      <form onSubmit={handleUpdate} data-testid="task-edit-form">
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="!mt-0 mr-auto text-base disabled:cursor-pointer disabled:border-none disabled:opacity-100"
           disabled={editDisable}
           ref={inputRef}
+          data-testid="task-title-input"
         />
       </form>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" className="ml-1">
+          <Button
+            variant="secondary"
+            className="ml-1"
+            data-testid="task-actions-trigger"
+          >
             <span className="sr-only">Actions</span>
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
+            data-testid="rename-task-button"
             onSelect={() => {
-              setIsEditDisable(!editDisable);
+              setIsEditDisable(false);
               setTimeout(() => {
                 inputRef.current?.focus();
               }, 500);
@@ -70,6 +99,7 @@ export function TaskActions({ title, id }: { title: string; id: string }) {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
+            data-testid="delete-task-button"
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
           >
@@ -78,7 +108,7 @@ export function TaskActions({ title, id }: { title: string; id: string }) {
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent data-testid="delete-task-dialog">
           <AlertDialogHeader>
             <AlertDialogTitle>
               Are you sure to delete Task: {title}?
@@ -89,17 +119,13 @@ export function TaskActions({ title, id }: { title: string; id: string }) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel data-testid="cancel-delete-button">
+              Cancel
+            </AlertDialogCancel>
             <Button
               variant="destructive"
-              onClick={() => {
-                // yes, you have to set a timeout
-                setTimeout(() => (document.body.style.pointerEvents = ''), 100);
-
-                setShowDeleteDialog(false);
-                removeTask(id);
-                toast('Task has been deleted.');
-              }}
+              onClick={handleDelete}
+              data-testid="confirm-delete-button"
             >
               Delete
             </Button>
