@@ -59,6 +59,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       className={variants({
         dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined
       })}
+      data-testid="task-card"
     >
       <CardHeader className="space-between relative flex flex-row border-b-2 border-secondary px-3 py-3">
         <Button
@@ -66,6 +67,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           {...attributes}
           {...listeners}
           className="-ml-2 h-auto cursor-grab p-1 text-secondary-foreground/50"
+          data-testid="task-card-drag-button"
         >
           <span className="sr-only">Move task</span>
           <IconDragDrop />
@@ -73,7 +75,12 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         <TaskActions title={task.title} id={task.id} />
       </CardHeader>
       <CardContent className="whitespace-pre-wrap px-3 pb-6 pt-3 text-left">
-        <p className="text-sl text-muted-foreground">{task.description}</p>
+        <p
+          className="text-sl text-muted-foreground"
+          data-testid="task-card-description"
+        >
+          {task.description}
+        </p>
       </CardContent>
     </Card>
   );
