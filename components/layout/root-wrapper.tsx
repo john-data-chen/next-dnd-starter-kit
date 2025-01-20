@@ -1,6 +1,6 @@
 'use client';
 
-import KBar from '@/components/kbar';
+import KBar from '@/components/kbar/Kbar';
 import Header from '@/components/layout/header';
 import AppSidebar from '@/components/layout/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
