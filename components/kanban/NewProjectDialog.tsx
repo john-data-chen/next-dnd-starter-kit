@@ -11,13 +11,19 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useTaskStore } from '@/utils/store';
-
 import React from 'react';
 
-export default function NewProjectDialog() {
+export interface NewProjectDialogProps {
+  onProjectAdd?: (title: string) => void;
+}
+
+export default function NewProjectDialog({
+  onProjectAdd
+}: NewProjectDialogProps = {}) {
   const addProject = useTaskStore((state) => state.addProject);
   const [inputValue, setInputValue] = React.useState('');
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,32 +32,45 @@ export default function NewProjectDialog() {
     const formData = new FormData(form);
     const { title } = Object.fromEntries(formData);
 
-    if (typeof title !== 'string') return;
+    if (typeof title !== 'string' || !title.trim()) return;
+
     addProject(title);
+    onProjectAdd?.(title);
+    setInputValue('');
+    setIsOpen(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    setInputValue(inputValue);
-    setIsButtonDisabled(!inputValue.trim()); // disable button if input is empty
+    const value = e.target.value;
+    setInputValue(value);
+    setIsButtonDisabled(!value.trim());
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="lg" className="w-full">
+        <Button
+          variant="secondary"
+          size="lg"
+          className="w-full"
+          data-testid="new-project-trigger"
+        >
           ＋ Add New Project
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        data-testid="new-project-dialog"
+      >
         <DialogHeader>
           <DialogTitle>Add New Project</DialogTitle>
           <DialogDescription>What project you want to add?</DialogDescription>
         </DialogHeader>
         <form
-          id="todo-form"
+          id="new-project-form"
           className="grid gap-4 py-4"
           onSubmit={handleSubmit}
+          data-testid="new-project-form"
         >
           <div className="grid grid-cols-4 items-center gap-4">
             <Input
@@ -63,20 +82,20 @@ export default function NewProjectDialog() {
               required
               value={inputValue}
               onChange={handleInputChange}
+              data-testid="project-title-input"
             />
           </div>
         </form>
         <DialogFooter>
-          <DialogTrigger asChild>
-            <Button
-              type="submit"
-              size="sm"
-              form="todo-form"
-              disabled={isButtonDisabled}
-            >
-              Add Project
-            </Button>
-          </DialogTrigger>
+          <Button
+            type="submit"
+            size="sm"
+            form="new-project-form"
+            disabled={isButtonDisabled}
+            data-testid="submit-project-button"
+          >
+            Add Project
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
