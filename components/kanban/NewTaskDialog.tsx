@@ -15,10 +15,20 @@ import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/utils/store';
 import React from 'react';
 
-export default function NewTaskDialog({ projectId }: { projectId: string }) {
+export interface NewTaskDialogProps {
+  projectId: string;
+  onTaskAdd?: (title: string, description: string) => void;
+}
+
+export default function NewTaskDialog({
+  projectId,
+  onTaskAdd
+}: NewTaskDialogProps) {
   const addTask = useTaskStore((state) => state.addTask);
   const [titleValue, setTitleValue] = React.useState('');
+  const [descriptionValue, setDescriptionValue] = React.useState('');
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,26 +37,37 @@ export default function NewTaskDialog({ projectId }: { projectId: string }) {
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
 
-    if (typeof title !== 'string') return;
+    if (typeof title !== 'string' || !title.trim()) return;
+
     addTask(projectId, title, description);
-    // reset
+    onTaskAdd?.(title, description);
+
+    // reset form
     setTitleValue('');
+    setDescriptionValue('');
+    setIsOpen(false);
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const titleValue = e.target.value;
-    setTitleValue(titleValue);
-    setIsButtonDisabled(!titleValue.trim()); // disable button if input is empty
+    const value = e.target.value;
+    setTitleValue(value);
+    setIsButtonDisabled(!value.trim());
+  };
+
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setDescriptionValue(e.target.value);
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
+        <Button variant="secondary" size="sm" data-testid="new-task-trigger">
           ＋ Add New Task
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" data-testid="new-task-dialog">
         <DialogHeader>
           <DialogTitle>Add New Task</DialogTitle>
           <DialogDescription>
@@ -54,9 +75,10 @@ export default function NewTaskDialog({ projectId }: { projectId: string }) {
           </DialogDescription>
         </DialogHeader>
         <form
-          id="task-form"
+          id="new-task-form"
           className="grid gap-4 py-4"
           onSubmit={handleSubmit}
+          data-testid="new-task-form"
         >
           <div className="grid grid-cols-4 items-center gap-4">
             <Input
@@ -68,6 +90,7 @@ export default function NewTaskDialog({ projectId }: { projectId: string }) {
               required
               value={titleValue}
               onChange={handleTitleChange}
+              data-testid="task-title-input"
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -76,20 +99,22 @@ export default function NewTaskDialog({ projectId }: { projectId: string }) {
               name="description"
               placeholder="Description..."
               className="col-span-4"
+              value={descriptionValue}
+              onChange={handleDescriptionChange}
+              data-testid="task-description-input"
             />
           </div>
         </form>
         <DialogFooter>
-          <DialogTrigger asChild>
-            <Button
-              type="submit"
-              size="sm"
-              form="task-form"
-              disabled={isButtonDisabled}
-            >
-              Add Task
-            </Button>
-          </DialogTrigger>
+          <Button
+            type="submit"
+            size="sm"
+            form="new-task-form"
+            disabled={isButtonDisabled}
+            data-testid="submit-task-button"
+          >
+            Add Task
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

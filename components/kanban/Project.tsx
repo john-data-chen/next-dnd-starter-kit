@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ProjectActions } from './ProjectAction';
 import { TaskCard } from './task-card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import NewTaskDialog from './new-task-dialog';
+import NewTaskDialog from './NewTaskDialog';
 import { Project } from '@/types/tasks';
 
 export interface ProjectDragData {
