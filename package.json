@@ -10,7 +10,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint src --fix",
     "format": "prettier --write .",
     "prepare": "husky",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
@@ -22,10 +22,10 @@
     "pnpm": ">=10.0.0"
   },
   "lint-staged": {
-    "**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
+    "./src/**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
       "prettier --write --no-error-on-unmatched-pattern"
     ],
-    "**/*.{js,jsx,ts,tsx}": [
+    "./src/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix"
     ]
   },
