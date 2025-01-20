@@ -28,7 +28,7 @@ export default function useAuthForm() {
           callbackUrl: callbackUrl ?? ROUTES.KANBAN
         });
         toast.success('Signed In Successfully!');
-      } catch (error) {
+      } catch {
         toast.error('Failed to sign in. Please try again.');
       }
     });

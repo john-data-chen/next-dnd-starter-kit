@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import UserAuthForm from '@/components/auth/UserAuthForm';
 
 describe('UserAuthForm', () => {
