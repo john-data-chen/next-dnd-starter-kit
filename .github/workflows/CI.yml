@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Generate Secret
+        run: echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env.local
+
       - name: Install PNPM
         uses: pnpm/action-setup@v4
         with:
