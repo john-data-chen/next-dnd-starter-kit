@@ -181,7 +181,7 @@ export function KanbanBoard() {
         pickedUpTaskProject.current = active.data.current.task.projectId;
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           active.data.current.task.id,
-          pickedUpTaskProject.current
+          active.data.current.task.projectId
         );
         return `Picked up Task ${
           active.data.current.task.title
