@@ -2,6 +2,7 @@
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![CI](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml)
 
 ## ✨ Why Choose This Template:
 
@@ -34,15 +35,19 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Styling**: [Taliwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/)
 - **Testing**: [Jest](https://jestjs.io/), [Playwright](https://playwright.dev/)
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
-- **CI/CD**: [GitHub Actions](https://github.com/features/actions)
+- **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home)
 
 ## 🚀 Getting Started
 
 - Press **Use this template** to create a new repository.
+- Generate Secret
 
-### PNPM commands
+### Commands
 
 ```bash
+# Generate Secret
+echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env.local
+
 # Install dependencies
 pnpm install
 
@@ -58,9 +63,10 @@ pnpm run playwright
 
 ## 🔜 Roadmap
 
-- [x] Full-stack support using Next.js
+- [x] Full-stack support by Next.js
 - [x] Enhanced accessibility with Shadcn UI
 - [x] Drag and drop supports
+- [x] CI / CD pipelines
 - [ ] Persistent data into Database
 - [ ] User authentication for secure project/task management
 
