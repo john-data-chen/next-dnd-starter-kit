@@ -1,7 +1,7 @@
-import { SidebarTrigger } from '../ui/sidebar';
-import { Separator } from '../ui/separator';
-import { Breadcrumbs } from '../breadcrumbs';
-import SearchInput from '../search-input';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
+import SearchInput from '@/components/SearchInput';
 import { UserNav } from './UserNav';
 import ThemeToggle from './ThemeToggle';
 
