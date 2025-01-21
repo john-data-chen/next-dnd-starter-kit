@@ -77,6 +77,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
       ref={setNodeRef}
       style={style}
       className={variants({ dragging: dragState })}
+      data-testid={`project-container`}
     >
       <CardHeader className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold">
         <Button
@@ -85,7 +86,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
           {...listeners}
           className="relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
         >
-          <span className="sr-only">Move project: {project.title}</span>
+          <span className="sr-only">drag project: {project.title}</span>
           <IconDragDrop />
         </Button>
         <ProjectActions id={project.id} title={project.title} />
