@@ -8,7 +8,7 @@
 
 ## ✨ Why Choose This Template:
 
-The **Enterprise-grade Next.js TypeScript template** featuring drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
+The **Enterprise-grade Next.js TypeScript template** with 85%+ test coverage, featuring drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
 - 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
 - 💪 Professional Setup: CI/CD, Testing, and Code Quality tools pre-configured
@@ -26,8 +26,10 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 **Key Accomplishments**:
 
+- **Test Coverage in Codecov**: 85%+
+- **Reliability Rating in SonarQube**: A
 - **Cross-browser Testing**: for both desktop and mobile devices.
-- **CI/CD automation**: in GitHub actions.
+- **CI/CD automation**: in GitHub actions and Vercel.
 
 ## 🛠️ Technical Stack
 
@@ -70,7 +72,7 @@ pnpm run playwright
 - [x] Drag and drop supports
 - [x] CI / CD pipelines
 - [x] Add code quality check with Codecov and SonarQube
-- [ ] Increase test coverage 85%+
+- [x] Increase test coverage to 85%+
 - [ ] Add localization: i18n ready with English and German support
 - [ ] Persistent data into Database
 - [ ] User authentication for secure project/task management
@@ -81,6 +83,7 @@ and more...
 
 ### 📊 Testing Strategy
 
+- Achieved 85%+ test coverage with unit, integration, and E2E tests.
 - Cross-browser testing ensures functionality across desktop and mobile.
 
 ### Project Structure
