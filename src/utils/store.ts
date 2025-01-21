@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { v4 as uuid } from 'uuid';
 import { persist, devtools } from 'zustand/middleware';
 import { Task, Project } from '@/types/tasks';
+import demoTasks from '@/constants/demoTasks';
+
+const initialProjects = demoTasks as Project[];
 
 interface State {
   projects: Project[];
@@ -18,7 +21,7 @@ export const useTaskStore = create<State>()(
   devtools(
     persist(
       (set) => ({
-        projects: [] as Project[],
+        projects: initialProjects as Project[],
         addProject: (title: string) =>
           set((state) => ({
             projects: [
