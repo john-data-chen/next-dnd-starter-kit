@@ -1,10 +1,10 @@
 {
-  "name": "next-board",
+  "name": "next-dnd-starter-kit",
   "version": "1.0.0",
   "private": true,
   "author": {
     "name": "john.chen",
-    "url": "https://github.com/john-data-chen/"
+    "url": "https://github.com/john-data-chen/next-dnd-starter-kit"
   },
   "scripts": {
     "dev": "next dev --turbo",
@@ -51,7 +51,7 @@
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
-    "@tabler/icons-react": "^3.28.1",
+    "@tabler/icons-react": "^3.29.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "kbar": "0.1.0-beta.45",
