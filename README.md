@@ -19,7 +19,7 @@ The **Enterprise-grade Next.js TypeScript template** featuring drag & drop funct
 ---
 
 ⭐ **Love this template?**
-If you like it, don't forget to [give it a star](https://github.com/john-data-chen/next-board) today!
+If you like it, don't forget to [give it a star](https://github.com/john-data-chen/next-dnd-starter-kit) today!
 Every star motivates me to deliver more high-quality templates. 🚀
 
 ---
@@ -70,6 +70,8 @@ pnpm run playwright
 - [x] Drag and drop supports
 - [x] CI / CD pipelines
 - [x] Add code quality check with Codecov and SonarQube
+- [ ] Increase test coverage 85%+
+- [ ] Add localization: i18n ready with English and German support
 - [ ] Persistent data into Database
 - [ ] User authentication for secure project/task management
 
