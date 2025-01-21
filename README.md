@@ -34,10 +34,15 @@ Every star motivates me to deliver more high-quality templates. 🚀
 ## 🛠️ Technical Stack
 
 - **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.13.0 or higher
-- **Frontend**: [Next](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Zustand](https://zustand-demo.pmnd.rs/)
+- **Frontend**: [Next](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
 - **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [husky](https://github.com/typicode/husky)
-- **Styling**: [Taliwind CSS](https://tailwindcss.com/), [Shadcn/UI](https://ui.shadcn.com/)
+- **Styling**: [Taliwind CSS](https://tailwindcss.com/)
+- **UI**: [Shadcn/UI](https://ui.shadcn.com/)
 - **Testing**: [Jest](https://jestjs.io/), [Playwright](https://playwright.dev/)
+- **Authentication**: [NextAuth](https://next-auth.js.org/)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+- **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
+- **Icons**: [Tabler Icons](https://tabler.io/icons)
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
