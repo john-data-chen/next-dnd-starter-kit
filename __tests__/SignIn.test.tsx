@@ -49,10 +49,15 @@ describe('SignInViewPage', () => {
     expect(mainContainer).toHaveAttribute('role', 'main');
     expect(mainContainer).toHaveAttribute('aria-label', 'Sign in page');
   });
+});
 
-  test('test_form_rendering', () => {
+describe('UserAuthForm', () => {
+  it('renders form elements', () => {
     render(<UserAuthForm />);
-    expect(screen.getByRole('form')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toBeInTheDocument();
+
+    expect(screen.getByTestId('auth-form')).toBeInTheDocument();
+    expect(screen.getByTestId('email-input')).toBeInTheDocument();
+    expect(screen.getByTestId('submit-button')).toBeInTheDocument();
+    // the test of submit sign in will be tested in playwright
   });
 });

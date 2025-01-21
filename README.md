@@ -1,5 +1,7 @@
 # Production-Ready Next.js TypeScript Template | Drag & Drop Support <br>
 
+[![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![CI](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml)
@@ -35,12 +37,12 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Styling**: [Taliwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/)
 - **Testing**: [Jest](https://jestjs.io/), [Playwright](https://playwright.dev/)
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
-- **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home)
+- **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
 ## 🚀 Getting Started
 
 - Press **Use this template** to create a new repository.
-- Generate Secret
+- Generate Secret in `.env.local` file.
 
 ### Commands
 
@@ -67,6 +69,7 @@ pnpm run playwright
 - [x] Enhanced accessibility with Shadcn UI
 - [x] Drag and drop supports
 - [x] CI / CD pipelines
+- [x] Add code quality check with Codecov and SonarQube
 - [ ] Persistent data into Database
 - [ ] User authentication for secure project/task management
 
@@ -84,12 +87,19 @@ and more...
 __tests__/ # Test cases
 src/
 ├── assets/ # Static files such as images
+├── app/ # Next.js App routes
+│   ├── page.tsx # Root page
+│   ├── layout.tsx # Layout component
+│   ├── not-found.tsx # 404 page
+│   ├── (auth)/login/ # Authentication routes
+│   └──(workspace)/ # Workspace routes (protected routes)
+│       └── kanban/ # Kanban routes
 ├── components/ # Reusable React components
 ├── constants/ # Application-wide constants
 ├── hooks/ # Custom React hooks
-├── styles/ # Light and dark theme configurations
+├── styles/ # Global styles
 ├── types/ # TypeScript type definitions
-└── utils/ # Utility functions
+└── utils/ # Utility functions such as Authentication and State management
 ```
 
 ### 📃 License

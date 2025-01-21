@@ -9,11 +9,6 @@ const lato = Lato({
   weight: ['100', '300', '400', '700', '900']
 });
 
-export const metadata = {
-  title: 'Next.js Template',
-  description: 'Next.js Template with Kanban Board'
-};
-
 export default async function RootLayout({
   children
 }: {

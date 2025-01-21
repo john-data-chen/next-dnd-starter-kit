@@ -12,7 +12,7 @@ interface NotFoundProps {
 export function NotFoundContent({ onBack, onHome }: NotFoundProps) {
   return (
     <div
-      className="absolute left-1/2 top-1/2 mb-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center"
+      className="flex min-h-screen flex-col items-center justify-center text-center"
       data-testid="not-found-container"
     >
       <span
@@ -33,18 +33,22 @@ export function NotFoundContent({ onBack, onHome }: NotFoundProps) {
       </p>
       <div className="mt-8 flex justify-center gap-2">
         <Button
+          type="button"
           onClick={onBack}
           variant="default"
           size="lg"
           data-testid="not-found-back-button"
+          aria-label="Navigate to previous page"
         >
           Go back
         </Button>
         <Button
+          type="button"
           onClick={onHome}
           variant="ghost"
           size="lg"
           data-testid="not-found-home-button"
+          aria-label="Navigate to home page"
         >
           Back to Home
         </Button>

@@ -30,6 +30,17 @@ jobs:
       - name: Run Tests
         run: pnpm run test
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5.1.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: john-data-chen/next-dnd-starter-kit
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
