@@ -1,4 +1,4 @@
-# Production-Ready Next.js TypeScript Template | Drag & Drop Support <br>
+# Production-Ready Next.js Template | Drag & Drop Support <br>
 
 [![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
@@ -8,7 +8,7 @@
 
 ## ✨ Why Choose This Template:
 
-The **Enterprise-grade Next.js TypeScript template** with 85%+ test coverage, featuring drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
+The **Enterprise-grade Next.js template** with 85%+ test coverage, featuring drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
 - 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
 - 💪 Professional Setup: CI/CD, Testing, and Code Quality tools pre-configured
@@ -34,9 +34,9 @@ Every star motivates me to deliver more high-quality templates. 🚀
 ## 🛠️ Technical Stack
 
 - **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.13.0 or higher
-- **Frontend**: [Next.js](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Zustand](https://zustand-demo.pmnd.rs/)
+- **Frontend**: [Next](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Zustand](https://zustand-demo.pmnd.rs/)
 - **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [husky](https://github.com/typicode/husky)
-- **Styling**: [Taliwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/)
+- **Styling**: [Taliwind CSS](https://tailwindcss.com/), [Shadcn/UI](https://ui.shadcn.com/)
 - **Testing**: [Jest](https://jestjs.io/), [Playwright](https://playwright.dev/)
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
@@ -73,9 +73,11 @@ pnpm run playwright
 - [x] CI / CD pipelines
 - [x] Add code quality check with Codecov and SonarQube
 - [x] Increase test coverage to 85%+
+- [ ] Fix responsive issues for multiple screen sizes
 - [ ] Add localization: i18n ready with English and German support
 - [ ] Persistent data into Database
 - [ ] User authentication for secure project/task management
+- [ ] Add Profile page
 
 and more...
 
