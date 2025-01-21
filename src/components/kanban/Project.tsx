@@ -25,10 +25,13 @@ interface BoardProjectProps {
 }
 
 export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
-  const tasksIds = useMemo(() => {
-    return project.tasks.map((task: { id: string }) => task.id);
-  }, [project.tasks]);
+  // Memoize task IDs for better performance
+  const tasksIds = useMemo(
+    () => project.tasks.map((task: { id: string }) => task.id),
+    [project.tasks]
+  );
 
+  // Setup drag & drop functionality
   const {
     setNodeRef,
     attributes,
@@ -47,11 +50,13 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
     }
   });
 
+  // Define drag & drop styles
   const style = {
     transition,
     transform: CSS.Translate.toString(transform)
   };
 
+  // Define card style variants based on drag state
   const variants = cva(
     'h-[75vh] max-h-[75vh] w-[350px] max-w-full bg-secondary flex flex-col flex-shrink-0 snap-center',
     {
@@ -65,26 +70,27 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
     }
   );
 
+  const dragState = isOverlay ? 'overlay' : isDragging ? 'over' : undefined;
+
   return (
     <Card
       ref={setNodeRef}
       style={style}
-      className={variants({
-        dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined
-      })}
+      className={variants({ dragging: dragState })}
     >
       <CardHeader className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold">
         <Button
-          variant={'ghost'}
+          variant="ghost"
           {...attributes}
           {...listeners}
           className="relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
         >
-          <span className="sr-only">{`Move project: ${project.title}`}</span>
+          <span className="sr-only">Move project: {project.title}</span>
           <IconDragDrop />
         </Button>
         <ProjectActions id={project.id} title={project.title} />
       </CardHeader>
+
       <CardContent className="flex flex-grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
           <NewTaskDialog projectId={project.id} />
