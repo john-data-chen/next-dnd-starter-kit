@@ -268,6 +268,7 @@ export function KanbanBoard() {
   return (
     <div data-testid="kanban-board">
       <DndContext
+        id="dnd-context"
         sensors={sensors}
         accessibility={{
           announcements
