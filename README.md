@@ -13,7 +13,7 @@ The **Enterprise-grade Next.js template** with 85%+ test coverage, featuring dra
 - 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
 - 🎯 Developer-Friendly: Clear documentation and best practices built-in
-- 🎨 Modern UX: Drag-and-drop, animations, and dark mode included
+- 🎨 Modern UX: Drag-and-drop, animations, dark mode, responsive design for mobile, tablet, and desktop
 - 💾 Persistent data: via local storage
 
 ---
@@ -78,7 +78,7 @@ pnpm run playwright
 - [x] CI / CD pipelines
 - [x] Add code quality check with Codecov and SonarQube
 - [x] Increase test coverage to 85%+
-- [ ] Fix responsive issues for multiple screen sizes
+- [ ] Add responsive support for multiple screen sizes
 - [ ] Add localization: i18n ready with English and German support
 - [ ] Persistent data into Database
 - [ ] User authentication for secure project/task management
@@ -92,6 +92,15 @@ and more...
 
 - Achieved 85%+ test coverage with unit, integration, and E2E tests.
 - Cross-browser testing ensures functionality across desktop and mobile.
+
+### 📱 Responsive Design
+
+Optimized for multiple screen sizes:
+
+- Mobile: 480px
+- Tablet: 768px
+- Desktop: 1024px
+- Large Desktop: 1280px
 
 ### Project Structure
 
