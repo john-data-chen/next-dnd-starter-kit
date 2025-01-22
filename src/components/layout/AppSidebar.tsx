@@ -18,12 +18,10 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar';
 import { navItems, companyInfo } from '@/constants/sidebar';
-import {
-  IconSquareChevronsRightFilled,
-  IconTopologyStar3
-} from '@tabler/icons-react';
+import { IconArrowRight, IconTopologyStar3 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Icons } from '@/components/layout/Icons';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -45,6 +43,7 @@ export default function AppSidebar() {
           <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarMenu>
             {navItems.map((item) => {
+              const Icon = item.icon ? Icons[item.icon] : null;
               return item?.items && item?.items?.length > 0 ? (
                 <Collapsible
                   key={item.title}
@@ -58,8 +57,9 @@ export default function AppSidebar() {
                         tooltip={item.title}
                         isActive={pathname === item.url}
                       >
+                        {Icon && <Icon />}
                         <span>{item.title}</span>
-                        <IconSquareChevronsRightFilled className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        <IconArrowRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
@@ -88,6 +88,7 @@ export default function AppSidebar() {
                     isActive={pathname === item.url}
                   >
                     <Link href={item.url}>
+                      {Icon && <Icon />}
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
