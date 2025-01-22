@@ -266,42 +266,42 @@ export function KanbanBoard() {
   };
 
   return (
-    <DndContext
-      id="dnd-context"
-      data-testid="kanban-board"
-      sensors={sensors}
-      accessibility={{
-        announcements
-      }}
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDragEnd={onDragEnd}
-    >
-      <BoardContainer>
-        <SortableContext items={projectsId}>
-          {projects?.map((project: Project, index: number) => (
-            <Fragment key={project.id}>
-              <BoardProject project={project} tasks={project.tasks} />
-              {index === projects?.length - 1 && (
-                <div className="w-[300px]">
-                  <NewProjectDialog />
-                </div>
-              )}
-            </Fragment>
-          ))}
-          {!projects.length && <NewProjectDialog />}
-        </SortableContext>
-      </BoardContainer>
-      <DragOverlay>
-        {activeProject && (
-          <BoardProject
-            isOverlay
-            project={activeProject}
-            tasks={activeProject.tasks}
-          />
-        )}
-        {activeTask && <TaskCard task={activeTask} isOverlay />}
-      </DragOverlay>
-    </DndContext>
+    <div data-testid="kanban-board">
+      <DndContext
+        sensors={sensors}
+        accessibility={{
+          announcements
+        }}
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragEnd={onDragEnd}
+      >
+        <BoardContainer>
+          <SortableContext items={projectsId}>
+            {projects?.map((project: Project, index: number) => (
+              <Fragment key={project.id}>
+                <BoardProject project={project} tasks={project.tasks} />
+                {index === projects?.length - 1 && (
+                  <div className="w-[300px]">
+                    <NewProjectDialog />
+                  </div>
+                )}
+              </Fragment>
+            ))}
+            {!projects.length && <NewProjectDialog />}
+          </SortableContext>
+        </BoardContainer>
+        <DragOverlay>
+          {activeProject && (
+            <BoardProject
+              isOverlay
+              project={activeProject}
+              tasks={activeProject.tasks}
+            />
+          )}
+          {activeTask && <TaskCard task={activeTask} isOverlay />}
+        </DragOverlay>
+      </DndContext>
+    </div>
   );
 }
