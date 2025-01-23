@@ -22,9 +22,18 @@ import NewProjectDialog from './NewProjectDialog';
 import { TaskCard } from './TaskCard';
 import { Task, Project } from '@/types/tasks';
 import DraggableData from '@/types/drag&drop';
+import demoTasks from '@/constants/demoTasks';
 
 export function KanbanBoard() {
   const projects = useTaskStore((state) => state.projects);
+  if (
+    typeof window !== 'undefined' &&
+    localStorage.getItem('tasks-store') === null
+  ) {
+    useTaskStore.setState({
+      projects: demoTasks
+    });
+  }
   const setProjects = useTaskStore((state) => state.setProjects);
   const pickedUpTaskProject = useRef<string | null>(null);
   const projectsId = useMemo(

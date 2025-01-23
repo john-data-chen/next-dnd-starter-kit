@@ -2,14 +2,6 @@ import { create } from 'zustand';
 import { v4 as uuid } from 'uuid';
 import { persist, devtools } from 'zustand/middleware';
 import { Task, Project } from '@/types/tasks';
-import demoTasks from '@/constants/demoTasks';
-
-let initialProjects = [] as Project[];
-if (typeof window !== 'undefined') {
-  if (localStorage.getItem('tasks-store') === null || undefined) {
-    initialProjects = demoTasks;
-  }
-}
 
 interface State {
   projects: Project[];
@@ -26,7 +18,7 @@ export const useTaskStore = create<State>()(
   devtools(
     persist(
       (set) => ({
-        projects: initialProjects as Project[],
+        projects: [] as Project[],
         addProject: (title: string) =>
           set((state) => ({
             projects: [
@@ -77,7 +69,7 @@ export const useTaskStore = create<State>()(
             }))
           }))
       }),
-      { name: 'tasks-store', skipHydration: true }
+      { name: 'tasks-store' }
     )
   )
 );
