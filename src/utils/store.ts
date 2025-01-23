@@ -4,12 +4,7 @@ import { persist, devtools } from 'zustand/middleware';
 import { Task, Project } from '@/types/tasks';
 import demoTasks from '@/constants/demoTasks';
 
-let initialProjects = [] as Project[];
-if (typeof window !== 'undefined') {
-  if (localStorage.getItem('tasks-store') === null || undefined) {
-    initialProjects = demoTasks;
-  }
-}
+const initialProjects = demoTasks as Project[];
 
 interface State {
   projects: Project[];
@@ -77,7 +72,7 @@ export const useTaskStore = create<State>()(
             }))
           }))
       }),
-      { name: 'tasks-store', skipHydration: true }
+      { name: 'tasks-store' }
     )
   )
 );
