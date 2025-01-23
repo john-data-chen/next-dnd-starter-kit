@@ -44,7 +44,7 @@ export function ProjectActions({ title, id }: { title: string; id: string }) {
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="!mt-0 mr-auto text-base disabled:cursor-pointer disabled:border-none disabled:opacity-100"
+          className="mt-0! mr-auto text-base disabled:cursor-pointer disabled:border-none disabled:opacity-100"
           disabled={editDisable}
           ref={inputRef}
         />

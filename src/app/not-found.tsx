@@ -16,7 +16,7 @@ export function NotFoundContent({ onBack, onHome }: NotFoundProps) {
       data-testid="not-found-container"
     >
       <span
-        className="bg-gradient-to-b from-foreground to-transparent bg-clip-text text-[10rem] font-extrabold leading-none text-transparent"
+        className="from-foreground bg-linear-to-b to-transparent bg-clip-text text-[10rem] leading-none font-extrabold text-transparent"
         data-testid="not-found-status"
       >
         404

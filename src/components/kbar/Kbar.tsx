@@ -67,17 +67,17 @@ const KBarComponent = ({ children }: { children: React.ReactNode }) => {
     <>
       <KBarPortal>
         <KBarPositioner
-          className="scrollbar-hide fixed inset-0 z-[99999] bg-black/80 !p-0 backdrop-blur-sm"
+          className="scrollbar-hide fixed inset-0 z-99999 bg-black/80 p-0! backdrop-blur-xs"
           data-testid="kbar-positioner"
         >
           <KBarAnimator
-            className="relative !mt-64 w-full max-w-[600px] !-translate-y-12 overflow-hidden rounded-lg border bg-background text-foreground shadow-lg"
+            className="bg-background text-foreground relative mt-64! w-full max-w-[600px] -translate-y-12! overflow-hidden rounded-lg border shadow-lg"
             data-testid="kbar-animator"
           >
             <div className="bg-background">
               <div className="border-x-0 border-b-2">
                 <KBarSearch
-                  className="w-full border-none bg-background px-6 py-4 text-lg outline-none focus:outline-none focus:ring-0 focus:ring-offset-0"
+                  className="bg-background w-full border-none px-6 py-4 text-lg outline-hidden focus:ring-0 focus:ring-offset-0 focus:outline-hidden"
                   data-testid="kbar-search"
                 />
               </div>
