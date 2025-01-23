@@ -5,8 +5,10 @@ import { Task, Project } from '@/types/tasks';
 import demoTasks from '@/constants/demoTasks';
 
 let initialProjects = [] as Project[];
-if (localStorage.getItem('tasks-store') === null || undefined) {
-  initialProjects = demoTasks;
+if (typeof window !== 'undefined') {
+  if (localStorage.getItem('tasks-store') === null || undefined) {
+    initialProjects = demoTasks;
+  }
 }
 
 interface State {
