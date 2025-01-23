@@ -26,14 +26,6 @@ import demoTasks from '@/constants/demoTasks';
 
 export function KanbanBoard() {
   const projects = useTaskStore((state) => state.projects);
-  if (
-    typeof window !== 'undefined' &&
-    localStorage.getItem('tasks-store') === null
-  ) {
-    useTaskStore.setState({
-      projects: demoTasks
-    });
-  }
   const setProjects = useTaskStore((state) => state.setProjects);
   const pickedUpTaskProject = useRef<string | null>(null);
   const projectsId = useMemo(
@@ -273,6 +265,17 @@ export function KanbanBoard() {
       return `Dragging ${active.data.current?.type} cancelled.`;
     }
   };
+
+  if (typeof window !== 'undefined') {
+    // Client-side code
+    if (localStorage.getItem('tasks-store') === null) {
+      useTaskStore.setState({
+        projects: demoTasks.map((project) => ({
+          ...project
+        }))
+      });
+    }
+  }
 
   return (
     <div data-testid="kanban-board">
