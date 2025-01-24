@@ -40,3 +40,6 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# mongodb by docker
+/mongodb/data/
