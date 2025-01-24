@@ -42,7 +42,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Authentication**: [NextAuth](https://next-auth.js.org/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
-- **Icons**: [Tabler Icons](https://tabler.io/icons)
+- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/))
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
@@ -56,6 +56,13 @@ Every star motivates me to deliver more high-quality templates. 🚀
 ```bash
 # Generate Secret
 echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env.local
+
+# start mongodb in docker
+cd mongodb
+docker-compose up -d
+
+# stop mongodb in docker
+docker-compose down
 
 # Install dependencies
 pnpm install
@@ -88,25 +95,22 @@ and more...
 
 ## 📖 Detailed Technical Documentation
 
+### Database
+
+- In production , I use [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
+- In local development, I use [Docker Compose](https://docs.docker.com/compose/), you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
+
 ### 📊 Testing Strategy
 
 - Achieved 85%+ test coverage with unit, integration, and E2E tests.
 - Cross-browser testing ensures functionality across desktop and mobile.
-
-### 📱 Responsive Design
-
-Optimized for multiple screen sizes:
-
-- Mobile: 480px
-- Tablet: 768px
-- Desktop: 1024px
-- Large Desktop: 1280px
 
 ### Project Structure
 
 ```
 __tests__/ # Test cases
 public/ # Static files such as images and i18n localization
+mongodb/ # MongoDB container
 src/
 ├── app/ # Next.js App routes
 │   ├── page.tsx # Root page
