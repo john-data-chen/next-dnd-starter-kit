@@ -106,8 +106,8 @@ Optimized for multiple screen sizes:
 
 ```
 __tests__/ # Test cases
+public/ # Static files such as images and i18n localization
 src/
-├── assets/ # Static files such as images
 ├── app/ # Next.js App routes
 │   ├── page.tsx # Root page
 │   ├── layout.tsx # Layout component
