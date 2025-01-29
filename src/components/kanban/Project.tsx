@@ -109,7 +109,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 export function BoardContainer({ children }: { children: React.ReactNode }) {
   const dndContext = useDndContext();
 
-  const variations = cva('px-2  pb-4 md:px-0 flex lg:justify-start', {
+  const variations = cva('px-2  pb-4 md:px-0 flex flex-col sm:flex-row', {
     variants: {
       dragging: {
         default: '',
@@ -125,7 +125,7 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
           dragging: dndContext.active ? 'active' : 'default'
         })}
       >
-        <div className="flex flex-row items-start justify-center gap-4">
+        <div className="flex flex-col items-start justify-center gap-4 sm:flex-row">
           {children}
         </div>
       </div>
