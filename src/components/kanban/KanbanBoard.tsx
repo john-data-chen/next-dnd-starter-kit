@@ -289,16 +289,15 @@ export function KanbanBoard() {
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
+        <div className="w-[200px] p-4">
+          <NewProjectDialog />
+        </div>
         <BoardContainer>
           <SortableContext items={projectsId}>
             {projects?.map((project: Project, index: number) => (
               <Fragment key={project.id}>
                 <BoardProject project={project} tasks={project.tasks} />
-                {index === projects?.length - 1 && (
-                  <div className="w-[300px]">
-                    <NewProjectDialog />
-                  </div>
-                )}
+                {index === projects?.length - 1}
               </Fragment>
             ))}
             {!projects.length && <NewProjectDialog />}

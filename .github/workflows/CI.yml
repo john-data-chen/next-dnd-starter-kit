@@ -31,7 +31,7 @@ jobs:
         run: pnpm run test
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5.1.2
+        uses: codecov/codecov-action@v5.3.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: john-data-chen/next-dnd-starter-kit
