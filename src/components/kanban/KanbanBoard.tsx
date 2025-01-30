@@ -300,7 +300,6 @@ export function KanbanBoard() {
                 {index === projects?.length - 1}
               </Fragment>
             ))}
-            {!projects.length && <NewProjectDialog />}
           </SortableContext>
         </BoardContainer>
         <DragOverlay>
