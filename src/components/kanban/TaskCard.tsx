@@ -61,12 +61,12 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       className={cardVariants({ dragging: dragState })}
       data-testid="task-card"
     >
-      <CardHeader className="flex flex-row justify-between border-b-2 border-secondary px-3 py-3">
+      <CardHeader className="border-secondary flex flex-row justify-between border-b-2 px-3 py-3">
         <Button
           variant="ghost"
           {...attributes}
           {...listeners}
-          className="-ml-2 h-auto cursor-grab p-1 text-secondary-foreground/50"
+          className="text-secondary-foreground/50 -ml-2 h-auto cursor-grab p-1"
           data-testid="task-card-drag-button"
           aria-label="Move task"
         >
@@ -75,7 +75,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         <TaskActions title={task.title} id={task.id} />
       </CardHeader>
 
-      <CardContent className="whitespace-pre-wrap px-3 pb-6 pt-3 text-left">
+      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
         <p
           className="text-sl text-muted-foreground"
           data-testid="task-card-description"
