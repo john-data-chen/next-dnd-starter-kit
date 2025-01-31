@@ -76,16 +76,16 @@ importers:
         version: 0.1.0-beta.45(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: ^14.2.23
-        version: 14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-auth:
         specifier: 5.0.0-beta.25
-        version: 5.0.0-beta.25(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 5.0.0-beta.25(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       next-themes:
         specifier: ^0.4.4
         version: 0.4.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nextjs-toploader:
         specifier: ^3.7.15
-        version: 3.7.15(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 3.7.15(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -118,8 +118,8 @@ importers:
         specifier: ^19.6.1
         version: 19.6.1(@types/node@22.12.0)(commitizen@4.3.1(@types/node@22.12.0)(typescript@5.7.3))(inquirer@8.2.5)(typescript@5.7.3)
       '@eslint/compat':
-        specifier: ^1.2.5
-        version: 1.2.5(eslint@9.19.0(jiti@2.4.2))
+        specifier: ^1.2.6
+        version: 1.2.6(eslint@9.19.0(jiti@2.4.2))
       '@eslint/eslintrc':
         specifier: ^3.2.0
         version: 3.2.0
@@ -130,8 +130,8 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@playwright/test':
-        specifier: ^1.50.0
-        version: 1.50.0
+        specifier: ^1.50.1
+        version: 1.50.1
       '@tailwindcss/postcss':
         specifier: ^4.0.1
         version: 4.0.1
@@ -530,8 +530,8 @@ packages:
     resolution: {integrity: sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
-  '@eslint/compat@1.2.5':
-    resolution: {integrity: sha512-5iuG/StT+7OfvhoBHPlmxkPA9om6aDUFgmD4+mWKAGsYt4vCe8rypneG03AuseyRHBmcCLXQtIH5S26tIoggLg==}
+  '@eslint/compat@1.2.6':
+    resolution: {integrity: sha512-k7HNCqApoDHM6XzT30zGoETj+D+uUcZUb+IVAJmar3u6bvHf7hhHJcWx09QHj4/a2qrKZMWU0E16tvkiAdv06Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^9.10.0
@@ -539,8 +539,8 @@ packages:
       eslint:
         optional: true
 
-  '@eslint/config-array@0.19.1':
-    resolution: {integrity: sha512-fo6Mtm5mWyKjA/Chy1BYTdn5mGJoDNjC7C64ug20ADsRDGrA85bN3uK3MaKbeRkRuuIEAR5N33Jr1pbm411/PA==}
+  '@eslint/config-array@0.19.2':
+    resolution: {integrity: sha512-GNKqxfHG2ySmJOBSHg7LxeUx4xpuCoFjacmlCoYWEbaPXLwvfIjixRI12xCQZeULksQb23uiA8F40w5TojpV7w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/core@0.10.0':
@@ -555,8 +555,8 @@ packages:
     resolution: {integrity: sha512-rbq9/g38qjfqFLOVPvwjIvFFdNziEC5S65jmjPw5r6A//QH+W91akh9irMwjDN8zKUTak6W9EsAv4m/7Wnw0UQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/object-schema@2.1.5':
-    resolution: {integrity: sha512-o0bhxnL89h5Bae5T318nFoFzGy+YE5i/gGkoPAgkmTVdRKTiv3p8JHevPiPaMwoloKfEiiaHlawCqaZMqRm+XQ==}
+  '@eslint/object-schema@2.1.6':
+    resolution: {integrity: sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/plugin-kit@0.2.5':
@@ -789,8 +789,8 @@ packages:
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@playwright/test@1.50.0':
-    resolution: {integrity: sha512-ZGNXbt+d65EGjBORQHuYKj+XhCewlwpnSd/EDuLPZGSiEWmgOJB5RmMCCYGy5aMfTs9wx61RivfDKi8H/hcMvw==}
+  '@playwright/test@1.50.1':
+    resolution: {integrity: sha512-Jii3aBg+CEDpgnuDxEp/h7BimHcUTDlpEtce89xEumlJ5ef2hqepZ+PWp1DDpYC/VO9fmWVI1IlEaoI5fK9FXQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -3537,13 +3537,13 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
-  playwright-core@1.50.0:
-    resolution: {integrity: sha512-CXkSSlr4JaZs2tZHI40DsZUN/NIwgaUPsyLuOAaIZp2CyF2sN5MM5NJsyB188lFSSozFxQ5fPT4qM+f0tH/6wQ==}
+  playwright-core@1.50.1:
+    resolution: {integrity: sha512-ra9fsNWayuYumt+NiM069M6OkcRb1FZSK8bgi66AtpFoWkg2+y0bJSNmkFrWhMbEBbVKC/EruAHH3g0zmtwGmQ==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.50.0:
-    resolution: {integrity: sha512-+GinGfGTrd2IfX1TA4N2gNmeIksSb+IAe589ZH+FlmpV3MYTx6+buChGIuDLQwrGNCw2lWibqV50fU510N7S+w==}
+  playwright@1.50.1:
+    resolution: {integrity: sha512-G8rwsOQJ63XG6BbKj2w5rHeavFjy5zynBA9zsJMMtBoe/Uf757oG12NXz6e6OirF7RCrTVAKFXbLmn1RbL7Qaw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -4773,13 +4773,13 @@ snapshots:
 
   '@eslint-community/regexpp@4.12.1': {}
 
-  '@eslint/compat@1.2.5(eslint@9.19.0(jiti@2.4.2))':
+  '@eslint/compat@1.2.6(eslint@9.19.0(jiti@2.4.2))':
     optionalDependencies:
       eslint: 9.19.0(jiti@2.4.2)
 
-  '@eslint/config-array@0.19.1':
+  '@eslint/config-array@0.19.2':
     dependencies:
-      '@eslint/object-schema': 2.1.5
+      '@eslint/object-schema': 2.1.6
       debug: 4.4.0
       minimatch: 3.1.2
     transitivePeerDependencies:
@@ -4805,7 +4805,7 @@ snapshots:
 
   '@eslint/js@9.19.0': {}
 
-  '@eslint/object-schema@2.1.5': {}
+  '@eslint/object-schema@2.1.6': {}
 
   '@eslint/plugin-kit@0.2.5':
     dependencies:
@@ -5103,9 +5103,9 @@ snapshots:
 
   '@pkgr/core@0.1.1': {}
 
-  '@playwright/test@1.50.0':
+  '@playwright/test@1.50.1':
     dependencies:
-      playwright: 1.50.0
+      playwright: 1.50.1
 
   '@prisma/client@6.3.0(prisma@6.3.0(typescript@5.7.3))(typescript@5.7.3)':
     optionalDependencies:
@@ -6720,7 +6720,7 @@ snapshots:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.1(eslint@9.19.0(jiti@2.4.2))
       '@eslint-community/regexpp': 4.12.1
-      '@eslint/config-array': 0.19.1
+      '@eslint/config-array': 0.19.2
       '@eslint/core': 0.10.0
       '@eslint/eslintrc': 3.2.0
       '@eslint/js': 9.19.0
@@ -8002,10 +8002,10 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-auth@5.0.0-beta.25(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
+  next-auth@5.0.0-beta.25(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
       '@auth/core': 0.37.2
-      next: 14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
   next-themes@0.4.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
@@ -8013,7 +8013,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@next/env': 14.2.23
       '@swc/helpers': 0.5.5
@@ -8034,14 +8034,14 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.23
       '@next/swc-win32-ia32-msvc': 14.2.23
       '@next/swc-win32-x64-msvc': 14.2.23
-      '@playwright/test': 1.50.0
+      '@playwright/test': 1.50.1
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs-toploader@3.7.15(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  nextjs-toploader@3.7.15(next@14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      next: 14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.23(@babel/core@7.26.7)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nprogress: 0.2.0
       prop-types: 15.8.1
       react: 18.3.1
@@ -8225,11 +8225,11 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  playwright-core@1.50.0: {}
+  playwright-core@1.50.1: {}
 
-  playwright@1.50.0:
+  playwright@1.50.1:
     dependencies:
-      playwright-core: 1.50.0
+      playwright-core: 1.50.1
     optionalDependencies:
       fsevents: 2.3.2
 
