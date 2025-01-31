@@ -33,13 +33,13 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 ## 🛠️ Technical Stack
 
-- **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.13.0 or higher
+- **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.x, I use [FNM](https://github.com/Schniz/fnm) to install
 - **Frontend**: [Next](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
 - **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [husky](https://github.com/typicode/husky)
-- **Styling**: [Taliwind CSS](https://tailwindcss.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI**: [Shadcn/UI](https://ui.shadcn.com/)
 - **Testing**: [Jest](https://jestjs.io/), [Playwright](https://playwright.dev/)
-- **Authentication**: [NextAuth](https://next-auth.js.org/)
+- **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
 - **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/))
@@ -85,8 +85,7 @@ pnpm run playwright
 - [x] CI / CD pipelines
 - [x] Add code quality check with Codecov and SonarQube
 - [x] Increase test coverage to 85%+
-- [ ] Add responsive support for multiple screen sizes
-- [ ] Add localization: i18n ready with English and German support
+- [x] Add responsive support for multiple screen sizes
 - [ ] Persistent data into Database
 - [ ] User authentication for secure project/task management
 - [ ] Add Profile page
