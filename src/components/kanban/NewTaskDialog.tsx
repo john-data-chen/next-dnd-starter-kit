@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
 import React from 'react';
+import CalendarForm from '@/components/CalendarForm';
 
 export interface NewTaskDialogProps {
   projectId: string;
@@ -92,6 +93,9 @@ export default function NewTaskDialog({
               onChange={handleTitleChange}
               data-testid="task-title-input"
             />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <CalendarForm />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Textarea
