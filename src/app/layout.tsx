@@ -1,4 +1,4 @@
-import { auth } from '@/utils/auth';
+import { auth } from '@/lib/auth';
 import Providers from '@/components/layout/Providers';
 import { Lato } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';

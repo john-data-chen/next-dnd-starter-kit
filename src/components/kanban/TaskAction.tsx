@@ -19,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useTaskStore } from '@/utils/store';
+import { useTaskStore } from '@/lib/store';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
