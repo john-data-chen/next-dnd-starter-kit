@@ -43,3 +43,6 @@ node_modules/
 
 # mongodb by docker
 /mongodb/data/
+
+# .windsurfrules
+/.windsurfrules
