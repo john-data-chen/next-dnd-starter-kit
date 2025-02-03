@@ -3,7 +3,7 @@ import { useDndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
-import { IconDragDrop } from '@tabler/icons-react';
+import { PointerIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -87,7 +87,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
           className="text-primary/50 relative -ml-2 h-auto cursor-grab p-1"
         >
           <span className="sr-only">drag project: {project.title}</span>
-          <IconDragDrop />
+          <PointerIcon />
         </Button>
         <ProjectActions id={project.id} title={project.title} />
       </CardHeader>

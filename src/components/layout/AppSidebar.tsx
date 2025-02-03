@@ -18,7 +18,7 @@ import {
   SidebarMenuSubItem
 } from '@/components/ui/sidebar';
 import { navItems, companyInfo } from '@/constants/sidebar';
-import { IconArrowRight, IconTopologyStar3 } from '@tabler/icons-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from '@/components/layout/Icons';
@@ -31,7 +31,7 @@ export default function AppSidebar() {
       <SidebarHeader>
         <div className="text-sidebar-accent-foreground flex gap-2 py-2">
           <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-            <IconTopologyStar3 className="animate-spin" />
+            <Icons.companyLogo className="animate-spin" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{companyInfo.name}</span>
@@ -59,7 +59,7 @@ export default function AppSidebar() {
                       >
                         {Icon && <Icon />}
                         <span>{item.title}</span>
-                        <IconArrowRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        <ArrowRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>

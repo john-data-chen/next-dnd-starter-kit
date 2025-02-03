@@ -1,6 +1,6 @@
-import { IconTopologyStar3, IconChecklist } from '@tabler/icons-react';
+import { StarIcon, CheckCircle2Icon } from 'lucide-react';
 
 export const Icons = {
-  companyLogo: IconTopologyStar3,
-  kanban: IconChecklist
+  companyLogo: StarIcon,
+  kanban: CheckCircle2Icon
 };

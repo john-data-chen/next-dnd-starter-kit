@@ -4,7 +4,7 @@ import { Task } from '@/types/tasks';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
-import { IconDragDrop } from '@tabler/icons-react';
+import { PointerIcon } from 'lucide-react';
 import { TaskActions } from './TaskAction';
 
 interface TaskCardProps {
@@ -70,7 +70,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           data-testid="task-card-drag-button"
           aria-label="Move task"
         >
-          <IconDragDrop />
+          <PointerIcon />
         </Button>
         <TaskActions title={task.title} id={task.id} />
       </CardHeader>
