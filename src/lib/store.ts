@@ -9,7 +9,12 @@ interface State {
   updateProject: (id: string, newName: string) => void;
   removeProject: (id: string) => void;
   setProjects: (projects: Project[]) => void;
-  addTask: (projectId: string, title: string, description?: string) => void;
+  addTask: (
+    projectId: string,
+    title: string,
+    description: string,
+    dueDate: Date | null
+  ) => void;
   updateTask: (taskId: string, title: string) => void;
   removeTask: (taskId: string) => void;
 }
@@ -37,7 +42,12 @@ export const useTaskStore = create<State>()(
             projects: state.projects.filter((project) => project.id !== id)
           })),
         setProjects: (projects: Project[]) => set({ projects }),
-        addTask: (projectId: string, title: string, description?: string) =>
+        addTask: (
+          projectId: string,
+          title: string,
+          description: string,
+          dueDate: Date | null
+        ) =>
           set((state) => ({
             projects: state.projects.map((project) => {
               if (project.id === projectId) {
@@ -45,7 +55,7 @@ export const useTaskStore = create<State>()(
                   ...project,
                   tasks: [
                     ...project.tasks,
-                    { projectId, id: uuid(), title, description }
+                    { projectId, id: uuid(), title, description, dueDate }
                   ]
                 };
               }
