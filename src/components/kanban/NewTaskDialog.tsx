@@ -124,7 +124,9 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                           {field.value ? (
                             format(field.value, 'PPP')
                           ) : (
-                            <span>Pick a date</span>
+                            <span data-testid="task-date-picker-trigger">
+                              Pick a date
+                            </span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -137,6 +139,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                         onSelect={field.onChange}
                         fromDate={new Date()}
                         initialFocus
+                        data-testid="calendar"
                       />
                     </PopoverContent>
                   </Popover>

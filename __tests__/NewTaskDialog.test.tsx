@@ -16,15 +16,13 @@ describe('NewTaskDialog', () => {
 
   it('opens dialog when clicking the add button', () => {
     render(<NewTaskDialog projectId={projectId} />);
-
-    const button = screen.getByTestId('new-task-trigger');
-    fireEvent.click(button);
+    fireEvent.click(screen.getByTestId('new-task-trigger'));
 
     expect(screen.getByTestId('new-task-dialog')).toBeInTheDocument();
     expect(screen.getByTestId('task-title-input')).toBeInTheDocument();
     expect(screen.getByTestId('task-description-input')).toBeInTheDocument();
-    expect(screen.getByTestId('date-picker-trigger')).toBeInTheDocument();
-    fireEvent.click(screen.getByTestId('date-picker-trigger'));
+    expect(screen.getByTestId('task-date-picker-trigger')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('task-date-picker-trigger'));
     expect(screen.getByTestId('calendar')).toBeInTheDocument();
   });
 });
