@@ -90,7 +90,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             className="text-sl text-muted-foreground"
             data-testid="task-card-description"
           >
-            Due Date: {task.dueDate.toISOString()}
+            Due Date: {task.dueDate.toString()}
           </p>
         </CardContent>
       )}
