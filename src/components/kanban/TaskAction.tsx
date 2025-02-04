@@ -1,7 +1,5 @@
 'use client';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import * as React from 'react';
-
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -22,36 +20,96 @@ import {
 import { useTaskStore } from '@/lib/store';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { cn } from '@/lib/utils';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
 
 export interface TaskActionsProps {
-  title: string;
   id: string;
-  onUpdate?: (id: string, newTitle: string) => void;
+  title: string;
+  description?: string;
+  dueDate?: Date | null;
+  onUpdate?: (
+    id: string,
+    newTitle: string,
+    newDescription?: string,
+    newDueDate?: Date | null
+  ) => void;
   onDelete?: (id: string) => void;
 }
 
+export const TaskFormSchema = z.object({
+  title: z.string().min(1, { message: 'Title is required' }),
+  description: z.string().optional(),
+  dueDate: z.date().optional()
+});
+
 export function TaskActions({
-  title,
   id,
-  onUpdate,
+  title,
+  description,
+  dueDate,
   onDelete
 }: TaskActionsProps) {
-  const [name, setName] = React.useState(title);
   const updateTask = useTaskStore((state) => state.updateTask);
   const removeTask = useTaskStore((state) => state.removeTask);
-  const [editDisable, setIsEditDisable] = React.useState(true);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [editEnable, setEditEnable] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const handleUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim()) return;
+  const form = useForm<z.infer<typeof TaskFormSchema>>({
+    resolver: zodResolver(TaskFormSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      dueDate: undefined
+    }
+  });
 
-    setIsEditDisable(true);
-    updateTask(id, name);
-    onUpdate?.(id, name);
-    toast(`Task ${title} updated to ${name}`);
-  };
+  async function onSubmit(values: z.infer<typeof TaskFormSchema>) {
+    try {
+      setIsSubmitting(true);
+      await updateTask(
+        id,
+        values.title,
+        values.description ?? '',
+        values.dueDate
+      );
+      toast.success(`New Task: ${values.title}`);
+      form.reset();
+      setEditEnable(false);
+    } catch (error) {
+      toast.error(`Failed to create task: ${error}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   const handleDelete = () => {
     setTimeout(() => (document.body.style.pointerEvents = ''), 100);
@@ -63,16 +121,120 @@ export function TaskActions({
 
   return (
     <>
-      <form onSubmit={handleUpdate} data-testid="task-edit-form">
-        <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="mt-0! mr-auto text-base disabled:cursor-pointer disabled:border-none disabled:opacity-100"
-          disabled={editDisable}
-          ref={inputRef}
-          data-testid="task-title-input"
-        />
-      </form>
+      <Dialog open={editEnable} onOpenChange={setEditEnable}>
+        <DialogContent className="sm:max-w-md" data-testid="edit-task-dialog">
+          <DialogHeader>
+            <DialogTitle>Edit Task</DialogTitle>
+            <DialogDescription>
+              Make changes to your task here. Click submit when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8"
+              data-testid="edit-task-form"
+            >
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Task Title</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="title"
+                        placeholder={title}
+                        className="col-span-4"
+                        autoFocus
+                        data-testid="task-title-input"
+                        aria-label="Task title"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage data-testid="task-title-error-message" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Task Description</FormLabel>
+                    <Textarea
+                      id="description"
+                      placeholder={
+                        description?.trim()
+                          ? description
+                          : 'Enter a description...'
+                      }
+                      className="col-span-4"
+                      data-testid="task-description-input"
+                      aria-label="Task description"
+                      {...field}
+                    />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dueDate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Due Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={'outline'}
+                            aria-label="Select due date"
+                            className={cn(
+                              'w-auto pl-3 text-left font-normal',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, 'PPP')
+                            ) : (
+                              <span data-testid="task-date-picker-trigger">
+                                {dueDate ? format(dueDate, 'PPP') : 'Select'}
+                              </span>
+                            )}
+                            <CalendarIcon
+                              className="ml-auto h-4 w-4 opacity-50"
+                              aria-hidden="true"
+                            />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          fromDate={new Date()}
+                          initialFocus
+                          data-testid="task-date-picker-calendar"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                data-testid="submit-task-button"
+              >
+                {isSubmitting ? 'Creating...' : 'Submit'}
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
@@ -86,15 +248,12 @@ export function TaskActions({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
-            data-testid="rename-task-button"
+            data-testid="edit-task-button"
             onSelect={() => {
-              setIsEditDisable(false);
-              setTimeout(() => {
-                inputRef.current?.focus();
-              }, 500);
+              setEditEnable(true);
             }}
           >
-            Rename
+            Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
 

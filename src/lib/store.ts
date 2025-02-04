@@ -15,7 +15,12 @@ interface State {
     description: string,
     dueDate: Date | null
   ) => void;
-  updateTask: (taskId: string, title: string) => void;
+  updateTask: (
+    taskId: string,
+    title: string,
+    description?: string,
+    dueDate?: Date
+  ) => void;
   removeTask: (taskId: string) => void;
 }
 
@@ -62,12 +67,19 @@ export const useTaskStore = create<State>()(
               return project;
             })
           })),
-        updateTask: (taskId: string, title: string) =>
+        updateTask: (
+          taskId: string,
+          title: string,
+          description?: string,
+          dueDate?: Date | null
+        ) =>
           set((state) => ({
             projects: state.projects.map((project) => ({
               ...project,
               tasks: project.tasks.map((task) =>
-                task.id === taskId ? { ...task, title } : task
+                task.id === taskId
+                  ? { ...task, title, description, dueDate }
+                  : task
               )
             }))
           })),

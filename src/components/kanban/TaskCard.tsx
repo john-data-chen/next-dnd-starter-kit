@@ -72,7 +72,17 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         >
           <PointerIcon />
         </Button>
-        <TaskActions title={task.title} id={task.id} />
+        {task.title && (
+          <h3 className="text-lg leading-none font-medium tracking-tight">
+            {task.title}
+          </h3>
+        )}
+        <TaskActions
+          id={task.id}
+          title={task.title}
+          description={task.description}
+          dueDate={task.dueDate}
+        />
       </CardHeader>
       {task.description && (
         <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
