@@ -23,6 +23,7 @@ describe('NewTaskDialog', () => {
     expect(screen.getByTestId('task-description-input')).toBeInTheDocument();
     expect(screen.getByTestId('task-date-picker-trigger')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('task-date-picker-trigger'));
-    expect(screen.getByTestId('calendar')).toBeInTheDocument();
+    expect(screen.getByTestId('task-date-picker-calendar')).toBeInTheDocument();
+    expect(screen.getByTestId('submit-task-button')).toBeInTheDocument();
   });
 });
