@@ -74,15 +74,26 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         </Button>
         <TaskActions title={task.title} id={task.id} />
       </CardHeader>
-
-      <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-        <p
-          className="text-sl text-muted-foreground"
-          data-testid="task-card-description"
-        >
-          {task.description}
-        </p>
-      </CardContent>
+      {task.description && (
+        <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
+          <p
+            className="text-sl text-muted-foreground"
+            data-testid="task-card-description"
+          >
+            {task.description}
+          </p>
+        </CardContent>
+      )}
+      {task.dueDate && (
+        <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
+          <p
+            className="text-sl text-muted-foreground"
+            data-testid="task-card-description"
+          >
+            Due Date: {task.dueDate.toISOString()}
+          </p>
+        </CardContent>
+      )}
     </Card>
   );
 }
