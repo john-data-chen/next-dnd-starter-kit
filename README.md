@@ -42,20 +42,20 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
-- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/)
+- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/), [Prisma](https://www.prisma.io/)
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
 ## 🚀 Getting Started
 
 - Press **Use this template** to create a new repository.
-- Generate Secret in `.env.local` file.
+- Generate Secret in `.env` file.
 
 ### Commands
 
 ```bash
 # Generate Secret
-echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env.local
+echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env
 
 # start mongodb in docker
 cd mongodb
