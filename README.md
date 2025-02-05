@@ -42,7 +42,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
-- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/))
+- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/)
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
@@ -84,11 +84,11 @@ pnpm run playwright
 - [x] Drag and drop supports
 - [x] CI / CD pipelines
 - [x] Add code quality check with Codecov and SonarQube
-- [x] Increase test coverage to 85%+
 - [x] Add responsive support for multiple screen sizes
-- [ ] Persistent data into Database
+- [x] Add edit task dialog
+- [x] Make Database Schema
 - [ ] User authentication for secure project/task management
-- [ ] Add Profile page
+- [ ] Add assigner and owner in task dialog
 
 and more...
 
