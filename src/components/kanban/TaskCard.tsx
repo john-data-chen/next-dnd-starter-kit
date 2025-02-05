@@ -6,6 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { PointerIcon } from 'lucide-react';
 import { TaskActions } from './TaskAction';
+import { format } from 'date-fns';
 
 interface TaskCardProps {
   task: Task;
@@ -100,7 +101,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             className="text-sl text-muted-foreground"
             data-testid="task-card-description"
           >
-            Due Date: {task.dueDate.toString()}
+            Due Date: {format(task.dueDate, 'yyyy-MM-dd')}
           </p>
         </CardContent>
       )}
