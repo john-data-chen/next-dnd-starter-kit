@@ -86,9 +86,9 @@ export function TaskActions({
   const form = useForm<z.infer<typeof TaskFormSchema>>({
     resolver: zodResolver(TaskFormSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      dueDate: undefined
+      title: title,
+      description: description ?? '',
+      dueDate: dueDate ?? undefined
     }
   });
 
@@ -101,11 +101,11 @@ export function TaskActions({
         values.description ?? '',
         values.dueDate
       );
-      toast.success(`New Task: ${values.title}`);
+      toast.success(`Task is updated: ${values.title}`);
       form.reset();
       setEditEnable(false);
     } catch (error) {
-      toast.error(`Failed to create task: ${error}`);
+      toast.error(`Failed to update task: ${error}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -145,7 +145,6 @@ export function TaskActions({
                     <FormControl>
                       <Input
                         id="title"
-                        placeholder={title}
                         className="col-span-4"
                         autoFocus
                         data-testid="task-title-input"
@@ -165,11 +164,6 @@ export function TaskActions({
                     <FormLabel>Task Description</FormLabel>
                     <Textarea
                       id="description"
-                      placeholder={
-                        description?.trim()
-                          ? description
-                          : 'Enter a description...'
-                      }
                       className="col-span-4"
                       data-testid="task-description-input"
                       aria-label="Task description"
@@ -196,10 +190,12 @@ export function TaskActions({
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PPP')
+                              format(field.value, 'yyyy-MM-dd')
                             ) : (
                               <span data-testid="task-date-picker-trigger">
-                                {dueDate ? format(dueDate, 'PPP') : 'Select'}
+                                {dueDate
+                                  ? format(dueDate, 'yyyy-MM-dd')
+                                  : 'Select'}
                               </span>
                             )}
                             <CalendarIcon

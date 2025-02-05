@@ -153,7 +153,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, 'PPP')
+                            format(field.value, 'yyyy-MM-dd')
                           ) : (
                             <span data-testid="task-date-picker-trigger">
                               Pick a date
