@@ -1,7 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import NewProjectDialog from '@/components/kanban/NewProjectDialog';
 import { jest } from '@jest/globals';
+import '@testing-library/jest-dom';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 describe('NewProjectDialog', () => {
   it('renders the add project button', () => {

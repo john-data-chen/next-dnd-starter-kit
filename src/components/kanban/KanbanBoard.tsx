@@ -1,28 +1,28 @@
 'use client';
-import { Fragment, useMemo, useRef, useState } from 'react';
+import demoTasks from '@/constants/demoTasks';
 import { useTaskStore } from '@/lib/store';
+import DraggableData from '@/types/drag&drop';
+import { Project, Task } from '@/types/tasks';
 import {
+  Active,
   Announcements,
+  DataRef,
   DndContext,
   DragOverlay,
   MouseSensor,
+  Over,
   TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
   type DragOverEvent,
-  type DragStartEvent,
-  Active,
-  DataRef,
-  Over
+  type DragStartEvent
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
-import { BoardProject, BoardContainer } from './Project';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import NewProjectDialog from './NewProjectDialog';
+import { BoardContainer, BoardProject } from './Project';
 import { TaskCard } from './TaskCard';
-import { Task, Project } from '@/types/tasks';
-import DraggableData from '@/types/drag&drop';
-import demoTasks from '@/constants/demoTasks';
 
 export function KanbanBoard() {
   const projects = useTaskStore((state) => state.projects);

@@ -9,8 +9,8 @@ import {
 } from 'kbar';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import RenderResults from './RenderResult';
 import useThemeSwitching from '../../hooks/useThemeSwitching';
+import RenderResults from './RenderResult';
 
 export default function KBar({ children }: { children: React.ReactNode }) {
   const router = useRouter();

@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { KanbanBoard } from '@/components/kanban/KanbanBoard';
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 
 describe('KanbanBoard', () => {
   it('renders the kanban board container', () => {

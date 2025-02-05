@@ -1,8 +1,8 @@
 'use client';
 
+import { ROUTES } from '@/constants/routes';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import { ROUTES } from '@/constants/routes';
 
 type BreadcrumbItem = {
   title: string;

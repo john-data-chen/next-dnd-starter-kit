@@ -1,6 +1,6 @@
+import { ROUTES } from '@/constants/routes';
 import NextAuth from 'next-auth';
 import authConfig from './auth.config';
-import { ROUTES } from '@/constants/routes';
 
 const { auth } = NextAuth(authConfig);
 

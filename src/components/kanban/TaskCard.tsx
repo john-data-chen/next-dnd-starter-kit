@@ -4,9 +4,9 @@ import { Task } from '@/types/tasks';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
+import { format } from 'date-fns';
 import { PointerIcon } from 'lucide-react';
 import { TaskActions } from './TaskAction';
-import { format } from 'date-fns';
 
 interface TaskCardProps {
   task: Task;

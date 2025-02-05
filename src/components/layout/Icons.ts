@@ -1,4 +1,4 @@
-import { StarIcon, CheckCircle2Icon } from 'lucide-react';
+import { CheckCircle2Icon, StarIcon } from 'lucide-react';
 
 export const Icons = {
   companyLogo: StarIcon,

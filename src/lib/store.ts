@@ -1,7 +1,7 @@
-import { create } from 'zustand';
+import { Project, Task } from '@/types/tasks';
 import { v4 as uuid } from 'uuid';
-import { persist, devtools } from 'zustand/middleware';
-import { Task, Project } from '@/types/tasks';
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
 
 interface State {
   projects: Project[];

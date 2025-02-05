@@ -1,17 +1,16 @@
-import { Task } from '@/types/tasks';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Project, Task } from '@/types/tasks';
 import { useDndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { PointerIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import NewTaskDialog from './NewTaskDialog';
 import { ProjectActions } from './ProjectAction';
 import { TaskCard } from './TaskCard';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import NewTaskDialog from './NewTaskDialog';
-import { Project } from '@/types/tasks';
 
 export interface ProjectDragData {
   type: 'Project';

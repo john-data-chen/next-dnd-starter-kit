@@ -10,8 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { signOut, useSession } from 'next-auth/react';
 import { ROUTES } from '@/constants/routes';
+import { signOut, useSession } from 'next-auth/react';
 
 export function UserNav() {
   const { data: session } = useSession();

@@ -1,5 +1,5 @@
-import UserAuthForm from './UserAuthForm';
 import { Presentation } from 'lucide-react';
+import UserAuthForm from './UserAuthForm';
 
 export default function SignInViewPage() {
   return (

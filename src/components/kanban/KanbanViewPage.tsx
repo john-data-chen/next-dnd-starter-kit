@@ -1,5 +1,5 @@
-import { memo, Suspense } from 'react';
 import PageContainer from '@/components/layout/PageContainer';
+import { memo, Suspense } from 'react';
 import { KanbanBoard } from './KanbanBoard';
 
 const MemoizedKanbanBoard = memo(KanbanBoard);

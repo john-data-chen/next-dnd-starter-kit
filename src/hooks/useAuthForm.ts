@@ -1,12 +1,12 @@
-import { useForm } from 'react-hook-form';
+import { defaultEmail } from '@/constants/auth';
+import { ROUTES } from '@/constants/routes';
+import { formSchema, UserFormValue } from '@/types/authUserForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { formSchema, UserFormValue } from '@/types/authUserForm';
-import { defaultEmail } from '@/constants/auth';
-import { ROUTES } from '@/constants/routes';
 
 export default function useAuthForm() {
   const searchParams = useSearchParams();

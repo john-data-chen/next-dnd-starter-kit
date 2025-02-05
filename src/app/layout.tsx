@@ -1,8 +1,8 @@
-import { auth } from '@/lib/auth';
 import Providers from '@/components/layout/Providers';
+import { auth } from '@/lib/auth';
+import '@/styles/globals.css';
 import { Lato } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
-import '@/styles/globals.css';
 
 const lato = Lato({
   subsets: ['latin'],

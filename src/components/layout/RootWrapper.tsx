@@ -1,8 +1,8 @@
 'use client';
 
 import KBar from '@/components/kbar/Kbar';
-import Header from '@/components/layout/Header';
 import AppSidebar from '@/components/layout/AppSidebar';
+import Header from '@/components/layout/Header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import React from 'react';

@@ -1,6 +1,6 @@
+import { ROUTES } from '@/constants/routes';
 import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
-import { ROUTES } from '@/constants/routes';
 
 const authConfig = {
   providers: [

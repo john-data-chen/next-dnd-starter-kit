@@ -1,6 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import NewTaskDialog from '@/components/kanban/NewTaskDialog';
+import '@testing-library/jest-dom';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 describe('NewTaskDialog', () => {
   const projectId = 'test-project-id';

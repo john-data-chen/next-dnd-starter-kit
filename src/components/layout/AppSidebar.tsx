@@ -1,4 +1,5 @@
 'use client';
+import { Icons } from '@/components/layout/Icons';
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,11 +18,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@/components/ui/sidebar';
-import { navItems, companyInfo } from '@/constants/sidebar';
+import { companyInfo, navItems } from '@/constants/sidebar';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Icons } from '@/components/layout/Icons';
 
 export default function AppSidebar() {
   const pathname = usePathname();

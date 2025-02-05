@@ -1,5 +1,5 @@
-import { Metadata } from 'next';
 import SignInViewPage from '@/components/auth/SignInView';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Next Board',

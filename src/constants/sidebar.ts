@@ -1,6 +1,6 @@
+import { Icons } from '@/components/layout/Icons';
 import { NavItem } from '@/types/sidebar';
 import { ROUTES } from './routes';
-import { Icons } from '@/components/layout/Icons';
 
 export const companyInfo = {
   name: 'Next.js Template',

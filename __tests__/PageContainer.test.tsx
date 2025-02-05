@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import PageContainer from '@/components/layout/PageContainer';
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 
 describe('PageContainer', () => {
   it('renders the container and content area', () => {

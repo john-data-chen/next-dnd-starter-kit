@@ -19,8 +19,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useTaskStore } from '@/lib/store';
 import { Input } from '@/components/ui/input';
+import { useTaskStore } from '@/lib/store';
 import { toast } from 'sonner';
 
 export function ProjectActions({ title, id }: { title: string; id: string }) {
