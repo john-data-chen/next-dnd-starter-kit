@@ -1,4 +1,5 @@
 'use client';
+
 import { Icons } from '@/components/layout/Icons';
 import {
   Collapsible,

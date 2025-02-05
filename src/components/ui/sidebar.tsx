@@ -15,7 +15,7 @@ import {
 import { cn } from '@/lib/utils';
 import { ViewVerticalIcon } from '@radix-ui/react-icons';
 import { Slot } from '@radix-ui/react-slot';
-import { VariantProps, cva } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';

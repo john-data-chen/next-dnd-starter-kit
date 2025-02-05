@@ -1,4 +1,5 @@
 'use client';
+
 import demoTasks from '@/constants/demoTasks';
 import { useTaskStore } from '@/lib/store';
 import DraggableData from '@/types/drag&drop';
@@ -8,17 +9,17 @@ import {
   Announcements,
   DataRef,
   DndContext,
+  type DragEndEvent,
+  type DragOverEvent,
   DragOverlay,
+  type DragStartEvent,
   MouseSensor,
   Over,
   TouchSensor,
   useSensor,
-  useSensors,
-  type DragEndEvent,
-  type DragOverEvent,
-  type DragStartEvent
+  useSensors
 } from '@dnd-kit/core';
-import { SortableContext, arrayMove } from '@dnd-kit/sortable';
+import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { Fragment, useMemo, useRef, useState } from 'react';
 import NewProjectDialog from './NewProjectDialog';
 import { BoardContainer, BoardProject } from './Project';

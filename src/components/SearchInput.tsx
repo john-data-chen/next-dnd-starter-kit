@@ -1,4 +1,5 @@
 'use client';
+
 import { useKBar } from 'kbar';
 import { SearchCodeIcon } from 'lucide-react';
 import { Button } from './ui/button';

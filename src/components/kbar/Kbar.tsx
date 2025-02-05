@@ -1,4 +1,5 @@
 'use client';
+
 import { navItems } from '@/constants/sidebar';
 import {
   KBarAnimator,

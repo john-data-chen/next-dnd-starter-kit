@@ -1,6 +1,4 @@
 'use client';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import * as React from 'react';
 
 import {
   AlertDialog,
@@ -21,6 +19,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { useTaskStore } from '@/lib/store';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import * as React from 'react';
 import { toast } from 'sonner';
 
 export function ProjectActions({ title, id }: { title: string; id: string }) {
