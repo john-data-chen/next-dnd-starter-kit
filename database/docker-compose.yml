@@ -5,7 +5,8 @@ services:
     ports:
       - '27017:27017'
     volumes:
-      - ./data:/data/db
+      - ./mongodb:/data/db
+      - ./mongo-init/:/docker-entrypoint-initdb.d/:ro
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: 123456

@@ -41,8 +41,8 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 
-# mongodb by docker
-/mongodb/data/
+# database by docker
+/database/mongodb/
 
 # .windsurfrules
 /.windsurfrules
