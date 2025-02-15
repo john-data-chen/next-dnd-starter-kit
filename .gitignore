@@ -44,5 +44,5 @@ node_modules/
 # database by docker
 /database/mongodb/
 
-# .windsurfrules
-/.windsurfrules
+# ai rules
+ai-rules.txt
