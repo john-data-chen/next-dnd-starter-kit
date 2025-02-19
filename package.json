@@ -68,7 +68,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.2",
     "sonner": "^1.7.4",
-    "uuid": "^11.0.5",
+    "uuid": "^11.1.0",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },
@@ -101,7 +101,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.4.3",
-    "postcss": "^8.5.2",
+    "postcss": "^8.5.3",
     "prettier": "^3.5.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.4.0",
