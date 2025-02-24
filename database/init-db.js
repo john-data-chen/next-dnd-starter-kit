@@ -1,47 +1,51 @@
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 
 // 使用 ES modules 時正確解析 .env 文件路徑
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-const prisma = new PrismaClient();
+// 定義用戶 Schema
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['ADMIN', 'USER'], default: 'USER' },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+const User = mongoose.model('User', userSchema);
 
 async function main() {
-  console.log('DATABASE_URL:', process.env.DATABASE_URL);
-
-  if (!process.env.DATABASE_URL) {
-    console.error('找不到 DATABASE_URL 環境變數！');
-    process.exit(1);
-  }
-
   try {
-    const newUser = await prisma.user.create({
-      data: {
-        email: 'admin@example.com',
-        name: 'admin',
-        password: await bcrypt.hash('123456', 10),
-        role: 'ADMIN'
-      }
+    // 連接到 MongoDB
+    await mongoose.connect(process.env.DATABASE_URL);
+    console.log('成功連接到 MongoDB');
+
+    // 創建管理員用戶
+    const adminUser = await User.create({
+      email: 'admin@example.com',
+      name: 'admin',
+      password: await bcrypt.hash('123456', 10),
+      role: 'ADMIN'
     });
-    console.log('Created admin user:', newUser);
+
+    console.log('創建管理員用戶成功:', adminUser);
   } catch (error) {
-    if (error.code === 'P2002') {
+    if (error.code === 11000) {
       console.log('用戶已存在');
     } else {
-      throw error;
+      console.error('錯誤:', error);
     }
+  } finally {
+    await mongoose.disconnect();
+    console.log('已斷開 MongoDB 連接');
   }
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch(console.error);
+
