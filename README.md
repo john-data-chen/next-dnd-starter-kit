@@ -42,7 +42,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
-- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/), [Prisma](https://www.prisma.io/)
+- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/), [Mongoose](https://github.com/Automattic/mongoose)
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
