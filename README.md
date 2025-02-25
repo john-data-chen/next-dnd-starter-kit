@@ -86,9 +86,10 @@ pnpm run playwright
 - [x] Add code quality check with Codecov and SonarQube
 - [x] Add responsive support for multiple screen sizes
 - [x] Add edit task dialog
-- [x] Make Database Schema
-- [ ] User authentication for secure project/task management
+- [x] Make Database Schema and initialization script
+- [ ] Persistent data into Database
 - [ ] Add assigner and owner in task dialog
+- [ ] User authentication for secure project/task management
 
 and more...
 
@@ -97,7 +98,10 @@ and more...
 ### Database
 
 - In production , I use [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
-- In local development, I use [Docker Compose](https://docs.docker.com/compose/), you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
+- In local development, I use [Docker Compose](https://docs.docker.com/compose/) in folder **database**, you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
+- Execute `docker-compose up -d` to start MongoDB in Docker.
+- Execute `docker-compose down` to stop MongoDB in Docker.
+- Execute `node src/database/init.js` to initialize MongoDB.
 
 ### 📊 Testing Strategy
 
@@ -109,7 +113,7 @@ and more...
 ```
 __tests__/ # Test cases
 public/ # Static files such as images and i18n localization
-mongodb/ # MongoDB container
+database/ # MongoDB docker-compose and initialization
 src/
 ├── app/ # Next.js App routes
 │   ├── page.tsx # Root page
