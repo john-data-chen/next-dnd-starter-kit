@@ -1,18 +1,11 @@
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { connectToDatabase, disconnectFromDatabase } from '@/lib/db/connect';
 import { Project } from '../src/models/project.model';
 import { Task } from '../src/models/task.model';
 import { User } from '../src/models/user.model';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
 async function main() {
   try {
-    await mongoose.connect(process.env.DATABASE_URL!);
-    console.log('mongodb connected');
+    await connectToDatabase();
 
     // Create admin user
     const adminUser = await User.create({
@@ -51,8 +44,7 @@ async function main() {
       console.error('Error:', error);
     }
   } finally {
-    await mongoose.disconnect();
-    console.log('mongodb disconnected');
+    await disconnectFromDatabase();
   }
 }
 
