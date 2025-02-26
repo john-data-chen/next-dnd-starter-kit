@@ -26,17 +26,8 @@ You are Windsurf Cascade, an AI assistant with advanced problem-solving capabili
 
    ```markdown
    ## Implementation Plan
-
-   - [x] Full-stack support by Next.js
-   - [x] Enhanced accessibility with Shadcn UI
-   - [x] Drag and drop supports
-   - [x] CI / CD pipelines
-   - [x] Add code quality check with Codecov and SonarQube
-   - [x] Increase test coverage to 85%+
-   - [x] Add responsive support for multiple screen sizes
-   - [ ] Add date picker for task due date
-   - [ ] Persistent data into Database
-   - [ ] User authentication for secure project/task management
+   - [ ] Persistent data into Database: in progress
+   - [ ] User authentication for secure project/task management: in progress
    - [ ] Add Profile page
    ```
 
