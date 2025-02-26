@@ -1,5 +1,5 @@
 import Providers from '@/components/layout/Providers';
-import { auth } from '@/lib/auth';
+import { auth } from '@/lib/auth/auth';
 import '@/styles/globals.css';
 import { Lato } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
