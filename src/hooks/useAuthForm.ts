@@ -24,7 +24,7 @@ export default function useAuthForm() {
       startTransition(() => {
         signIn('credentials', {
           email: data.email,
-          redirect: true,
+          redirect: false,
           callbackUrl: ROUTES.KANBAN
         })
           .then((result) => {
@@ -32,15 +32,26 @@ export default function useAuthForm() {
 
             if (result?.error) {
               console.error('Sign in error: ', result.error);
-              toast.error('Failed to sign in. Please try again.');
+              toast.error('Failed to sign in. Reloading in 5 seconds...');
+              setTimeout(() => {
+                window.location.href = ROUTES.AUTH.LOGIN;
+              }, 5000);
+
               return;
             }
 
+            // 登入成功直接重定向
+            window.location.href = ROUTES.KANBAN;
             toast.success('Signed In Successfully!');
           })
           .catch((error) => {
             console.error('Unexpected error:', error);
             toast.error('Failed to sign in. Please try again.');
+
+            // 錯誤時也延遲重定向
+            setTimeout(() => {
+              window.location.href = ROUTES.AUTH.LOGIN;
+            }, 5000);
           });
       });
     } catch (error) {
