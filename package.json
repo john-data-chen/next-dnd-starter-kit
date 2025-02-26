@@ -92,7 +92,6 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/uuid": "^10.0.0",
-    "bcryptjs": "^3.0.2",
     "commitizen": "^4.3.1",
     "dotenv": "^16.4.7",
     "eslint": "^9.21.0",
@@ -110,7 +109,16 @@
     "tailwindcss": "^4.0.9",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.25.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild"
+    ],
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
