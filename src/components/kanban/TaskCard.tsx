@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Task } from '@/types/tasks';
+import { Task } from '@/types/dbInterface';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
@@ -29,7 +29,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     transition,
     isDragging
   } = useSortable({
-    id: task.id,
+    id: task._id,
     data: {
       type: 'Task',
       task
@@ -79,7 +79,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           </h3>
         )}
         <TaskActions
-          id={task.id}
+          id={task._id}
           title={task.title}
           description={task.description}
           dueDate={task.dueDate}

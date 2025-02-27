@@ -29,7 +29,7 @@ export function KanbanBoard() {
   const setProjects = useTaskStore((state) => state.setProjects);
   const pickedUpTaskProject = useRef<string | null>(null);
   const projectsId = useMemo(
-    () => projects.map((project: Project) => project.id),
+    () => projects.map((project: Project) => project._id),
     [projects]
   );
 
@@ -55,13 +55,13 @@ export function KanbanBoard() {
 
   function getDraggingTaskData(taskId: string, projectId: string) {
     const project = projects.find(
-      (project: Project) => project.id === projectId
+      (project: Project) => project._id === projectId
     );
     const tasksInProject = project!.tasks.filter(
-      (task: { projectId: string }) => task.projectId === projectId
+      (task: Task) => task.projectId === projectId
     );
     const taskPosition = tasksInProject.findIndex(
-      (task: { id: string }) => task.id === taskId
+      (task: { _id: string }) => task._id === taskId
     );
     return {
       tasksInProject,
@@ -179,10 +179,10 @@ export function KanbanBoard() {
           startProjectIdx + 1
         } of ${projectsId.length}`;
       } else if (active.data.current?.type === 'Task') {
-        pickedUpTaskProject.current = active.data.current.task.projectId;
+        pickedUpTaskProject.current = active.data.current.task.project;
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
-          active.data.current.task.id,
-          active.data.current.task.projectId
+          active.data.current.task._id,
+          active.data.current.task.project
         );
         return `Picked up Task ${
           active.data.current.task.title
@@ -208,8 +208,8 @@ export function KanbanBoard() {
         over.data.current?.type === 'Task'
       ) {
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
-          over.data.current.task.id,
-          over.data.current.task.projectId
+          over.data.current.task._id,
+          over.data.current.task.project
         );
         if (over.data.current.task.projectId !== pickedUpTaskProject.current) {
           return `Task ${
@@ -246,8 +246,8 @@ export function KanbanBoard() {
         over.data.current?.type === 'Task'
       ) {
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
-          over.data.current.task.id,
-          over.data.current.task.projectId
+          over.data.current.task._id,
+          over.data.current.task.project
         );
         if (over.data.current.task.projectId !== pickedUpTaskProject.current) {
           return `Task was dropped into project ${project?.title} in position ${
@@ -284,7 +284,7 @@ export function KanbanBoard() {
         <BoardContainer>
           <SortableContext items={projectsId}>
             {projects?.map((project: Project, index: number) => (
-              <Fragment key={project.id}>
+              <Fragment key={project._id}>
                 <BoardProject project={project} tasks={project.tasks} />
                 {index === projects?.length - 1}
               </Fragment>

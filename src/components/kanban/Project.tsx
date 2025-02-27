@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Project, Task } from '@/types/tasks';
+import { Project, Task } from '@/types/dbInterface';
 import { useDndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -26,7 +26,7 @@ interface BoardProjectProps {
 export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   // Memoize task IDs for better performance
   const tasksIds = useMemo(
-    () => project.tasks.map((task: { id: string }) => task.id),
+    () => project.tasks.map((task) => task._id),
     [project.tasks]
   );
 
@@ -39,7 +39,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
     transition,
     isDragging
   } = useSortable({
-    id: project.id,
+    id: project._id,
     data: {
       type: 'Project',
       project
@@ -88,15 +88,15 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
           <span className="sr-only">drag project: {project.title}</span>
           <PointerIcon />
         </Button>
-        <ProjectActions id={project.id} title={project.title} />
+        <ProjectActions id={project._id} title={project.title} />
       </CardHeader>
 
       <CardContent className="flex grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
-          <NewTaskDialog projectId={project.id} />
+          <NewTaskDialog projectId={project._id} />
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard key={task._id} task={task} />
             ))}
           </SortableContext>
         </ScrollArea>
