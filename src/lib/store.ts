@@ -1,4 +1,4 @@
-import { Project, Task } from '@/types/tasks';
+import { Project, Task } from '@/types/dbInterface';
 import { v4 as uuid } from 'uuid';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';

@@ -1,8 +1,8 @@
 'use client';
 
 import { useTaskStore } from '@/lib/store';
+import { Project, Task } from '@/types/dbInterface';
 import DraggableData from '@/types/drag&drop';
-import { Project, Task } from '@/types/tasks';
 import {
   Active,
   Announcements,
