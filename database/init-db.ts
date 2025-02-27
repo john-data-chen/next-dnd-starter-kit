@@ -8,34 +8,67 @@ async function main() {
     await connectToDatabase();
 
     // Create admin user
-    const adminUser = await User.create({
-      email: 'demo@example.com',
-      name: 'admin',
-      role: 'ADMIN'
-    });
+    const users = await User.insertMany([
+      {
+        email: 'demo@example.com',
+        name: 'Admin',
+        role: 'ADMIN'
+      },
+      {
+        email: 'john.doe@example.com',
+        name: 'John Doe',
+        role: 'USER'
+      }
+    ]);
 
-    // Create demo project
-    const demoProject = await Project.create({
-      name: 'Demo Project',
-      description: 'This is a demo project',
-      owner: adminUser._id,
-      members: [adminUser._id]
-    });
+    // Bulk create projects
+    const projects = await Project.insertMany([
+      {
+        name: 'Demo Project 1',
+        description: 'This is demo project 1',
+        owner: users[0]._id,
+        members: [users[0]._id, users[1]._id]
+      },
+      {
+        name: 'Demo Project 2',
+        description: 'This is demo project 2',
+        owner: users[1]._id,
+        members: [users[0]._id, users[1]._id]
+      }
+    ]);
 
-    // Create demo task
-    const demoTask = await Task.create({
-      title: 'First Task',
-      description: 'This is our first task',
-      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      project: demoProject._id,
-      assignee: adminUser._id,
-      assigner: adminUser._id
-    });
+    // Bulk create tasks
+    const tasks = await Task.insertMany([
+      {
+        title: 'Task 1',
+        description: 'This is our first task',
+        dueDate: new Date(Date.now()),
+        project: projects[0]._id,
+        assignee: users[1]._id,
+        assigner: users[0]._id
+      },
+      {
+        title: 'Task 2',
+        description: 'This is task 2',
+        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        project: projects[0]._id,
+        assignee: users[1]._id,
+        assigner: users[1]._id
+      },
+      {
+        title: 'Task 3',
+        description: 'This is task 3',
+        dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        project: projects[1]._id,
+        assignee: users[1]._id,
+        assigner: users[0]._id
+      }
+    ]);
 
     console.log('Created demo data:', {
-      user: adminUser,
-      project: demoProject,
-      task: demoTask
+      users,
+      projects,
+      tasks
     });
   } catch (error: any) {
     if (error.code === 11000) {
