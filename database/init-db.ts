@@ -24,13 +24,13 @@ async function main() {
     // Bulk create projects
     const projects = await Project.insertMany([
       {
-        name: 'Demo Project 1',
+        title: 'Demo Project 1',
         description: 'This is demo project 1',
         owner: users[0]._id,
         members: [users[0]._id, users[1]._id]
       },
       {
-        name: 'Demo Project 2',
+        title: 'Demo Project 2',
         description: 'This is demo project 2',
         owner: users[1]._id,
         members: [users[0]._id, users[1]._id]
