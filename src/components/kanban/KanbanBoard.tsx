@@ -1,6 +1,5 @@
 'use client';
 
-import demoTasks from '@/constants/demoTasks';
 import { useTaskStore } from '@/lib/store';
 import DraggableData from '@/types/drag&drop';
 import { Project, Task } from '@/types/tasks';
@@ -266,17 +265,6 @@ export function KanbanBoard() {
       return `Dragging ${active.data.current?.type} cancelled.`;
     }
   };
-
-  if (typeof window !== 'undefined') {
-    // Client-side code
-    if (localStorage.getItem('tasks-store') === null) {
-      useTaskStore.setState({
-        projects: demoTasks.map((project) => ({
-          ...project
-        }))
-      });
-    }
-  }
 
   return (
     <div data-testid="kanban-board">
