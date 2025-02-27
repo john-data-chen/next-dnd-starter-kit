@@ -1,10 +1,12 @@
 import { Project } from '@/models/project.model';
 import { connectToDatabase, disconnectFromDatabase } from './connect';
 
-export async function getProjectsFromDb() {
+export async function getProjectsFromDb(userId: string) {
   try {
     await connectToDatabase();
-    const projects = await Project.find();
+    const projects = await Project.find({
+      $or: [{ owner: userId }, { members: userId }]
+    });
     return projects;
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -18,8 +20,7 @@ export async function createProjectInDb(data: { name: string; owner: string }) {
   try {
     await connectToDatabase();
     const project = await Project.create({
-      name: data.name,
-      owner: data.owner,
+      ...data,
       members: [data.owner]
     });
     return project;
@@ -31,15 +32,32 @@ export async function createProjectInDb(data: { name: string; owner: string }) {
   }
 }
 
-export async function updateProjectInDb(id: string, data: { name?: string }) {
+export async function updateProjectInDb(
+  id: string,
+  userId: string,
+  data: { name: string }
+) {
   try {
     await connectToDatabase();
-    const project = await Project.findByIdAndUpdate(
+
+    const project = await Project.findById(id);
+
+    if (!project) {
+      console.error('Project not found');
+      return null;
+    }
+
+    if (project.owner.toString() !== userId) {
+      console.error('Permission denied: User is not the project owner');
+      return null;
+    }
+
+    const updatedProject = await Project.findByIdAndUpdate(
       id,
       { ...data, updatedAt: new Date() },
       { new: true }
     );
-    return project;
+    return updatedProject;
   } catch (error) {
     console.error('Error updating project:', error);
     return null;
@@ -48,9 +66,22 @@ export async function updateProjectInDb(id: string, data: { name?: string }) {
   }
 }
 
-export async function deleteProjectInDb(id: string) {
+export async function deleteProjectInDb(id: string, userId: string) {
   try {
     await connectToDatabase();
+
+    const project = await Project.findById(id);
+
+    if (!project) {
+      console.error('Project not found');
+      return false;
+    }
+
+    if (project.owner.toString() !== userId) {
+      console.error('Permission denied: User is not the project owner');
+      return false;
+    }
+
     await Project.findByIdAndDelete(id);
     return true;
   } catch (error) {
