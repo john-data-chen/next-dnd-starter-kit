@@ -1,14 +1,20 @@
-import { Project, Task } from '@/types/dbInterface';
-import { v4 as uuid } from 'uuid';
+import { Project } from '@/types/dbInterface';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+import {
+  createProjectInDb,
+  deleteProjectInDb,
+  getProjectsFromDb,
+  updateProjectInDb
+} from './db/project';
 
 interface State {
   projects: Project[];
-  addProject: (title: string) => void;
-  updateProject: (id: string, newName: string) => void;
-  removeProject: (id: string) => void;
+  fetchProjects: (userId: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
+  addProject: (title: string, userId: string) => void;
+  updateProject: (id: string, newName: string, userId: string) => void;
+  removeProject: (id: string, userId: string) => void;
   addTask: (
     projectId: string,
     title: string,
@@ -26,72 +32,48 @@ interface State {
 
 export const useTaskStore = create<State>()(
   devtools(
-    persist(
-      (set) => ({
-        projects: [] as Project[],
-        addProject: (title: string) =>
+    persist((set) => ({
+      projects: [] as Project[],
+      fetchProjects: async (userId: string) => {
+        const projects = await getProjectsFromDb(userId);
+        if (projects) {
+          set({ projects });
+        }
+      },
+      addProject: async (title: string, userId: string) => {
+        const newProject = await createProjectInDb({
+          name: title,
+          owner: userId
+        });
+        if (newProject) {
           set((state) => ({
-            projects: [
-              ...state.projects,
-              { title, id: uuid(), tasks: [] as Task[] }
-            ]
-          })),
-        updateProject: (id: string, newName: string) =>
+            projects: [...state.projects, newProject]
+          }));
+        }
+      },
+      updateProject: async (id: string, newName: string, userId: string) => {
+        const updatedProject = await updateProjectInDb(id, userId, {
+          name: newName
+        });
+        if (updatedProject) {
           set((state) => ({
             projects: state.projects.map((project) =>
-              project.id === id ? { ...project, title: newName } : project
+              project._id === id ? updatedProject : project
             )
-          })),
-        removeProject: (id: string) =>
+          }));
+        }
+      },
+      removeProject: async (id: string, userId: string) => {
+        const deletedProject = await deleteProjectInDb(id, userId);
+        if (deletedProject) {
           set((state) => ({
-            projects: state.projects.filter((project) => project.id !== id)
-          })),
-        setProjects: (projects: Project[]) => set({ projects }),
-        addTask: (
-          projectId: string,
-          title: string,
-          description: string,
-          dueDate: Date | null
-        ) =>
-          set((state) => ({
-            projects: state.projects.map((project) => {
-              if (project.id === projectId) {
-                return {
-                  ...project,
-                  tasks: [
-                    ...project.tasks,
-                    { projectId, id: uuid(), title, description, dueDate }
-                  ]
-                };
-              }
-              return project;
-            })
-          })),
-        updateTask: (
-          taskId: string,
-          title: string,
-          description?: string,
-          dueDate?: Date | null
-        ) =>
-          set((state) => ({
-            projects: state.projects.map((project) => ({
-              ...project,
-              tasks: project.tasks.map((task) =>
-                task.id === taskId
-                  ? { ...task, title, description, dueDate }
-                  : task
-              )
-            }))
-          })),
-        removeTask: (taskId: string) =>
-          set((state) => ({
-            projects: state.projects.map((project) => ({
-              ...project,
-              tasks: project.tasks.filter((task) => task.id !== taskId)
-            }))
-          }))
-      }),
-      { name: 'tasks-store' }
-    )
+            projects: state.projects.filter((project) => project._id !== id)
+          }));
+        }
+      },
+      setProjects: (projects: Project[]) => {
+        set({ projects });
+      }
+    }))
   )
 );
