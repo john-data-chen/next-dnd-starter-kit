@@ -1,6 +1,6 @@
 import { defaultEmail } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
-import { formSchema, UserFormValue } from '@/types/authUserForm';
+import { SignInFormValue, SignInValidation } from '@/types/authUserForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useTransition } from 'react';
@@ -10,14 +10,14 @@ import { toast } from 'sonner';
 export default function useAuthForm() {
   const [loading, startTransition] = useTransition();
 
-  const form = useForm<UserFormValue>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignInFormValue>({
+    resolver: zodResolver(SignInValidation),
     defaultValues: {
       email: defaultEmail
     }
   });
 
-  const onSubmit = async (data: UserFormValue) => {
+  const onSubmit = async (data: SignInFormValue) => {
     try {
       console.log('Signing in with email:', data.email);
 
@@ -40,7 +40,6 @@ export default function useAuthForm() {
               return;
             }
 
-            // 登入成功直接重定向
             window.location.href = ROUTES.KANBAN;
             toast.success('Signed In Successfully!');
           })
@@ -48,7 +47,6 @@ export default function useAuthForm() {
             console.error('Unexpected error:', error);
             toast.error('Failed to sign in. Please try again.');
 
-            // 錯誤時也延遲重定向
             setTimeout(() => {
               window.location.href = ROUTES.AUTH.LOGIN;
             }, 5000);

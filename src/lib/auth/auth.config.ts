@@ -1,6 +1,6 @@
 import { ROUTES } from '@/constants/routes';
-import { SignInValidation } from '@/lib/auth/validations';
 import { getUserFromDb } from '@/lib/db/user';
+import { SignInValidation } from '@/types/authUserForm';
 import { NextAuthConfig } from 'next-auth';
 import Credential from 'next-auth/providers/credentials';
 
