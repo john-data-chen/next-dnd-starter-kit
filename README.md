@@ -87,9 +87,9 @@ pnpm run playwright
 - [x] Add responsive support for multiple screen sizes
 - [x] Add edit task dialog
 - [x] Make Database Schema and initialization script
+- [x] User authentication for secure project/task management
 - [ ] Persistent data into Database
 - [ ] Add assigner and owner in task dialog
-- [ ] User authentication for secure project/task management
 
 and more...
 
