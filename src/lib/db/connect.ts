@@ -1,10 +1,8 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+// Load environment variables directly without path resolution
+dotenv.config();
 
 let isConnected = false;
 
@@ -14,8 +12,12 @@ export async function connectToDatabase() {
   }
 
   try {
-    console.log('DATABASE_URL:', process.env.DATABASE_URL);
-    await mongoose.connect(process.env.DATABASE_URL!);
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL is not defined in environment variables');
+    }
+
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(process.env.DATABASE_URL);
     isConnected = true;
     console.log('MongoDB connected successfully');
   } catch (error) {

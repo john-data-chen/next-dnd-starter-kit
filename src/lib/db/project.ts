@@ -1,7 +1,9 @@
-import { Project } from '@/models/project.model';
+import { Project, ProjectDocument } from '@/models/project.model';
 import { connectToDatabase, disconnectFromDatabase } from './connect';
 
-export async function getProjectsFromDb(userId: string) {
+export async function getProjectsFromDb(
+  userId: string
+): Promise<ProjectDocument[] | null> {
   try {
     await connectToDatabase();
     const projects = await Project.find({
@@ -16,7 +18,10 @@ export async function getProjectsFromDb(userId: string) {
   }
 }
 
-export async function createProjectInDb(data: { name: string; owner: string }) {
+export async function createProjectInDb(data: {
+  title: string;
+  owner: string;
+}) {
   try {
     await connectToDatabase();
     const project = await Project.create({
@@ -35,7 +40,7 @@ export async function createProjectInDb(data: { name: string; owner: string }) {
 export async function updateProjectInDb(
   id: string,
   userId: string,
-  data: { name: string }
+  data: { title: string }
 ) {
   try {
     await connectToDatabase();
