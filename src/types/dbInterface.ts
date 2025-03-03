@@ -1,8 +1,28 @@
-import { Project as ProjectModel } from '@/models/project.model';
+import { ProjectModel } from '@/models/project.model';
 import { Task as TaskModel } from '@/models/task.model';
 import mongoose from 'mongoose';
 
-export type Project = mongoose.InferSchemaType<
+export interface Project {
+  _id: string;
+  title: string;
+  description?: string;
+  owner: mongoose.Types.ObjectId;
+  members: mongoose.Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Task {
+  _id: string;
+  title: string;
+  description?: string;
+  dueDate?: Date;
+  project: mongoose.Types.ObjectId;
+  assignee?: mongoose.Types.ObjectId;
+  assigner: mongoose.Types.ObjectId;
+}
+
+export type ProjectModel = mongoose.InferSchemaType<
   (typeof ProjectModel)['schema']
 > & {
   _id: string;
@@ -13,7 +33,9 @@ export type Project = mongoose.InferSchemaType<
   tasks: Task[];
 };
 
-export type Task = mongoose.InferSchemaType<(typeof TaskModel)['schema']> & {
+export type TaskModel = mongoose.InferSchemaType<
+  (typeof TaskModel)['schema']
+> & {
   _id: string;
   title: string;
   description?: string;

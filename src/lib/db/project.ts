@@ -22,7 +22,7 @@ export async function getProjectsFromDb(
 export async function createProjectInDb(data: {
   title: string;
   owner: string;
-}) {
+}): Promise<ProjectType | null> {
   try {
     await connectToDatabase();
     const project = await ProjectModel.create({
@@ -42,7 +42,7 @@ export async function updateProjectInDb(
   id: string,
   userId: string,
   data: { title: string }
-) {
+): Promise<ProjectType | null> {
   try {
     await connectToDatabase();
 
@@ -72,7 +72,10 @@ export async function updateProjectInDb(
   }
 }
 
-export async function deleteProjectInDb(id: string, userId: string) {
+export async function deleteProjectInDb(
+  id: string,
+  userId: string
+): Promise<boolean> {
   try {
     await connectToDatabase();
 
