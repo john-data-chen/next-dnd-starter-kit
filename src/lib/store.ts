@@ -9,6 +9,8 @@ import {
 } from './db/project';
 
 interface State {
+  userId: string | null;
+  setUserId: (userId: string) => void;
   projects: Project[];
   fetchProjects: (userId: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
@@ -33,6 +35,8 @@ interface State {
 export const useTaskStore = create<State>()(
   devtools(
     persist((set) => ({
+      userId: null,
+      setUserId: (userId: string) => set({ userId }),
       projects: [] as Project[],
       fetchProjects: async (userId: string) => {
         const projects = await getProjectsFromDb(userId);
@@ -42,7 +46,7 @@ export const useTaskStore = create<State>()(
       },
       addProject: async (title: string, userId: string) => {
         const newProject = await createProjectInDb({
-          name: title,
+          title: title,
           owner: userId
         });
         if (newProject) {
@@ -51,9 +55,9 @@ export const useTaskStore = create<State>()(
           }));
         }
       },
-      updateProject: async (id: string, newName: string, userId: string) => {
+      updateProject: async (id: string, newTitle: string, userId: string) => {
         const updatedProject = await updateProjectInDb(id, userId, {
-          name: newName
+          title: newTitle
         });
         if (updatedProject) {
           set((state) => ({
@@ -74,6 +78,9 @@ export const useTaskStore = create<State>()(
       setProjects: (projects: Project[]) => {
         set({ projects });
       }
-    }))
+    })),
+    {
+      name: 'task-storage'
+    }
   )
 );

@@ -1,5 +1,6 @@
 import { ProjectModel } from '@/models/project.model';
 import { Task as TaskModel } from '@/models/task.model';
+import { UserModel } from '@/models/user.model';
 import mongoose from 'mongoose';
 
 export interface Project {
@@ -8,6 +9,15 @@ export interface Project {
   description?: string;
   owner: mongoose.Types.ObjectId;
   members: mongoose.Types.ObjectId[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface User {
+  _id: string;
+  email: string;
+  name: string;
+  role: 'ADMIN' | 'USER';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,6 +41,15 @@ export type ProjectModel = mongoose.InferSchemaType<
   owner: string;
   members: string[];
   tasks: Task[];
+};
+
+export type UserModel = mongoose.InferSchemaType<
+  (typeof UserModel)['schema']
+> & {
+  _id: string;
+  email: string;
+  name: string;
+  role: 'ADMIN' | 'USER';
 };
 
 export type TaskModel = mongoose.InferSchemaType<

@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import { User as UserType } from '@/types/dbInterface';
+import mongoose, { Model } from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -8,4 +9,11 @@ const userSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-export const User = mongoose.models.User || mongoose.model('User', userSchema);
+let UserModel: Model<UserType>;
+try {
+  UserModel = mongoose.model<UserType>('User');
+} catch {
+  UserModel = mongoose.model<UserType>('User', userSchema);
+}
+
+export { UserModel };
