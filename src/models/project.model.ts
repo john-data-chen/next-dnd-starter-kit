@@ -1,14 +1,5 @@
+import { Project as ProjectType } from '@/types/dbInterface';
 import mongoose, { Model } from 'mongoose';
-
-// Define the interface for Project document
-export interface ProjectDocument extends mongoose.Document {
-  title: string;
-  description?: string;
-  owner: mongoose.Types.ObjectId;
-  members: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 const projectSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -19,11 +10,12 @@ const projectSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-let Project: Model<ProjectDocument>;
+let ProjectModel: Model<ProjectType>;
 try {
-  Project = mongoose.model<ProjectDocument>('Project');
+  ProjectModel = mongoose.model<ProjectType>('Project');
 } catch {
-  Project = mongoose.model<ProjectDocument>('Project', projectSchema);
+  ProjectModel = mongoose.model<ProjectType>('Project', projectSchema);
 }
 
-export { Project };
+export { ProjectModel };
+export type { ProjectType };

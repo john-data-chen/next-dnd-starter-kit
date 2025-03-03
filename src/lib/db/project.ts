@@ -1,12 +1,13 @@
-import { Project, ProjectDocument } from '@/models/project.model';
+import { ProjectModel, ProjectType } from '@/models/project.model';
 import { connectToDatabase, disconnectFromDatabase } from './connect';
 
 export async function getProjectsFromDb(
   userId: string
-): Promise<ProjectDocument[] | null> {
+): Promise<ProjectType[] | null> {
   try {
     await connectToDatabase();
-    const projects = await Project.find({
+    console.log('userId', userId);
+    const projects = await ProjectModel.find({
       $or: [{ owner: userId }, { members: userId }]
     });
     return projects;
@@ -24,7 +25,7 @@ export async function createProjectInDb(data: {
 }) {
   try {
     await connectToDatabase();
-    const project = await Project.create({
+    const project = await ProjectModel.create({
       ...data,
       members: [data.owner]
     });
@@ -45,7 +46,7 @@ export async function updateProjectInDb(
   try {
     await connectToDatabase();
 
-    const project = await Project.findById(id);
+    const project = await ProjectModel.findById(id);
 
     if (!project) {
       console.error('Project not found');
@@ -57,7 +58,7 @@ export async function updateProjectInDb(
       return null;
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(
+    const updatedProject = await ProjectModel.findByIdAndUpdate(
       id,
       { ...data, updatedAt: new Date() },
       { new: true }
@@ -75,7 +76,7 @@ export async function deleteProjectInDb(id: string, userId: string) {
   try {
     await connectToDatabase();
 
-    const project = await Project.findById(id);
+    const project = await ProjectModel.findById(id);
 
     if (!project) {
       console.error('Project not found');
@@ -87,7 +88,7 @@ export async function deleteProjectInDb(id: string, userId: string) {
       return false;
     }
 
-    await Project.findByIdAndDelete(id);
+    await ProjectModel.findByIdAndDelete(id);
     return true;
   } catch (error) {
     console.error('Error deleting project:', error);
