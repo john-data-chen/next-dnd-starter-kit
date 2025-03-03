@@ -8,12 +8,15 @@ export async function connectToDatabase() {
   }
 
   try {
+    let dbUrl = process.env.DATABASE_URL;
     if (!process.env.DATABASE_URL) {
-      throw new Error('DATABASE_URL is not defined in environment variables');
+      dbUrl =
+        'mongodb://root:123456@localhost:27017/next-template?authSource=admin';
     }
 
-    console.log('DATABASE_URL:', process.env.DATABASE_URL);
-    await mongoose.connect(process.env.DATABASE_URL);
+    console.log('DATABASE_URL:', dbUrl);
+    const mongoose = (await import('mongoose')).default;
+    await mongoose.connect(dbUrl!);
     isConnected = true;
     console.log('MongoDB connected successfully');
   } catch (error) {
