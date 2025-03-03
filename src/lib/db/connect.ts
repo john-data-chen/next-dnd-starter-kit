@@ -1,3 +1,4 @@
+import { defaultDbUrl } from '@/constants/auth';
 import mongoose from 'mongoose';
 
 let isConnected = false;
@@ -10,8 +11,7 @@ export async function connectToDatabase() {
   try {
     let dbUrl = process.env.DATABASE_URL;
     if (!process.env.DATABASE_URL) {
-      dbUrl =
-        'mongodb://root:123456@localhost:27017/next-template?authSource=admin';
+      dbUrl = defaultDbUrl;
     }
 
     console.log('DATABASE_URL:', dbUrl);
