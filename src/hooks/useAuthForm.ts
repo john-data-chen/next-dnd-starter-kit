@@ -1,5 +1,6 @@
 import { defaultEmail } from '@/constants/auth';
 import { ROUTES } from '@/constants/routes';
+import { useTaskStore } from '@/lib/store';
 import { SignInFormValue, SignInValidation } from '@/types/authUserForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
@@ -9,6 +10,7 @@ import { toast } from 'sonner';
 
 export default function useAuthForm() {
   const [loading, startTransition] = useTransition();
+  const { setUserId } = useTaskStore();
 
   const form = useForm<SignInFormValue>({
     resolver: zodResolver(SignInValidation),
@@ -39,6 +41,7 @@ export default function useAuthForm() {
 
               return;
             }
+            setUserId(data.email);
 
             window.location.href = ROUTES.KANBAN;
             toast.success('Signed In Successfully!');
