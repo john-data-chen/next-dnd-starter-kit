@@ -5,7 +5,7 @@ export async function getUserFromDb(email: string) {
   try {
     await connectToDatabase();
     const user = await UserModel.findOne({ email });
-    return user?._id.toString();
+    return user;
   } catch (error) {
     console.error('Error fetching user:', error);
     return null;
