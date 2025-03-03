@@ -81,8 +81,8 @@ importers:
         specifier: ^0.474.0
         version: 0.474.0(react@18.3.1)
       mongoose:
-        specifier: ^8.11.0
-        version: 8.11.0
+        specifier: ^8.12.0
+        version: 8.12.0
       next:
         specifier: ^14.2.24
         version: 14.2.24(@babel/core@7.26.9)(@playwright/test@1.50.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3525,11 +3525,11 @@ packages:
   mongodb-connection-string-url@3.0.2:
     resolution: {integrity: sha512-rMO7CGo/9BFwyZABcKAWL8UJwH/Kc2x0g72uhDWzG48URRax5TCIcJ7Rc3RZqffZzO/Gwff/jyKwCU9TN8gehA==}
 
-  mongodb@6.13.1:
-    resolution: {integrity: sha512-gdq40tX8StmhP6akMp1pPoEVv+9jTYFSrga/g23JxajPAQhH39ysZrHGzQCSd9PEOnuEQEdjIWqxO7ZSwC0w7Q==}
+  mongodb@6.14.0:
+    resolution: {integrity: sha512-AlM6alTx98vcnk/jMMmoYuBrm4qpe1/VrbwvL2SXEHjdtJ1ZbVZmrpyjUx9mqS94e9HcemzpLn+CxzhmT7b0uw==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
-      '@aws-sdk/credential-providers': ^3.632.0
+      '@aws-sdk/credential-providers': ^3.188.0
       '@mongodb-js/zstd': ^1.1.0 || ^2.0.0
       gcp-metadata: ^5.2.0
       kerberos: ^2.0.1
@@ -3552,8 +3552,8 @@ packages:
       socks:
         optional: true
 
-  mongoose@8.11.0:
-    resolution: {integrity: sha512-xaQSuaLk2JKmXI5zDVVWXVCQTnWhAe8MFOijMnwOuP/wucKVphd3f+ouDKivCDMGjYBDrR7dtoyV0U093xbKqA==}
+  mongoose@8.12.0:
+    resolution: {integrity: sha512-FXZIngJBTt/gvb6uHZHiROy3Mk3EOjNpD0m+GBRfG+twuEntnMjfxwcA94YbYIulf9LkBozt7H8w2OJpqHdUxA==}
     engines: {node: '>=16.20.1'}
 
   mpath@0.9.0:
@@ -3646,8 +3646,8 @@ packages:
   nprogress@0.2.0:
     resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
 
-  nwsapi@2.2.16:
-    resolution: {integrity: sha512-F1I/bimDpj3ncaNDhfyMWuFqmQDBwDB0Fogc2qpL3BWvkQteFD/8BzWuIRl83rq0DXfm8SGt/HFhLXZyljTXcQ==}
+  nwsapi@2.2.18:
+    resolution: {integrity: sha512-p1TRH/edngVEHVbwqWnxUViEmq5znDvyB+Sik5cmuLpGOIfDf/39zLiq3swPF8Vakqn+gvNiOQAZu8djYlQILA==}
 
   oauth4webapi@3.3.0:
     resolution: {integrity: sha512-ZlozhPlFfobzh3hB72gnBFLjXpugl/dljz1fJSRdqaV2r3D5dmi5lg2QWI0LmUYuazmE+b5exsloEv6toUtw9g==}
@@ -8175,7 +8175,7 @@ snapshots:
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.16
+      nwsapi: 2.2.18
       parse5: 7.2.1
       saxes: 6.0.0
       symbol-tree: 3.2.4
@@ -8457,17 +8457,17 @@ snapshots:
       '@types/whatwg-url': 11.0.5
       whatwg-url: 14.1.1
 
-  mongodb@6.13.1:
+  mongodb@6.14.0:
     dependencies:
       '@mongodb-js/saslprep': 1.2.0
       bson: 6.10.3
       mongodb-connection-string-url: 3.0.2
 
-  mongoose@8.11.0:
+  mongoose@8.12.0:
     dependencies:
       bson: 6.10.3
       kareem: 2.6.3
-      mongodb: 6.13.1
+      mongodb: 6.14.0
       mpath: 0.9.0
       mquery: 5.0.0
       ms: 2.1.3
@@ -8559,7 +8559,7 @@ snapshots:
 
   nprogress@0.2.0: {}
 
-  nwsapi@2.2.16: {}
+  nwsapi@2.2.18: {}
 
   oauth4webapi@3.3.0: {}
 
