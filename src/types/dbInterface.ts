@@ -1,5 +1,5 @@
 import { ProjectModel } from '@/models/project.model';
-import { Task as TaskModel } from '@/models/task.model';
+import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
 import mongoose from 'mongoose';
 
@@ -11,6 +11,7 @@ export interface Project {
   members: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
+  tasks: Task[];
 }
 
 export interface User {
