@@ -7,6 +7,7 @@ import {
   getProjectsFromDb,
   updateProjectInDb
 } from './db/project';
+import { getTasksByProjectId } from './db/task';
 
 interface State {
   userEmail: string | null;
@@ -41,7 +42,13 @@ export const useTaskStore = create<State>()(
       fetchProjects: async (userEmail: string) => {
         const projects = await getProjectsFromDb(userEmail);
         if (projects) {
-          set({ projects });
+          const projectsWithTasks = await Promise.all(
+            projects.map(async (project) => {
+              const tasks = await getTasksByProjectId(project._id);
+              return { ...project, tasks: tasks || [] };
+            })
+          );
+          set({ projects: projectsWithTasks });
         } else {
           set({ projects: [] as Project[] });
         }
