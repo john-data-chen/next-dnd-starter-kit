@@ -2,11 +2,17 @@ import { ProjectModel, ProjectType } from '@/models/project.model';
 import { connectToDatabase, disconnectFromDatabase } from './connect';
 
 export async function getProjectsFromDb(
-  userId: string
+  userEmail: string
 ): Promise<ProjectType[] | null> {
   try {
     await connectToDatabase();
-    console.log('userId', userId);
+    console.log('userEmail: ', userEmail);
+    const user = await ProjectModel.findOne({ owner: userEmail });
+    if (!user) {
+      console.error('User not found');
+      return null;
+    }
+    const userId = user._id.toString();
     const projects = await ProjectModel.find({
       $or: [{ owner: userId }, { members: userId }]
     });
@@ -21,13 +27,19 @@ export async function getProjectsFromDb(
 
 export async function createProjectInDb(data: {
   title: string;
-  owner: string;
+  userEmail: string;
 }): Promise<ProjectType | null> {
   try {
     await connectToDatabase();
+    const owner = await ProjectModel.findOne({ email: data.userEmail });
+    if (!owner) {
+      console.error('Owner not found');
+      return null;
+    }
+    const ownerId = owner._id.toString();
     const project = await ProjectModel.create({
       ...data,
-      members: [data.owner]
+      members: [ownerId]
     });
     return project;
   } catch (error) {
@@ -40,7 +52,7 @@ export async function createProjectInDb(data: {
 
 export async function updateProjectInDb(
   id: string,
-  userId: string,
+  userEmail: string,
   data: { title: string }
 ): Promise<ProjectType | null> {
   try {
@@ -52,7 +64,12 @@ export async function updateProjectInDb(
       console.error('Project not found');
       return null;
     }
-
+    const user = await ProjectModel.findOne({ email: userEmail });
+    if (!user) {
+      console.error('User not found');
+      return null;
+    }
+    const userId = user._id.toString();
     if (project.owner.toString() !== userId) {
       console.error('Permission denied: User is not the project owner');
       return null;
@@ -74,7 +91,7 @@ export async function updateProjectInDb(
 
 export async function deleteProjectInDb(
   id: string,
-  userId: string
+  userEmail: string
 ): Promise<boolean> {
   try {
     await connectToDatabase();
@@ -85,7 +102,12 @@ export async function deleteProjectInDb(
       console.error('Project not found');
       return false;
     }
-
+    const user = await ProjectModel.findOne({ email: userEmail });
+    if (!user) {
+      console.error('User not found');
+      return false;
+    }
+    const userId = user._id.toString();
     if (project.owner.toString() !== userId) {
       console.error('Permission denied: User is not the project owner');
       return false;
