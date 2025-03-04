@@ -1,5 +1,8 @@
+'use server';
+
 import { ProjectModel, ProjectType } from '@/models/project.model';
 import { connectToDatabase, disconnectFromDatabase } from './connect';
+import { getUserFromDb } from './user';
 
 export async function getProjectsFromDb(
   userEmail: string
@@ -7,7 +10,7 @@ export async function getProjectsFromDb(
   try {
     await connectToDatabase();
     console.log('userEmail: ', userEmail);
-    const user = await ProjectModel.findOne({ owner: userEmail });
+    const user = await getUserFromDb(userEmail);
     if (!user) {
       console.error('User not found');
       return null;

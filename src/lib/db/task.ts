@@ -1,3 +1,5 @@
+'use server';
+
 import { ProjectModel } from '@/models/project.model';
 import { TaskType } from '@/models/task.model';
 import { connectToDatabase, disconnectFromDatabase } from './connect';
