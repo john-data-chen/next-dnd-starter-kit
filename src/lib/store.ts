@@ -1,6 +1,6 @@
 import { Project } from '@/types/dbInterface';
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import {
   createProjectInDb,
   deleteProjectInDb,
@@ -33,8 +33,8 @@ interface State {
 }
 
 export const useTaskStore = create<State>()(
-  devtools(
-    persist((set) => ({
+  persist(
+    (set) => ({
       userEmail: null,
       setUserEmail: (userEmail: string) => set({ userEmail }),
       projects: [] as Project[],
@@ -42,49 +42,32 @@ export const useTaskStore = create<State>()(
         const projects = await getProjectsFromDb(userEmail);
         if (projects) {
           set({ projects });
+        } else {
+          set({ projects: [] as Project[] });
         }
       },
-      addProject: async (title: string, userEmail: string) => {
-        const newProject = await createProjectInDb({
-          title: title,
-          owner: userEmail
-        });
-        if (newProject) {
-          set((state) => ({
-            projects: [...state.projects, newProject]
-          }));
-        }
+      setProjects: (projects: Project[]) => set({ projects }),
+      addProject: (title: string, userEmail: string) => {
+        createProjectInDb({ title, userEmail });
       },
-      updateProject: async (
-        id: string,
-        newTitle: string,
-        userEmail: string
-      ) => {
-        const updatedProject = await updateProjectInDb(id, userEmail, {
-          title: newTitle
-        });
-        if (updatedProject) {
-          set((state) => ({
-            projects: state.projects.map((project) =>
-              project._id === id ? updatedProject : project
-            )
-          }));
-        }
+      updateProject: (id: string, newName: string, userEmail: string) => {
+        updateProjectInDb(id, userEmail, { title: newName });
       },
-      removeProject: async (id: string, userEmail: string) => {
-        const deletedProject = await deleteProjectInDb(id, userEmail);
-        if (deletedProject) {
-          set((state) => ({
-            projects: state.projects.filter((project) => project._id !== id)
-          }));
-        }
+      removeProject: (id: string, userEmail: string) => {
+        deleteProjectInDb(id, userEmail);
       },
-      setProjects: (projects: Project[]) => {
-        set({ projects });
+      addTask: () => {
+        // implement addTask logic
+      },
+      updateTask: () => {
+        // implement updateTask logic
+      },
+      removeTask: () => {
+        // implement removeTask logic
       }
-    })),
+    }),
     {
-      name: 'task-storage'
+      name: 'task-store'
     }
   )
 );
