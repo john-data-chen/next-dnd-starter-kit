@@ -9,14 +9,14 @@ import {
 } from './db/project';
 
 interface State {
-  userId: string | null;
-  setUserId: (userId: string) => void;
+  userEmail: string | null;
+  setUserEmail: (userEmail: string) => void;
   projects: Project[];
-  fetchProjects: (userId: string) => Promise<void>;
+  fetchProjects: (userEmail: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
-  addProject: (title: string, userId: string) => void;
-  updateProject: (id: string, newName: string, userId: string) => void;
-  removeProject: (id: string, userId: string) => void;
+  addProject: (title: string, userEmail: string) => void;
+  updateProject: (id: string, newName: string, userEmail: string) => void;
+  removeProject: (id: string, userEmail: string) => void;
   addTask: (
     projectId: string,
     title: string,
@@ -35,19 +35,19 @@ interface State {
 export const useTaskStore = create<State>()(
   devtools(
     persist((set) => ({
-      userId: null,
-      setUserId: (userId: string) => set({ userId }),
+      userEmail: null,
+      setUserEmail: (userEmail: string) => set({ userEmail }),
       projects: [] as Project[],
-      fetchProjects: async (userId: string) => {
-        const projects = await getProjectsFromDb(userId);
+      fetchProjects: async (userEmail: string) => {
+        const projects = await getProjectsFromDb(userEmail);
         if (projects) {
           set({ projects });
         }
       },
-      addProject: async (title: string, userId: string) => {
+      addProject: async (title: string, userEmail: string) => {
         const newProject = await createProjectInDb({
           title: title,
-          owner: userId
+          owner: userEmail
         });
         if (newProject) {
           set((state) => ({
@@ -55,8 +55,12 @@ export const useTaskStore = create<State>()(
           }));
         }
       },
-      updateProject: async (id: string, newTitle: string, userId: string) => {
-        const updatedProject = await updateProjectInDb(id, userId, {
+      updateProject: async (
+        id: string,
+        newTitle: string,
+        userEmail: string
+      ) => {
+        const updatedProject = await updateProjectInDb(id, userEmail, {
           title: newTitle
         });
         if (updatedProject) {
@@ -67,8 +71,8 @@ export const useTaskStore = create<State>()(
           }));
         }
       },
-      removeProject: async (id: string, userId: string) => {
-        const deletedProject = await deleteProjectInDb(id, userId);
+      removeProject: async (id: string, userEmail: string) => {
+        const deletedProject = await deleteProjectInDb(id, userEmail);
         if (deletedProject) {
           set((state) => ({
             projects: state.projects.filter((project) => project._id !== id)

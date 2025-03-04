@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 export default function useAuthForm() {
   const [loading, startTransition] = useTransition();
-  const { setUserId } = useTaskStore();
+  const { setUserEmail } = useTaskStore();
 
   const form = useForm<SignInFormValue>({
     resolver: zodResolver(SignInValidation),
@@ -41,7 +41,7 @@ export default function useAuthForm() {
 
               return;
             }
-            setUserId(data.email);
+            setUserEmail(data.email);
 
             window.location.href = ROUTES.KANBAN;
             toast.success('Signed In Successfully!');
