@@ -19,15 +19,24 @@ import {
   useSensors
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
-import { Fragment, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import NewProjectDialog from './NewProjectDialog';
 import { BoardContainer, BoardProject } from './Project';
 import { TaskCard } from './TaskCard';
 
 export function KanbanBoard() {
+  const userEmail = useTaskStore((state) => state.userEmail);
   const projects = useTaskStore((state) => state.projects);
+  const fetchProjects = useTaskStore((state) => state.fetchProjects);
   const setProjects = useTaskStore((state) => state.setProjects);
-  const pickedUpTaskProject = useRef<string | null>(null);
+  useEffect(() => {
+    if (userEmail) {
+      fetchProjects(userEmail);
+    }
+  }, [userEmail]);
+  const pickedUpTaskProject = useMemo(() => {
+    return { current: null };
+  }, []);
   const projectsId = useMemo(
     () => projects.map((project: Project) => project._id),
     [projects]
