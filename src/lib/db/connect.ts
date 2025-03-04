@@ -1,7 +1,13 @@
+'use server';
+
 import { defaultDbUrl } from '@/constants/auth';
-import mongoose from 'mongoose';
+import { connect, disconnect } from 'mongoose';
 
 let isConnected = false;
+let dbUrl = process.env.DATABASE_URL;
+if (!process.env.DATABASE_URL) {
+  dbUrl = defaultDbUrl;
+}
 
 export async function connectToDatabase() {
   if (isConnected) {
@@ -9,14 +15,8 @@ export async function connectToDatabase() {
   }
 
   try {
-    let dbUrl = process.env.DATABASE_URL;
-    if (!process.env.DATABASE_URL) {
-      dbUrl = defaultDbUrl;
-    }
-
     console.log('DATABASE_URL:', dbUrl);
-    const mongoose = (await import('mongoose')).default;
-    await mongoose.connect(dbUrl!);
+    await connect(dbUrl!);
     isConnected = true;
     console.log('MongoDB connected successfully');
   } catch (error) {
@@ -31,7 +31,7 @@ export async function disconnectFromDatabase() {
   }
 
   try {
-    await mongoose.disconnect();
+    await disconnect();
     isConnected = false;
     console.log('MongoDB disconnected successfully');
   } catch (error) {
