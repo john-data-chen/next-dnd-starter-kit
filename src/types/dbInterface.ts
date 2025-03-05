@@ -31,6 +31,8 @@ export interface Task {
   project: mongoose.Types.ObjectId;
   assignee?: mongoose.Types.ObjectId;
   assigner: mongoose.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type ProjectModel = mongoose.InferSchemaType<

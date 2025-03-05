@@ -19,6 +19,7 @@ import {
   useSensors
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
+import mongoose from 'mongoose';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import NewProjectDialog from './NewProjectDialog';
 import { BoardContainer, BoardProject } from './Project';
@@ -35,7 +36,7 @@ export function KanbanBoard() {
     }
   }, [userEmail]);
   const pickedUpTaskProject = useMemo(() => {
-    return { current: null };
+    return { current: null as null | mongoose.Types.ObjectId };
   }, []);
   const projectsId = useMemo(
     () => projects.map((project: Project) => project._id),
@@ -64,10 +65,10 @@ export function KanbanBoard() {
 
   function getDraggingTaskData(taskId: string, projectId: string) {
     const project = projects.find(
-      (project: Project) => project._id === projectId
+      (project: Project) => project._id.toString() === projectId
     );
     const tasksInProject = project!.tasks.filter(
-      (task: Task) => task.projectId === projectId
+      (task: Task) => task.project.toString() === projectId
     );
     const taskPosition = tasksInProject.findIndex(
       (task: { _id: string }) => task._id === taskId
@@ -108,17 +109,17 @@ export function KanbanBoard() {
     // get active task
     const activeTask = active.data.current!.task;
     const activeProject = updatedProjects.find(
-      (project: Project) => project.id === active.data.current!.task.projectId
+      (project: Project) => project._id === active.data.current!.task.projectId
     );
     const activeTaskIdx = activeProject!.tasks.findIndex(
-      (task: Task) => task.id === activeTask.id
+      (task: Task) => task._id === activeTask._id
     );
     // drag a task over a project
     if (over.data.current!.type === 'Project') {
       const overProject = updatedProjects.find(
-        (project: Project) => project.id === over.data.current!.project.id
+        (project: Project) => project._id === over.data.current!.project.id
       );
-      activeTask.projectId = overProject!.id;
+      activeTask.project = new mongoose.Types.ObjectId(overProject!._id);
       overProject!.tasks.push(activeTask);
       activeProject!.tasks.splice(activeTaskIdx, 1);
     }
@@ -126,14 +127,15 @@ export function KanbanBoard() {
     if (over.data.current!.type === 'Task') {
       const overTask = over.data.current!.task;
       const overProject = updatedProjects.find(
-        (project: Project) => project.id === overTask.projectId
+        (project: Project) =>
+          project._id.toString() === overTask.project.toString()
       );
       const overTaskIdx = overProject!.tasks.findIndex(
-        (task: Task) => task.id === overTask.id
+        (task: Task) => task._id === overTask._id
       );
       // move task to a different project
-      if (overTask.projectId !== activeTask.projectId) {
-        activeTask.projectId = overTask.projectId;
+      if (overTask.project !== activeTask.project) {
+        activeTask.project = overTask.project;
         overProject!.tasks.splice(overTaskIdx, 0, activeTask);
         activeProject!.tasks.splice(activeTaskIdx, 1);
       }
@@ -166,11 +168,11 @@ export function KanbanBoard() {
     const isActiveAProject = activeData?.type === 'Project';
     if (!isActiveAProject) return;
     const activeProjectIndex = projects.findIndex(
-      (project: Project) => project.id === activeId
+      (project: Project) => project._id === activeId
     );
 
     const overProjectIndex = projects.findIndex(
-      (project: Project) => project.id === overId
+      (project: Project) => project._id === overId
     );
 
     setProjects(arrayMove(projects, activeProjectIndex, overProjectIndex));
@@ -191,7 +193,7 @@ export function KanbanBoard() {
         pickedUpTaskProject.current = active.data.current.task.project;
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           active.data.current.task._id,
-          active.data.current.task.project
+          active.data.current.task.project.toString()
         );
         return `Picked up Task ${
           active.data.current.task.title
@@ -218,9 +220,9 @@ export function KanbanBoard() {
       ) {
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           over.data.current.task._id,
-          over.data.current.task.project
+          over.data.current.task.project.toString()
         );
-        if (over.data.current.task.projectId !== pickedUpTaskProject.current) {
+        if (over.data.current.task.project !== pickedUpTaskProject.current) {
           return `Task ${
             active.data.current.task.title
           } was moved over project ${project?.title} in position ${
@@ -256,9 +258,9 @@ export function KanbanBoard() {
       ) {
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           over.data.current.task._id,
-          over.data.current.task.project
+          over.data.current.task.project.toString()
         );
-        if (over.data.current.task.projectId !== pickedUpTaskProject.current) {
+        if (over.data.current.task.project !== pickedUpTaskProject.current) {
           return `Task was dropped into project ${project?.title} in position ${
             taskPosition + 1
           } of ${tasksInProject.length}`;

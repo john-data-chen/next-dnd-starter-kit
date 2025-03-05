@@ -45,12 +45,26 @@ export const useTaskStore = create<State>()(
           const projectsWithTasks = await Promise.all(
             projects.map(async (project) => {
               const tasks = await getTasksByProjectId(project._id);
-              return { ...project, tasks: tasks || [] };
+              return {
+                ...project,
+                _id: project._id,
+                owner: project.owner,
+                members: project.members,
+                tasks: tasks
+                  ? tasks.map((task) => ({
+                      ...task,
+                      _id: task._id,
+                      project: task.project,
+                      assignee: task.assignee,
+                      assigner: task.assigner
+                    }))
+                  : []
+              } as Project;
             })
           );
           set({ projects: projectsWithTasks });
         } else {
-          set({ projects: [] as Project[] });
+          set({ projects: [] });
         }
       },
       setProjects: (projects: Project[]) => set({ projects }),
