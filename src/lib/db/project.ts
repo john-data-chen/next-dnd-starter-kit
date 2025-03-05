@@ -1,7 +1,7 @@
 'use server';
 
 import { ProjectModel, ProjectType } from '@/models/project.model';
-import { connectToDatabase, disconnectFromDatabase } from './connect';
+import { connectToDatabase } from './connect';
 import { getUserFromDb } from './user';
 
 export async function getProjectsFromDb(
@@ -23,8 +23,6 @@ export async function getProjectsFromDb(
   } catch (error) {
     console.error('Error fetching projects:', error);
     return null;
-  } finally {
-    await disconnectFromDatabase();
   }
 }
 
@@ -48,8 +46,6 @@ export async function createProjectInDb(data: {
   } catch (error) {
     console.error('Error creating project:', error);
     return null;
-  } finally {
-    await disconnectFromDatabase();
   }
 }
 
@@ -87,8 +83,6 @@ export async function updateProjectInDb(
   } catch (error) {
     console.error('Error updating project:', error);
     return null;
-  } finally {
-    await disconnectFromDatabase();
   }
 }
 
@@ -121,7 +115,5 @@ export async function deleteProjectInDb(
   } catch (error) {
     console.error('Error deleting project:', error);
     return false;
-  } finally {
-    await disconnectFromDatabase();
   }
 }

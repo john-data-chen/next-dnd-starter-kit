@@ -1,7 +1,7 @@
 'use server';
 
 import { defaultDbUrl } from '@/constants/auth';
-import { connect, disconnect } from 'mongoose';
+import { connect } from 'mongoose';
 
 let isConnected = false;
 let dbUrl = process.env.DATABASE_URL;
@@ -21,21 +21,6 @@ export async function connectToDatabase() {
     console.log('MongoDB connected successfully');
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    throw error;
-  }
-}
-
-export async function disconnectFromDatabase() {
-  if (!isConnected) {
-    return;
-  }
-
-  try {
-    await disconnect();
-    isConnected = false;
-    console.log('MongoDB disconnected successfully');
-  } catch (error) {
-    console.error('MongoDB disconnection error:', error);
     throw error;
   }
 }

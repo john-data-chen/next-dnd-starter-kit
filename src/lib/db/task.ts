@@ -2,7 +2,7 @@
 
 import { ProjectModel } from '@/models/project.model';
 import { TaskType } from '@/models/task.model';
-import { connectToDatabase, disconnectFromDatabase } from './connect';
+import { connectToDatabase } from './connect';
 
 export async function getTasksByProjectId(
   projectId: string
@@ -14,11 +14,10 @@ export async function getTasksByProjectId(
       console.error('Project not found');
       return null;
     }
+    console.log('project.tasks', project.tasks);
     return project.tasks || [];
   } catch (error) {
     console.error('Error fetching tasks:', error);
     return null;
-  } finally {
-    await disconnectFromDatabase();
   }
 }
