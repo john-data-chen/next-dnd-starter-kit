@@ -83,8 +83,11 @@ export const useTaskStore = create<State>()(
           )
         }));
       },
-      removeProject: (id: string, userEmail: string) => {
-        deleteProjectInDb(id, userEmail);
+      removeProject: async (id: string, userEmail: string) => {
+        await deleteProjectInDb(id, userEmail);
+        set((state) => ({
+          projects: state.projects.filter((project) => project._id !== id)
+        }));
       },
       addTask: () => {
         // implement addTask logic

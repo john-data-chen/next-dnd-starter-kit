@@ -98,8 +98,8 @@ export function ProjectActions({ title, id }: { title: string; id: string }) {
                 setTimeout(() => (document.body.style.pointerEvents = ''), 100);
 
                 setShowDeleteDialog(false);
-                removeProject(id);
-                toast('Project has been deleted.');
+                removeProject(id, userEmail!);
+                toast(`Project title: ${title} is deleted`);
               }}
             >
               Delete
