@@ -47,19 +47,8 @@ export const useTaskStore = create<State>()(
               const tasks = await getTasksByProjectId(project._id);
               return {
                 ...project,
-                _id: project._id,
-                owner: project.owner,
-                members: project.members,
-                tasks: tasks
-                  ? tasks.map((task) => ({
-                      ...task,
-                      _id: task._id,
-                      project: task.project,
-                      assignee: task.assignee,
-                      assigner: task.assigner
-                    }))
-                  : []
-              } as Project;
+                tasks: tasks || []
+              };
             })
           );
           set({ projects: projectsWithTasks });
