@@ -71,8 +71,17 @@ export const useTaskStore = create<State>()(
           console.error('Error in addProject:', error);
         }
       },
-      updateProject: (id: string, newName: string, userEmail: string) => {
-        updateProjectInDb(id, userEmail, { title: newName });
+      updateProject: (id: string, newTitle: string, userEmail: string) => {
+        updateProjectInDb({
+          projectId: id,
+          userEmail: userEmail,
+          newTitle: newTitle
+        });
+        set((state) => ({
+          projects: state.projects.map((project) =>
+            project._id === id ? { ...project, title: newTitle } : project
+          )
+        }));
       },
       removeProject: (id: string, userEmail: string) => {
         deleteProjectInDb(id, userEmail);

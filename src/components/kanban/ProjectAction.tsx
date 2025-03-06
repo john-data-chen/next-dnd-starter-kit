@@ -24,7 +24,8 @@ import * as React from 'react';
 import { toast } from 'sonner';
 
 export function ProjectActions({ title, id }: { title: string; id: string }) {
-  const [name, setName] = React.useState(title);
+  const [newTitle, setNewTitle] = React.useState(title);
+  const userEmail = useTaskStore((state) => state.userEmail);
   const updateProject = useTaskStore((state) => state.updateProject);
   const removeProject = useTaskStore((state) => state.removeProject);
   const [editDisable, setIsEditDisable] = React.useState(true);
@@ -37,13 +38,13 @@ export function ProjectActions({ title, id }: { title: string; id: string }) {
         onSubmit={(e) => {
           e.preventDefault();
           setIsEditDisable(!editDisable);
-          updateProject(id, name);
-          toast(`Project ${title} updated to ${name}`);
+          updateProject(id, newTitle, userEmail!);
+          toast(`Project title: ${title} updated to ${newTitle}`);
         }}
       >
         <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
           className="mt-0! mr-auto text-base disabled:cursor-pointer disabled:border-none disabled:opacity-100"
           disabled={editDisable}
           ref={inputRef}
