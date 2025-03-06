@@ -53,7 +53,7 @@ function convertProjectToPlainObject(projectDoc: ProjectDocument): ProjectType {
 async function getUserIdByEmail(userEmail: string): Promise<string | null> {
   try {
     await connectToDatabase();
-    const user = await UserModel.findOne({ userEmail });
+    const user = await UserModel.findOne({ email: userEmail });
     if (!user) {
       console.error('User not found');
       return null;
@@ -77,7 +77,6 @@ export async function createProjectInDb(data: {
       owner: ownerId,
       members: [ownerId]
     });
-
     const project = convertProjectToPlainObject(
       projectDoc as unknown as ProjectDocument
     );
@@ -133,26 +132,18 @@ export async function deleteProjectInDb(
 ): Promise<boolean> {
   try {
     await connectToDatabase();
-
     const project = await ProjectModel.findById(id);
-
     if (!project) {
       console.error('Project not found');
       return false;
     }
-    const user = await ProjectModel.findOne({ email: userEmail });
-    if (!user) {
-      console.error('User not found');
-      return false;
-    }
-    const userId = user._id.toString();
+    const userId = await getUserIdByEmail(userEmail);
     if (project.owner.toString() !== userId) {
       console.error('Permission denied: User is not the project owner');
-      return false;
     }
 
-    await ProjectModel.findByIdAndDelete(id);
-    return true;
+    const newProjects = await ProjectModel.findByIdAndDelete(id);
+    return newProjects !== null;
   } catch (error) {
     console.error('Error deleting project:', error);
     return false;
