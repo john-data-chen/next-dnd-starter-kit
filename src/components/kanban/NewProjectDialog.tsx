@@ -22,6 +22,7 @@ export default function NewProjectDialog({
   onProjectAdd
 }: NewProjectDialogProps = {}) {
   const addProject = useTaskStore((state) => state.addProject);
+  const userEmail = useTaskStore((state) => state.userEmail);
   const [inputValue, setInputValue] = React.useState('');
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -35,7 +36,7 @@ export default function NewProjectDialog({
 
     if (typeof title !== 'string' || !title.trim()) return;
 
-    addProject(title);
+    addProject(title, userEmail!);
     onProjectAdd?.(title);
     setInputValue('');
     setIsOpen(false);

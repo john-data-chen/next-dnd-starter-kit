@@ -1,6 +1,7 @@
 'use server';
 
 import { ProjectModel, ProjectType } from '@/models/project.model';
+import { UserModel } from '@/models/user.model';
 import { connectToDatabase } from './connect';
 import { getUserFromDb } from './user';
 
@@ -9,7 +10,6 @@ export async function getProjectsFromDb(
 ): Promise<ProjectType[] | null> {
   try {
     await connectToDatabase();
-    console.log('userEmail: ', userEmail);
     const user = await getUserFromDb(userEmail);
     if (!user) {
       console.error('User not found');
@@ -32,16 +32,30 @@ export async function createProjectInDb(data: {
 }): Promise<ProjectType | null> {
   try {
     await connectToDatabase();
-    const owner = await ProjectModel.findOne({ email: data.userEmail });
+    const owner = await UserModel.findOne({ email: data.userEmail });
+
     if (!owner) {
       console.error('Owner not found');
       return null;
     }
     const ownerId = owner._id.toString();
-    const project = await ProjectModel.create({
+    const projectDoc = await ProjectModel.create({
       ...data,
+      owner: ownerId,
       members: [ownerId]
     });
+
+    const project = {
+      _id: projectDoc._id.toString(),
+      title: projectDoc.title,
+      owner: projectDoc.owner.toString(),
+      members: projectDoc.members.map((member) => member.toString()),
+      createdAt: projectDoc.createdAt,
+      updatedAt: projectDoc.updatedAt,
+      tasks: []
+    };
+
+    console.log('Created project: ', project);
     return project;
   } catch (error) {
     console.error('Error creating project:', error);

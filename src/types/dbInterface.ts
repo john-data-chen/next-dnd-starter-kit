@@ -7,10 +7,10 @@ export interface Project {
   _id: string;
   title: string;
   description?: string;
-  owner: mongoose.Types.ObjectId;
-  members: mongoose.Types.ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
+  owner: string;
+  members: string[];
+  createdAt: string;
+  updatedAt: string;
   tasks: Task[];
 }
 

@@ -57,8 +57,19 @@ export const useTaskStore = create<State>()(
         }
       },
       setProjects: (projects: Project[]) => set({ projects }),
-      addProject: (title: string, userEmail: string) => {
-        createProjectInDb({ title, userEmail });
+      addProject: async (title: string, userEmail: string) => {
+        try {
+          const newProject = await createProjectInDb({ title, userEmail });
+          if (newProject) {
+            set((state) => ({
+              projects: [...state.projects, newProject]
+            }));
+          } else {
+            console.error('Failed to create project');
+          }
+        } catch (error) {
+          console.error('Error in addProject:', error);
+        }
       },
       updateProject: (id: string, newName: string, userEmail: string) => {
         updateProjectInDb(id, userEmail, { title: newName });
