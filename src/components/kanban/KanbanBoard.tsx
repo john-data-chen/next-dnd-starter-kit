@@ -34,7 +34,7 @@ export function KanbanBoard() {
     if (userEmail) {
       fetchProjects(userEmail);
     }
-  }, [userEmail]);
+  }, [userEmail, fetchProjects]);
   const pickedUpTaskProject = useMemo(() => {
     return { current: null as null | mongoose.Types.ObjectId };
   }, []);
