@@ -28,8 +28,12 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
    ```markdown
    ## Implementation Plan
 
-   - [x] User authentication for secure project/task management: done
    - [ ] Persistent data into Database: in progress
+   - [ ] Add the ability to add a new task card
+   - [ ] Add the ability to delete a task card
+   - [ ] Add the ability to edit the task card
+   - [ ] Add the ability to drag the task card to change its order in the project
+   - [ ] Add the ability to drag the task card to another project
    ```
 
 4. **Phased Implementation and Verification**
