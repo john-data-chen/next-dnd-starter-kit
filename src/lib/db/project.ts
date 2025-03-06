@@ -50,19 +50,28 @@ function convertProjectToPlainObject(projectDoc: ProjectDocument): ProjectType {
   };
 }
 
+async function getUserIdByEmail(userEmail: string): Promise<string | null> {
+  try {
+    await connectToDatabase();
+    const user = await UserModel.findOne({ userEmail });
+    if (!user) {
+      console.error('User not found');
+      return null;
+    }
+    return user._id.toString();
+  } catch (error) {
+    console.error('Error fetching user ID:', error);
+    return null; // Add explicit return for error case
+  }
+}
+
 export async function createProjectInDb(data: {
   title: string;
   userEmail: string;
 }): Promise<ProjectType | null> {
   try {
     await connectToDatabase();
-    const owner = await UserModel.findOne({ email: data.userEmail });
-
-    if (!owner) {
-      console.error('Owner not found');
-      return null;
-    }
-    const ownerId = owner._id.toString();
+    const ownerId = await getUserIdByEmail(data.userEmail);
     const projectDoc = await ProjectModel.create({
       ...data,
       owner: ownerId,
@@ -92,12 +101,7 @@ export async function updateProjectInDb(data: {
       console.error('Project not found');
       return null;
     }
-    const user = await UserModel.findOne({ email: data.userEmail });
-    if (!user) {
-      console.error('User not found');
-      return null;
-    }
-    const userId = user._id.toString();
+    const userId = await getUserIdByEmail(data.userEmail);
     if (project.owner.toString() !== userId) {
       console.error('Permission denied: User is not the project owner');
       return null;
