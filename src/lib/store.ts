@@ -7,7 +7,7 @@ import {
   getProjectsFromDb,
   updateProjectInDb
 } from './db/project';
-import { getTasksByProjectId } from './db/task';
+import { createTaskInDb, getTasksByProjectId } from './db/task';
 
 interface State {
   userEmail: string | null;
@@ -20,10 +20,12 @@ interface State {
   removeProject: (id: string, userEmail: string) => void;
   addTask: (
     projectId: string,
+    userEmail: string,
     title: string,
-    description: string,
-    dueDate: Date | null
-  ) => void;
+    description?: string,
+    dueDate?: Date,
+    assigneeId?: string
+  ) => Promise<void>;
   updateTask: (
     taskId: string,
     title: string,
@@ -89,8 +91,35 @@ export const useTaskStore = create<State>()(
           projects: state.projects.filter((project) => project._id !== id)
         }));
       },
-      addTask: () => {
-        // implement addTask logic
+      addTask: async (
+        projectId: string,
+        userEmail: string,
+        title: string,
+        description?: string,
+        dueDate?: Date,
+        assigneeId?: string
+      ) => {
+        try {
+          const newTask = await createTaskInDb(
+            projectId,
+            title,
+            userEmail,
+            description,
+            dueDate,
+            assigneeId
+          );
+
+          set((state) => ({
+            projects: state.projects.map((project) =>
+              project._id === projectId
+                ? { ...project, tasks: [...project.tasks, newTask] }
+                : project
+            )
+          }));
+        } catch (error) {
+          console.error('Error in addTask:', error);
+          throw error;
+        }
       },
       updateTask: () => {
         // implement updateTask logic

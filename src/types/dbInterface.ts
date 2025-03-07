@@ -28,9 +28,9 @@ export interface Task {
   title: string;
   description?: string;
   dueDate?: Date;
-  project: mongoose.Types.ObjectId;
-  assignee?: mongoose.Types.ObjectId;
-  assigner: mongoose.Types.ObjectId;
+  project: string;
+  assignee?: string;
+  assigner: string;
   createdAt: Date;
   updatedAt: Date;
 }

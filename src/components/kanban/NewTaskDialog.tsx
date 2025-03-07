@@ -27,6 +27,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
+import { TaskFormSchema } from '@/types/taskForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
@@ -39,20 +40,16 @@ export interface NewTaskDialogProps {
   projectId: string;
 }
 
-export const TaskFormSchema = z.object({
-  title: z.string().min(1, { message: 'Title is required' }),
-  description: z.string().optional(),
-  dueDate: z.date().optional()
-});
-
 export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
   const addTask = useTaskStore((state) => state.addTask);
+  const userEmail = useTaskStore((state) => state.userEmail);
   const form = useForm<z.infer<typeof TaskFormSchema>>({
     resolver: zodResolver(TaskFormSchema),
     defaultValues: {
       title: '',
       description: '',
-      dueDate: undefined
+      dueDate: undefined,
+      assignee: undefined
     }
   });
   const [isOpen, setIsOpen] = React.useState(false);
@@ -62,10 +59,12 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
     try {
       setIsSubmitting(true);
       await addTask(
-        projectId,
-        values.title,
+        projectId!,
+        userEmail!,
+        values.title!,
         values.description ?? '',
-        values.dueDate ?? null
+        values.dueDate ?? undefined,
+        values.assignee ?? undefined
       );
       toast.success(`New Task: ${values.title}`);
       form.reset();
