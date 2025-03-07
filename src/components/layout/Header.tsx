@@ -1,5 +1,4 @@
 import { Breadcrumbs } from '@/components/Breadcrumbs';
-import SearchInput from '@/components/SearchInput';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import ThemeToggle from './ThemeToggle';
@@ -15,9 +14,6 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-2 px-4">
-        <div className="hidden md:flex">
-          <SearchInput />
-        </div>
         <UserNav />
         <ThemeToggle />
       </div>

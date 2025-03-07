@@ -1,6 +1,5 @@
 'use client';
 
-import KBar from '@/components/kbar/Kbar';
 import AppSidebar from '@/components/layout/AppSidebar';
 import Header from '@/components/layout/Header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
@@ -14,15 +13,13 @@ export default function RootWrapper({
 }) {
   return (
     <>
-      <KBar>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <Header />
-            {children}
-          </SidebarInset>
-        </SidebarProvider>
-      </KBar>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <Header />
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
       <Toaster />
     </>
   );
