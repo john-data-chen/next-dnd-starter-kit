@@ -3,6 +3,14 @@
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandList
+} from '@/components/ui/command';
+import { CommandItem } from '@/components/ui/command';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -25,8 +33,10 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useTaskStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
+import { User } from '@/types/dbInterface';
 import { TaskFormSchema } from '@/types/taskForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
@@ -52,8 +62,22 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
       assignee: undefined
     }
   });
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [addTaskOpen, setAddTaskOpen] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [AssignOpen, setAssignOpen] = React.useState(false);
+
+  const searchUsers = async (search: string) => {
+    try {
+      const response = await fetch(
+        `/api/users/search?q=${search}&projectId=${projectId}`
+      );
+      const data = await response.json();
+      return data.users || [];
+    } catch (error) {
+      console.error('Error searching users:', error);
+      return [];
+    }
+  };
 
   async function onSubmit(values: z.infer<typeof TaskFormSchema>) {
     try {
@@ -64,11 +88,11 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
         values.title!,
         values.description ?? '',
         values.dueDate ?? undefined,
-        values.assignee ?? undefined
+        values.assignee?.id ?? undefined
       );
       toast.success(`New Task: ${values.title}`);
       form.reset();
-      setIsOpen(false);
+      setAddTaskOpen(false);
     } catch (error) {
       toast.error(`Failed to create task: ${error}`);
     } finally {
@@ -76,8 +100,32 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
     }
   }
 
+  const [users, setUsers] = React.useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [isSearching, setIsSearching] = React.useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      if (debouncedSearchQuery) {
+        setIsSearching(true);
+        try {
+          const results = await searchUsers(debouncedSearchQuery);
+          setUsers(results);
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setUsers([]);
+      }
+    };
+    fetchUsers();
+  }, [debouncedSearchQuery, projectId]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={addTaskOpen} onOpenChange={setAddTaskOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary" size="sm" data-testid="new-task-trigger">
           ＋ Add New Task
@@ -177,6 +225,63 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="assignee"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Assign to?</FormLabel>
+                  <FormControl>
+                    <Popover open={AssignOpen} onOpenChange={setAssignOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="w-full justify-between"
+                        >
+                          {field.value ? field.value.name : 'Select user...'}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="p-0"
+                        side="bottom"
+                        align="start"
+                      >
+                        <Command shouldFilter={false}>
+                          <CommandInput
+                            placeholder="Search users..."
+                            value={searchQuery}
+                            onValueChange={setSearchQuery}
+                          />
+                          <CommandList>
+                            <CommandEmpty>
+                              {isSearching ? 'Searching...' : 'No users found.'}
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {users.map((user) => (
+                                <CommandItem
+                                  key={user._id}
+                                  value={user._id}
+                                  onSelect={() => {
+                                    field.onChange({
+                                      id: user._id,
+                                      name: user.name || user.email
+                                    });
+                                    setAssignOpen(false);
+                                  }}
+                                >
+                                  {user.name || user.email}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
                 </FormItem>
               )}
             />
