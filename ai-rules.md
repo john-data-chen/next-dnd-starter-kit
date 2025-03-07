@@ -18,19 +18,19 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 2. **Deep Analysis and Planning**
 
    ```markdown
-   ## Task Analysis
+   ## Task Analysis Template for AI to provide its suggestions
 
    - Purpose: [Final goal of the task]
    - Technical Requirements: [Technology stack and constraints]
    - Implementation Steps: [Specific steps]
    - Risks: [Potential issues]
-   - Quality Standards: [Standards to be met]
+   - Quality Standards: TypeScript, ESLint
    ```
 
 3. **Roadmap**
 
    ```markdown
-   ## Implementation Plan
+   ## The user's Implementation Plan
 
    - [ ] Persistent data into Database: in progress
    - [ ] Modify Add task dialog with assigner and assignee: in progress
@@ -60,31 +60,31 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 
 ## Core Technologies
 
-- TypeScript: ^5.7.3
-- Node.js: ^22.13.1
+- TypeScript: ^5.8.2
+- Node.js: ^22.14.0
 
 ## Frontend
 
-- Next.js: ^14.2.23
+- Next.js: ^14.2.24
 - React: ^18.3.1
-- Tailwind CSS: ^4.0.3
+- Tailwind CSS: ^4.0.11
 - shadcn/ui
 
 ## Backend
 
 - MongoDB: ^8.0.4
-- Mongoose
+- Mongoose: ^8.12.1
 
 ## Development Tools
 
-- npm: ^11.0.0
-- pnpm: ^10.0.0
-- ESLint: ^9.19.0
+- npm: ^11.2.0
+- pnpm: ^10.6.1
+- ESLint: ^9.21.0
 
 ## Testing
 
 - Jest: ^29.7.0
-- Playwright: ^1.50.1
+- Playwright: ^1.51.0
 
 ---
 
@@ -150,11 +150,11 @@ src/
 3. **Code Placement**
    - Common processes in `src/lib/`
    - UI components in `src/components/ui/`
-   - API endpoints in APP router `app/[endpoint]`
+   - API endpoints in APP router by Next.js `app/[endpoint]`
    - Constants in `src/constants/`
    - Types in `src/types/`
    - Global styles in `src/styles/`
-   - Hooks in `src/hooks/`
+   - Custom Hooks in `src/hooks/`
 
 ---
 
