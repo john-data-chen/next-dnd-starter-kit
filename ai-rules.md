@@ -29,9 +29,10 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
    ## Implementation Plan
 
    - [ ] Persistent data into Database: in progress
-   - [ ] Add the ability to add a new task card
-   - [ ] Add the ability to delete a task card
-   - [ ] Add the ability to edit the task card
+   - [ ] Modify Add task dialog with assigner and assignee: in progress
+   - [ ] Add the ability to add a new task card in db
+   - [ ] Add the ability to delete a task card in db
+   - [ ] Add the ability to edit the task card in db
    - [ ] Add the ability to drag the task card to change its order in the project
    - [ ] Add the ability to drag the task card to another project
    ```
