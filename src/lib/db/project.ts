@@ -17,7 +17,7 @@ export async function getProjectsFromDb(
       return null;
     }
     const projects = await ProjectModel.find({
-      $or: [{ owner: user }, { members: { $in: [user] } }]
+      $or: [{ owner: user }, { members: user }]
     });
     return projects;
   } catch (error) {
