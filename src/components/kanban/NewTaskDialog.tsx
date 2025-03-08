@@ -68,9 +68,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
 
   const searchUsers = async (search: string) => {
     try {
-      const response = await fetch(
-        `/api/users/search?q=${search}&projectId=${projectId}`
-      );
+      const response = await fetch(`/api/users/search?username=${search}`);
       const data = await response.json();
       return data.users || [];
     } catch (error) {
