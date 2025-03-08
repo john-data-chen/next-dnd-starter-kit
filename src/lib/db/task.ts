@@ -78,3 +78,36 @@ export async function createTaskInDb(
     throw error;
   }
 }
+
+export async function updateTaskInDb(
+  taskId: string,
+  title: string,
+  description?: string,
+  dueDate?: Date,
+  assigneeId?: string
+): Promise<Task> {
+  try {
+    await connectToDatabase();
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      taskId,
+      {
+        title,
+        description,
+        dueDate,
+        assignee: assigneeId,
+        updatedAt: new Date()
+      },
+      { new: true }
+    );
+
+    if (!updatedTask) {
+      throw new Error('Task not found');
+    }
+
+    return convertTaskToPlainObject(updatedTask as unknown as TaskDocument);
+  } catch (error) {
+    console.error('Error updating task:', error);
+    throw error;
+  }
+}

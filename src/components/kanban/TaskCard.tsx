@@ -6,6 +6,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { format } from 'date-fns';
 import { PointerIcon } from 'lucide-react';
+import { Calendar1Icon, FileTextIcon, UserIcon } from 'lucide-react';
+import 'lucide-react';
 import { TaskActions } from './TaskAction';
 
 interface TaskCardProps {
@@ -83,26 +85,58 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           title={task.title}
           description={task.description}
           dueDate={task.dueDate}
+          assignee={task.assignee}
         />
       </CardHeader>
-      {task.description && (
-        <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-          <p
-            className="text-sl text-muted-foreground"
-            data-testid="task-card-description"
-          >
-            {task.description}
-          </p>
+      {task.assigner && (
+        <CardContent className="px-3 py-2 border-b">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            {task.assigner && (
+              <div className="flex items-center gap-1">
+                <UserIcon className="h-4 w-4" />
+                <span>Created by: {task.assigner}</span>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      )}
+      {task.assignee && (
+        <CardContent className="px-3 py-2 border-b">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            {task.assignee && (
+              <div className="flex items-center gap-1">
+                <UserIcon className="h-4 w-4" />
+                <span>Assignee: {task.assignee}</span>
+              </div>
+            )}
+          </div>
         </CardContent>
       )}
       {task.dueDate && (
-        <CardContent className="px-3 pt-3 pb-6 text-left whitespace-pre-wrap">
-          <p
-            className="text-sl text-muted-foreground"
-            data-testid="task-card-description"
-          >
-            Due Date: {format(task.dueDate, 'yyyy-MM-dd')}
-          </p>
+        <CardContent className="px-3 py-2 border-b">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            {task.dueDate && (
+              <div className="flex items-center gap-1">
+                <Calendar1Icon className="h-4 w-4" />
+                <span>
+                  Due Date: {format(new Date(task.dueDate), 'yyyy/MM/dd')}
+                </span>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      )}
+      {task.description && (
+        <CardContent className="px-3 py-2 text-left whitespace-pre-wrap">
+          <div className="flex items-start gap-1">
+            <FileTextIcon className="h-4 w-4 mt-1 text-muted-foreground" />
+            <p
+              className="text-sl text-muted-foreground"
+              data-testid="task-card-description"
+            >
+              {task.description}
+            </p>
+          </div>
         </CardContent>
       )}
     </Card>

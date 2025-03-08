@@ -12,6 +12,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -40,8 +48,11 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useTaskStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
+import { User } from '@/types/dbInterface';
+import { TaskFormSchema } from '@/types/taskForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
@@ -56,26 +67,23 @@ export interface TaskActionsProps {
   title: string;
   description?: string;
   dueDate?: Date | null;
+  assignee?: string;
   onUpdate?: (
     id: string,
     newTitle: string,
     newDescription?: string,
-    newDueDate?: Date | null
+    newDueDate?: Date | null,
+    assignee?: string
   ) => void;
   onDelete?: (id: string) => void;
 }
-
-export const TaskFormSchema = z.object({
-  title: z.string().min(1, { message: 'Title is required' }),
-  description: z.string().optional(),
-  dueDate: z.date().optional()
-});
 
 export function TaskActions({
   id,
   title,
   description,
   dueDate,
+  assignee,
   onDelete
 }: TaskActionsProps) {
   const updateTask = useTaskStore((state) => state.updateTask);
@@ -83,13 +91,49 @@ export function TaskActions({
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [editEnable, setEditEnable] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [users, setUsers] = React.useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [isSearching, setIsSearching] = React.useState(false);
+  const [AssignOpen, setAssignOpen] = React.useState(false);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  const searchUsers = async (search: string) => {
+    try {
+      const response = await fetch(`/api/users/search?username=${search}`);
+      const data = await response.json();
+      return data.users || [];
+    } catch (error) {
+      console.error('Error searching users:', error);
+      return [];
+    }
+  };
+
+  React.useEffect(() => {
+    const fetchUsers = async () => {
+      if (debouncedSearchQuery) {
+        setIsSearching(true);
+        try {
+          const results = await searchUsers(debouncedSearchQuery);
+          setUsers(results);
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setUsers([]);
+      }
+    };
+    fetchUsers();
+  }, [debouncedSearchQuery]);
 
   const form = useForm<z.infer<typeof TaskFormSchema>>({
     resolver: zodResolver(TaskFormSchema),
     defaultValues: {
       title: title,
       description: description ?? '',
-      dueDate: dueDate ?? undefined
+      dueDate: dueDate ?? undefined,
+      assignee: assignee ? { id: assignee } : undefined
     }
   });
 
@@ -100,7 +144,8 @@ export function TaskActions({
         id,
         values.title,
         values.description ?? '',
-        values.dueDate
+        values.dueDate,
+        values.assignee?.id
       );
       toast.success(`Task is updated: ${values.title}`);
       form.reset();
@@ -218,6 +263,65 @@ export function TaskActions({
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="assignee"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Assign to?</FormLabel>
+                    <FormControl>
+                      <Popover open={AssignOpen} onOpenChange={setAssignOpen}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="w-full justify-between"
+                          >
+                            {field.value ? field.value.name : 'Select user...'}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="p-0"
+                          side="bottom"
+                          align="start"
+                        >
+                          <Command shouldFilter={false}>
+                            <CommandInput
+                              placeholder="Search users..."
+                              value={searchQuery}
+                              onValueChange={setSearchQuery}
+                            />
+                            <CommandList>
+                              <CommandEmpty>
+                                {isSearching
+                                  ? 'Searching...'
+                                  : 'No users found.'}
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {users.map((user) => (
+                                  <CommandItem
+                                    key={user._id}
+                                    value={user._id}
+                                    onSelect={() => {
+                                      field.onChange({
+                                        id: user._id,
+                                        name: user.name || user.email
+                                      });
+                                      setAssignOpen(false);
+                                    }}
+                                  >
+                                    {user.name || user.email}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
                   </FormItem>
                 )}
               />
