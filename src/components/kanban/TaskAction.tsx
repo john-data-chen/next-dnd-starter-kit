@@ -86,6 +86,7 @@ export function TaskActions({
   assignee,
   onDelete
 }: TaskActionsProps) {
+  const userEmail = useTaskStore((state) => state.userEmail);
   const updateTask = useTaskStore((state) => state.updateTask);
   const removeTask = useTaskStore((state) => state.removeTask);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
@@ -143,6 +144,7 @@ export function TaskActions({
       await updateTask(
         id,
         values.title,
+        userEmail!,
         values.description ?? '',
         values.dueDate,
         values.assignee?.id
