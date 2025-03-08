@@ -22,6 +22,11 @@ async function main() {
           email: 'john.doe@example.com',
           name: 'John Doe',
           role: 'USER'
+        },
+        {
+          email: 'jane.doe@example.com',
+          name: 'Jane Doe',
+          role: 'USER'
         }
       ]);
       console.log('Created users successfully');
@@ -54,8 +59,8 @@ async function main() {
         {
           title: 'Demo Project 2',
           description: 'This is demo project 2',
-          owner: users[1]._id,
-          members: [users[0]._id, users[1]._id]
+          owner: users[2]._id,
+          members: [users[0]._id, users[1]._id, users[2]._id]
         }
       ]);
       console.log('Created projects successfully');
@@ -73,33 +78,36 @@ async function main() {
         title: { $in: ['Task 1', 'Task 2', 'Task 3'] }
       });
       if (tasks.length === 0) {
-      tasks = await TaskModel.insertMany([
-        {
-          title: 'Task 1',
-          description: 'This is our first task',
-          dueDate: new Date(Date.now()),
-          project: projects[0]._id,
-          assignee: users[1]._id,
-          assigner: users[0]._id
-        },
-        {
-          title: 'Task 2',
-          description: 'This is task 2',
-          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-          project: projects[0]._id,
-          assignee: users[1]._id,
-          assigner: users[1]._id
-        },
-        {
-          title: 'Task 3',
-          description: 'This is task 3',
-          dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-          project: projects[1]._id,
-          assignee: users[1]._id,
-          assigner: users[0]._id
-        }
-      ]);
-      console.log('Created tasks successfully');
+        tasks = await TaskModel.insertMany([
+          {
+            title: 'Task 1',
+            description: 'This is our first task',
+            dueDate: new Date(Date.now()),
+            project: projects[0]._id,
+            assignee: users[1]._id,
+            creator: users[0]._id,
+            lastModifier: users[0]._id
+          },
+          {
+            title: 'Task 2',
+            description: 'This is task 2',
+            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            project: projects[0]._id,
+            assignee: users[1]._id,
+            creator: users[2]._id,
+            lastModifier: users[1]._id
+          },
+          {
+            title: 'Task 3',
+            description: 'This is task 3',
+            dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+            project: projects[1]._id,
+            assignee: users[1]._id,
+            creator: users[0]._id,
+            lastModifier: users[2]._id
+          }
+        ]);
+        console.log('Created tasks successfully');
       } else {
         console.log('Tasks already exist, continuing...');
       }

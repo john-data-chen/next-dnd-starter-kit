@@ -29,6 +29,7 @@ interface State {
   updateTask: (
     taskId: string,
     title: string,
+    modifierEmail: string,
     description?: string,
     dueDate?: Date,
     assigneeId?: string
@@ -125,6 +126,7 @@ export const useTaskStore = create<State>()(
       updateTask: async (
         taskId: string,
         title: string,
+        modifierEmail: string,
         description?: string,
         dueDate?: Date,
         assigneeId?: string
@@ -133,7 +135,8 @@ export const useTaskStore = create<State>()(
           const updatedTask = await updateTaskInDb(
             taskId,
             title,
-            description,
+            modifierEmail,
+            description || '',
             dueDate,
             assigneeId
           );

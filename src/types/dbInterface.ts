@@ -23,14 +23,20 @@ export interface User {
   updatedAt: Date;
 }
 
+interface UserInfo {
+  id: string;
+  name: string;
+}
+
 export interface Task {
   _id: string;
   title: string;
   description?: string;
   dueDate?: Date;
   project: string;
-  assignee?: string;
-  assigner: string;
+  assignee?: UserInfo;
+  creator: UserInfo;
+  lastModifier: UserInfo;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -64,5 +70,6 @@ export type TaskModel = mongoose.InferSchemaType<
   dueDate?: Date;
   project: string;
   assignee?: string;
-  assigner: string;
+  creator: string;
+  lastModifier: string;
 };
