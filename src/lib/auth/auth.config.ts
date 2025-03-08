@@ -1,5 +1,5 @@
 import { ROUTES } from '@/constants/routes';
-import { getUserFromDb } from '@/lib/db/user';
+import { getUserByEmail } from '@/lib/db/user';
 import { SignInValidation } from '@/types/authUserForm';
 import { NextAuthConfig } from 'next-auth';
 import Credential from 'next-auth/providers/credentials';
@@ -11,7 +11,7 @@ const authConfig = {
         const validatedFields = SignInValidation.safeParse(credentials);
         if (validatedFields.success) {
           const { email } = validatedFields.data;
-          const user = await getUserFromDb(email);
+          const user = await getUserByEmail(email);
           if (!user) return null;
           return user;
         }
