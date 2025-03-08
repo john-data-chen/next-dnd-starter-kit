@@ -329,8 +329,17 @@ export function TaskActions({
                 type="submit"
                 disabled={isSubmitting}
                 data-testid="submit-task-button"
+                className="mr-2"
               >
                 {isSubmitting ? 'Creating...' : 'Submit'}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setEditEnable(false)}
+                data-testid="cancel-task-button"
+                className="ml-2"
+              >
+                Cancel
               </Button>
             </form>
           </Form>
