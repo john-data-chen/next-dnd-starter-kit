@@ -4,20 +4,19 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const query = searchParams.get('q');
-    const projectId = searchParams.get('projectId');
+    const username = searchParams.get('username');
 
-    if (!query || !projectId) {
+    if (!username) {
       return NextResponse.json(
-        { error: 'Missing required parameters' },
+        { error: 'Username parameter is required' },
         { status: 400 }
       );
     }
 
     const users = await UserModel.find({
       $or: [
-        { email: { $regex: query, $options: 'i' } },
-        { name: { $regex: query, $options: 'i' } }
+        { email: { $regex: username, $options: 'i' } },
+        { name: { $regex: username, $options: 'i' } }
       ]
     }).select('_id email name');
 
