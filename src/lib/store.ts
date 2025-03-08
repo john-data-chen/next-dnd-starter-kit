@@ -29,7 +29,7 @@ interface State {
   updateTask: (
     taskId: string,
     title: string,
-    modifierEmail: string,
+    userEmail: string,
     description?: string,
     dueDate?: Date,
     assigneeId?: string
@@ -44,19 +44,37 @@ export const useTaskStore = create<State>()(
       setUserEmail: (userEmail: string) => set({ userEmail }),
       projects: [] as Project[],
       fetchProjects: async (userEmail: string) => {
-        const projects = await getProjectsFromDb(userEmail);
-        if (projects) {
+        try {
+          const projects = await getProjectsFromDb(userEmail);
+          if (!projects) {
+            set({ projects: [] });
+            return;
+          }
+
           const projectsWithTasks = await Promise.all(
             projects.map(async (project) => {
-              const tasks = await getTasksByProjectId(project._id);
-              return {
-                ...project,
-                tasks: tasks || []
-              };
+              try {
+                const tasks = await getTasksByProjectId(project._id);
+                return {
+                  ...project,
+                  tasks: tasks || []
+                };
+              } catch (error) {
+                console.error(
+                  `Error fetching tasks for project ${project._id}:`,
+                  error
+                );
+                return {
+                  ...project,
+                  tasks: []
+                };
+              }
             })
           );
+
           set({ projects: projectsWithTasks });
-        } else {
+        } catch (error) {
+          console.error('Error fetching projects:', error);
           set({ projects: [] });
         }
       },
@@ -126,7 +144,7 @@ export const useTaskStore = create<State>()(
       updateTask: async (
         taskId: string,
         title: string,
-        modifierEmail: string,
+        userEmail: string,
         description?: string,
         dueDate?: Date,
         assigneeId?: string
@@ -135,7 +153,7 @@ export const useTaskStore = create<State>()(
           const updatedTask = await updateTaskInDb(
             taskId,
             title,
-            modifierEmail,
+            userEmail,
             description || '',
             dueDate,
             assigneeId

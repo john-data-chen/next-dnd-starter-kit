@@ -2,11 +2,11 @@
 
 import { TaskModel, TaskType } from '@/models/task.model';
 import { Task } from '@/types/dbInterface';
-import { Document, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { connectToDatabase } from './connect';
 import { getUserByEmail, getUserById } from './user';
 
-interface TaskDocument extends Document {
+interface TaskDocument {
   _id: Types.ObjectId;
   title: string;
   description?: string;
@@ -22,31 +22,47 @@ interface TaskDocument extends Document {
 async function convertTaskToPlainObject(
   taskDoc: TaskDocument
 ): Promise<TaskType> {
+  if (!taskDoc) {
+    throw new Error('Task document is undefined');
+  }
+
+  if (!taskDoc.creator?.toString() || !taskDoc.lastModifier?.toString()) {
+    throw new Error(
+      `Task document missing required fields: creator (${taskDoc.creator}) or lastModifier (${taskDoc.lastModifier})`
+    );
+  }
+
   const [assigneeUser, creatorUser, modifierUser] = await Promise.all([
-    taskDoc.assignee ? getUserById(taskDoc.assignee.toString()) : null,
+    taskDoc.assignee
+      ? getUserById(taskDoc.assignee.toString())
+      : Promise.resolve(null),
     getUserById(taskDoc.creator.toString()),
     getUserById(taskDoc.lastModifier.toString())
   ]);
 
+  if (!creatorUser || !modifierUser) {
+    throw new Error('Unable to find creator or modifier user data');
+  }
+
   return {
     _id: taskDoc._id.toString(),
     title: taskDoc.title,
-    description: taskDoc.description,
+    description: taskDoc.description || '',
     dueDate: taskDoc.dueDate,
     project: taskDoc.project.toString(),
-    assignee: taskDoc.assignee
+    assignee: assigneeUser
       ? {
-          id: taskDoc.assignee.toString(),
-          name: assigneeUser?.name || 'Unknown User'
+          id: taskDoc.assignee!.toString(),
+          name: assigneeUser.name
         }
       : undefined,
     creator: {
       id: taskDoc.creator.toString(),
-      name: creatorUser?.name || 'Unknown User'
+      name: creatorUser.name
     },
     lastModifier: {
       id: taskDoc.lastModifier.toString(),
-      name: modifierUser?.name || 'Unknown User'
+      name: modifierUser.name
     },
     createdAt: taskDoc.createdAt,
     updatedAt: taskDoc.updatedAt
@@ -58,9 +74,11 @@ export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
     await connectToDatabase();
     const tasks = await TaskModel.find({ project: projectId });
     return Promise.all(
-      tasks.map((task) =>
-        convertTaskToPlainObject(task as unknown as TaskDocument)
-      )
+      tasks.map((task) => {
+        return convertTaskToPlainObject(
+          task.toObject() as unknown as TaskDocument
+        );
+      })
     );
   } catch (error) {
     console.error('Error fetching tasks:', error);
@@ -106,14 +124,14 @@ export async function createTaskInDb(
 export async function updateTaskInDb(
   taskId: string,
   title: string,
-  modifierEmail: string,
+  userEmail: string,
   description?: string,
   dueDate?: Date,
   assigneeId?: string
 ): Promise<Task> {
   try {
     await connectToDatabase();
-    const modifier = await getUserByEmail(modifierEmail);
+    const modifier = await getUserByEmail(userEmail);
     if (!modifier) {
       throw new Error('Modifier not found');
     }
