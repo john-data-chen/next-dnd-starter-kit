@@ -16,7 +16,7 @@ interface State {
   fetchProjects: (userEmail: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
   addProject: (title: string, userEmail: string) => void;
-  updateProject: (id: string, newName: string, userEmail: string) => void;
+  updateProject: (id: string, newTitle: string, userEmail: string) => void;
   removeProject: (id: string, userEmail: string) => void;
   addTask: (
     projectId: string,

@@ -88,7 +88,7 @@ export async function updateProjectInDb(data: {
       console.error('Owner not found');
       return null;
     }
-    if (project.owner.toString() !== owner._id) {
+    if (project.owner.toString() !== owner._id.toString()) {
       console.error('Permission denied: User is not the project owner');
       return null;
     }
