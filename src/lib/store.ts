@@ -7,7 +7,12 @@ import {
   getProjectsFromDb,
   updateProjectInDb
 } from './db/project';
-import { createTaskInDb, getTasksByProjectId, updateTaskInDb } from './db/task';
+import {
+  createTaskInDb,
+  deleteTaskInDb,
+  getTasksByProjectId,
+  updateTaskInDb
+} from './db/task';
 
 interface State {
   userEmail: string | null;
@@ -172,8 +177,20 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      removeTask: () => {
-        // implement removeTask logic
+      removeTask: async (taskId: string) => {
+        try {
+          await deleteTaskInDb(taskId);
+
+          set((state) => ({
+            projects: state.projects.map((project) => ({
+              ...project,
+              tasks: project.tasks.filter((task) => task._id !== taskId)
+            }))
+          }));
+        } catch (error) {
+          console.error('Error in removeTask:', error);
+          throw error;
+        }
       }
     }),
     {

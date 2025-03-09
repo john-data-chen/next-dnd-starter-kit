@@ -159,3 +159,17 @@ export async function updateTaskInDb(
     throw error;
   }
 }
+
+export async function deleteTaskInDb(taskId: string): Promise<void> {
+  try {
+    await connectToDatabase();
+    const task = await TaskModel.findById(taskId);
+    if (!task) {
+      throw new Error(`Task with id ${taskId} not found`);
+    }
+    await TaskModel.findByIdAndDelete(taskId);
+  } catch (error) {
+    console.error('Error deleting task:', error);
+    throw error;
+  }
+}
