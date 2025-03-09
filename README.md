@@ -88,8 +88,11 @@ pnpm run playwright
 - [x] Add edit task dialog
 - [x] Make Database Schema and initialization script
 - [x] User authentication for secure project/task management
-- [ ] Persistent data into Database
-- [ ] Add assigner and owner in task dialog
+- [x] Add assigner and owner in task dialog
+- [x] Persistent data into Database
+- [ ] Fix the issues of dragging tasks to another order in the same project
+- [ ] Fix the issues of dragging tasks to another project
+- [ ] Fix the warning when add a new task card
 
 and more...
 
