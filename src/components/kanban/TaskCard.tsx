@@ -88,18 +88,6 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           assignee={task.assignee?.name}
         />
       </CardHeader>
-      {task.lastModifier && (
-        <CardContent className="px-3 py-2 border-b">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            {task.lastModifier.name && (
-              <div className="flex items-center gap-1">
-                <UserIcon className="h-4 w-4" />
-                <span>Last Modified by: {task.lastModifier.name}</span>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      )}
       {task.creator && (
         <CardContent className="px-3 py-2 border-b">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -107,6 +95,18 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
               <div className="flex items-center gap-1">
                 <UserIcon className="h-4 w-4" />
                 <span>Created by: {task.creator.name}</span>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      )}
+      {task.lastModifier && (
+        <CardContent className="px-3 py-2 border-b">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            {task.lastModifier.name && (
+              <div className="flex items-center gap-1">
+                <UserIcon className="h-4 w-4" />
+                <span>Last Modified by: {task.lastModifier.name}</span>
               </div>
             )}
           </div>
