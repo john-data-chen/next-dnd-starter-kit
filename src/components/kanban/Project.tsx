@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -93,6 +94,11 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 
       <CardContent className="flex grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
+          <div className="mb-2">
+            <Badge variant="outline" className="text-xs">
+              owner: {project.owner.name}
+            </Badge>
+          </div>
           <NewTaskDialog projectId={project._id} />
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
