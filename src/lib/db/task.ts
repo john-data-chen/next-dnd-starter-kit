@@ -1,5 +1,6 @@
 'use server';
 
+import { ProjectModel } from '@/models/project.model';
 import { TaskModel, TaskType } from '@/models/task.model';
 import { Task } from '@/types/dbInterface';
 import { Types } from 'mongoose';
@@ -156,6 +157,50 @@ export async function updateTaskInDb(
     return convertTaskToPlainObject(updatedTask as unknown as TaskDocument);
   } catch (error) {
     console.error('Error updating task:', error);
+    throw error;
+  }
+}
+
+export async function updateTaskProjectInDb(
+  userEmail: string,
+  taskId: string,
+  newProjectId: string
+): Promise<Task> {
+  try {
+    await connectToDatabase();
+
+    const user = await getUserByEmail(userEmail);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const project = await ProjectModel.findById(newProjectId);
+    if (project!.owner.toString() !== user._id) {
+      console.error('Permission denied: User is not the project owner');
+    }
+
+    const task = await TaskModel.findById(taskId);
+    if (!task) {
+      throw new Error('Task not found');
+    }
+
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      taskId,
+      {
+        project: new Types.ObjectId(newProjectId),
+        lastModifier: user._id,
+        updatedAt: new Date()
+      },
+      { new: true }
+    );
+
+    if (!updatedTask) {
+      throw new Error('Failed to update task');
+    }
+
+    return convertTaskToPlainObject(updatedTask as unknown as TaskDocument);
+  } catch (error) {
+    console.error('Error updating task project:', error);
     throw error;
   }
 }

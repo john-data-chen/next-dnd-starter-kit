@@ -11,7 +11,8 @@ import {
   createTaskInDb,
   deleteTaskInDb,
   getTasksByProjectId,
-  updateTaskInDb
+  updateTaskInDb,
+  updateTaskProjectInDb
 } from './db/task';
 
 interface State {
@@ -40,6 +41,11 @@ interface State {
     assigneeId?: string
   ) => void;
   removeTask: (taskId: string) => void;
+  dragTaskIntoNewProject: (
+    taskId: string,
+    newProjectId: string,
+    userEmail: string
+  ) => Promise<void>;
 }
 
 export const useTaskStore = create<State>()(
@@ -189,6 +195,18 @@ export const useTaskStore = create<State>()(
           }));
         } catch (error) {
           console.error('Error in removeTask:', error);
+          throw error;
+        }
+      },
+      dragTaskIntoNewProject: async (
+        userEmail: string,
+        taskId: string,
+        newProjectId: string
+      ) => {
+        try {
+          await updateTaskProjectInDb(userEmail, taskId, newProjectId);
+        } catch (error) {
+          console.error('Error in dragTaskIntoNewProject:', error);
           throw error;
         }
       }

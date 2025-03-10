@@ -30,6 +30,9 @@ export function KanbanBoard() {
   const projects = useTaskStore((state) => state.projects);
   const fetchProjects = useTaskStore((state) => state.fetchProjects);
   const setProjects = useTaskStore((state) => state.setProjects);
+  const dragTaskIntoNewProject = useTaskStore(
+    (state) => state.dragTaskIntoNewProject
+  );
   useEffect(() => {
     if (userEmail) {
       fetchProjects(userEmail);
@@ -117,11 +120,16 @@ export function KanbanBoard() {
     // drag a task over a project
     if (over.data.current!.type === 'Project') {
       const overProject = updatedProjects.find(
-        (project: Project) => project._id === over.data.current!.project.id
+        (project: Project) => project === over.data.current!.project
       );
-      activeTask.project = overProject!._id;
-      overProject!.tasks.push(activeTask);
+      if (!overProject) {
+        console.error('Target project not found');
+        return;
+      }
+      activeTask.project = overProject._id;
+      overProject.tasks.push(activeTask);
       activeProject!.tasks.splice(activeTaskIdx, 1);
+      dragTaskIntoNewProject(userEmail!, activeTask._id, overProject._id);
     }
     // drag a task over a task
     if (over.data.current!.type === 'Task') {
