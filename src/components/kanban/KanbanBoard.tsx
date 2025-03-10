@@ -109,7 +109,7 @@ export function KanbanBoard() {
     // get active task
     const activeTask = active.data.current!.task;
     const activeProject = updatedProjects.find(
-      (project: Project) => project._id === active.data.current!.task.projectId
+      (project: Project) => project._id === active.data.current!.task.project
     );
     const activeTaskIdx = activeProject!.tasks.findIndex(
       (task: Task) => task._id === activeTask._id
@@ -119,7 +119,7 @@ export function KanbanBoard() {
       const overProject = updatedProjects.find(
         (project: Project) => project._id === over.data.current!.project.id
       );
-      activeTask.project = new mongoose.Types.ObjectId(overProject!._id);
+      activeTask.project = overProject!._id;
       overProject!.tasks.push(activeTask);
       activeProject!.tasks.splice(activeTaskIdx, 1);
     }
@@ -190,7 +190,9 @@ export function KanbanBoard() {
           startProjectIdx + 1
         } of ${projectsId.length}`;
       } else if (active.data.current?.type === 'Task') {
-        pickedUpTaskProject.current = active.data.current.task.project;
+        pickedUpTaskProject.current = new mongoose.Types.ObjectId(
+          active.data.current.task.project
+        );
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           active.data.current.task._id,
           active.data.current.task.project.toString()
@@ -222,7 +224,10 @@ export function KanbanBoard() {
           over.data.current.task._id,
           over.data.current.task.project.toString()
         );
-        if (over.data.current.task.project !== pickedUpTaskProject.current) {
+        if (
+          over.data.current.task.project !==
+          pickedUpTaskProject.current?.toString()
+        ) {
           return `Task ${
             active.data.current.task.title
           } was moved over project ${project?.title} in position ${
@@ -260,7 +265,10 @@ export function KanbanBoard() {
           over.data.current.task._id,
           over.data.current.task.project.toString()
         );
-        if (over.data.current.task.project !== pickedUpTaskProject.current) {
+        if (
+          over.data.current.task.project !==
+          pickedUpTaskProject.current?.toString()
+        ) {
           return `Task was dropped into project ${project?.title} in position ${
             taskPosition + 1
           } of ${tasksInProject.length}`;
