@@ -90,8 +90,9 @@ pnpm run playwright
 - [x] User authentication for secure project/task management
 - [x] Add assigner and owner in task dialog
 - [x] Persistent data into Database
-- [ ] Fix the issues of dragging tasks to another order in the same project
-- [ ] Fix the issues of dragging tasks to another project
+- [x] Fix the issues of dragging tasks to another order in the same project
+- [x] Fix the issues of dragging tasks to another project
+- [ ] Add owner name in project
 - [ ] Fix the warning when add a new task card
 
 and more...

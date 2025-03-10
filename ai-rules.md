@@ -32,13 +32,7 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
    ```markdown
    ## The user's Implementation Plan
 
-   - [X] Persistent data into Database
-   - [X] Modify Add task dialog with assigner and assignee: in progress
-   - [X] Add the ability to add a new task card in db
-   - [X] Add the ability to delete a task card in db
-   - [X] Add the ability to edit the task card in db
-   - [ ] Add the ability to drag the task card to change its order in the project
-   - [ ] Add the ability to drag the task card to another project
+   - [ ] Add project owner in project: in progress
    - [ ] Fix the warning when add a new task card
    ```
 
