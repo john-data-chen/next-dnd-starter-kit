@@ -4,7 +4,7 @@ import { ProjectModel, ProjectType } from '@/models/project.model';
 import { Task } from '@/types/dbInterface';
 import { Document, Types } from 'mongoose';
 import { connectToDatabase } from './connect';
-import { getUserByEmail } from './user';
+import { getUserByEmail, getUserById } from './user';
 
 export async function getProjectsFromDb(
   userEmail: string
@@ -19,7 +19,12 @@ export async function getProjectsFromDb(
     const projects = await ProjectModel.find({
       $or: [{ owner: user }, { members: user }]
     });
-    return projects;
+    const plainProjects = await Promise.all(
+      projects.map((project) =>
+        convertProjectToPlainObject(project as unknown as ProjectDocument)
+      )
+    );
+    return plainProjects;
   } catch (error) {
     console.error('Error fetching projects:', error);
     return null;
@@ -36,11 +41,21 @@ interface ProjectDocument extends Document {
   tasks?: Task[];
 }
 
-function convertProjectToPlainObject(projectDoc: ProjectDocument): ProjectType {
+async function convertProjectToPlainObject(
+  projectDoc: ProjectDocument
+): Promise<ProjectType> {
+  const ownerUser = await getUserById(projectDoc.owner.toString());
+  if (!ownerUser) {
+    throw new Error('Owner user not found');
+  }
+
   return {
     _id: projectDoc._id.toString(),
     title: projectDoc.title,
-    owner: projectDoc.owner.toString(),
+    owner: {
+      id: ownerUser._id.toString(),
+      name: ownerUser.name
+    },
     members: projectDoc.members.map((member) => member.toString()),
     createdAt: projectDoc.createdAt?.toISOString() || new Date().toISOString(),
     updatedAt: projectDoc.updatedAt?.toISOString() || new Date().toISOString(),
