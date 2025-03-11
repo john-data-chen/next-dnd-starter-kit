@@ -65,10 +65,27 @@ export const useTaskStore = create<State>()(
           const projectsWithTasks = await Promise.all(
             projects.map(async (project) => {
               try {
-                const tasks = await getTasksByProjectId(project._id);
+                // 獲取當前狀態中的項目任務
+                const currentStateTasks =
+                  useTaskStore
+                    .getState()
+                    .projects.find((p) => p._id === project._id)?.tasks || [];
+
+                const dbTasks = await getTasksByProjectId(project._id);
+
+                if (
+                  currentStateTasks.length > 0 &&
+                  currentStateTasks.length === dbTasks?.length
+                ) {
+                  return {
+                    ...project,
+                    tasks: currentStateTasks
+                  };
+                }
+
                 return {
                   ...project,
-                  tasks: tasks || []
+                  tasks: dbTasks || []
                 };
               } catch (error) {
                 console.error(
