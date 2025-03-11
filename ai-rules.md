@@ -1,3 +1,5 @@
+# A template of the rules for AI to provide its help
+
 You are an AI assistant with advanced problem-solving capabilities. Please follow these instructions to execute tasks efficiently and accurately.
 
 # Basic Operating Principles
@@ -67,8 +69,12 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 
 - Next.js: ^14.2.24
 - React: ^18.3.1
-- Tailwind CSS: ^4.0.11
+- Tailwind CSS: ^4.0.12
 - shadcn/ui
+
+## State management
+
+- Zustand: ^5.0.3
 
 ## Backend
 
@@ -77,14 +83,22 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 
 ## Development Tools
 
-- npm: ^11.2.0
-- pnpm: ^10.6.1
-- ESLint: ^9.21.0
+- Git: ^2.48.1
+- pnpm: ^10.6.2
+- ESLint: ^9.22.0
 
 ## Testing
 
 - Jest: ^29.7.0
 - Playwright: ^1.51.0
+
+## Auth
+
+- Auth.js: 5.0.0-beta.25
+
+## Notification
+
+- sonner: ^1.7.4
 
 ---
 
@@ -93,6 +107,9 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 ### 1. Code Quality
 
 - Strict TypeScript type checking
+- Do not use the 'any' type.
+- Do not use the non-null assertion operator (`!`).
+- Do not cast to unknown (e.g. `as unknown as T`).
 - Full compliance with ESLint rules
 - Consistency maintenance
 
