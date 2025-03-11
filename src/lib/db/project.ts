@@ -1,6 +1,7 @@
 'use server';
 
 import { ProjectModel, ProjectType } from '@/models/project.model';
+import { TaskModel } from '@/models/task.model';
 import { Task } from '@/types/dbInterface';
 import { Document, Types } from 'mongoose';
 import { connectToDatabase } from './connect';
@@ -144,12 +145,14 @@ export async function deleteProjectInDb(
       console.error('User not found');
       return false;
     }
-    if (project.owner.toString() !== owner._id) {
+    if (project.owner.toString() !== owner._id.toString()) {
       console.error('Permission denied: User is not the project owner');
+      return false;
     }
 
-    const newProjects = await ProjectModel.findByIdAndDelete(id);
-    return newProjects !== null;
+    await TaskModel.deleteMany({ project: id });
+    const deletedProject = await ProjectModel.findByIdAndDelete(id);
+    return deletedProject !== null;
   } catch (error) {
     console.error('Error deleting project:', error);
     return false;
