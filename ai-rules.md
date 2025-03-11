@@ -32,7 +32,9 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
    ```markdown
    ## The user's Implementation Plan
 
-   - [ ] Add project owner in project: in progress
+   - [x] Add project owner in project
+   - [ ] Fix the order of the tasks doesn't save to db
+   - [ ] Add refetch after modified a task
    - [ ] Fix the warning when add a new task card
    ```
 

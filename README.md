@@ -92,7 +92,9 @@ pnpm run playwright
 - [x] Persistent data into Database
 - [x] Fix the issues of dragging tasks to another order in the same project
 - [x] Fix the issues of dragging tasks to another project
-- [ ] Add owner name in project
+- [x] Add owner name in project
+- [ ] Fix the order of the tasks doesn't save to db
+- [ ] Add refetch after modified a task
 - [ ] Fix the warning when add a new task card
 
 and more...
