@@ -93,9 +93,13 @@ pnpm run playwright
 - [x] Fix the issues of dragging tasks to another order in the same project
 - [x] Fix the issues of dragging tasks to another project
 - [x] Add owner name in project
-- [ ] Fix the order of the tasks doesn't save to db
-- [ ] Add refetch after modified a task
-- [ ] Fix the warning when add a new task card
+- [x] Add project owner in project
+   - [x] Fix the order of the tasks doesn't save to db
+   - [x] Fix the tasks of a project are not deleted when the project is deleted
+   - [ ] Add error handle of the task is dragged into another project, but owner is another user
+   - [ ] Fix the issue of adding a new project
+   - [ ] Add refetch after modified a task
+   - [ ] Fix the warning when add a new task card
 
 and more...
 
