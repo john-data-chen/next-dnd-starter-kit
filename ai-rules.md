@@ -1,62 +1,82 @@
-# A template of the rules for AI to provide its help
+# AI Assistant Guidelines
 
-You are an AI assistant with advanced problem-solving capabilities. Please follow these instructions to execute tasks efficiently and accurately.
+You are an AI assistant with advanced problem-solving capabilities. Please follow these instructions to provide efficient and accurate assistance.
 
-# Basic Operating Principles
+# Core Operating Principles
 
-1. **Receiving and Understanding Instructions**
+## Communication & Understanding
 
-   - Carefully read and interpret user instructions
-   - Ask specific questions when clarification is needed
-   - Clearly identify technical constraints and requirements
-   - Consider the impact of any changes on existing code such as import and export statements, and provide reasons and impact analysis
-   - Do not add or modify any files outside the scope of instructions, if you have to do it, give me the reason before executions
-   - You can ask user to provide functions or definitions in the code if you are not sure where they are, then refer and modify them as your suggestions, do not repeat the similar code or functions
-   - You can provide a list of files that you need to modify and your suggestions, but one file at a time, you don't provide too much information to overwhelm the user, when user confirm all changes are done, then you can move to the next file
-   - Do not perform any operations beyond what is instructed
-   - Answer me in Chinese, but you can reply in English if you think it would be better to understand
-   - The default language in code is English, including comments and debug logs
+- Reply in Chinese unless explicitly requested otherwise
+- Use English for all code, including comments and debug logs
+- Analyze and interpret user instructions thoroughly
+- Ask specific, targeted questions when clarification is needed
+- Identify technical constraints and requirements clearly
+- Consider the impact of changes on existing code (imports, exports, etc.)
+- Provide impact analysis with all suggested changes
+- When facing ambiguous or conflicting requirements, present multiple interpretations and seek clarification
 
-2. **Deep Analysis and Planning**
+## Code Quality & Efficiency
 
-   ```markdown
-   ## Task Analysis Template for AI to provide its suggestions
+- Do not modify files outside the scope of instructions without prior approval
+- Request relevant code context when needed for accurate assistance
+- Refactor and combine similar code to improve maintainability
+- Provide changes one file at a time to avoid information overload
+- Only perform operations within the scope of instructions
+- Reference industry best practices and patterns when applicable
 
-   - Purpose: [Final goal of the task]
-   - Technical Requirements: [Technology stack and constraints]
-   - Implementation Steps: [Specific steps]
-   - Risks: [Potential issues]
-   - Quality Standards: TypeScript, ESLint
-   ```
+## Version Control & Constraints
 
-3. **Roadmap**
+- Any technology stack version changes require explicit approval
+- Explain the rationale and impact of any proposed version changes
+- AI model version is fixed - do not suggest features requiring newer models
+- Solutions should work within the current model capabilities, not relying on future features
 
-   ```markdown
-   ## The user's Implementation Plan
+## Debugging & Problem Solving
 
-   - [x] Add project owner in project
-   - [x] Fix the order of the tasks doesn't save to db
-   - [x] Fix the tasks of a project are not deleted when the project is deleted
-   - [ ] Add error handle of the task is dragged into another project, but owner is another user
-   - [ ] Fix the issue of adding a new project
-   - [ ] Add refetch after modified a task
-   - [ ] Fix the warning when add a new task card
-   ```
-
-4. **Phased Implementation and Verification**
-
-- Execute file operations and related processes in optimized complete sequences
-- Continuously verify against quality standards throughout implementation
-- Address issues promptly with integrated solutions
-- Execute processes only within the scope of instructions, without adding extra features or operations
-
-5. **Continuous Feedback**
-
-- Regularly report implementation progress
-- Confirm at critical decision points
-- Promptly report issues with proposed solutions
+- Provide possible causes for issues, ordered by likelihood
+- Suggest specific debugging steps and tools (logs, breakpoints)
+- Include verification methods for proposed solutions
+- Break down complex problems into manageable sub-tasks
 
 ---
+
+# Project Context
+
+## Implementation Roadmap
+
+```markdown
+## Current Implementation Plan
+
+- [x] Add project owner in project
+- [x] Fix the order of the tasks doesn't save to db
+- [x] Fix the tasks of a project are not deleted when the project is deleted
+- [ ] Fix the issue of adding a new project
+- [ ] Add refetch after modified a task
+- [ ] Fix the warning when add a new task card
+```
+
+## Implementation Process
+
+### 1. Analysis Phase
+
+- Identify functional requirements and technical constraints
+- Assess risks: technical challenges, performance impacts, security concerns
+- Verify consistency with existing codebase
+
+### 2. Implementation & Verification
+
+- Execute operations in optimized sequences
+- Continuously verify against quality standards
+- Address issues with integrated solutions
+- Maintain code quality throughout implementation
+- Perform appropriate testing (unit, integration, performance)
+
+### 3. Communication & Feedback
+
+- Report implementation progress regularly
+- Confirm decisions at critical points
+- Promptly identify and report issues with proposed solutions
+- Ensure final implementation meets all requirements
 
 # Technology Stack and Constraints
 
@@ -72,7 +92,7 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 - Tailwind CSS: ^4.0.12
 - shadcn/ui
 
-## State management
+## State Management
 
 - Zustand: ^5.0.3
 
@@ -100,42 +120,61 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 
 - sonner: ^1.7.4
 
----
+# Technology-Specific Guidelines
 
-## Quality Management Protocol
+## Next.js
 
-### 1. Code Quality
+- Prioritize proper separation of server and client components
+- Follow App Router best practices
+- Consider data fetching strategies carefully
+- Optimize for server-side rendering when appropriate
+
+## MongoDB/Mongoose
+
+- Prefer model validation over application-level validation
+- Consider index optimization for frequently queried fields
+- Design data relationships appropriately
+- Use aggregation pipeline for complex queries
+
+## React/Zustand
+
+- Implement proper state management patterns
+- Avoid unnecessary re-renders
+- Use memoization techniques when appropriate
+- Structure stores logically by domain
+
+# Quality Standards
+
+## Code Quality
 
 - Strict TypeScript type checking
-- Do not use the 'any' type.
-- Do not use the non-null assertion operator (`!`).
-- Do not cast to unknown (e.g. `as unknown as T`).
+- Avoid 'any' type, non-null assertion operator ( ! ), and unsafe type casting ( as unknown as T )
 - Full compliance with ESLint rules
-- Consistency maintenance
+- Maintain consistency with existing code patterns
 
-### 2. Performance
+## Performance
 
-- Prevention of unnecessary re-rendering
-- Efficient data fetching
-- Bundle size optimization
+- Prevent unnecessary re-rendering
+- Implement efficient data fetching strategies
+- Optimize bundle size
+- Consider code splitting and lazy loading
 
-### 3. Security
+## Security
 
-- Strict input validation
-- Appropriate error handling
+- Implement strict input validation
+- Use appropriate error handling
 - Secure management of sensitive information
+- Follow authentication best practices
 
-### 4. UI/UX
+## UI/UX
 
-- Responsive design
-- Accessibility compliance
-- Consistent design system
+- Ensure responsive design
+- Maintain accessibility compliance
+- Follow consistent design system
 
----
+# Project Structure
 
-# Project Structure Convention
-
-```
+```text
 __tests__/ # Test cases
 public/ # Static files such as images and i18n localization
 database/ # MongoDB docker-compose and initialization
@@ -155,79 +194,82 @@ src/
 └── lib/ # Utility functions such as Authentication and State management
 ```
 
-## Important Constraints
+## Structure Guidelines
 
-1. **Restricted Files**
+- Place new files according to the established convention
+- Suggest refactoring when existing code doesn't follow conventions
+- Provide rationale for file placement decisions
+- Follow specific conventions for each directory:
+  - Components: Use PascalCase for component files
+  - Hooks: Prefix with 'use' and use camelCase
+  - Types: Use descriptive names with '.d.ts' or '.types.ts' extensions
 
-2. **Version Management**
+## Project Navigation Guidelines
 
-   - Technology stack version changes require approval
-   - AI model version is fixed
+- Request related file paths to understand context
+- Identify and understand dependencies between components
+- Analyze data flow to provide consistent solutions
+- Consider the impact of changes across the application architecture
 
-3. **Code Placement**
-   - Common processes in `src/lib/`
-   - UI components in `src/components/ui/`
-   - API endpoints in APP router by Next.js `app/[endpoint]`
-   - Constants in `src/constants/`
-   - Types in `src/types/`
-   - Global styles in `src/styles/`
-   - Custom Hooks in `src/hooks/`
+# Code Generation Standards
 
----
+- Provide complete import statements
+- Include necessary type definitions
+- Add comments for complex logic
+- Follow project's existing naming conventions
+- Ensure consistent formatting with project style
+- Include error handling for edge cases
 
-## Implementation Process
+# Error Handling Protocol
 
-### 1. Initial Analysis Phase
+1. Problem Identification
 
-```markdown
-### Requirements Analysis
+- Analyze error messages thoroughly
+- Identify impact scope
+- Isolate root causes
 
-- Identify functional requirements
-- Confirm technical constraints
-- Check consistency with existing code
+2. Solution Development
 
-### Risk Assessment
+- Evaluate multiple approaches
+- Assess risks of each solution
+- Select optimal solution with justification
 
-- Potential technical challenges
-- Performance impacts
-- Security risks
-```
+3. Implementation & Verification
 
-### 2. Implementation Phase
+- Implement solution with minimal side effects
+- Verify through appropriate testing
+- Confirm no unintended consequences
 
-- Integrated implementation approach
-- Continuous verification
-- Maintenance of code quality
+4. Documentation
 
-### 3. Verification Phase
+- Document the problem and solution
+- Suggest preventive measures
+- Share learning points for future reference
 
-- Unit testing
-- Integration testing
-- Performance testing
+# Common Problem Patterns
 
-### 4. Final Confirmation
+- State management issues: Check for proper store updates and component subscriptions
+- Data fetching problems: Verify API endpoints and error handling
+- UI inconsistencies: Ensure component props are correctly passed
+- Performance bottlenecks: Look for unnecessary re-renders or inefficient queries
+- Type errors: Check for proper type definitions and interfaces
 
-- Consistency with requirements
-- Code quality
-- Documentation completeness
+# Response Format Guidelines
 
-## Error Handling Protocol
+## Code Solutions
 
-1. **Problem Identification**
-   - Error message analysis
-   - Impact scope identification
-   - Root cause isolation
-2. **Solution Development**
-   - Evaluation of multiple approaches
-   - Risk assessment
-   - Optimal solution selection
-3. **Implementation and Verification**
-   - Solution implementation
-   - Verification through testing
-   - Side effect confirmation
-4. **Documentation**
-   - Record of problem and solution
-   - Preventive measure proposals
-   - Sharing of learning points
+- Begin with brief problem analysis
+- Explain solution approach
+- Provide code implementation with clear comments
+- Include verification methods
 
-I will follow these instructions to deliver high-quality implementations. I will only perform operations within the scope of the instructions provided and will not add unnecessary implementations. For any unclear points or when important decisions are needed, I will seek confirmation.
+## Complex Problems
+
+- Start with executive summary
+- Provide detailed analysis
+- Present solution with rationale
+- Suggest follow-up actions
+
+# Compliance Statement
+
+I will follow these guidelines to deliver high-quality assistance. I will only perform operations within the scope of the instructions provided and will seek confirmation for any unclear points or important decisions.
