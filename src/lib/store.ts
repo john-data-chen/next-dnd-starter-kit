@@ -56,16 +56,27 @@ export const useTaskStore = create<State>()(
       projects: [] as Project[],
       fetchProjects: async (userEmail: string) => {
         try {
+          const currentProjects = useTaskStore.getState().projects;
           const projects = await getProjectsFromDb(userEmail);
-          if (!projects) {
+          if (!projects || projects.length === 0) {
             set({ projects: [] });
             return;
           }
 
+          let orderedProjects = [...projects];
+          if (currentProjects.length > 0) {
+            const projectMap = new Map(projects.map((p) => [p._id, p]));
+            orderedProjects = currentProjects
+              .filter((p) => projectMap.has(p._id))
+              .map((p) => projectMap.get(p._id)!);
+            const existingIds = new Set(orderedProjects.map((p) => p._id));
+            const newProjects = projects.filter((p) => !existingIds.has(p._id));
+            orderedProjects = [...orderedProjects, ...newProjects];
+          }
+
           const projectsWithTasks = await Promise.all(
-            projects.map(async (project) => {
+            orderedProjects.map(async (project) => {
               try {
-                // 獲取當前狀態中的項目任務
                 const currentStateTasks =
                   useTaskStore
                     .getState()
@@ -221,7 +232,51 @@ export const useTaskStore = create<State>()(
         newProjectId: string
       ) => {
         try {
-          await updateTaskProjectInDb(userEmail, taskId, newProjectId);
+          // 调用API更新数据库
+          const updatedTask = await updateTaskProjectInDb(
+            userEmail,
+            taskId,
+            newProjectId
+          );
+
+          set((state) => {
+            const oldProject = state.projects.find((project) =>
+              project.tasks.some((task) => task._id === taskId)
+            );
+
+            if (!oldProject) {
+              console.error('Task not found in any project');
+              return state;
+            }
+
+            const targetProject = state.projects.find(
+              (project) => project._id === newProjectId
+            );
+
+            if (!targetProject) {
+              console.error('Target project not found');
+              return state;
+            }
+
+            const updatedOldProject = {
+              ...oldProject,
+              tasks: oldProject.tasks.filter((task) => task._id !== taskId)
+            };
+
+            const updatedTargetProject = {
+              ...targetProject,
+              tasks: [...targetProject.tasks, updatedTask]
+            };
+
+            return {
+              projects: state.projects.map((project) => {
+                if (project._id === oldProject._id) return updatedOldProject;
+                if (project._id === targetProject._id)
+                  return updatedTargetProject;
+                return project;
+              })
+            };
+          });
         } catch (error) {
           console.error('Error in dragTaskIntoNewProject:', error);
           throw error;
