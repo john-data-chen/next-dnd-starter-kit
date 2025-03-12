@@ -87,6 +87,26 @@ export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
   }
 }
 
+async function ensureUserIsMember(
+  projectId: string,
+  userId: string
+): Promise<void> {
+  const project = await ProjectModel.findById(projectId);
+  if (!project) {
+    throw new Error('Project not found');
+  }
+
+  const isMember = project.members.some(
+    (member) => member.toString() === userId
+  );
+
+  if (!isMember) {
+    await ProjectModel.findByIdAndUpdate(projectId, {
+      $push: { members: userId }
+    });
+  }
+}
+
 export async function createTaskInDb(
   projectId: string,
   title: string,
@@ -100,6 +120,10 @@ export async function createTaskInDb(
     const creator = await getUserByEmail(userEmail);
     if (!creator) {
       throw new Error('Creator not found');
+    }
+
+    if (assigneeId) {
+      await ensureUserIsMember(projectId, assigneeId);
     }
 
     const taskData = {
@@ -135,6 +159,14 @@ export async function updateTaskInDb(
     const modifier = await getUserByEmail(userEmail);
     if (!modifier) {
       throw new Error('Modifier not found');
+    }
+    const task = await TaskModel.findById(taskId);
+    if (!task) {
+      throw new Error('Task not found');
+    }
+
+    if (assigneeId) {
+      await ensureUserIsMember(task.project.toString(), assigneeId);
     }
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
