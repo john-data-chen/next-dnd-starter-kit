@@ -3,9 +3,20 @@
 import { ProjectModel, ProjectType } from '@/models/project.model';
 import { TaskModel } from '@/models/task.model';
 import { Task } from '@/types/dbInterface';
-import { Document, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { connectToDatabase } from './connect';
 import { getUserByEmail, getUserById } from './user';
+
+interface ProjectBase {
+  _id: Types.ObjectId | string;
+  title: string;
+  owner: Types.ObjectId | string | { id: string; name: string };
+  members: (Types.ObjectId | string | { id: string; name: string })[];
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  tasks?: Task[];
+  __v?: number;
+}
 
 export async function getProjectsFromDb(
   userEmail: string
@@ -19,10 +30,11 @@ export async function getProjectsFromDb(
     }
     const projects = await ProjectModel.find({
       $or: [{ owner: user }, { members: user }]
-    });
+    }).lean();
+
     const plainProjects = await Promise.all(
       projects.map((project) =>
-        convertProjectToPlainObject(project as unknown as ProjectDocument)
+        convertProjectToPlainObject(project as ProjectBase)
       )
     );
     return plainProjects;
@@ -32,49 +44,83 @@ export async function getProjectsFromDb(
   }
 }
 
-interface ProjectDocument extends Document {
-  _id: Types.ObjectId;
-  title: string;
-  owner: Types.ObjectId;
-  members: Types.ObjectId[];
-  createdAt?: Date;
-  updatedAt?: Date;
-  tasks?: Task[];
-}
-
 async function convertProjectToPlainObject(
-  projectDoc: ProjectDocument
+  projectDoc: ProjectBase
 ): Promise<ProjectType> {
-  const ownerUser = await getUserById(projectDoc.owner.toString());
-  if (!ownerUser) {
-    throw new Error('Owner user not found');
+  // Handle the case where owner is already an object
+  let ownerUser;
+  if (
+    typeof projectDoc.owner === 'object' &&
+    'id' in projectDoc.owner &&
+    'name' in projectDoc.owner
+  ) {
+    // Owner is already an object with id and name
+    ownerUser = {
+      _id: projectDoc.owner.id,
+      name: projectDoc.owner.name
+    };
+  } else {
+    // Owner is an ObjectId or string
+    const ownerId =
+      typeof projectDoc.owner === 'string'
+        ? projectDoc.owner
+        : projectDoc.owner.toString();
+
+    ownerUser = await getUserById(ownerId);
+    if (!ownerUser) {
+      throw new Error('Owner user not found');
+    }
   }
 
-  const memberPromises = projectDoc.members.map(async (memberId) => {
-    const memberUser = await getUserById(memberId.toString());
-    if (!memberUser) {
-      return null;
+  // Handle the case where members might be an array of objects
+  const memberPromises = projectDoc.members.map(async (member) => {
+    if (typeof member === 'object' && 'id' in member && 'name' in member) {
+      // Member is already an object with id and name
+      return {
+        id: member.id,
+        name: member.name
+      };
+    } else {
+      // Member is an ObjectId or string
+      const memberIdStr =
+        typeof member === 'string' ? member : member.toString();
+
+      const memberUser = await getUserById(memberIdStr);
+      if (!memberUser) {
+        return null;
+      }
+      return {
+        id: memberUser._id.toString(),
+        name: memberUser.name
+      };
     }
-    return {
-      id: memberUser._id.toString(),
-      name: memberUser.name
-    };
   });
 
   const members = (await Promise.all(memberPromises)).filter(
-    (member) => member !== null
+    (member): member is { id: string; name: string } => member !== null
   );
 
+  const docId =
+    typeof projectDoc._id === 'string'
+      ? projectDoc._id
+      : projectDoc._id.toString();
+
   return {
-    _id: projectDoc._id.toString(),
+    _id: docId,
     title: projectDoc.title,
     owner: {
       id: ownerUser._id.toString(),
       name: ownerUser.name
     },
     members: members,
-    createdAt: projectDoc.createdAt?.toISOString() || new Date().toISOString(),
-    updatedAt: projectDoc.updatedAt?.toISOString() || new Date().toISOString(),
+    createdAt:
+      typeof projectDoc.createdAt === 'string'
+        ? projectDoc.createdAt
+        : projectDoc.createdAt?.toISOString() || new Date().toISOString(),
+    updatedAt:
+      typeof projectDoc.updatedAt === 'string'
+        ? projectDoc.updatedAt
+        : projectDoc.updatedAt?.toISOString() || new Date().toISOString(),
     tasks: projectDoc.tasks || []
   };
 }
@@ -95,8 +141,10 @@ export async function createProjectInDb(data: {
       owner: owner._id,
       members: [owner._id]
     });
+
+    // Convert to plain object using toObject() and cast to ProjectBase type
     const project = convertProjectToPlainObject(
-      projectDoc as unknown as ProjectDocument
+      projectDoc.toObject() as ProjectBase
     );
     console.log('Created project: ', project);
     return project;
@@ -138,8 +186,9 @@ export async function updateProjectInDb(data: {
       return null;
     }
 
+    // Convert to plain object using toObject() and cast to ProjectBase type
     const updatedProject = convertProjectToPlainObject(
-      updatedProjectDoc as unknown as ProjectDocument
+      updatedProjectDoc.toObject() as ProjectBase
     );
     return updatedProject;
   } catch (error) {

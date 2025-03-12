@@ -7,78 +7,105 @@ import { Types } from 'mongoose';
 import { connectToDatabase } from './connect';
 import { getUserByEmail, getUserById } from './user';
 
-interface TaskDocument {
-  _id: Types.ObjectId;
+// Define a base interface for both Mongoose documents and plain objects
+interface TaskBase {
+  _id: Types.ObjectId | string;
   title: string;
   description?: string;
   dueDate?: Date;
-  project: Types.ObjectId;
-  assignee?: Types.ObjectId;
-  creator: Types.ObjectId;
-  lastModifier: Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
+  project: Types.ObjectId | string;
+  assignee?: Types.ObjectId | string | { id: string; name: string };
+  creator: Types.ObjectId | string | { id: string; name: string };
+  lastModifier: Types.ObjectId | string | { id: string; name: string };
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  __v?: number;
 }
 
-async function convertTaskToPlainObject(
-  taskDoc: TaskDocument
-): Promise<TaskType> {
+async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
   if (!taskDoc) {
     throw new Error('Task document is undefined');
   }
 
-  if (!taskDoc.creator?.toString() || !taskDoc.lastModifier?.toString()) {
+  const creatorId =
+    typeof taskDoc.creator === 'string'
+      ? taskDoc.creator
+      : taskDoc.creator.toString();
+
+  const modifierId =
+    typeof taskDoc.lastModifier === 'string'
+      ? taskDoc.lastModifier
+      : taskDoc.lastModifier.toString();
+
+  if (!creatorId || !modifierId) {
     throw new Error(
       `Task document missing required fields: creator (${taskDoc.creator}) or lastModifier (${taskDoc.lastModifier})`
     );
   }
 
+  const assigneeId = taskDoc.assignee
+    ? typeof taskDoc.assignee === 'string'
+      ? taskDoc.assignee
+      : taskDoc.assignee.toString()
+    : undefined;
+
   const [assigneeUser, creatorUser, modifierUser] = await Promise.all([
-    taskDoc.assignee
-      ? getUserById(taskDoc.assignee.toString())
-      : Promise.resolve(null),
-    getUserById(taskDoc.creator.toString()),
-    getUserById(taskDoc.lastModifier.toString())
+    assigneeId ? getUserById(assigneeId) : Promise.resolve(null),
+    getUserById(creatorId),
+    getUserById(modifierId)
   ]);
 
   if (!creatorUser || !modifierUser) {
     throw new Error('Unable to find creator or modifier user data');
   }
 
+  const projectId =
+    typeof taskDoc.project === 'string'
+      ? taskDoc.project
+      : taskDoc.project.toString();
+
+  const docId =
+    typeof taskDoc._id === 'string' ? taskDoc._id : taskDoc._id.toString();
+
   return {
-    _id: taskDoc._id.toString(),
+    _id: docId,
     title: taskDoc.title,
     description: taskDoc.description || '',
     dueDate: taskDoc.dueDate,
-    project: taskDoc.project.toString(),
-    assignee: assigneeUser
-      ? {
-          id: taskDoc.assignee!.toString(),
-          name: assigneeUser.name
-        }
-      : undefined,
+    project: projectId,
+    assignee:
+      assigneeUser && assigneeId
+        ? {
+            id: assigneeId,
+            name: assigneeUser.name
+          }
+        : undefined,
     creator: {
-      id: taskDoc.creator.toString(),
+      id: creatorId,
       name: creatorUser.name
     },
     lastModifier: {
-      id: taskDoc.lastModifier.toString(),
+      id: modifierId,
       name: modifierUser.name
     },
-    createdAt: taskDoc.createdAt,
-    updatedAt: taskDoc.updatedAt
+    createdAt:
+      typeof taskDoc.createdAt === 'string'
+        ? new Date(taskDoc.createdAt)
+        : taskDoc.createdAt,
+    updatedAt:
+      typeof taskDoc.updatedAt === 'string'
+        ? new Date(taskDoc.updatedAt)
+        : taskDoc.updatedAt
   };
 }
 
 export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
   try {
     await connectToDatabase();
-    const tasks = await TaskModel.find({ project: projectId });
+    const tasks = await TaskModel.find({ project: projectId }).lean();
     return Promise.all(
       tasks.map((task) => {
-        return convertTaskToPlainObject(
-          task.toObject() as unknown as TaskDocument
-        );
+        return convertTaskToPlainObject(task as unknown as TaskBase);
       })
     );
   } catch (error) {
@@ -139,7 +166,7 @@ export async function createTaskInDb(
     };
 
     const newTask = await TaskModel.create(taskData);
-    return convertTaskToPlainObject(newTask as unknown as TaskDocument);
+    return convertTaskToPlainObject(newTask.toObject() as TaskBase);
   } catch (error) {
     console.error('Error creating task:', error);
     throw error;
@@ -186,7 +213,7 @@ export async function updateTaskInDb(
       throw new Error('Task not found');
     }
 
-    return convertTaskToPlainObject(updatedTask as unknown as TaskDocument);
+    return convertTaskToPlainObject(updatedTask.toObject() as TaskBase);
   } catch (error) {
     console.error('Error updating task:', error);
     throw error;
@@ -249,7 +276,7 @@ export async function updateTaskProjectInDb(
       throw new Error('Failed to update task');
     }
 
-    return convertTaskToPlainObject(updatedTask as unknown as TaskDocument);
+    return convertTaskToPlainObject(updatedTask.toObject() as TaskBase);
   } catch (error) {
     console.error('Error updating task project:', error);
     throw error;
