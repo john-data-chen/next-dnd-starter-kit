@@ -21,6 +21,7 @@ import {
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import mongoose from 'mongoose';
 import { Fragment, useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import NewProjectDialog from './NewProjectDialog';
 import { BoardContainer, BoardProject } from './Project';
 import { TaskCard } from './TaskCard';
@@ -126,10 +127,22 @@ export function KanbanBoard() {
         console.error('Target project not found');
         return;
       }
-      activeTask.project = overProject._id;
-      overProject.tasks.push(activeTask);
-      activeProject!.tasks.splice(activeTaskIdx, 1);
-      dragTaskIntoNewProject(userEmail!, activeTask._id, overProject._id);
+      dragTaskIntoNewProject(userEmail!, activeTask._id, overProject._id)
+        .then(() => {
+          activeTask.project = overProject._id;
+          overProject.tasks.push(activeTask);
+          activeProject!.tasks.splice(activeTaskIdx, 1);
+          setProjects(updatedProjects);
+          toast.success(
+            `Task:"${activeTask.title}" is moved into Project: "${overProject.title}"`
+          );
+        })
+        .catch((error) => {
+          console.error('Failed to move task:', error);
+          toast.error(
+            `Failed to move task: ${error.message || 'unknown error'}`
+          );
+        });
     }
     // drag a task over a task
     if (over.data.current!.type === 'Task') {
@@ -143,18 +156,31 @@ export function KanbanBoard() {
       );
       // move task to a different project
       if (overTask.project !== activeTask.project) {
-        activeTask.project = overTask.project;
-        overProject!.tasks.splice(overTaskIdx, 0, activeTask);
-        activeProject!.tasks.splice(activeTaskIdx, 1);
+        dragTaskIntoNewProject(userEmail!, activeTask._id, overTask.project)
+          .then(() => {
+            activeTask.project = overTask.project;
+            overProject!.tasks.splice(overTaskIdx, 0, activeTask);
+            activeProject!.tasks.splice(activeTaskIdx, 1);
+            setProjects(updatedProjects);
+            toast.success(
+              `Task: "${activeTask.title}" is moved into Project: "${overProject!.title}"`
+            );
+          })
+          .catch((error) => {
+            console.error('Failed to move task:', error);
+            toast.error(
+              `Failed to move task: ${error.message || 'unknown error'}`
+            );
+          });
       }
       // move task to the same project
       else {
         const tempTask = activeTask;
         activeProject!.tasks.splice(activeTaskIdx, 1);
         overProject!.tasks.splice(overTaskIdx, 0, tempTask);
+        setProjects(updatedProjects);
       }
     }
-    setProjects(updatedProjects);
   }
 
   function onDragEnd(event: DragEndEvent) {
