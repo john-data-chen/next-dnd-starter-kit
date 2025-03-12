@@ -50,6 +50,21 @@ async function convertProjectToPlainObject(
     throw new Error('Owner user not found');
   }
 
+  const memberPromises = projectDoc.members.map(async (memberId) => {
+    const memberUser = await getUserById(memberId.toString());
+    if (!memberUser) {
+      return null;
+    }
+    return {
+      id: memberUser._id.toString(),
+      name: memberUser.name
+    };
+  });
+
+  const members = (await Promise.all(memberPromises)).filter(
+    (member) => member !== null
+  );
+
   return {
     _id: projectDoc._id.toString(),
     title: projectDoc.title,
@@ -57,7 +72,7 @@ async function convertProjectToPlainObject(
       id: ownerUser._id.toString(),
       name: ownerUser.name
     },
-    members: projectDoc.members.map((member) => member.toString()),
+    members: members,
     createdAt: projectDoc.createdAt?.toISOString() || new Date().toISOString(),
     updatedAt: projectDoc.updatedAt?.toISOString() || new Date().toISOString(),
     tasks: projectDoc.tasks || []

@@ -94,9 +94,12 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 
       <CardContent className="flex grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
-          <div className="mb-2">
+          <div className="mb-2 flex flex-col gap-1">
             <Badge variant="outline" className="text-xs">
               owner: {project.owner.name}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              members: {project.members.map((member) => member.name).join(', ')}
             </Badge>
           </div>
           <NewTaskDialog projectId={project._id} />

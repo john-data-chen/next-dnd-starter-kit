@@ -8,7 +8,7 @@ export interface Project {
   title: string;
   description?: string;
   owner: UserInfo;
-  members: string[];
+  members: UserInfo[];
   createdAt: string;
   updatedAt: string;
   tasks: Task[];
