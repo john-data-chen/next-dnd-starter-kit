@@ -71,10 +71,14 @@ export async function createProjectInDb(data: {
   try {
     await connectToDatabase();
     const owner = await getUserByEmail(data.userEmail);
+    if (!owner) {
+      console.error('User not found');
+      return null;
+    }
     const projectDoc = await ProjectModel.create({
       ...data,
-      owner: owner,
-      members: [owner]
+      owner: owner._id,
+      members: [owner._id]
     });
     const project = convertProjectToPlainObject(
       projectDoc as unknown as ProjectDocument
