@@ -92,12 +92,12 @@ pnpm run playwright
 - [x] Persistent data into Database
 - [x] Fix the issues of dragging tasks to another order in the same project
 - [x] Fix the issues of dragging tasks to another project
-- [x] Add owner name in project
-- [x] Add project owner in project
-- [x] Fix the order of the tasks doesn't save after save into database
-- [x] Fix the tasks of a project are not deleted when the project is deleted
-- [ ] Fix the issue of adding a new project
-- [ ] Add refetch after modified a task
+- [x] Add project owner in project column
+- [x] Add user permission check when dragging a task into a project
+- [x] Add a better fetching and reloading strategy of state and database
+- [x] Fix the UI issue of dragging a task into a project
+- [x] Add a toast after dragging a task into a project
+- [x] Add members into project column
 - [ ] Fix the warning when add a new task card
 
 and more...
