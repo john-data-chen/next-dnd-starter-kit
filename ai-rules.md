@@ -64,7 +64,8 @@ When users inquire about functionality or logic similar to existing software sol
 - [x] Add project owner in project
 - [x] Fix the order of the tasks doesn't save to db
 - [x] Fix the tasks of a project are not deleted when the project is deleted
-- [ ] Fix the issue of adding a new project
+- [x] Add user permission check when dragging a task into a project
+= [ ] Add a better fetching and reloading strategy of state and database
 - [ ] Add refetch after modified a task
 - [ ] Fix the warning when add a new task card
 ```
