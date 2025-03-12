@@ -206,14 +206,33 @@ export async function updateTaskProjectInDb(
       throw new Error('User not found');
     }
 
-    const project = await ProjectModel.findById(newProjectId);
-    if (project!.owner.toString() !== user._id) {
-      console.error('Permission denied: User is not the project owner');
+    const targetProject = await ProjectModel.findById(newProjectId);
+    if (!targetProject) {
+      throw new Error('Target project not found');
     }
 
     const task = await TaskModel.findById(taskId);
     if (!task) {
       throw new Error('Task not found');
+    }
+
+    const isTargetProjectOwner =
+      targetProject.owner.toString() === user._id.toString();
+    const isTargetProjectMember = targetProject.members.some(
+      (member) => member.toString() === user._id.toString()
+    );
+    const isTaskCreator = task.creator.toString() === user._id.toString();
+    const isTaskAssignee = task.assignee?.toString() === user._id.toString();
+
+    if (
+      !(
+        isTargetProjectOwner ||
+        (isTargetProjectMember && (isTaskCreator || isTaskAssignee))
+      )
+    ) {
+      throw new Error(
+        'Permission denied: You do not have sufficient permissions to move this task'
+      );
     }
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
