@@ -99,7 +99,15 @@ pnpm run playwright
 - [x] Add a toast after dragging a task into a project
 - [x] Add members into project column
 - [x] Temp fix ES lint 9 config type issue
-- [ ] Fix the warning when add a new task card
+- [ ] Add status of task such as to do, in progress, done...etc
+- [ ] Add UI variation of task status
+- [ ] Add task filtering by status
+- [ ] Add task search by title/description
+- [ ] Add board switching feature
+- [ ] Add board overview page
+- [ ] Add board sharing permissions
+- [ ] Add Sign up page and router for user to sign up
+- [ ] Add basic task statistics (total, completed, in progress)
 
 and more...
 
