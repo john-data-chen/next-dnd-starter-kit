@@ -18,6 +18,7 @@ You are an AI assistant with advanced problem-solving capabilities. Please follo
 ## Refer to Best Practices and Provide Suggestions
 
 When users inquire about functionality or logic similar to existing software solutions:
+
 - First analyze the project's current tech stack and architectural constraints
 - Reference industry-standard applications (such as Trello, Jira, Asana for kanban applications) and their best practices
 - Provide specific implementation recommendations, including:
@@ -69,6 +70,7 @@ When users inquire about functionality or logic similar to existing software sol
 - [x] Fix the UI issue of dragging a task into a project
 - [x] Add a toast after dragging a task into a project
 - [x] Add members into project column
+- [x] Fix ES lint 9 config type issue
 - [ ] Fix the warning when add a new task card
 ```
 
@@ -136,6 +138,23 @@ When users inquire about functionality or logic similar to existing software sol
 ## Notification
 
 - sonner: ^1.7.4
+
+# Known Issues & Limitations
+
+## React/Next.js
+
+- **Radix UI Ref Warning**:
+  - Issue: Function components cannot be given refs warning in Dialog components
+  - Impact: Development warning only, no production impact
+  - Solution: Keep using `asChild` as per Radix UI docs, warning can be safely ignored
+  - Reason: Internal implementation detail of Radix UI
+
+## ESLint
+
+- **ESLint 9.x Type Issues**:
+  - Issue: Type incompatibility with @types/eslint
+  - Solution: Use type assertions or @ts-ignore for specific cases
+  - Status: Waiting for type definitions to catch up with ESLint 9.x
 
 # Technology-Specific Guidelines
 
