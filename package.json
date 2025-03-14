@@ -15,7 +15,9 @@
     "prepare": "husky",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "playwright": "npx playwright test",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "init-db": "tsx database/init-db-data.ts",
+    "init-db:force": "tsx database/init-db-data.ts --force"
   },
   "engines": {
     "node": "==22.x"
