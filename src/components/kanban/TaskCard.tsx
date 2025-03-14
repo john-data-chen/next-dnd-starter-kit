@@ -1,13 +1,15 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { Task } from '@/types/dbInterface';
+import { TaskStatus } from '@/types/dbInterface';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { format } from 'date-fns';
 import { PointerIcon } from 'lucide-react';
 import { Calendar1Icon, FileTextIcon, UserIcon } from 'lucide-react';
-import 'lucide-react';
 import { TaskActions } from './TaskAction';
 
 interface TaskCardProps {
@@ -21,6 +23,27 @@ export interface TaskDragData {
   type: TaskType;
   task: Task;
 }
+
+const statusConfig: Record<
+  TaskStatus,
+  {
+    label: string;
+    className: string;
+  }
+> = {
+  TODO: {
+    label: 'To Do',
+    className: 'bg-slate-500 hover:bg-slate-500'
+  },
+  IN_PROGRESS: {
+    label: 'In Progress',
+    className: 'bg-blue-500 hover:bg-blue-500'
+  },
+  DONE: {
+    label: 'Done',
+    className: 'bg-green-500 hover:bg-green-500'
+  }
+};
 
 export function TaskCard({ task, isOverlay }: TaskCardProps) {
   const {
@@ -75,11 +98,22 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         >
           <PointerIcon />
         </Button>
-        {task.title && (
-          <h3 className="text-lg leading-none font-medium tracking-tight">
-            {task.title}
-          </h3>
-        )}
+        <div className="flex flex-col gap-2 items-start flex-1 mx-2">
+          {task.title && (
+            <h3 className="text-lg leading-none font-medium tracking-tight">
+              {task.title}
+            </h3>
+          )}
+          <Badge
+            variant="secondary"
+            className={cn(
+              'text-white',
+              task.status && statusConfig[task.status]?.className
+            )}
+          >
+            {task.status ? statusConfig[task.status]?.label : 'No Status'}
+          </Badge>
+        </div>
         <TaskActions
           id={task._id}
           title={task.title}

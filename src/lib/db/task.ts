@@ -12,6 +12,7 @@ interface TaskBase {
   _id: Types.ObjectId | string;
   title: string;
   description?: string;
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
   dueDate?: Date;
   project: Types.ObjectId | string;
   assignee?: Types.ObjectId | string | { id: string; name: string };
@@ -71,6 +72,7 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
     _id: docId,
     title: taskDoc.title,
     description: taskDoc.description || '',
+    status: taskDoc.status || 'TODO',
     dueDate: taskDoc.dueDate,
     project: projectId,
     assignee:
@@ -140,7 +142,8 @@ export async function createTaskInDb(
   userEmail: string,
   description?: string,
   dueDate?: Date,
-  assigneeId?: string
+  assigneeId?: string,
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE' = 'TODO'
 ): Promise<Task> {
   try {
     await connectToDatabase();
@@ -156,6 +159,7 @@ export async function createTaskInDb(
     const taskData = {
       title,
       description,
+      status,
       dueDate,
       project: projectId,
       assignee: assigneeId,
@@ -179,7 +183,8 @@ export async function updateTaskInDb(
   userEmail: string,
   description?: string,
   dueDate?: Date,
-  assigneeId?: string
+  assigneeId?: string,
+  status?: 'TODO' | 'IN_PROGRESS' | 'DONE'
 ): Promise<Task> {
   try {
     await connectToDatabase();
@@ -201,6 +206,7 @@ export async function updateTaskInDb(
       {
         title,
         description,
+        status,
         dueDate,
         assignee: assigneeId,
         lastModifier: modifier._id,
