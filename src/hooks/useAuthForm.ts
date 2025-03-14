@@ -1,4 +1,4 @@
-import { defaultEmail } from '@/constants/auth';
+import { defaultEmail } from '@/constants/db';
 import { ROUTES } from '@/constants/routes';
 import { useTaskStore } from '@/lib/store';
 import { SignInFormValue, SignInValidation } from '@/types/authUserForm';
