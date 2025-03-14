@@ -5,6 +5,7 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![CI](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## ✨ Why Choose This Template:
 
@@ -99,7 +100,7 @@ pnpm run playwright
 - [x] Add a toast after dragging a task into a project
 - [x] Add members into project column
 - [x] Temp fix ES lint 9 config type issue
-- [ ] Add status of task such as to do, in progress, done...etc
+- [ ] Add status of task such as to do, in progress, done
 - [ ] Add UI variation of task status
 - [ ] Add task filtering by status
 - [ ] Add task search by title/description
@@ -119,7 +120,7 @@ and more...
 - In local development, I use [Docker Compose](https://docs.docker.com/compose/) in folder **database**, you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
 - Execute `docker-compose up -d` to start MongoDB in Docker.
 - Execute `docker-compose down` to stop MongoDB in Docker.
-- Execute `node src/database/init.js` to initialize MongoDB.
+- Execute `npm run init-db` to initialize MongoDB.
 
 ### 📊 Testing Strategy
 
@@ -151,13 +152,15 @@ src/
 ## Known Issues & Limitations
 
 ### React/Next.js
-- **Radix UI Ref Warning**: 
+
+- **Radix UI Ref Warning**:
   - Issue: Function components cannot be given refs warning in Dialog components
   - Impact: Development warning only, no production impact
   - Solution: Keep using `asChild` as per Radix UI docs, warning can be safely ignored
   - Reason: Internal implementation detail of Radix UI
 
 ### ESLint
+
 - **ESLint 9.x Type Issues**:
   - Issue: Type incompatibility with @types/eslint
   - Solution: Use type assertions or @ts-ignore for specific cases
