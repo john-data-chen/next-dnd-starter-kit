@@ -89,8 +89,8 @@ When users inquire about functionality or logic similar to existing software sol
 - [x] Add a toast after dragging a task into a project
 - [x] Add members into project column
 - [x] Fix ES lint 9 config type issue
-- [ ] Add status of task such as to do, in progress, done
-- [ ] Add UI variation of task status
+- [x] Add status of task such as to do, in progress, done
+- [x] Add UI variation of task status
 - [ ] Add task filtering by status
 - [ ] Add task search by title/description
 - [ ] Add board switching feature
