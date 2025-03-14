@@ -47,6 +47,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useTaskStore } from '@/lib/store';
@@ -65,12 +66,14 @@ import { z } from 'zod';
 export interface TaskActionsProps {
   id: string;
   title: string;
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
   description?: string;
   dueDate?: Date | null;
   assignee?: string;
   onUpdate?: (
     id: string,
     newTitle: string,
+    status: 'TODO' | 'IN_PROGRESS' | 'DONE',
     newDescription?: string,
     newDueDate?: Date | null,
     assignee?: string
@@ -84,6 +87,7 @@ export function TaskActions({
   description,
   dueDate,
   assignee,
+  status,
   onDelete
 }: TaskActionsProps) {
   const userEmail = useTaskStore((state) => state.userEmail);
@@ -133,6 +137,7 @@ export function TaskActions({
     defaultValues: {
       title: title,
       description: description ?? '',
+      status: status ?? 'TODO',
       dueDate: dueDate ?? undefined,
       assignee: assignee ? { id: assignee } : undefined
     }
@@ -145,6 +150,7 @@ export function TaskActions({
         id,
         values.title,
         userEmail!,
+        values.status,
         values.description ?? '',
         values.dueDate,
         values.assignee?.id
@@ -217,6 +223,44 @@ export function TaskActions({
                       aria-label="Task description"
                       {...field}
                     />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Status</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="TODO" />
+                          </FormControl>
+                          <FormLabel className="font-normal">To Do</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="IN_PROGRESS" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            In Progress
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="DONE" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Done</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -324,6 +368,44 @@ export function TaskActions({
                         </PopoverContent>
                       </Popover>
                     </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="mb-2">Status</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="TODO" />
+                          </FormControl>
+                          <FormLabel className="font-normal">To Do</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="IN_PROGRESS" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            In Progress
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="DONE" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Done</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

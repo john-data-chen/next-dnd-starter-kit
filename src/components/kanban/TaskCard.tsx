@@ -120,6 +120,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           description={task.description}
           dueDate={task.dueDate}
           assignee={task.assignee?.name}
+          status={task.status}
         />
       </CardHeader>
       {task.creator && (

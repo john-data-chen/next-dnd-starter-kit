@@ -28,6 +28,7 @@ interface State {
     projectId: string,
     userEmail: string,
     title: string,
+    status: 'TODO' | 'IN_PROGRESS' | 'DONE',
     description?: string,
     dueDate?: Date,
     assigneeId?: string
@@ -36,6 +37,7 @@ interface State {
     taskId: string,
     title: string,
     userEmail: string,
+    status: 'TODO' | 'IN_PROGRESS' | 'DONE',
     description?: string,
     dueDate?: Date,
     assigneeId?: string
@@ -154,6 +156,7 @@ export const useTaskStore = create<State>()(
         projectId: string,
         userEmail: string,
         title: string,
+        status: 'TODO' | 'IN_PROGRESS' | 'DONE',
         description?: string,
         dueDate?: Date,
         assigneeId?: string
@@ -165,7 +168,8 @@ export const useTaskStore = create<State>()(
             userEmail,
             description,
             dueDate,
-            assigneeId
+            assigneeId,
+            status
           );
 
           set((state) => ({
@@ -184,6 +188,7 @@ export const useTaskStore = create<State>()(
         taskId: string,
         title: string,
         userEmail: string,
+        status: 'TODO' | 'IN_PROGRESS' | 'DONE',
         description?: string,
         dueDate?: Date,
         assigneeId?: string
@@ -193,6 +198,7 @@ export const useTaskStore = create<State>()(
             taskId,
             title,
             userEmail,
+            status,
             description || '',
             dueDate,
             assigneeId
@@ -232,7 +238,6 @@ export const useTaskStore = create<State>()(
         newProjectId: string
       ) => {
         try {
-          // 调用API更新数据库
           const updatedTask = await updateTaskProjectInDb(
             userEmail,
             taskId,

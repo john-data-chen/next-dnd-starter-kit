@@ -181,10 +181,10 @@ export async function updateTaskInDb(
   taskId: string,
   title: string,
   userEmail: string,
+  status: 'TODO' | 'IN_PROGRESS' | 'DONE' = 'TODO',
   description?: string,
   dueDate?: Date,
-  assigneeId?: string,
-  status?: 'TODO' | 'IN_PROGRESS' | 'DONE'
+  assigneeId?: string
 ): Promise<Task> {
   try {
     await connectToDatabase();

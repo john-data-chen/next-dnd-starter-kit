@@ -32,6 +32,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useTaskStore } from '@/lib/store';
@@ -58,6 +59,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
     defaultValues: {
       title: '',
       description: '',
+      status: 'TODO',
       dueDate: undefined,
       assignee: undefined
     }
@@ -84,6 +86,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
         projectId!,
         userEmail!,
         values.title!,
+        values.status!,
         values.description ?? '',
         values.dueDate ?? undefined,
         values.assignee?.id ?? undefined
@@ -280,6 +283,44 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                       </PopoverContent>
                     </Popover>
                   </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Status</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="TODO" />
+                        </FormControl>
+                        <FormLabel className="font-normal">To Do</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="IN_PROGRESS" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          In Progress
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="DONE" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Done</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
