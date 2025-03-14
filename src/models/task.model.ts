@@ -4,6 +4,12 @@ import mongoose, { Model } from 'mongoose';
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
+  status: {
+    type: String,
+    enum: ['TODO', 'IN_PROGRESS', 'DONE'],
+    default: 'TODO',
+    required: true
+  },
   dueDate: { type: Date },
   project: {
     type: mongoose.Schema.Types.ObjectId,
