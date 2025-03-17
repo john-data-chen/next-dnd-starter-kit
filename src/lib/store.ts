@@ -48,6 +48,10 @@ interface State {
     newProjectId: string,
     userEmail: string
   ) => Promise<void>;
+  filter: {
+    status: string | null;
+  };
+  setFilter: (filter: { status: string | null }) => void;
 }
 
 export const useTaskStore = create<State>()(
@@ -286,6 +290,18 @@ export const useTaskStore = create<State>()(
           console.error('Error in dragTaskIntoNewProject:', error);
           throw error;
         }
+      },
+      // Add filter state and setter
+      filter: {
+        status: null
+      },
+      setFilter: (filter: { status: string | null }) => {
+        set((state) => ({
+          filter: {
+            ...state.filter,
+            ...filter
+          }
+        }));
       }
     }),
     {

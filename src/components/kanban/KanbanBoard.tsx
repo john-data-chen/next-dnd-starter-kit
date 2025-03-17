@@ -25,6 +25,7 @@ import { toast } from 'sonner';
 import NewProjectDialog from './NewProjectDialog';
 import { BoardContainer, BoardProject } from './Project';
 import { TaskCard } from './TaskCard';
+import { TaskFilter } from './TaskFilter';
 
 export function KanbanBoard() {
   const userEmail = useTaskStore((state) => state.userEmail);
@@ -331,8 +332,11 @@ export function KanbanBoard() {
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
-        <div className="w-[200px] p-4">
-          <NewProjectDialog />
+        <div className="flex items-center justify-between p-4">
+          <div className="w-[200px]">
+            <NewProjectDialog />
+          </div>
+          <TaskFilter />
         </div>
         <BoardContainer>
           <SortableContext items={projectsId}>
