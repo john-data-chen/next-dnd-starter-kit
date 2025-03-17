@@ -354,11 +354,13 @@ export function KanbanBoard() {
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
-        <div className="flex items-center justify-between p-4">
-          <div className="w-[200px]">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-4">
+          <div className="w-full sm:w-[200px]">
             <NewProjectDialog />
           </div>
-          <TaskFilter />
+          <div className="w-full sm:w-auto">
+            <TaskFilter />
+          </div>
         </div>
         <BoardContainer>
           <SortableContext items={projectsId}>
