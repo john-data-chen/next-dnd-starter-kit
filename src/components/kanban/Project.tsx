@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useTaskStore } from '@/lib/store';
 import { Project, Task } from '@/types/dbInterface';
 import { useDndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
@@ -25,6 +26,13 @@ interface BoardProjectProps {
 }
 
 export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
+  const { filter } = useTaskStore();
+
+  const filteredTasks = useMemo(() => {
+    if (!filter.status) return tasks;
+    return tasks.filter((task) => task.status === filter.status);
+  }, [tasks, filter.status]);
+
   // Memoize task IDs for better performance
   const tasksIds = useMemo(
     () => project.tasks.map((task) => task._id),
@@ -104,7 +112,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
           </div>
           <NewTaskDialog projectId={project._id} />
           <SortableContext items={tasksIds}>
-            {tasks.map((task) => (
+            {filteredTasks.map((task) => (
               <TaskCard key={task._id} task={task} />
             ))}
           </SortableContext>
