@@ -109,6 +109,9 @@ pnpm run playwright
 - [ ] Add board sharing permissions
 - [ ] Add Sign up page and router for user to sign up
 - [ ] Add basic task statistics (total, completed, in progress)
+- [ ] Add Unit tests by Jest
+- [ ] Add E2E tests by Playwright
+- [ ] Add CI/CD pipeline
 
 and more...
 
