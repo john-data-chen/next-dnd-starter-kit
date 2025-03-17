@@ -2,6 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -42,8 +43,22 @@ export function TaskFilter() {
     [setFilter]
   );
 
+  const handleSearchChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFilter({ search: event.target.value });
+    },
+    [setFilter]
+  );
+
   return (
     <div className="flex items-center space-x-2 mb-4">
+      <Input
+        type="text"
+        placeholder="Search title or description..."
+        value={filter.search}
+        onChange={handleSearchChange}
+        className="w-[200px]"
+      />
       <Select
         value={filter.status || 'TOTAL'}
         onValueChange={handleFilterChange}
@@ -79,11 +94,13 @@ export function TaskFilter() {
         </SelectContent>
       </Select>
 
-      {filter.status && (
+      {(filter.status || filter.search) && (
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => handleFilterChange('TOTAL')}
+          onClick={() => {
+            setFilter({ status: null, search: '' });
+          }}
         >
           Clear Filter
         </Button>

@@ -50,8 +50,9 @@ interface State {
   ) => Promise<void>;
   filter: {
     status: string | null;
+    search: string;
   };
-  setFilter: (filter: { status: string | null }) => void;
+  setFilter: (filter: Partial<State['filter']>) => void;
 }
 
 export const useTaskStore = create<State>()(
@@ -293,9 +294,10 @@ export const useTaskStore = create<State>()(
       },
       // Add filter state and setter
       filter: {
-        status: null
+        status: null,
+        search: '' // 初始化搜索字段
       },
-      setFilter: (filter: { status: string | null }) => {
+      setFilter: (filter) => {
         set((state) => ({
           filter: {
             ...state.filter,

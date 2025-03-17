@@ -30,6 +30,7 @@ import { TaskFilter } from './TaskFilter';
 export function KanbanBoard() {
   const userEmail = useTaskStore((state) => state.userEmail);
   const projects = useTaskStore((state) => state.projects);
+  const filter = useTaskStore((state) => state.filter);
   const fetchProjects = useTaskStore((state) => state.fetchProjects);
   const setProjects = useTaskStore((state) => state.setProjects);
   const dragTaskIntoNewProject = useTaskStore(
@@ -320,6 +321,27 @@ export function KanbanBoard() {
     }
   };
 
+  // 添加任務過濾函數
+  const filterTasks = (tasks: Task[]) => {
+    return tasks.filter((task) => {
+      // 狀態過濾
+      if (filter.status && task.status !== filter.status) {
+        return false;
+      }
+
+      // 搜索過濾
+      if (filter.search) {
+        const searchTerm = filter.search.toLowerCase();
+        return (
+          task.title.toLowerCase().includes(searchTerm) ||
+          (task.description?.toLowerCase().includes(searchTerm) ?? false)
+        );
+      }
+
+      return true;
+    });
+  };
+
   return (
     <div data-testid="kanban-board">
       <DndContext
@@ -342,7 +364,10 @@ export function KanbanBoard() {
           <SortableContext items={projectsId}>
             {projects?.map((project: Project, index: number) => (
               <Fragment key={project._id}>
-                <BoardProject project={project} tasks={project.tasks} />
+                <BoardProject
+                  project={project}
+                  tasks={filterTasks(project.tasks)} // 使用過濾後的任務
+                />
                 {index === projects?.length - 1}
               </Fragment>
             ))}
@@ -353,7 +378,7 @@ export function KanbanBoard() {
             <BoardProject
               isOverlay
               project={activeProject}
-              tasks={activeProject.tasks}
+              tasks={filterTasks(activeProject.tasks)} // 這裡也需要過濾
             />
           )}
           {activeTask && <TaskCard task={activeTask} isOverlay />}
