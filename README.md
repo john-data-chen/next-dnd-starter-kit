@@ -104,7 +104,7 @@ pnpm run playwright
 - [x] Add UI variation of task status
 - [x] Add task filtering by status
 - [x] Add basic task statistics (total, to-do, in progress, done)
-- [ ] Add task search by title/description
+- [x] Add task search by title/description
 - [ ] Add board switching feature
 - [ ] Add board overview page
 - [ ] Add board sharing permissions
