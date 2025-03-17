@@ -17,6 +17,7 @@ export function TaskFilter() {
 
   const statusCounts = React.useMemo(() => {
     const counts = {
+      TOTAL: 0,
       TODO: 0,
       IN_PROGRESS: 0,
       DONE: 0
@@ -24,6 +25,7 @@ export function TaskFilter() {
 
     projects.forEach((project) => {
       project.tasks.forEach((task) => {
+        counts.TOTAL++;
         if (task.status && counts.hasOwnProperty(task.status)) {
           counts[task.status as keyof typeof counts]++;
         }
@@ -35,19 +37,27 @@ export function TaskFilter() {
 
   const handleFilterChange = React.useCallback(
     (value: string) => {
-      setFilter({ status: value === 'ALL' ? null : value });
+      setFilter({ status: value === 'TOTAL' ? null : value });
     },
     [setFilter]
   );
 
   return (
     <div className="flex items-center space-x-2 mb-4">
-      <Select value={filter.status || 'ALL'} onValueChange={handleFilterChange}>
+      <Select
+        value={filter.status || 'TOTAL'}
+        onValueChange={handleFilterChange}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="ALL">All Tasks</SelectItem>
+          <SelectItem value="TOTAL">
+            All Tasks{' '}
+            <Badge variant="outline" className="ml-2">
+              {statusCounts.TOTAL}
+            </Badge>
+          </SelectItem>
           <SelectItem value="TODO">
             To Do{' '}
             <Badge variant="outline" className="ml-2">
@@ -73,7 +83,7 @@ export function TaskFilter() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => handleFilterChange('ALL')}
+          onClick={() => handleFilterChange('TOTAL')}
         >
           Clear Filter
         </Button>
