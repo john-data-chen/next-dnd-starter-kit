@@ -53,13 +53,13 @@ export function TaskFilter() {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="TOTAL">
-            All Tasks{' '}
+            Total
             <Badge variant="outline" className="ml-2">
               {statusCounts.TOTAL}
             </Badge>
           </SelectItem>
           <SelectItem value="TODO">
-            To Do{' '}
+            To Do
             <Badge variant="outline" className="ml-2">
               {statusCounts.TODO}
             </Badge>
