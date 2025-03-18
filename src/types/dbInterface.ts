@@ -1,3 +1,4 @@
+import { BoardModel } from '@/models/board.model';
 import { ProjectModel } from '@/models/project.model';
 import { TaskModel } from '@/models/task.model';
 import { UserModel } from '@/models/user.model';
@@ -75,4 +76,28 @@ export type TaskModel = mongoose.InferSchemaType<
   assignee?: string;
   creator: string;
   lastModifier: string;
+};
+
+export interface Board {
+  _id: string;
+  title: string;
+  description?: string;
+  owner: UserInfo;
+  members: UserInfo[];
+  projects: Project[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type BoardModel = mongoose.InferSchemaType<
+  (typeof BoardModel)['schema']
+> & {
+  _id: string;
+  title: string;
+  description?: string;
+  owner: string;
+  members: string[];
+  projects: string[];
+  createdAt: Date;
+  updatedAt: Date;
 };
