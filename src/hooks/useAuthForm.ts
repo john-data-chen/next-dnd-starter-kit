@@ -21,40 +21,18 @@ export default function useAuthForm() {
 
   const onSubmit = async (data: SignInFormValue) => {
     try {
-      console.log('Signing in with email:', data.email);
-
       startTransition(() => {
         signIn('credentials', {
           email: data.email,
-          redirect: false,
+          redirect: true,
           callbackUrl: ROUTES.BOARDS.ROOT
-        })
-          .then((result) => {
-            console.log('Sign in result:', result);
-
-            if (result?.error) {
-              console.error('Sign in error: ', result.error);
-              toast.error('Failed to sign in. Reloading in 5 seconds...');
-              setTimeout(() => {
-                window.location.href = ROUTES.AUTH.LOGIN;
-              }, 5000);
-
-              return;
-            }
-            setUserEmail(data.email);
-
-            window.location.href = ROUTES.BOARDS.ROOT;
-            toast.success('Signed In Successfully!');
-          })
-          .catch((error) => {
-            console.error('Unexpected error:', error);
-            toast.error('Failed to sign in. Please try again.');
-
-            setTimeout(() => {
-              window.location.href = ROUTES.AUTH.LOGIN;
-            }, 5000);
-          });
+        }).catch((error) => {
+          console.error('Authentication error:', error);
+          toast.error('Failed to sign in. Please try again.');
+        });
       });
+
+      setUserEmail(data.email);
     } catch (error) {
       console.error('Form submission error:', error);
       toast.error('Failed to submit form.');
