@@ -105,9 +105,8 @@ pnpm run playwright
 - [x] Add task filtering by status
 - [x] Add basic task statistics (total, to-do, in progress, done)
 - [x] Add task search by title/description
-- [ ] Add board switching feature
-- [ ] Add board overview page
-- [ ] Add board sharing permissions
+- [ ] Add board switching feature in sidebar
+- [ ] Add members management page for board and project owners
 - [ ] Add Sign up page and router for user to sign up
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
