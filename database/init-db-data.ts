@@ -1,4 +1,9 @@
-import { demoUsers } from '@/constants/demoData';
+import {
+  demoBoards,
+  demoProjects,
+  demoTasks,
+  demoUsers
+} from '@/constants/demoData';
 import { connectToDatabase } from '@/lib/db/connect';
 import mongoose from 'mongoose';
 import readline from 'readline';
@@ -48,85 +53,53 @@ async function main() {
     const users = await UserModel.insertMany(demoUsers);
     console.log('Created users successfully');
 
-    // Create boards
-    const boards = await BoardModel.insertMany([
-      {
-        title: 'Personal Board',
-        description: 'My personal tasks and projects',
-        owner: users[0]._id,
-        members: [users[0]._id, users[1]._id]
-      },
-      {
-        title: 'Team Board',
-        description: 'Collaborative team projects',
-        owner: users[2]._id,
-        members: [users[0]._id, users[1]._id, users[2]._id]
-      }
-    ]);
+    // Create boards with user references
+    const boards = await BoardModel.insertMany(
+      demoBoards.map((board, index) => ({
+        ...board,
+        owner: users[index === 0 ? 0 : 2]._id,
+        members:
+          index === 0
+            ? [users[0]._id, users[1]._id]
+            : [users[0]._id, users[1]._id, users[2]._id]
+      }))
+    );
     console.log('Created boards successfully');
 
     // Create projects with board reference
-    const projects = await ProjectModel.insertMany([
-      {
-        title: 'Demo Project 1',
-        description: 'This is demo project 1',
-        owner: users[0]._id,
-        members: [users[0]._id, users[1]._id],
-        board: boards[0]._id
-      },
-      {
-        title: 'Demo Project 2',
-        description: 'This is demo project 2',
-        owner: users[2]._id,
-        members: [users[0]._id, users[1]._id, users[2]._id],
-        board: boards[1]._id
-      }
-    ]);
+    const projects = await ProjectModel.insertMany(
+      demoProjects.map((project) => ({
+        ...project,
+        owner: users[project.boardIndex === 0 ? 0 : 2]._id,
+        members:
+          project.boardIndex === 0
+            ? [users[0]._id, users[1]._id]
+            : [users[0]._id, users[1]._id, users[2]._id],
+        board: boards[project.boardIndex]._id
+      }))
+    );
     console.log('Created projects successfully');
 
     // Update boards with projects
-    await Promise.all([
-      BoardModel.findByIdAndUpdate(boards[0]._id, {
-        $push: { projects: projects[0]._id }
-      }),
-      BoardModel.findByIdAndUpdate(boards[1]._id, {
-        $push: { projects: projects[1]._id }
-      })
-    ]);
+    await Promise.all(
+      boards.map((board, index) =>
+        BoardModel.findByIdAndUpdate(board._id, {
+          $push: { projects: projects[index]._id }
+        })
+      )
+    );
 
-    // Bulk create tasks
-    const tasks = await TaskModel.insertMany([
-      {
-        title: 'Task 1',
-        description: 'This is our first task',
-        status: 'TODO',
-        dueDate: new Date(Date.now()),
-        project: projects[0]._id,
-        assignee: users[1]._id,
-        creator: users[0]._id,
-        lastModifier: users[0]._id
-      },
-      {
-        title: 'Task 2',
-        description: 'This is task 2',
-        status: 'IN_PROGRESS',
-        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        project: projects[0]._id,
-        assignee: users[1]._id,
-        creator: users[2]._id,
-        lastModifier: users[1]._id
-      },
-      {
-        title: 'Task 3',
-        description: 'This is task 3',
-        status: 'DONE',
-        dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-        project: projects[1]._id,
-        assignee: users[1]._id,
-        creator: users[0]._id,
-        lastModifier: users[2]._id
-      }
-    ]);
+    // Create tasks with all references
+    const tasks = await TaskModel.insertMany(
+      demoTasks.map((task) => ({
+        ...task,
+        dueDate: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000),
+        project: projects[task.projectIndex]._id,
+        assignee: users[task.assigneeIndex]._id,
+        creator: users[task.creatorIndex]._id,
+        lastModifier: users[task.creatorIndex]._id
+      }))
+    );
     console.log('Created tasks successfully');
 
     console.log('Final data:', {
