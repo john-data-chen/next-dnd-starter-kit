@@ -1,6 +1,12 @@
-import { Project } from '@/types/dbInterface';
+import { Board, Project } from '@/types/dbInterface';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import {
+  createBoardInDb,
+  deleteBoardInDb,
+  getBoardsFromDb,
+  updateBoardInDb
+} from './db/board';
 import {
   createProjectInDb,
   deleteProjectInDb,
@@ -53,6 +59,13 @@ interface State {
     search: string;
   };
   setFilter: (filter: Partial<State['filter']>) => void;
+  boards: Board[];
+  currentBoardId: string | null;
+  fetchBoards: (userEmail: string) => Promise<void>;
+  setCurrentBoard: (boardId: string) => void;
+  addBoard: (title: string, userEmail: string) => Promise<void>;
+  updateBoard: (id: string, data: Partial<Board>) => Promise<void>;
+  removeBoard: (id: string) => Promise<void>;
 }
 
 export const useTaskStore = create<State>()(
@@ -304,6 +317,70 @@ export const useTaskStore = create<State>()(
             ...filter
           }
         }));
+      },
+      boards: [],
+      currentBoardId: null,
+
+      fetchBoards: async (userEmail: string) => {
+        try {
+          const boards = await getBoardsFromDb(userEmail);
+          set({ boards: boards || [] });
+        } catch (error) {
+          console.error('Error fetching boards:', error);
+          set({ boards: [] });
+        }
+      },
+
+      setCurrentBoard: (boardId: string) => {
+        set({ currentBoardId: boardId });
+      },
+
+      addBoard: async (title: string, userEmail: string) => {
+        try {
+          const newBoard = await createBoardInDb({ title, userEmail });
+          if (newBoard) {
+            set((state) => ({
+              boards: [...state.boards, newBoard],
+              currentBoardId: newBoard._id
+            }));
+          }
+        } catch (error) {
+          console.error('Error in addBoard:', error);
+          throw error;
+        }
+      },
+
+      updateBoard: async (id: string, data: Partial<Board>) => {
+        try {
+          const updatedBoard = await updateBoardInDb(id, data);
+          if (!updatedBoard) throw new Error('Failed to update board');
+
+          set((state) => ({
+            boards: state.boards.map((board) =>
+              board._id === id ? updatedBoard : board
+            )
+          }));
+        } catch (error) {
+          console.error('Error in updateBoard:', error);
+          throw error;
+        }
+      },
+
+      removeBoard: async (id: string) => {
+        try {
+          const success = await deleteBoardInDb(id);
+          if (!success) throw new Error('Failed to delete board');
+
+          set((state) => ({
+            boards: state.boards.filter((board) => board._id !== id),
+            currentBoardId:
+              state.currentBoardId === id ? null : state.currentBoardId,
+            projects: state.currentBoardId === id ? [] : state.projects
+          }));
+        } catch (error) {
+          console.error('Error in removeBoard:', error);
+          throw error;
+        }
       }
     }),
     {
