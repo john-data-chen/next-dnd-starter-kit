@@ -84,7 +84,7 @@ export interface Board {
   description?: string;
   owner: UserInfo;
   members: UserInfo[];
-  projects: Project[];
+  projects: string[];
   createdAt: Date;
   updatedAt: Date;
 }
