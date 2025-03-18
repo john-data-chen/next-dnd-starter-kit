@@ -1,10 +1,11 @@
+import { demoUsers } from '@/constants/demoData';
 import { connectToDatabase } from '@/lib/db/connect';
 import mongoose from 'mongoose';
 import readline from 'readline';
+import { BoardModel } from '../src/models/board.model';
 import { ProjectModel } from '../src/models/project.model';
 import { TaskModel } from '../src/models/task.model';
 import { UserModel } from '../src/models/user.model';
-import { demoUsers } from '@/constants/db'
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -37,31 +38,61 @@ async function main() {
     console.log('Clearing database...');
     await Promise.all([
       UserModel.deleteMany({}),
+      BoardModel.deleteMany({}),
       ProjectModel.deleteMany({}),
       TaskModel.deleteMany({})
     ]);
     console.log('Database cleared');
 
-    // Create admin user
+    // Create users
     const users = await UserModel.insertMany(demoUsers);
     console.log('Created users successfully');
 
-    // Bulk create projects
+    // Create boards
+    const boards = await BoardModel.insertMany([
+      {
+        title: 'Personal Board',
+        description: 'My personal tasks and projects',
+        owner: users[0]._id,
+        members: [users[0]._id, users[1]._id]
+      },
+      {
+        title: 'Team Board',
+        description: 'Collaborative team projects',
+        owner: users[2]._id,
+        members: [users[0]._id, users[1]._id, users[2]._id]
+      }
+    ]);
+    console.log('Created boards successfully');
+
+    // Create projects with board reference
     const projects = await ProjectModel.insertMany([
       {
         title: 'Demo Project 1',
         description: 'This is demo project 1',
         owner: users[0]._id,
-        members: [users[0]._id, users[1]._id]
+        members: [users[0]._id, users[1]._id],
+        board: boards[0]._id
       },
       {
         title: 'Demo Project 2',
         description: 'This is demo project 2',
         owner: users[2]._id,
-        members: [users[0]._id, users[1]._id, users[2]._id]
+        members: [users[0]._id, users[1]._id, users[2]._id],
+        board: boards[1]._id
       }
     ]);
     console.log('Created projects successfully');
+
+    // Update boards with projects
+    await Promise.all([
+      BoardModel.findByIdAndUpdate(boards[0]._id, {
+        $push: { projects: projects[0]._id }
+      }),
+      BoardModel.findByIdAndUpdate(boards[1]._id, {
+        $push: { projects: projects[1]._id }
+      })
+    ]);
 
     // Bulk create tasks
     const tasks = await TaskModel.insertMany([
@@ -100,6 +131,7 @@ async function main() {
 
     console.log('Final data:', {
       users: users.length,
+      boards: boards.length,
       projects: projects.length,
       tasks: tasks.length
     });

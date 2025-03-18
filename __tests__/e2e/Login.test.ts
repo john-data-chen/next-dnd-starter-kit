@@ -1,4 +1,4 @@
-import { defaultEmail } from '@/constants/db';
+import { defaultEmail } from '@/constants/demoData';
 import { expect, test } from '@playwright/test';
 
 // Test suite for SignInPage

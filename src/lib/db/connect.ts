@@ -1,6 +1,6 @@
 'use server';
 
-import { defaultDbUrl } from '@/constants/db';
+import { defaultDbUrl } from '@/constants/demoData';
 import { connect } from 'mongoose';
 
 let isConnected = false;
