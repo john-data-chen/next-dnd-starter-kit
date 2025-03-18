@@ -30,7 +30,8 @@
     "**/*.ts",
     "**/*.tsx",
     "types.d.ts",
-    ".next/types/**/*.ts"
-, "database/init-db-data.ts"  ],
+    ".next/types/**/*.ts",
+    "database/init-db-data.ts"
+  ],
   "exclude": ["node_modules"]
 }
