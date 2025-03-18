@@ -32,7 +32,7 @@ export function useBreadcrumbs() {
     }
   }, [boardId]);
 
-  const items: BreadcrumbItem[] = [{ title: '看板', link: ROUTES.HOME }];
+  const items: BreadcrumbItem[] = [{ title: 'Kanban', link: ROUTES.HOME }];
 
   if (board) {
     items.push({
