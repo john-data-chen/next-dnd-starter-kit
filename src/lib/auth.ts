@@ -1,7 +1,7 @@
 import { ROUTES } from '@/constants/routes';
 import { getUserByEmail } from '@/lib/db/user';
 import { SignInValidation } from '@/types/authUserForm';
-import { NextAuthConfig } from 'next-auth';
+import NextAuth, { NextAuthConfig } from 'next-auth';
 import Credential from 'next-auth/providers/credentials';
 
 const authConfig = {
@@ -24,4 +24,4 @@ const authConfig = {
   }
 } satisfies NextAuthConfig;
 
-export default authConfig;
+export const { auth, handlers, signOut, signIn } = NextAuth(authConfig);
