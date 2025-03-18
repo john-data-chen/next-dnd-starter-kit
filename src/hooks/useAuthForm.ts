@@ -27,7 +27,7 @@ export default function useAuthForm() {
         signIn('credentials', {
           email: data.email,
           redirect: false,
-          callbackUrl: ROUTES.KANBAN
+          callbackUrl: ROUTES.BOARDS.ROOT
         })
           .then((result) => {
             console.log('Sign in result:', result);
@@ -43,7 +43,7 @@ export default function useAuthForm() {
             }
             setUserEmail(data.email);
 
-            window.location.href = ROUTES.KANBAN;
+            window.location.href = ROUTES.BOARDS.ROOT;
             toast.success('Signed In Successfully!');
           })
           .catch((error) => {
