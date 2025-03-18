@@ -1,4 +1,4 @@
-import NewProjectDialog from '@/components/kanban/NewProjectDialog';
+import NewProjectDialog from '@/components/boards/NewProjectDialog';
 import { jest } from '@jest/globals';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';

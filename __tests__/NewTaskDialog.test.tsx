@@ -1,4 +1,4 @@
-import NewTaskDialog from '@/components/kanban/NewTaskDialog';
+import NewTaskDialog from '@/components/boards/NewTaskDialog';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 

@@ -1,6 +1,6 @@
 import PageContainer from '@/components/layout/PageContainer';
 import { memo, Suspense } from 'react';
-import { KanbanBoard } from './KanbanBoard';
+import { KanbanBoard } from './Board';
 
 const MemoizedKanbanBoard = memo(KanbanBoard);
 
