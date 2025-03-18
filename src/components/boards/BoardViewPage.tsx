@@ -1,15 +1,15 @@
 import PageContainer from '@/components/layout/PageContainer';
 import { memo, Suspense } from 'react';
-import { KanbanBoard } from './Board';
+import { Board } from './Board';
 
-const MemoizedKanbanBoard = memo(KanbanBoard);
+const MemoizedBoard = memo(Board);
 
-export default function KanbanViewPage() {
+export default function BoardViewPage() {
   return (
     <PageContainer>
       <div role="main" className="space-y-4">
-        <Suspense fallback={<div>Loading kanban board...</div>}>
-          <MemoizedKanbanBoard />
+        <Suspense fallback={<div>Loading board...</div>}>
+          <MemoizedBoard />
         </Suspense>
       </div>
     </PageContainer>

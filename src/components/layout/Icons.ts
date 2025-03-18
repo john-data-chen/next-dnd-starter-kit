@@ -1,6 +1,5 @@
-import { ListTodoIcon, StarIcon } from 'lucide-react';
+import { StarIcon } from 'lucide-react';
 
 export const Icons = {
-  companyLogo: StarIcon,
-  kanban: ListTodoIcon
+  companyLogo: StarIcon
 };

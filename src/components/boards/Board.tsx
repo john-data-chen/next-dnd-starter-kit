@@ -27,7 +27,7 @@ import { BoardContainer, BoardProject } from './Project';
 import { TaskCard } from './TaskCard';
 import { TaskFilter } from './TaskFilter';
 
-export function KanbanBoard() {
+export function Board() {
   const userEmail = useTaskStore((state) => state.userEmail);
   const projects = useTaskStore((state) => state.projects);
   const filter = useTaskStore((state) => state.filter);
@@ -343,7 +343,7 @@ export function KanbanBoard() {
   };
 
   return (
-    <div data-testid="kanban-board">
+    <div data-testid="board">
       <DndContext
         id="dnd-context"
         sensors={sensors}
