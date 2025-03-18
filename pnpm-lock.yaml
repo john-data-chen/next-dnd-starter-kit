@@ -84,8 +84,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       lucide-react:
-        specifier: ^0.482.0
-        version: 0.482.0(react@18.3.1)
+        specifier: ^0.483.0
+        version: 0.483.0(react@18.3.1)
       mongoose:
         specifier: ^8.12.1
         version: 8.12.1
@@ -1887,58 +1887,58 @@ packages:
     resolution: {integrity: sha512-AjOC3zfnxd6S4Eiy3jwktJPclqhFHNyd8L6Gycf9WUPoKZpgM5PjkxY1X7uSy61xVpiJDhhk7XT2NVsN3ALTWg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@unrs/rspack-resolver-binding-darwin-arm64@1.1.2':
-    resolution: {integrity: sha512-bQx2L40UF5XxsXwkD26PzuspqUbUswWVbmclmUC+c83Cv/EFrFJ1JaZj5Q5jyYglKGOtyIWY/hXTCdWRN9vT0Q==}
+  '@unrs/rspack-resolver-binding-darwin-arm64@1.2.1':
+    resolution: {integrity: sha512-xgSjy64typsn/lhQk/uKaS363H7ZeIBlWSh25FJFWXSCeLMHpEZ0umDo5Vzqi5iS26OZ5R1SpQkwiS78GhQRjw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@unrs/rspack-resolver-binding-darwin-x64@1.1.2':
-    resolution: {integrity: sha512-dMi9a7//BsuPTnhWEDxmdKZ6wxQlPnAob8VSjefGbKX/a+pHfTaX1pm/jv2VPdarP96IIjCKPatJS/TtLQeGQA==}
+  '@unrs/rspack-resolver-binding-darwin-x64@1.2.1':
+    resolution: {integrity: sha512-3maDtW0vehzciEbuLxc2g+0FmDw5LGfCt+yMN1ZDn0lW0ikEBEFp6ul3h2fRphtfuCc7IvBJE9WWTt1UHkS7Nw==}
     cpu: [x64]
     os: [darwin]
 
-  '@unrs/rspack-resolver-binding-freebsd-x64@1.1.2':
-    resolution: {integrity: sha512-RiBZQ+LSORQObfhV1yH7jGz+4sN3SDYtV53jgc8tUVvqdqVDaUm1KA3zHLffmoiYNGrYkE3sSreGC+FVpsB4Vg==}
+  '@unrs/rspack-resolver-binding-freebsd-x64@1.2.1':
+    resolution: {integrity: sha512-aN6ifws9rNLjK2+6sIU9wvHyjXEf3S5+EZTHRarzd4jfa8i5pA7Mwt28un2DZVrBtIxhWDQvUPVKGI7zSBfVCA==}
     cpu: [x64]
     os: [freebsd]
 
-  '@unrs/rspack-resolver-binding-linux-arm-gnueabihf@1.1.2':
-    resolution: {integrity: sha512-IyKIFBtOvuPCJt1WPx9e9ovTGhZzrIbW11vWzw4aPmx3VShE+YcMpAldqQubdCep0UVKZyFt+2hQDQZwFiJ4jg==}
+  '@unrs/rspack-resolver-binding-linux-arm-gnueabihf@1.2.1':
+    resolution: {integrity: sha512-tKqu9VQyCO1yEUX6n6jgOHi7SJA9e6lvHczK60gur4VBITxnPmVYiCj2aekrOOIavvvjjuWAL2rqPQuc4g7RHQ==}
     cpu: [arm]
     os: [linux]
 
-  '@unrs/rspack-resolver-binding-linux-arm64-gnu@1.1.2':
-    resolution: {integrity: sha512-RfYtlCtJrv5i6TO4dSlpbyOJX9Zbhmkqrr9hjDfr6YyE5KD0ywLRzw8UjXsohxG1XWgRpb2tvPuRYtURJwbqWg==}
+  '@unrs/rspack-resolver-binding-linux-arm64-gnu@1.2.1':
+    resolution: {integrity: sha512-+xDI0kvwPiCR7334O83TPfaUXSe0UMVi5srQpQxP4+SDVYuONWsbwAC1IXe+yfOwRVGZsUdW9wE0ZiWs4Z+egw==}
     cpu: [arm64]
     os: [linux]
 
-  '@unrs/rspack-resolver-binding-linux-arm64-musl@1.1.2':
-    resolution: {integrity: sha512-MaITzkoqsn1Rm3+YnplubgAQEfOt+2jHfFvuFhXseUfcfbxe8Zyc3TM7LKwgv7mRVjIl+/yYN5JqL0cjbnhAnQ==}
+  '@unrs/rspack-resolver-binding-linux-arm64-musl@1.2.1':
+    resolution: {integrity: sha512-fcrVHlw+6UgQliMbI0znFD4ASWKuyY17FdH67ZmyNH62b0hRhhxQuJE0D6N3410m8lKVu4QW4EzFiHxYFUC0cg==}
     cpu: [arm64]
     os: [linux]
 
-  '@unrs/rspack-resolver-binding-linux-x64-gnu@1.1.2':
-    resolution: {integrity: sha512-Nu981XmzQqis/uB3j4Gi3p5BYCd/zReU5zbJmjMrEH7IIRH0dxZpdOmS/+KwEk6ao7Xd8P2D2gDHpHD/QTp0aQ==}
+  '@unrs/rspack-resolver-binding-linux-x64-gnu@1.2.1':
+    resolution: {integrity: sha512-xISTyUJ2PiAT4x9nlh8FdciDcdKbsatgK9qO7EEsILt9VB7Y1mHYGaszj3ouxfZnaKQ13WwW+dFLGxkZLP/WVg==}
     cpu: [x64]
     os: [linux]
 
-  '@unrs/rspack-resolver-binding-linux-x64-musl@1.1.2':
-    resolution: {integrity: sha512-xJupeDvaRpV0ADMuG1dY9jkOjhUzTqtykvchiU2NldSD+nafSUcMWnoqzNUx7HGiqbTMOw9d9xT8ZiFs+6ZFyQ==}
+  '@unrs/rspack-resolver-binding-linux-x64-musl@1.2.1':
+    resolution: {integrity: sha512-LE8EjE/iPlvSsFbZ6P9c0Jh5/pifAi03UYeXYwOnQqt1molKAPMB0R4kGWOM7dnDYaNgkk1MN9MOTCLsqe97Fw==}
     cpu: [x64]
     os: [linux]
 
-  '@unrs/rspack-resolver-binding-wasm32-wasi@1.1.2':
-    resolution: {integrity: sha512-un6X/xInks+KEgGpIHFV8BdoODHRohaDRvOwtjq+FXuoI4Ga0P6sLRvf4rPSZDvoMnqUhZtVNG0jG9oxOnrrLQ==}
+  '@unrs/rspack-resolver-binding-wasm32-wasi@1.2.1':
+    resolution: {integrity: sha512-XERT3B88+G55RgG96May8QvAdgGzHr8qtQ70cIdbuWTpIcA0I76cnxSZ8Qwx33y73jE5N/myX2YKDlFksn4z6w==}
     engines: {node: '>=14.0.0'}
     cpu: [wasm32]
 
-  '@unrs/rspack-resolver-binding-win32-arm64-msvc@1.1.2':
-    resolution: {integrity: sha512-2lCFkeT1HYUb/OOStBS1m67aZOf9BQxRA+Wf/xs94CGgzmoQt7H4V/BrkB/GSGKsudXjkiwt2oHNkHiowAS90A==}
+  '@unrs/rspack-resolver-binding-win32-arm64-msvc@1.2.1':
+    resolution: {integrity: sha512-I8OLI6JbmNx2E/SG8MOEuo/d6rNx8dwgL09rcItSMcP82v1oZ8AY8HNA+axxuxEH95nkb6MPJU09p63isDvzrA==}
     cpu: [arm64]
     os: [win32]
 
-  '@unrs/rspack-resolver-binding-win32-x64-msvc@1.1.2':
-    resolution: {integrity: sha512-EYfya5HCQ/8Yfy7rvAAX2rGytu81+d/CIhNCbZfNKLQ690/qFsdEeTXRsMQW1afHoluMM50PsjPYu8ndy8fSQg==}
+  '@unrs/rspack-resolver-binding-win32-x64-msvc@1.2.1':
+    resolution: {integrity: sha512-s5WvCljhFqiE3McvaD3lDIsQpmk7gEJRUHy1PRwLPzEB7snq9P2xQeqgzdjGhJQq62jBFz7NDy7NbMkocWr2pw==}
     cpu: [x64]
     os: [win32]
 
@@ -2188,8 +2188,8 @@ packages:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
 
-  caniuse-lite@1.0.30001705:
-    resolution: {integrity: sha512-S0uyMMiYvA7CxNgomYBwwwPUnWzFD83f3B1ce5jHUfHTH//QL6hHsreI8RVC5606R4ssqravelYO5TU6t8sEyg==}
+  caniuse-lite@1.0.30001706:
+    resolution: {integrity: sha512-3ZczoTApMAZwPKYWmwVbQMFpXBDds3/0VciVoUwPUbldlYyVLmRVuRs/PcUZtHpbLRpzzDvrvnFuREsGt6lUug==}
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -3685,8 +3685,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.482.0:
-    resolution: {integrity: sha512-XM8PzHzSrg8ATmmO+fzf+JyYlVVdQnJjuyLDj2p4V2zEtcKeBNAqAoJIGFv1x2HSBa7kT8gpYUxwdQ0g7nypfw==}
+  lucide-react@0.483.0:
+    resolution: {integrity: sha512-WldsY17Qb/T3VZdMnVQ9C3DDIP7h1ViDTHVdVGnLZcvHNg30zH/MTQ04RTORjexoGmpsXroiQXZ4QyR0kBy0FA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -3894,8 +3894,8 @@ packages:
   nprogress@0.2.0:
     resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
 
-  nwsapi@2.2.18:
-    resolution: {integrity: sha512-p1TRH/edngVEHVbwqWnxUViEmq5znDvyB+Sik5cmuLpGOIfDf/39zLiq3swPF8Vakqn+gvNiOQAZu8djYlQILA==}
+  nwsapi@2.2.19:
+    resolution: {integrity: sha512-94bcyI3RsqiZufXjkr3ltkI86iEl+I7uiHVDtcq9wJUTwYQJ5odHDeSzkkrRzi80jJ8MaeZgqKjH1bAWAFw9bA==}
 
   oauth4webapi@3.3.1:
     resolution: {integrity: sha512-ZwX7UqYrP3Lr+Glhca3a1/nF2jqf7VVyJfhGuW5JtrfDUxt0u+IoBPzFjZ2dd7PJGkdM6CFPVVYzuDYKHv101A==}
@@ -4346,8 +4346,8 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
-  rspack-resolver@1.1.2:
-    resolution: {integrity: sha512-eHhz+9JWHFdbl/CVVqEP6kviLFZqw1s0MWxLdsGMtUKUspSO3SERptPohmrUIC9jT1bGV9Bd3+r8AmWbdfNAzQ==}
+  rspack-resolver@1.2.1:
+    resolution: {integrity: sha512-yTaWGUvHOjcoyFMdVTdYt2nq2Hu8sw6ia3X9szloXFJlWLQZnQ9g/4TPhL3Bb3qN58Mkye8mFG7MCaKhya7fOw==}
 
   run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
@@ -6708,39 +6708,39 @@ snapshots:
       '@typescript-eslint/types': 8.26.1
       eslint-visitor-keys: 4.2.0
 
-  '@unrs/rspack-resolver-binding-darwin-arm64@1.1.2':
+  '@unrs/rspack-resolver-binding-darwin-arm64@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-darwin-x64@1.1.2':
+  '@unrs/rspack-resolver-binding-darwin-x64@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-freebsd-x64@1.1.2':
+  '@unrs/rspack-resolver-binding-freebsd-x64@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-linux-arm-gnueabihf@1.1.2':
+  '@unrs/rspack-resolver-binding-linux-arm-gnueabihf@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-linux-arm64-gnu@1.1.2':
+  '@unrs/rspack-resolver-binding-linux-arm64-gnu@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-linux-arm64-musl@1.1.2':
+  '@unrs/rspack-resolver-binding-linux-arm64-musl@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-linux-x64-gnu@1.1.2':
+  '@unrs/rspack-resolver-binding-linux-x64-gnu@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-linux-x64-musl@1.1.2':
+  '@unrs/rspack-resolver-binding-linux-x64-musl@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-wasm32-wasi@1.1.2':
+  '@unrs/rspack-resolver-binding-wasm32-wasi@1.2.1':
     dependencies:
       '@napi-rs/wasm-runtime': 0.2.7
     optional: true
 
-  '@unrs/rspack-resolver-binding-win32-arm64-msvc@1.1.2':
+  '@unrs/rspack-resolver-binding-win32-arm64-msvc@1.2.1':
     optional: true
 
-  '@unrs/rspack-resolver-binding-win32-x64-msvc@1.1.2':
+  '@unrs/rspack-resolver-binding-win32-x64-msvc@1.2.1':
     optional: true
 
   JSONStream@1.3.5:
@@ -6995,7 +6995,7 @@ snapshots:
 
   browserslist@4.24.4:
     dependencies:
-      caniuse-lite: 1.0.30001705
+      caniuse-lite: 1.0.30001706
       electron-to-chromium: 1.5.120
       node-releases: 2.0.19
       update-browserslist-db: 1.1.3(browserslist@4.24.4)
@@ -7042,7 +7042,7 @@ snapshots:
 
   camelcase@6.3.0: {}
 
-  caniuse-lite@1.0.30001705: {}
+  caniuse-lite@1.0.30001706: {}
 
   chalk@2.4.2:
     dependencies:
@@ -7562,7 +7562,7 @@ snapshots:
       eslint: 9.22.0(jiti@2.4.2)
       get-tsconfig: 4.10.0
       is-bun-module: 1.3.0
-      rspack-resolver: 1.1.2
+      rspack-resolver: 1.2.1
       stable-hash: 0.0.5
       tinyglobby: 0.2.12
     optionalDependencies:
@@ -8691,7 +8691,7 @@ snapshots:
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
       is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.18
+      nwsapi: 2.2.19
       parse5: 7.2.1
       saxes: 6.0.0
       symbol-tree: 3.2.4
@@ -8894,7 +8894,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@0.482.0(react@18.3.1):
+  lucide-react@0.483.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -9017,7 +9017,7 @@ snapshots:
       '@next/env': 14.2.25
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001705
+      caniuse-lite: 1.0.30001706
       graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.3.1
@@ -9062,7 +9062,7 @@ snapshots:
 
   nprogress@0.2.0: {}
 
-  nwsapi@2.2.18: {}
+  nwsapi@2.2.19: {}
 
   oauth4webapi@3.3.1: {}
 
@@ -9459,19 +9459,19 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rspack-resolver@1.1.2:
+  rspack-resolver@1.2.1:
     optionalDependencies:
-      '@unrs/rspack-resolver-binding-darwin-arm64': 1.1.2
-      '@unrs/rspack-resolver-binding-darwin-x64': 1.1.2
-      '@unrs/rspack-resolver-binding-freebsd-x64': 1.1.2
-      '@unrs/rspack-resolver-binding-linux-arm-gnueabihf': 1.1.2
-      '@unrs/rspack-resolver-binding-linux-arm64-gnu': 1.1.2
-      '@unrs/rspack-resolver-binding-linux-arm64-musl': 1.1.2
-      '@unrs/rspack-resolver-binding-linux-x64-gnu': 1.1.2
-      '@unrs/rspack-resolver-binding-linux-x64-musl': 1.1.2
-      '@unrs/rspack-resolver-binding-wasm32-wasi': 1.1.2
-      '@unrs/rspack-resolver-binding-win32-arm64-msvc': 1.1.2
-      '@unrs/rspack-resolver-binding-win32-x64-msvc': 1.1.2
+      '@unrs/rspack-resolver-binding-darwin-arm64': 1.2.1
+      '@unrs/rspack-resolver-binding-darwin-x64': 1.2.1
+      '@unrs/rspack-resolver-binding-freebsd-x64': 1.2.1
+      '@unrs/rspack-resolver-binding-linux-arm-gnueabihf': 1.2.1
+      '@unrs/rspack-resolver-binding-linux-arm64-gnu': 1.2.1
+      '@unrs/rspack-resolver-binding-linux-arm64-musl': 1.2.1
+      '@unrs/rspack-resolver-binding-linux-x64-gnu': 1.2.1
+      '@unrs/rspack-resolver-binding-linux-x64-musl': 1.2.1
+      '@unrs/rspack-resolver-binding-wasm32-wasi': 1.2.1
+      '@unrs/rspack-resolver-binding-win32-arm64-msvc': 1.2.1
+      '@unrs/rspack-resolver-binding-win32-x64-msvc': 1.2.1
 
   run-async@2.4.1: {}
 
