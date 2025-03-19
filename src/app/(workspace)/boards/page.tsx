@@ -1,9 +1,9 @@
-import BoardViewPage from '@/components/boards/BoardViewPage';
+import { BoardOverview } from '@/components/boards/BoardOverview';
 
-export default function BoardPage() {
+export default function BoardsPage() {
   return (
-    <div data-testid="board-page-container">
-      <BoardViewPage />
+    <div className="container mx-auto p-6">
+      <BoardOverview />
     </div>
   );
 }

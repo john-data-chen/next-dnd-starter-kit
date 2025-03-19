@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { companyInfo } from '@/constants/sidebar';
 import { useBoards } from '@/hooks/useBoards';
+import { useTaskStore } from '@/lib/store';
 import { PlusIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,11 +24,15 @@ export default function AppSidebar() {
   const pathname = usePathname();
   const { boards, loading } = useBoards();
 
+  const userEmail = useTaskStore((state) => state.userEmail);
+  const myBoards = boards?.filter((board) => board.owner.id === userEmail);
+  const joinedBoards = boards?.filter((board) => board.owner.id !== userEmail);
+
   return (
     <Sidebar>
       <SidebarHeader>
         <div className="text-sidebar-accent-foreground flex gap-2 py-2">
-          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+          <div className="bg-sidebar-pdivary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
             <Icons.companyLogo />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
@@ -36,6 +41,7 @@ export default function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent>
+        {/* My Boards Section */}
         <SidebarGroup>
           <div className="flex items-center justify-between px-2">
             <SidebarGroupLabel>My Boards</SidebarGroupLabel>
@@ -51,7 +57,34 @@ export default function AppSidebar() {
                 Loading...
               </div>
             ) : (
-              boards?.map((board) => (
+              myBoards?.map((board) => (
+                <SidebarMenuItem key={board._id}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === `/boards/${board._id}`}
+                  >
+                    <Link href={`/boards/${board._id}`}>
+                      <span>{board.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))
+            )}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Joined Boards Section */}
+        <SidebarGroup>
+          <div className="flex items-center justify-between px-2">
+            <SidebarGroupLabel>Joined Boards</SidebarGroupLabel>
+          </div>
+          <SidebarMenu>
+            {loading ? (
+              <div className="px-4 py-2 text-sm text-muted-foreground">
+                Loading...
+              </div>
+            ) : (
+              joinedBoards?.map((board) => (
                 <SidebarMenuItem key={board._id}>
                   <SidebarMenuButton
                     asChild
