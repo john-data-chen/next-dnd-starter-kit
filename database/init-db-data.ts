@@ -54,40 +54,54 @@ async function main() {
     console.log('Created users successfully');
 
     // Create boards with user references
-    const boards = await BoardModel.insertMany(
-      demoBoards.map((board, index) => ({
-        ...board,
-        owner: users[index === 0 ? 0 : 2]._id,
-        members:
-          index === 0
-            ? [users[0]._id, users[1]._id]
-            : [users[0]._id, users[1]._id, users[2]._id]
-      }))
-    );
+    const boards = await BoardModel.insertMany([
+      // John's team board
+      {
+        ...demoBoards[0],
+        owner: users[1]._id, // John
+        members: [users[1]._id, users[3]._id],
+        projects: []
+      },
+      // Jane's team board
+      {
+        ...demoBoards[1],
+        owner: users[2]._id, // Jane
+        members: [users[1]._id, users[2]._id],
+        projects: []
+      },
+      // Mark's personal board
+      {
+        title: "Mark's Personal Board",
+        description: 'Private workspace for personal tasks',
+        owner: users[3]._id, // Mark S
+        members: [users[3]._id],
+        projects: []
+      }
+    ]);
     console.log('Created boards successfully');
 
-    // Create projects with board reference
+    // Create projects with board references
     const projects = await ProjectModel.insertMany(
-      demoProjects.map((project) => ({
+      demoProjects.map((project, index) => ({
         ...project,
-        owner: users[project.boardIndex === 0 ? 0 : 2]._id,
-        members:
-          project.boardIndex === 0
-            ? [users[0]._id, users[1]._id]
-            : [users[0]._id, users[1]._id, users[2]._id],
-        board: boards[project.boardIndex]._id
+        owner: users[project.boardIndex === 0 ? 1 : 2]._id,
+        members: [users[1]._id, users[2]._id],
+        board: boards[index < 2 ? project.boardIndex : 2]._id  // Ensure valid board reference
       }))
     );
-    console.log('Created projects successfully');
 
-    // Update boards with projects
+    // Update boards with project references
     await Promise.all(
-      boards.map((board, index) =>
-        BoardModel.findByIdAndUpdate(board._id, {
-          $push: { projects: projects[index]._id }
-        })
-      )
+      boards.map(async (board) => {
+        const boardProjects = projects.filter(
+          (p) => p.board && board._id && p.board.toString() === board._id.toString()
+        );
+        await BoardModel.findByIdAndUpdate(board._id, {
+          projects: boardProjects.map((p) => p._id)
+        });
+      })
     );
+    console.log('Updated boards with project references');
 
     // Create tasks with all references
     const tasks = await TaskModel.insertMany(
@@ -102,6 +116,7 @@ async function main() {
     );
     console.log('Created tasks successfully');
 
+    // Final data summary
     console.log('Final data:', {
       users: users.length,
       boards: boards.length,
