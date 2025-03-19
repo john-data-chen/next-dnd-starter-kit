@@ -1,6 +1,8 @@
 'use client';
 
+import NewBoardDialog from '@/components/boards/NewBoardDialog';
 import { Icons } from '@/components/layout/Icons';
+import { Button } from '@/components/ui/button';
 import {
   Sidebar,
   SidebarContent,
@@ -13,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { companyInfo } from '@/constants/sidebar';
 import { useBoards } from '@/hooks/useBoards';
+import { PlusIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -34,7 +37,14 @@ export default function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>My Boards</SidebarGroupLabel>
+          <div className="flex items-center justify-between px-2">
+            <SidebarGroupLabel>My Boards</SidebarGroupLabel>
+            <NewBoardDialog>
+              <Button variant="ghost" size="icon" className="h-6 w-6">
+                <PlusIcon className="h-4 w-4" />
+              </Button>
+            </NewBoardDialog>
+          </div>
           <SidebarMenu>
             {loading ? (
               <div className="px-4 py-2 text-sm text-muted-foreground">
