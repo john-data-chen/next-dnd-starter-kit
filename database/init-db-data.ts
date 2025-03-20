@@ -86,7 +86,7 @@ async function main() {
         ...project,
         owner: users[project.boardIndex === 0 ? 1 : 2]._id,
         members: [users[1]._id, users[2]._id],
-        board: boards[index < 2 ? project.boardIndex : 2]._id  // Ensure valid board reference
+        board: boards[index < 2 ? project.boardIndex : 2]._id // Ensure valid board reference
       }))
     );
 
@@ -94,7 +94,8 @@ async function main() {
     await Promise.all(
       boards.map(async (board) => {
         const boardProjects = projects.filter(
-          (p) => p.board && board._id && p.board.toString() === board._id.toString()
+          (p) =>
+            p.board && board._id && p.board.toString() === board._id.toString()
         );
         await BoardModel.findByIdAndUpdate(board._id, {
           projects: boardProjects.map((p) => p._id)
