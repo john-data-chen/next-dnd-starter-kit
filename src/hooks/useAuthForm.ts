@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 export default function useAuthForm() {
   const [loading, startTransition] = useTransition();
-  const { setUserEmail } = useTaskStore();
+  const { setUserInfo } = useTaskStore();
 
   const form = useForm<SignInFormValue>({
     resolver: zodResolver(SignInValidation),
@@ -32,7 +32,7 @@ export default function useAuthForm() {
         });
       });
 
-      setUserEmail(data.email);
+      setUserInfo(data.email);
     } catch (error) {
       console.error('Form submission error:', error);
       toast.error('Failed to submit form.');

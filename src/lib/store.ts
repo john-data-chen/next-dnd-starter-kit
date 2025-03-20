@@ -20,10 +20,12 @@ import {
   updateTaskInDb,
   updateTaskProjectInDb
 } from './db/task';
+import { getUserByEmail } from './db/user';
 
 interface State {
   userEmail: string | null;
-  setUserEmail: (userEmail: string) => void;
+  userId: string | null;
+  setUserInfo: (email: string) => void;
   projects: Project[];
   fetchProjects: (userEmail: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
@@ -72,8 +74,15 @@ export const useTaskStore = create<State>()(
   persist(
     (set) => ({
       userEmail: null,
-      setUserEmail: (userEmail: string) => set({ userEmail }),
+      userId: null,
       projects: [] as Project[],
+      setUserInfo: async (email: string) => {
+        const user = await getUserByEmail(email);
+        if (!user) {
+          throw new Error('User not found');
+        }
+        set({ userEmail: email, userId: user.id });
+      },
       fetchProjects: async (userEmail: string) => {
         try {
           const currentProjects = useTaskStore.getState().projects;
