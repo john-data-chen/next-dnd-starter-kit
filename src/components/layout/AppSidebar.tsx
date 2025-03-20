@@ -15,18 +15,13 @@ import {
 } from '@/components/ui/sidebar';
 import { companyInfo } from '@/constants/sidebar';
 import { useBoards } from '@/hooks/useBoards';
-import { useTaskStore } from '@/lib/store';
 import { PlusIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function AppSidebar() {
   const pathname = usePathname();
-  const { boards, loading } = useBoards();
-
-  const userEmail = useTaskStore((state) => state.userEmail);
-  const myBoards = boards?.filter((board) => board.owner.id === userEmail);
-  const joinedBoards = boards?.filter((board) => board.owner.id !== userEmail);
+  const { myBoards, teamBoards, loading } = useBoards();
 
   return (
     <Sidebar>
@@ -73,10 +68,10 @@ export default function AppSidebar() {
           </SidebarMenu>
         </SidebarGroup>
 
-        {/* Joined Boards Section */}
+        {/* Team Boards Section */}
         <SidebarGroup>
           <div className="flex items-center justify-between px-2">
-            <SidebarGroupLabel>Joined Boards</SidebarGroupLabel>
+            <SidebarGroupLabel>Team Boards</SidebarGroupLabel>
           </div>
           <SidebarMenu>
             {loading ? (
@@ -84,7 +79,7 @@ export default function AppSidebar() {
                 Loading...
               </div>
             ) : (
-              joinedBoards?.map((board) => (
+              teamBoards?.map((board) => (
                 <SidebarMenuItem key={board._id}>
                   <SidebarMenuButton
                     asChild

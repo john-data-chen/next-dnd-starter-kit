@@ -1,16 +1,16 @@
-import { BoardModel as BoardCollection } from '@/models/board.model';
+import { BoardModel } from '@/models/board.model';
 import { Board } from '@/types/dbInterface';
 import { connectToDatabase } from './connect';
 import { getUserByEmail } from './user';
 
-export async function getBoardsFromDb(userEmail: string): Promise<Board[]> {
+export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
   try {
     await connectToDatabase();
     const user = await getUserByEmail(userEmail);
     if (!user) throw new Error('User not found');
 
-    const boards = await BoardCollection.find({
-      $or: [{ owner: user._id }, { members: user._id }]
+    const boards = await BoardModel.find({
+      $or: [{ owner: user.id }, { members: user.id }]
     }).lean();
 
     return boards.map((board) => ({
@@ -18,12 +18,12 @@ export async function getBoardsFromDb(userEmail: string): Promise<Board[]> {
       title: board.title,
       description: board.description,
       owner: {
-        id: user._id.toString(),
+        id: user.id,
         name: user.name
       },
-      members: board.members.map((memberId) => ({
-        id: memberId.toString(),
-        name: 'Member Name' // TODO: Fetch member names
+      members: board.members.map((member) => ({
+        id: member.id,
+        name: member.name
       })),
       projects: board.projects.map((id) => id.toString()),
       createdAt: board.createdAt,
@@ -49,23 +49,23 @@ export async function createBoardInDb({
     const user = await getUserByEmail(userEmail);
     if (!user) throw new Error('User not found');
 
-    const newBoard = await BoardCollection.create({
+    const newBoard = await BoardModel.create({
       title,
       description,
-      owner: user._id,
-      members: [user._id],
+      owner: user.id,
+      members: [user.id],
       projects: []
     });
 
     return {
       ...newBoard.toObject(),
       owner: {
-        id: user._id,
+        id: user.id,
         name: user.name
       },
       members: [
         {
-          id: user._id,
+          id: user.id,
           name: user.name
         }
       ]
@@ -82,7 +82,7 @@ export async function updateBoardInDb(
 ): Promise<Board | null> {
   try {
     await connectToDatabase();
-    const board = await BoardCollection.findByIdAndUpdate(
+    const board = await BoardModel.findByIdAndUpdate(
       boardId,
       { ...data },
       { new: true }
@@ -90,16 +90,15 @@ export async function updateBoardInDb(
 
     if (!board) return null;
 
-    // 这里需要补充获取成员名称的逻辑
     return {
       ...board,
       owner: {
         id: board.owner.id,
-        name: 'Owner Name'
+        name: board.owner.name
       },
       members: board.members.map((member) => ({
         id: member.id,
-        name: 'Member Name'
+        name: member.name
       }))
     };
   } catch (error) {
@@ -111,7 +110,7 @@ export async function updateBoardInDb(
 export async function deleteBoardInDb(boardId: string): Promise<boolean> {
   try {
     await connectToDatabase();
-    await BoardCollection.findByIdAndDelete(boardId);
+    await BoardModel.findByIdAndDelete(boardId);
     return true;
   } catch (error) {
     console.error('Error in deleteBoardInDb:', error);
