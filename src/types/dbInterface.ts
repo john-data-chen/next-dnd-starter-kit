@@ -78,13 +78,18 @@ export type TaskModel = mongoose.InferSchemaType<
   lastModifier: string;
 };
 
+interface ProjectInfo {
+  id: string;
+  title: string;
+}
+
 export interface Board {
   _id: string;
   title: string;
   description?: string;
   owner: UserInfo;
   members: UserInfo[];
-  projects: string[];
+  projects: ProjectInfo[];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,6 +1,7 @@
 'use server';
 
 import { BoardModel } from '@/models/board.model';
+import { ProjectModel } from '@/models/project.model';
 import { Board } from '@/types/dbInterface';
 import { connectToDatabase } from './connect';
 import { getUserByEmail } from './user';
@@ -14,6 +15,22 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
     const boards = await BoardModel.find({
       $or: [{ owner: user.id }, { members: user.id }]
     }).lean();
+
+    const projectIds = boards.reduce((ids: string[], board) => {
+      return ids.concat(board.projects.map((id) => id.toString()));
+    }, []);
+
+    const projects = await ProjectModel.find({
+      _id: { $in: projectIds }
+    }).lean();
+
+    const projectMap = new Map();
+    projects.forEach((project) => {
+      projectMap.set(project._id.toString(), {
+        id: project._id.toString(),
+        title: project.title
+      });
+    });
 
     const userIds = new Set<string>();
     boards.forEach((board) => {
@@ -44,7 +61,13 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
         id: memberId.toString(),
         name: userMap.get(memberId.toString()) || 'unknown user'
       })),
-      projects: board.projects.map((project) => project.toString()),
+      projects: board.projects.map(
+        (projectId) =>
+          projectMap.get(projectId.toString()) || {
+            id: projectId.toString(),
+            title: 'Unknown Project'
+          }
+      ),
       createdAt: board.createdAt,
       updatedAt: board.updatedAt
     }));
