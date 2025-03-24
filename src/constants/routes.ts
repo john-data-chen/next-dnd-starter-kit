@@ -6,11 +6,7 @@ export const ROUTES = {
   },
   BOARDS: {
     ROOT: '/boards',
-    VIEW: (id: string) => `/boards/${id}`,
-    API: {
-      ROOT: '/api/boards',
-      DETAIL: (id: string) => `/api/boards/${id}`
-    }
+    VIEW: (id: string) => `/boards/${id}`
   },
   API: {
     USERS: {
@@ -19,11 +15,3 @@ export const ROUTES = {
     }
   }
 } as const;
-
-export function createBoardPath(id: string) {
-  return ROUTES.BOARDS.VIEW(id);
-}
-
-export function createBoardApiPath(id: string) {
-  return ROUTES.BOARDS.API.DETAIL(id);
-}
