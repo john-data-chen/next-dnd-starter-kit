@@ -18,6 +18,9 @@ const boardSchema = new mongoose.Schema(
   }
 );
 
+boardSchema.index({ owner: 1 });
+boardSchema.index({ members: 1 });
+
 let BoardModel: Model<BoardType>;
 try {
   BoardModel = mongoose.model<BoardType>('Board');
