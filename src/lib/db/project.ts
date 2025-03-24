@@ -29,9 +29,8 @@ export async function getProjectsFromDb(
       return null;
     }
     const projects = await ProjectModel.find({
-      $or: [{ owner: user }, { members: user }]
+      $or: [{ owner: user.id }, { members: user.id }]
     }).lean();
-
     const plainProjects = await Promise.all(
       projects.map((project) =>
         convertProjectToPlainObject(project as ProjectBase)
@@ -56,7 +55,7 @@ async function convertProjectToPlainObject(
   ) {
     // Owner is already an object with id and name
     ownerUser = {
-      _id: projectDoc.owner.id,
+      id: projectDoc.owner.id,
       name: projectDoc.owner.name
     };
   } else {
@@ -90,7 +89,7 @@ async function convertProjectToPlainObject(
         return null;
       }
       return {
-        id: memberUser._id.toString(),
+        id: memberUser.id.toString(),
         name: memberUser.name
       };
     }
@@ -109,7 +108,7 @@ async function convertProjectToPlainObject(
     _id: docId,
     title: projectDoc.title,
     owner: {
-      id: ownerUser._id.toString(),
+      id: ownerUser.id,
       name: ownerUser.name
     },
     members: members,
@@ -138,8 +137,8 @@ export async function createProjectInDb(data: {
     }
     const projectDoc = await ProjectModel.create({
       ...data,
-      owner: owner._id,
-      members: [owner._id]
+      owner: owner.id,
+      members: [owner.id]
     });
 
     // Convert to plain object using toObject() and cast to ProjectBase type
@@ -171,7 +170,7 @@ export async function updateProjectInDb(data: {
       console.error('Owner not found');
       return null;
     }
-    if (project.owner.toString() !== owner._id.toString()) {
+    if (project.owner.toString() !== owner.id.toString()) {
       console.error('Permission denied: User is not the project owner');
       return null;
     }
@@ -213,7 +212,7 @@ export async function deleteProjectInDb(
       console.error('User not found');
       return false;
     }
-    if (project.owner.toString() !== owner._id.toString()) {
+    if (project.owner.toString() !== owner.id.toString()) {
       console.error('Permission denied: User is not the project owner');
       return false;
     }
