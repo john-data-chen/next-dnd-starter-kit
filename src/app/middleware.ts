@@ -1,8 +1,5 @@
 import { ROUTES } from '@/constants/routes';
-import authConfig from '@/lib/auth/auth.config';
-import NextAuth from 'next-auth';
-
-const { auth } = NextAuth(authConfig);
+import { auth } from '@/lib/auth';
 
 export default auth((req) => {
   if (!req.auth) {
