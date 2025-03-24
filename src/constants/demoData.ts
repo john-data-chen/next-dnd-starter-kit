@@ -28,30 +28,39 @@ export const demoUsers = [
 
 export const demoBoards = [
   {
-    title: 'Personal Board',
+    title: "Mark's Kanban",
     description: 'My personal tasks and projects'
   },
   {
-    title: 'Team Board',
-    description: 'Collaborative team projects'
+    title: "John's Kanban",
+    description: 'My personal tasks and projects'
+  },
+  {
+    title: "Jane's Kanban",
+    description: 'My personal tasks and projects'
+  },
+  {
+    title: 'Dev Team Board',
+    description: 'public board for Dev Team'
+  },
+  {
+    title: 'Marketing Board',
+    description: 'public board for Marketing Team'
   }
 ];
 
 export const demoProjects = [
   {
-    title: 'My First Project in personal board',
-    description: 'This is demo project 1',
-    boardIndex: 0
+    title: "Mark's todo list",
+    description: 'This is demo project 1'
   },
   {
     title: 'Demo Project 2 in team board',
-    description: 'This is demo project 2',
-    boardIndex: 1
+    description: 'This is demo project 2'
   },
   {
     title: 'Demo Project 3 in team board',
-    description: 'This is demo project 3',
-    boardIndex: 2
+    description: 'This is demo project 3'
   }
 ];
 
@@ -59,25 +68,16 @@ export const demoTasks = [
   {
     title: 'Task 1',
     description: 'This is my first task',
-    status: 'TODO',
-    projectIndex: 0,
-    assigneeIndex: 2,
-    creatorIndex: 3
+    status: 'TODO'
   },
   {
     title: 'Task 2',
     description: 'This is task 2',
-    status: 'IN_PROGRESS',
-    projectIndex: 1,
-    assigneeIndex: 3,
-    creatorIndex: 1
+    status: 'IN_PROGRESS'
   },
   {
     title: 'Task 3',
     description: 'This is task 3',
-    status: 'DONE',
-    projectIndex: 2,
-    assigneeIndex: 1,
-    creatorIndex: 2
+    status: 'DONE'
   }
 ];
