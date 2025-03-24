@@ -1,3 +1,5 @@
+'use server';
+
 import { BoardModel } from '@/models/board.model';
 import { Board } from '@/types/dbInterface';
 import { connectToDatabase } from './connect';
@@ -18,11 +20,11 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
       title: board.title,
       description: board.description,
       owner: {
-        id: user.id,
+        id: user.id.toString(),
         name: user.name
       },
       members: board.members.map((member) => ({
-        id: member.id,
+        id: member.id.toString(),
         name: member.name
       })),
       projects: board.projects.map((id) => id.toString()),
