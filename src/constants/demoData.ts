@@ -55,11 +55,11 @@ export const demoProjects = [
     description: 'This is demo project 1'
   },
   {
-    title: 'Demo Project 2 in team board',
+    title: 'Demo Project 2',
     description: 'This is demo project 2'
   },
   {
-    title: 'Demo Project 3 in team board',
+    title: 'Demo Project 3',
     description: 'This is demo project 3'
   }
 ];

@@ -94,19 +94,19 @@ async function main() {
         ...demoProjects[0], // Mark's todo list
         owner: users[3]._id, // Mark S
         members: [users[3]._id],
-        board: boards[0]._id // In Mark's Kanban
+        boards: [boards[0]._id] // In Mark's Kanban
       },
       {
         ...demoProjects[1], // Demo Project 2
         owner: users[1]._id, // John
         members: [users[1]._id, users[2]._id],
-        board: boards[3]._id // In Dev Team Board
+        boards: [boards[3]._id] // In Dev Team Board
       },
       {
         ...demoProjects[2], // Demo Project 3
         owner: users[2]._id, // Jane
         members: [users[1]._id, users[2]._id],
-        board: boards[3]._id // In Dev Team Board
+        boards: [boards[3]._id] // In Dev Team Board
       }
     ]);
     console.log('Created projects successfully');
