@@ -36,7 +36,6 @@ export default function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {/* My Boards Section */}
         <SidebarGroup>
           <div className="flex items-center justify-between px-2">
             <SidebarGroupLabel>My Boards</SidebarGroupLabel>

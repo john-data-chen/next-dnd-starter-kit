@@ -15,19 +15,36 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
       $or: [{ owner: user.id }, { members: user.id }]
     }).lean();
 
+    const userIds = new Set<string>();
+    boards.forEach((board) => {
+      userIds.add(board.owner.toString());
+      board.members.forEach((memberId) => userIds.add(memberId.toString()));
+    });
+
+    const { getUserById } = await import('./user');
+    const userPromises = Array.from(userIds).map((id) => getUserById(id));
+    const users = await Promise.all(userPromises);
+
+    const userMap = new Map();
+    users.forEach((user) => {
+      if (user) {
+        userMap.set(user.id, user.name);
+      }
+    });
+
     return boards.map((board) => ({
       _id: board._id.toString(),
       title: board.title,
       description: board.description,
       owner: {
-        id: user.id.toString(),
-        name: user.name
+        id: board.owner.toString(),
+        name: userMap.get(board.owner.toString()) || 'unknown user'
       },
-      members: board.members.map((member) => ({
-        id: member.id.toString(),
-        name: member.name
+      members: board.members.map((memberId) => ({
+        id: memberId.toString(),
+        name: userMap.get(memberId.toString()) || 'unknown user'
       })),
-      projects: board.projects.map((id) => id.toString()),
+      projects: board.projects.map((project) => project.toString()),
       createdAt: board.createdAt,
       updatedAt: board.updatedAt
     }));

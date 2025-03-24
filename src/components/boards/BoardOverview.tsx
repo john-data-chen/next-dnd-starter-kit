@@ -2,14 +2,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBoards } from '@/hooks/useBoards';
-import { useTaskStore } from '@/lib/store';
 
 export function BoardOverview() {
-  const { boards, loading } = useBoards();
-  const { userEmail } = useTaskStore();
-
-  const myBoards = boards?.filter((board) => board.owner.id === userEmail);
-  const joinedBoards = boards?.filter((board) => board.owner.id !== userEmail);
+  const { myBoards, teamBoards, loading } = useBoards();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -29,7 +24,9 @@ export function BoardOverview() {
                 <p className="text-sm text-muted-foreground">
                   {board.description || 'No description'}
                 </p>
-                <p className="text-sm mt-2">Members: {board.members.length}</p>
+                <p className="text-sm mt-2">
+                  Projects: {board.projects.length}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -37,9 +34,9 @@ export function BoardOverview() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold mb-4">Joined Boards</h2>
+        <h2 className="text-2xl font-bold mb-4">Team Boards</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {joinedBoards?.map((board) => (
+          {teamBoards?.map((board) => (
             <Card key={board._id}>
               <CardHeader>
                 <CardTitle>{board.title}</CardTitle>
@@ -49,6 +46,9 @@ export function BoardOverview() {
                   {board.description || 'No description'}
                 </p>
                 <p className="text-sm mt-2">Owner: {board.owner.name}</p>
+                <p className="text-sm mt-2">
+                  Projects: {board.projects.length}
+                </p>
               </CardContent>
             </Card>
           ))}

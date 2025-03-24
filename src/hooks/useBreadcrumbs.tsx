@@ -1,6 +1,8 @@
 'use client';
 
 import { ROUTES } from '@/constants/routes';
+import { fetchBoardsFromDb } from '@/lib/db/board';
+import { useTaskStore } from '@/lib/store';
 import { Board } from '@/types/dbInterface';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -14,14 +16,17 @@ export function useBreadcrumbs() {
   const params = useParams();
   const boardId = params.boardId as string;
   const [board, setBoard] = useState<Board | null>(null);
+  const userEmail = useTaskStore((state) => state.userEmail);
 
   useEffect(() => {
     async function fetchBoard() {
-      if (!boardId) return;
+      if (!boardId || !userEmail) return;
       try {
-        const response = await fetch(`/api/boards/${boardId}`);
-        const data = await response.json();
-        setBoard(data);
+        const boards = await fetchBoardsFromDb(userEmail);
+        const currentBoard = boards.find((b) => b._id === boardId);
+        if (currentBoard) {
+          setBoard(currentBoard);
+        }
       } catch (error) {
         console.error('Failed to fetch board:', error);
       }
@@ -30,9 +35,11 @@ export function useBreadcrumbs() {
     if (boardId) {
       fetchBoard();
     }
-  }, [boardId]);
+  }, [boardId, userEmail]);
 
-  const items: BreadcrumbItem[] = [{ title: 'Kanban', link: ROUTES.HOME }];
+  const items: BreadcrumbItem[] = [
+    { title: 'Kanban', link: ROUTES.BOARDS.ROOT }
+  ];
 
   if (board) {
     items.push({

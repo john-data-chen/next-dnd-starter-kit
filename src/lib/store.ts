@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 import {
   createBoardInDb,
   deleteBoardInDb,
-  getBoardsFromDb,
+  fetchBoardsFromDb,
   updateBoardInDb
 } from './db/board';
 import {
@@ -314,10 +314,9 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      // Add filter state and setter
       filter: {
         status: null,
-        search: '' // 初始化搜索字段
+        search: ''
       },
       setFilter: (filter) => {
         set((state) => ({
@@ -332,7 +331,7 @@ export const useTaskStore = create<State>()(
 
       fetchBoards: async (userEmail: string) => {
         try {
-          const boards = await getBoardsFromDb(userEmail);
+          const boards = await fetchBoardsFromDb(userEmail);
           set({ boards: boards || [] });
         } catch (error) {
           console.error('Error fetching boards:', error);
