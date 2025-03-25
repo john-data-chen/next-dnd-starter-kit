@@ -112,20 +112,37 @@ async function convertProjectToPlainObject(
     _id: docId,
     title: projectDoc.title,
     owner: {
-      id: ownerUser.id,
+      id: ownerUser.id.toString(),
       name: ownerUser.name
     },
-    members: members,
-    createdAt:
-      typeof projectDoc.createdAt === 'string'
-        ? projectDoc.createdAt
-        : projectDoc.createdAt?.toISOString() || new Date().toISOString(),
-    updatedAt:
-      typeof projectDoc.updatedAt === 'string'
-        ? projectDoc.updatedAt
-        : projectDoc.updatedAt?.toISOString() || new Date().toISOString(),
-    tasks: projectDoc.tasks || [],
-    board: projectDoc.board
+    members: members.map((member) => ({
+      id: member.id.toString(),
+      name: member.name
+    })),
+    createdAt: projectDoc.createdAt
+      ? new Date(projectDoc.createdAt).toISOString()
+      : new Date().toISOString(),
+    updatedAt: projectDoc.updatedAt
+      ? new Date(projectDoc.updatedAt).toISOString()
+      : new Date().toISOString(),
+    tasks: (projectDoc.tasks || []).map((task) => ({
+      _id: task._id.toString(),
+      title: task.title,
+      description: task.description || '',
+      status: task.status,
+      project: task.project.toString(),
+      creator: {
+        id: task.creator.id.toString(),
+        name: task.creator.name
+      },
+      lastModifier: {
+        id: task.lastModifier.id.toString(),
+        name: task.lastModifier.name
+      },
+      createdAt: new Date(task.createdAt),
+      updatedAt: new Date(task.updatedAt)
+    })),
+    board: projectDoc.board.toString()
   };
 }
 
