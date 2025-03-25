@@ -23,19 +23,11 @@ export async function getProjectsFromDb(
 ): Promise<ProjectType[] | null> {
   try {
     await connectToDatabase();
-
-    console.log('Fetching projects for boardId:', boardId);
-
-    // 確保 boardId 格式正確
     const boardObjectId = new Types.ObjectId(boardId);
 
     const projects = await ProjectModel.find({
       board: boardObjectId
-    })
-      .populate('tasks') // 填充任務數據
-      .lean();
-
-    console.log('Raw projects from DB:', JSON.stringify(projects, null, 2));
+    }).lean();
 
     if (!projects || projects.length === 0) {
       console.log('No projects found for board:', boardId);
@@ -47,8 +39,6 @@ export async function getProjectsFromDb(
         convertProjectToPlainObject(project as ProjectBase)
       )
     );
-
-    console.log('Converted projects:', JSON.stringify(plainProjects, null, 2));
 
     return plainProjects;
   } catch (error) {

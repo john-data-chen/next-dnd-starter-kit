@@ -293,10 +293,8 @@ export const useTaskStore = create<State>()(
       },
       currentBoardId: null,
       setCurrentBoardId: (boardId: string) => {
-        console.log('Setting currentBoardId to:', boardId); // Add this line to check the value of boardId before setting it t
         set({ currentBoardId: boardId });
       },
-
       addBoard: async (title: string, userEmail: string) => {
         try {
           const newBoard = await createBoardInDb({ title, userEmail });
