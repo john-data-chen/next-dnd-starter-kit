@@ -13,6 +13,7 @@ export interface Project {
   createdAt: string;
   updatedAt: string;
   tasks: Task[];
+  board: string;
 }
 
 export interface User {
@@ -54,6 +55,9 @@ export type ProjectModel = mongoose.InferSchemaType<
   owner: string;
   members: string[];
   tasks: Task[];
+  board: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type UserModel = mongoose.InferSchemaType<

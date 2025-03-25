@@ -1,12 +1,7 @@
 import { Board, Project } from '@/types/dbInterface';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import {
-  createBoardInDb,
-  deleteBoardInDb,
-  fetchBoardsFromDb,
-  updateBoardInDb
-} from './db/board';
+import { createBoardInDb, deleteBoardInDb, updateBoardInDb } from './db/board';
 import {
   createProjectInDb,
   deleteProjectInDb,
@@ -27,7 +22,7 @@ interface State {
   userId: string | null;
   setUserInfo: (email: string) => void;
   projects: Project[];
-  fetchProjects: (userEmail: string) => Promise<void>;
+  fetchProjects: (boardId: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
   addProject: (title: string, userEmail: string) => void;
   updateProject: (id: string, newTitle: string, userEmail: string) => void;
@@ -61,10 +56,8 @@ interface State {
     search: string;
   };
   setFilter: (filter: Partial<State['filter']>) => void;
-  boards: Board[];
   currentBoardId: string | null;
-  fetchBoards: (userEmail: string) => Promise<void>;
-  setCurrentBoard: (boardId: string) => void;
+  setCurrentBoardId: (boardId: string) => void;
   addBoard: (title: string, userEmail: string) => Promise<void>;
   updateBoard: (id: string, data: Partial<Board>) => Promise<void>;
   removeBoard: (id: string) => Promise<void>;
@@ -83,49 +76,21 @@ export const useTaskStore = create<State>()(
         }
         set({ userEmail: email, userId: user.id });
       },
-      fetchProjects: async (userEmail: string) => {
+      fetchProjects: async (boardId: string) => {
         try {
-          const currentProjects = useTaskStore.getState().projects;
-          const projects = await getProjectsFromDb(userEmail);
+          const projects = await getProjectsFromDb(boardId);
           if (!projects || projects.length === 0) {
             set({ projects: [] });
             return;
           }
 
-          let orderedProjects = [...projects];
-          if (currentProjects.length > 0) {
-            const projectMap = new Map(projects.map((p) => [p._id, p]));
-            orderedProjects = currentProjects
-              .filter((p) => projectMap.has(p._id))
-              .map((p) => projectMap.get(p._id)!);
-            const existingIds = new Set(orderedProjects.map((p) => p._id));
-            const newProjects = projects.filter((p) => !existingIds.has(p._id));
-            orderedProjects = [...orderedProjects, ...newProjects];
-          }
-
           const projectsWithTasks = await Promise.all(
-            orderedProjects.map(async (project) => {
+            projects.map(async (project) => {
               try {
-                const currentStateTasks =
-                  useTaskStore
-                    .getState()
-                    .projects.find((p) => p._id === project._id)?.tasks || [];
-
-                const dbTasks = await getTasksByProjectId(project._id);
-
-                if (
-                  currentStateTasks.length > 0 &&
-                  currentStateTasks.length === dbTasks?.length
-                ) {
-                  return {
-                    ...project,
-                    tasks: currentStateTasks
-                  };
-                }
-
+                const tasks = await getTasksByProjectId(project._id);
                 return {
                   ...project,
-                  tasks: dbTasks || []
+                  tasks: tasks || []
                 };
               } catch (error) {
                 console.error(
@@ -326,31 +291,17 @@ export const useTaskStore = create<State>()(
           }
         }));
       },
-      boards: [],
       currentBoardId: null,
-
-      fetchBoards: async (userEmail: string) => {
-        try {
-          const boards = await fetchBoardsFromDb(userEmail);
-          set({ boards: boards || [] });
-        } catch (error) {
-          console.error('Error fetching boards:', error);
-          set({ boards: [] });
-        }
-      },
-
-      setCurrentBoard: (boardId: string) => {
+      setCurrentBoardId: (boardId: string) => {
+        console.log('Setting currentBoardId to:', boardId); // Add this line to check the value of boardId before setting it t
         set({ currentBoardId: boardId });
       },
 
       addBoard: async (title: string, userEmail: string) => {
         try {
           const newBoard = await createBoardInDb({ title, userEmail });
-          if (newBoard) {
-            set((state) => ({
-              boards: [...state.boards, newBoard],
-              currentBoardId: newBoard._id
-            }));
+          if (!newBoard) {
+            throw new Error('Failed to create board');
           }
         } catch (error) {
           console.error('Error in addBoard:', error);
@@ -362,12 +313,6 @@ export const useTaskStore = create<State>()(
         try {
           const updatedBoard = await updateBoardInDb(id, data);
           if (!updatedBoard) throw new Error('Failed to update board');
-
-          set((state) => ({
-            boards: state.boards.map((board) =>
-              board._id === id ? updatedBoard : board
-            )
-          }));
         } catch (error) {
           console.error('Error in updateBoard:', error);
           throw error;
@@ -378,13 +323,6 @@ export const useTaskStore = create<State>()(
         try {
           const success = await deleteBoardInDb(id);
           if (!success) throw new Error('Failed to delete board');
-
-          set((state) => ({
-            boards: state.boards.filter((board) => board._id !== id),
-            currentBoardId:
-              state.currentBoardId === id ? null : state.currentBoardId,
-            projects: state.currentBoardId === id ? [] : state.projects
-          }));
         } catch (error) {
           console.error('Error in removeBoard:', error);
           throw error;

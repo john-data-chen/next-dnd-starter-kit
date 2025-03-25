@@ -2,9 +2,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBoards } from '@/hooks/useBoards';
+import { useTaskStore } from '@/lib/store';
 
 export function BoardOverview() {
   const { myBoards, teamBoards, loading } = useBoards();
+  const setCurrentBoardId = useTaskStore((state) => state.setCurrentBoardId);
+  setCurrentBoardId('');
 
   if (loading) {
     return <div>Loading...</div>;

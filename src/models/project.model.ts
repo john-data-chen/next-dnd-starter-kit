@@ -6,7 +6,7 @@ const projectSchema = new mongoose.Schema({
   description: { type: String },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  boards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Board' }],
+  board: { type: mongoose.Schema.Types.ObjectId, ref: 'Board', required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

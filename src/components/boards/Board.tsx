@@ -20,7 +20,7 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import mongoose from 'mongoose';
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import NewProjectDialog from './NewProjectDialog';
 import { BoardContainer, BoardProject } from './Project';
@@ -28,19 +28,13 @@ import { TaskCard } from './TaskCard';
 import { TaskFilter } from './TaskFilter';
 
 export function Board() {
-  const userEmail = useTaskStore((state) => state.userEmail);
   const projects = useTaskStore((state) => state.projects);
   const filter = useTaskStore((state) => state.filter);
-  const fetchProjects = useTaskStore((state) => state.fetchProjects);
+  const currentBoardId = useTaskStore((state) => state.currentBoardId);
   const setProjects = useTaskStore((state) => state.setProjects);
   const dragTaskIntoNewProject = useTaskStore(
     (state) => state.dragTaskIntoNewProject
   );
-  useEffect(() => {
-    if (userEmail) {
-      fetchProjects(userEmail);
-    }
-  }, [userEmail, fetchProjects]);
   const pickedUpTaskProject = useMemo(() => {
     return { current: null as null | mongoose.Types.ObjectId };
   }, []);
@@ -129,7 +123,7 @@ export function Board() {
         console.error('Target project not found');
         return;
       }
-      dragTaskIntoNewProject(userEmail!, activeTask._id, overProject._id)
+      dragTaskIntoNewProject(currentBoardId!, activeTask._id, overProject._id)
         .then(() => {
           activeTask.project = overProject._id;
           overProject.tasks.push(activeTask);
@@ -158,7 +152,11 @@ export function Board() {
       );
       // move task to a different project
       if (overTask.project !== activeTask.project) {
-        dragTaskIntoNewProject(userEmail!, activeTask._id, overTask.project)
+        dragTaskIntoNewProject(
+          currentBoardId!,
+          activeTask._id,
+          overTask.project
+        )
           .then(() => {
             activeTask.project = overTask.project;
             overProject!.tasks.splice(overTaskIdx, 0, activeTask);
