@@ -62,7 +62,7 @@ interface State {
     title: string,
     userEmail: string,
     description?: string
-  ) => Promise<void>;
+  ) => Promise<string>;
   updateBoard: (id: string, data: Partial<Board>) => Promise<void>;
   removeBoard: (id: string) => Promise<void>;
 }
@@ -313,6 +313,12 @@ export const useTaskStore = create<State>()(
           if (!newBoard) {
             throw new Error('Failed to create board');
           }
+          const boardId = newBoard._id.toString();
+          set({
+            currentBoardId: boardId,
+            projects: []
+          });
+          return boardId;
         } catch (error) {
           console.error('Error in addBoard:', error);
           throw error;

@@ -25,9 +25,20 @@ export interface User {
   updatedAt: Date;
 }
 
-interface UserInfo {
+export interface UserInfo {
   id: string;
   name: string;
+}
+
+export interface BoardDocument {
+  _id: string;
+  title: string;
+  description?: string;
+  owner: string | UserInfo;
+  members: (string | UserInfo)[];
+  projects: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
@@ -82,7 +93,7 @@ export type TaskModel = mongoose.InferSchemaType<
   lastModifier: string;
 };
 
-interface ProjectInfo {
+export interface ProjectInfo {
   id: string;
   title: string;
 }

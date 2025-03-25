@@ -2,7 +2,7 @@
 
 import { BoardModel } from '@/models/board.model';
 import { ProjectModel } from '@/models/project.model';
-import { Board } from '@/types/dbInterface';
+import { Board, BoardDocument } from '@/types/dbInterface';
 import { connectToDatabase } from './connect';
 import { getUserByEmail } from './user';
 
@@ -77,6 +77,42 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
   }
 }
 
+async function convertBoardToPlainObject(
+  boardDoc: BoardDocument
+): Promise<Board> {
+  return {
+    _id: boardDoc._id.toString(),
+    title: boardDoc.title,
+    description: boardDoc.description || '',
+    owner: {
+      id:
+        typeof boardDoc.owner === 'object' && 'name' in boardDoc.owner
+          ? boardDoc.owner.id.toString()
+          : boardDoc.owner.toString(),
+      name:
+        typeof boardDoc.owner === 'object' && 'name' in boardDoc.owner
+          ? boardDoc.owner.name
+          : 'unknown user'
+    },
+    members: (boardDoc.members || []).map((member) => ({
+      id:
+        typeof member === 'object' && 'name' in member
+          ? member.id.toString()
+          : member.toString(),
+      name:
+        typeof member === 'object' && 'name' in member
+          ? member.name
+          : 'unknown user'
+    })),
+    projects: (boardDoc.projects || []).map((project) => ({
+      id: project.toString(),
+      title: 'Unknown Project'
+    })),
+    createdAt: boardDoc.createdAt ? new Date(boardDoc.createdAt) : new Date(),
+    updatedAt: boardDoc.updatedAt ? new Date(boardDoc.updatedAt) : new Date()
+  };
+}
+
 export async function createBoardInDb({
   title,
   userEmail,
@@ -99,19 +135,19 @@ export async function createBoardInDb({
       projects: []
     });
 
-    return {
-      ...newBoard.toObject(),
-      owner: {
-        id: user.id,
-        name: user.name
-      },
-      members: [
-        {
-          id: user.id,
-          name: user.name
-        }
-      ]
+    // Convert to plain object and ensure correct types
+    const plainBoard = {
+      _id: newBoard._id,
+      title: newBoard.title,
+      description: newBoard.description,
+      owner: user.id,
+      members: [user.id],
+      projects: [],
+      createdAt: newBoard.createdAt,
+      updatedAt: newBoard.updatedAt
     };
+
+    return convertBoardToPlainObject(plainBoard);
   } catch (error) {
     console.error('Error in createBoardInDb:', error);
     return null;

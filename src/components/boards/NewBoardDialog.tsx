@@ -13,29 +13,43 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
+import { boardSchema } from '@/types/boardForm';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { z } from 'zod';
 
 interface NewBoardDialogProps {
   children: React.ReactNode;
 }
 
+type BoardFormData = z.infer<typeof boardSchema>;
+
 export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const { addBoard, userEmail } = useTaskStore();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !userEmail) return;
+  const form = useForm<BoardFormData>({
+    resolver: zodResolver(boardSchema),
+    defaultValues: {
+      title: '',
+      description: ''
+    }
+  });
+
+  const router = useRouter();
+
+  const handleSubmit = async (data: BoardFormData) => {
+    if (!userEmail) return;
 
     try {
-      await addBoard(title, userEmail, description);
+      const boardId = await addBoard(data.title, userEmail, data.description);
       toast.success('Board created successfully');
       setOpen(false);
-      setTitle('');
-      setDescription('');
+      form.reset();
+      router.push(`/boards/${boardId}`);
     } catch (error) {
       console.error(error);
       toast.error('Failed to create board');
@@ -49,23 +63,24 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
         <DialogHeader>
           <DialogTitle>Create New Board</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">Board Title</Label>
               <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                {...form.register('title')}
                 placeholder="Enter board title"
               />
+              {form.formState.errors.title && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.title.message}
+                </p>
+              )}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                {...form.register('description')}
                 placeholder="Enter board description"
                 className="resize-none"
               />
