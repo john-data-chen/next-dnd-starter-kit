@@ -58,7 +58,11 @@ interface State {
   setFilter: (filter: Partial<State['filter']>) => void;
   currentBoardId: string | null;
   setCurrentBoardId: (boardId: string) => void;
-  addBoard: (title: string, userEmail: string) => Promise<void>;
+  addBoard: (
+    title: string,
+    userEmail: string,
+    description?: string
+  ) => Promise<void>;
   updateBoard: (id: string, data: Partial<Board>) => Promise<void>;
   removeBoard: (id: string) => Promise<void>;
 }
@@ -295,9 +299,17 @@ export const useTaskStore = create<State>()(
       setCurrentBoardId: (boardId: string) => {
         set({ currentBoardId: boardId });
       },
-      addBoard: async (title: string, userEmail: string) => {
+      addBoard: async (
+        title: string,
+        userEmail: string,
+        description?: string
+      ) => {
         try {
-          const newBoard = await createBoardInDb({ title, userEmail });
+          const newBoard = await createBoardInDb({
+            title,
+            userEmail,
+            description
+          });
           if (!newBoard) {
             throw new Error('Failed to create board');
           }

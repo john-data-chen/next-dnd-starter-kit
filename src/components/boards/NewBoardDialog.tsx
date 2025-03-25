@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -22,6 +23,7 @@ interface NewBoardDialogProps {
 export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const { addBoard, userEmail } = useTaskStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,10 +31,11 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
     if (!title.trim() || !userEmail) return;
 
     try {
-      await addBoard(title, userEmail);
+      await addBoard(title, userEmail, description);
       toast.success('Board created successfully');
       setOpen(false);
       setTitle('');
+      setDescription('');
     } catch (error) {
       console.error(error);
       toast.error('Failed to create board');
@@ -55,6 +58,16 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter board title"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter board description"
+                className="resize-none"
               />
             </div>
           </div>
