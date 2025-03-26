@@ -148,6 +148,8 @@ async function convertProjectToPlainObject(
 
 export async function createProjectInDb(data: {
   title: string;
+  description: string;
+  board: string;
   userEmail: string;
 }): Promise<ProjectType | null> {
   try {
@@ -160,7 +162,8 @@ export async function createProjectInDb(data: {
     const projectDoc = await ProjectModel.create({
       ...data,
       owner: owner.id,
-      members: [owner.id]
+      members: [owner.id],
+      board: new Types.ObjectId(data.board)
     });
 
     // Convert to plain object using toObject() and cast to ProjectBase type

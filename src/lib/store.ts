@@ -24,7 +24,7 @@ interface State {
   projects: Project[];
   fetchProjects: (boardId: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
-  addProject: (title: string, userEmail: string) => void;
+  addProject: (title: string, description: string) => Promise<string>;
   updateProject: (id: string, newTitle: string, userEmail: string) => void;
   removeProject: (id: string, userEmail: string) => void;
   addTask: (
@@ -124,18 +124,31 @@ export const useTaskStore = create<State>()(
         }
       },
       setProjects: (projects: Project[]) => set({ projects }),
-      addProject: async (title: string, userEmail: string) => {
+      addProject: async (title: string, description: string) => {
         try {
-          const newProject = await createProjectInDb({ title, userEmail });
+          const state = useTaskStore.getState();
+          if (!state.userEmail || !state.currentBoardId) {
+            throw new Error('User email or board id not found');
+          }
+
+          const newProject = await createProjectInDb({
+            title,
+            description,
+            userEmail: state.userEmail,
+            board: state.currentBoardId
+          });
+
           if (newProject) {
             set((state) => ({
               projects: [...state.projects, newProject]
             }));
+            return newProject._id;
           } else {
-            console.error('Failed to create project');
+            throw new Error('Failed to create project');
           }
         } catch (error) {
           console.error('Error in addProject:', error);
+          throw error;
         }
       },
       updateProject: (id: string, newTitle: string, userEmail: string) => {

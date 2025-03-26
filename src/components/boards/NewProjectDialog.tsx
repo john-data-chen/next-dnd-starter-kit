@@ -11,41 +11,54 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
+import { boardSchema } from '@/types/projectForm';
+import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 export interface NewProjectDialogProps {
-  onProjectAdd?: (title: string) => void;
+  onProjectAdd?: (title: string, description?: string) => void;
 }
+
+type ProjectFormData = z.infer<typeof boardSchema>;
 
 export default function NewProjectDialog({
   onProjectAdd
-}: NewProjectDialogProps = {}) {
+}: NewProjectDialogProps) {
   const addProject = useTaskStore((state) => state.addProject);
   const userEmail = useTaskStore((state) => state.userEmail);
-  const [inputValue, setInputValue] = React.useState('');
-  const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = useForm<ProjectFormData>({
+    resolver: zodResolver(boardSchema),
+    defaultValues: {
+      title: '',
+      description: ''
+    }
+  });
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const { title } = Object.fromEntries(formData);
+  const handleSubmit = async (data: ProjectFormData) => {
+    if (!userEmail) return;
 
-    if (typeof title !== 'string' || !title.trim()) return;
-
-    addProject(title, userEmail!);
-    onProjectAdd?.(title);
-    setInputValue('');
-    setIsOpen(false);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInputValue(value);
-    setIsButtonDisabled(!value.trim());
+    try {
+      const projectId = await addProject(data.title, data.description || '');
+      if (!projectId) {
+        toast.error('Failed to create project');
+        return;
+      }
+      onProjectAdd?.(data.title, data.description);
+      toast.success('Project created successfully');
+      setIsOpen(false);
+      form.reset();
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to create project');
+    }
   };
 
   return (
@@ -69,36 +82,45 @@ export default function NewProjectDialog({
           <DialogDescription>What project you want to add?</DialogDescription>
         </DialogHeader>
         <form
-          id="new-project-form"
-          className="grid gap-4 py-4"
-          onSubmit={handleSubmit}
+          onSubmit={form.handleSubmit(handleSubmit)}
           data-testid="new-project-form"
         >
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Input
-              id="title"
-              name="title"
-              placeholder="Project title is required"
-              className="col-span-4"
-              autoFocus
-              required
-              value={inputValue}
-              onChange={handleInputChange}
-              data-testid="project-title-input"
-            />
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="title">Project Title</Label>
+              <Input
+                {...form.register('title')}
+                placeholder="Project title is required"
+                data-testid="project-title-input"
+              />
+              {form.formState.errors.title && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.title.message}
+                </p>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                {...form.register('description')}
+                placeholder="Enter project description"
+                className="resize-none"
+              />
+            </div>
           </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" data-testid="submit-project-button">
+              Add Project
+            </Button>
+          </DialogFooter>
         </form>
-        <DialogFooter>
-          <Button
-            type="submit"
-            size="sm"
-            form="new-project-form"
-            disabled={isButtonDisabled}
-            data-testid="submit-project-button"
-          >
-            Add Project
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
