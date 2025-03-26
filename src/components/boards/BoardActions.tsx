@@ -62,7 +62,6 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
   const { updateBoard, removeBoard } = useTaskStore();
   const router = useRouter();
   const { fetchBoards } = useBoards();
-  const userEmail = useTaskStore((state) => state.userEmail);
 
   const form = useForm<z.infer<typeof BoardFormSchema>>({
     resolver: zodResolver(BoardFormSchema),
@@ -74,13 +73,8 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
 
   async function onSubmit(values: z.infer<typeof BoardFormSchema>) {
     try {
-      if (!userEmail) {
-        toast.error('User not authenticated');
-        return;
-      }
-
       setIsSubmitting(true);
-      await updateBoard(board._id, values, userEmail);
+      await updateBoard(board._id, values);
       toast.success(`Board updated: ${values.title}`);
       form.reset();
       await fetchBoards();
@@ -95,12 +89,7 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
 
   const handleDelete = async () => {
     try {
-      if (!userEmail) {
-        toast.error('User not authenticated');
-        return;
-      }
-
-      await removeBoard(board._id, userEmail);
+      await removeBoard(board._id);
       setShowDeleteDialog(false);
       toast.success('Board has been deleted.');
       onDelete?.();

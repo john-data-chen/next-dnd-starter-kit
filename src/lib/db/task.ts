@@ -163,8 +163,8 @@ export async function createTaskInDb(
       dueDate,
       project: projectId,
       assignee: assigneeId,
-      creator: creator._id,
-      lastModifier: creator._id,
+      creator: creator.id,
+      lastModifier: creator.id,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -209,7 +209,7 @@ export async function updateTaskInDb(
         status,
         dueDate,
         assignee: assigneeId,
-        lastModifier: modifier._id,
+        lastModifier: modifier.id,
         updatedAt: new Date()
       },
       { new: true }
@@ -250,12 +250,12 @@ export async function updateTaskProjectInDb(
     }
 
     const isTargetProjectOwner =
-      targetProject.owner.toString() === user._id.toString();
+      targetProject.owner.toString() === user.id.toString();
     const isTargetProjectMember = targetProject.members.some(
-      (member) => member.toString() === user._id.toString()
+      (member) => member.toString() === user.id.toString()
     );
-    const isTaskCreator = task.creator.toString() === user._id.toString();
-    const isTaskAssignee = task.assignee?.toString() === user._id.toString();
+    const isTaskCreator = task.creator.toString() === user.id.toString();
+    const isTaskAssignee = task.assignee?.toString() === user.id.toString();
 
     if (
       !(
@@ -272,7 +272,7 @@ export async function updateTaskProjectInDb(
       taskId,
       {
         project: new Types.ObjectId(newProjectId),
-        lastModifier: user._id,
+        lastModifier: user.id,
         updatedAt: new Date()
       },
       { new: true }

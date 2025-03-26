@@ -30,7 +30,7 @@ type BoardFormData = z.infer<typeof boardSchema>;
 
 export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const [open, setOpen] = useState(false);
-  const { addBoard, userEmail } = useTaskStore();
+  const { addBoard } = useTaskStore();
   const { fetchBoards } = useBoards();
 
   const form = useForm<BoardFormData>({
@@ -44,10 +44,8 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const router = useRouter();
 
   const handleSubmit = async (data: BoardFormData) => {
-    if (!userEmail) return;
-
     try {
-      const boardId = await addBoard(data.title, userEmail, data.description);
+      const boardId = await addBoard(data.title, data.description);
       toast.success('Board created successfully');
       setOpen(false);
       form.reset();

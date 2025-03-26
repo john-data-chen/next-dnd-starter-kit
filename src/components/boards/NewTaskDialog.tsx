@@ -53,7 +53,7 @@ export interface NewTaskDialogProps {
 
 export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
   const addTask = useTaskStore((state) => state.addTask);
-  const userEmail = useTaskStore((state) => state.userEmail);
+
   const form = useForm<z.infer<typeof TaskFormSchema>>({
     resolver: zodResolver(TaskFormSchema),
     defaultValues: {
@@ -84,7 +84,6 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
       setIsSubmitting(true);
       await addTask(
         projectId!,
-        userEmail!,
         values.title!,
         values.status!,
         values.description ?? '',

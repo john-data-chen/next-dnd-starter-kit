@@ -25,7 +25,6 @@ import { toast } from 'sonner';
 
 export function ProjectActions({ title, id }: { title: string; id: string }) {
   const [newTitle, setNewTitle] = React.useState(title);
-  const userEmail = useTaskStore((state) => state.userEmail);
   const updateProject = useTaskStore((state) => state.updateProject);
   const removeProject = useTaskStore((state) => state.removeProject);
   const [editDisable, setIsEditDisable] = React.useState(true);
@@ -38,7 +37,7 @@ export function ProjectActions({ title, id }: { title: string; id: string }) {
         onSubmit={(e) => {
           e.preventDefault();
           setIsEditDisable(!editDisable);
-          updateProject(id, newTitle, userEmail!);
+          updateProject(id, newTitle);
           toast(`Project title: ${title} updated to ${newTitle}`);
         }}
       >
@@ -98,7 +97,7 @@ export function ProjectActions({ title, id }: { title: string; id: string }) {
                 setTimeout(() => (document.body.style.pointerEvents = ''), 100);
 
                 setShowDeleteDialog(false);
-                removeProject(id, userEmail!);
+                removeProject(id);
                 toast(`Project title: ${title} is deleted`);
               }}
             >

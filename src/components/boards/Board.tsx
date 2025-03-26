@@ -30,7 +30,6 @@ import { TaskFilter } from './TaskFilter';
 export function Board() {
   const projects = useTaskStore((state) => state.projects);
   const filter = useTaskStore((state) => state.filter);
-  const currentBoardId = useTaskStore((state) => state.currentBoardId);
   const setProjects = useTaskStore((state) => state.setProjects);
   const dragTaskIntoNewProject = useTaskStore(
     (state) => state.dragTaskIntoNewProject
@@ -123,7 +122,7 @@ export function Board() {
         console.error('Target project not found');
         return;
       }
-      dragTaskIntoNewProject(currentBoardId!, activeTask._id, overProject._id)
+      dragTaskIntoNewProject(activeTask._id, overProject._id)
         .then(() => {
           activeTask.project = overProject._id;
           overProject.tasks.push(activeTask);
@@ -152,11 +151,7 @@ export function Board() {
       );
       // move task to a different project
       if (overTask.project !== activeTask.project) {
-        dragTaskIntoNewProject(
-          currentBoardId!,
-          activeTask._id,
-          overTask.project
-        )
+        dragTaskIntoNewProject(activeTask._id, overTask.project)
           .then(() => {
             activeTask.project = overTask.project;
             overProject!.tasks.splice(overTaskIdx, 0, activeTask);

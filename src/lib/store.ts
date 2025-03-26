@@ -25,11 +25,10 @@ interface State {
   fetchProjects: (boardId: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
   addProject: (title: string, description: string) => Promise<string>;
-  updateProject: (id: string, newTitle: string, userEmail: string) => void;
-  removeProject: (id: string, userEmail: string) => void;
+  updateProject: (id: string, newTitle: string) => void;
+  removeProject: (id: string) => void;
   addTask: (
     projectId: string,
-    userEmail: string,
     title: string,
     status: 'TODO' | 'IN_PROGRESS' | 'DONE',
     description?: string,
@@ -39,7 +38,6 @@ interface State {
   updateTask: (
     taskId: string,
     title: string,
-    userEmail: string,
     status: 'TODO' | 'IN_PROGRESS' | 'DONE',
     description?: string,
     dueDate?: Date,
@@ -48,8 +46,7 @@ interface State {
   removeTask: (taskId: string) => void;
   dragTaskIntoNewProject: (
     taskId: string,
-    newProjectId: string,
-    userEmail: string
+    newProjectId: string
   ) => Promise<void>;
   filter: {
     status: string | null;
@@ -58,17 +55,9 @@ interface State {
   setFilter: (filter: Partial<State['filter']>) => void;
   currentBoardId: string | null;
   setCurrentBoardId: (boardId: string) => void;
-  addBoard: (
-    title: string,
-    userEmail: string,
-    description?: string
-  ) => Promise<string>;
-  updateBoard: (
-    id: string,
-    data: Partial<Board>,
-    userEmail: string
-  ) => Promise<void>;
-  removeBoard: (id: string, userEmail: string) => Promise<void>;
+  addBoard: (title: string, description?: string) => Promise<string>;
+  updateBoard: (id: string, data: Partial<Board>) => Promise<void>;
+  removeBoard: (id: string) => Promise<void>;
   myBoards: Board[];
   teamBoards: Board[];
   setMyBoards: (boards: Board[]) => void;
@@ -151,7 +140,11 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      updateProject: (id: string, newTitle: string, userEmail: string) => {
+      updateProject: (id: string, newTitle: string) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         updateProjectInDb({
           projectId: id,
           userEmail: userEmail,
@@ -163,7 +156,11 @@ export const useTaskStore = create<State>()(
           )
         }));
       },
-      removeProject: async (id: string, userEmail: string) => {
+      removeProject: async (id: string) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         await deleteProjectInDb(id, userEmail);
         set((state) => ({
           projects: state.projects.filter((project) => project._id !== id)
@@ -171,13 +168,16 @@ export const useTaskStore = create<State>()(
       },
       addTask: async (
         projectId: string,
-        userEmail: string,
         title: string,
         status: 'TODO' | 'IN_PROGRESS' | 'DONE',
         description?: string,
         dueDate?: Date,
         assigneeId?: string
       ) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         try {
           const newTask = await createTaskInDb(
             projectId,
@@ -204,12 +204,15 @@ export const useTaskStore = create<State>()(
       updateTask: async (
         taskId: string,
         title: string,
-        userEmail: string,
         status: 'TODO' | 'IN_PROGRESS' | 'DONE',
         description?: string,
         dueDate?: Date,
         assigneeId?: string
       ) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         try {
           const updatedTask = await updateTaskInDb(
             taskId,
@@ -249,11 +252,11 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      dragTaskIntoNewProject: async (
-        userEmail: string,
-        taskId: string,
-        newProjectId: string
-      ) => {
+      dragTaskIntoNewProject: async (taskId: string, newProjectId: string) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         try {
           const updatedTask = await updateTaskProjectInDb(
             userEmail,
@@ -319,11 +322,11 @@ export const useTaskStore = create<State>()(
       setCurrentBoardId: (boardId: string) => {
         set({ currentBoardId: boardId });
       },
-      addBoard: async (
-        title: string,
-        userEmail: string,
-        description?: string
-      ) => {
+      addBoard: async (title: string, description?: string) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         try {
           const newBoard = await createBoardInDb({
             title,
@@ -344,11 +347,11 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      updateBoard: async (
-        id: string,
-        data: Partial<Board>,
-        userEmail: string
-      ) => {
+      updateBoard: async (id: string, data: Partial<Board>) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         try {
           const updatedBoard = await updateBoardInDb(id, data, userEmail);
           if (!updatedBoard) throw new Error('Failed to update board');
@@ -358,7 +361,11 @@ export const useTaskStore = create<State>()(
         }
       },
 
-      removeBoard: async (id: string, userEmail: string) => {
+      removeBoard: async (id: string) => {
+        const userEmail = useTaskStore.getState().userEmail;
+        if (!userEmail) {
+          throw new Error('User email not found');
+        }
         try {
           const success = await deleteBoardInDb(id, userEmail);
           if (!success) throw new Error('Failed to delete board');
