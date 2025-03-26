@@ -319,15 +319,12 @@ export function Board() {
     }
   };
 
-  // 添加任務過濾函數
   const filterTasks = (tasks: Task[]) => {
     return tasks.filter((task) => {
-      // 狀態過濾
       if (filter.status && task.status !== filter.status) {
         return false;
       }
 
-      // 搜索過濾
       if (filter.search) {
         const searchTerm = filter.search.toLowerCase();
         return (
@@ -366,7 +363,7 @@ export function Board() {
               <Fragment key={project._id}>
                 <BoardProject
                   project={project}
-                  tasks={filterTasks(project.tasks)} // 使用過濾後的任務
+                  tasks={filterTasks(project.tasks)}
                 />
                 {index === projects?.length - 1}
               </Fragment>
@@ -378,7 +375,7 @@ export function Board() {
             <BoardProject
               isOverlay
               project={activeProject}
-              tasks={filterTasks(activeProject.tasks)} // 這裡也需要過濾
+              tasks={filterTasks(activeProject.tasks)}
             />
           )}
           {activeTask && <TaskCard task={activeTask} isOverlay />}

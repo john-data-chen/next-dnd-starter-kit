@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBoards } from '@/hooks/useBoards';
 import { useTaskStore } from '@/lib/store';
 import { useEffect } from 'react';
+import { BoardActions } from './BoardActions';
 
 export function BoardOverview() {
   const { myBoards, teamBoards, loading } = useBoards();
@@ -37,8 +38,9 @@ export function BoardOverview() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {myBoards?.map((board) => (
               <Card key={board._id}>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle>{board.title}</CardTitle>
+                  <BoardActions board={board} />
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
@@ -75,8 +77,9 @@ export function BoardOverview() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {teamBoards?.map((board) => (
               <Card key={board._id}>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle>{board.title}</CardTitle>
+                  <BoardActions board={board} />
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">

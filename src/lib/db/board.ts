@@ -168,17 +168,18 @@ export async function updateBoardInDb(
 
     if (!board) return null;
 
-    return {
-      ...board,
-      owner: {
-        id: board.owner.id,
-        name: board.owner.name
-      },
-      members: board.members.map((member) => ({
-        id: member.id,
-        name: member.name
-      }))
+    const boardDoc = {
+      _id: board._id,
+      title: board.title,
+      description: board.description,
+      owner: board.owner,
+      members: board.members,
+      projects: board.projects.map((p) => p.id || p),
+      createdAt: board.createdAt,
+      updatedAt: board.updatedAt
     };
+
+    return convertBoardToPlainObject(boardDoc as BoardDocument);
   } catch (error) {
     console.error('Error in updateBoardInDb:', error);
     return null;
@@ -188,7 +189,18 @@ export async function updateBoardInDb(
 export async function deleteBoardInDb(boardId: string): Promise<boolean> {
   try {
     await connectToDatabase();
+    const board = await BoardModel.findById(boardId).lean();
+    if (!board) return false;
+
+    const { TaskModel } = await import('@/models/task.model');
+    await TaskModel.deleteMany({
+      project: { $in: board.projects }
+    });
+
+    await ProjectModel.deleteMany({ board: boardId });
+
     await BoardModel.findByIdAndDelete(boardId);
+
     return true;
   } catch (error) {
     console.error('Error in deleteBoardInDb:', error);
