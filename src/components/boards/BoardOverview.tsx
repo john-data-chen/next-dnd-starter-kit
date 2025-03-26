@@ -12,6 +12,7 @@ import {
 import { useBoards } from '@/hooks/useBoards';
 import { useTaskStore } from '@/lib/store';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BoardActions } from './BoardActions';
 import NewBoardDialog from './NewBoardDialog';
@@ -23,6 +24,7 @@ export function BoardOverview() {
   const setCurrentBoardId = useTaskStore((state) => state.setCurrentBoardId);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
+  const router = useRouter();
 
   useEffect(() => {
     setCurrentBoardId('');
@@ -45,6 +47,12 @@ export function BoardOverview() {
 
   const shouldShowMyBoards = filter === 'all' || filter === 'my';
   const shouldShowTeamBoards = filter === 'all' || filter === 'team';
+
+  // 修改路由路徑
+  const handleBoardClick = (boardId: string) => {
+    setCurrentBoardId(boardId);
+    router.push(`/boards/${boardId}`); // 修改這裡，從 /board/ 改為 /boards/
+  };
 
   return (
     <div className="space-y-6">
@@ -95,10 +103,16 @@ export function BoardOverview() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
               {filteredMyBoards?.map((board) => (
-                <Card key={board._id}>
+                <Card
+                  key={board._id}
+                  className="cursor-pointer hover:border-primary transition-colors"
+                  onClick={() => handleBoardClick(board._id)}
+                >
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle>{board.title}</CardTitle>
-                    <BoardActions board={board} />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <BoardActions board={board} />
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
@@ -134,7 +148,11 @@ export function BoardOverview() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
               {filteredTeamBoards?.map((board) => (
-                <Card key={board._id}>
+                <Card
+                  key={board._id}
+                  className="cursor-pointer hover:border-primary transition-colors"
+                  onClick={() => handleBoardClick(board._id)}
+                >
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle>{board.title}</CardTitle>
                   </CardHeader>
