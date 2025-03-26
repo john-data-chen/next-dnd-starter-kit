@@ -1,5 +1,6 @@
 'use server';
 
+import { BoardModel } from '@/models/board.model';
 import { ProjectModel, ProjectType } from '@/models/project.model';
 import { TaskModel } from '@/models/task.model';
 import { Task } from '@/types/dbInterface';
@@ -166,7 +167,21 @@ export async function createProjectInDb(data: {
       board: new Types.ObjectId(data.board)
     });
 
-    // Convert to plain object using toObject() and cast to ProjectBase type
+    // add new project to board
+    const updatedBoard = await BoardModel.findByIdAndUpdate(
+      data.board,
+      {
+        $push: { projects: projectDoc._id }
+      },
+      { new: true }
+    );
+
+    if (!updatedBoard) {
+      console.error('Failed to update board');
+      return null;
+    }
+
+    // Convert to plain object using toObject()
     const project = convertProjectToPlainObject(
       projectDoc.toObject() as ProjectBase
     );

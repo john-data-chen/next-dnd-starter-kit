@@ -20,18 +20,19 @@ import NewBoardDialog from './NewBoardDialog';
 type FilterType = 'all' | 'my' | 'team';
 
 export function BoardOverview() {
-  const { myBoards, teamBoards, loading } = useBoards();
+  const { myBoards, teamBoards, loading, fetchBoards } = useBoards();
   const setCurrentBoardId = useTaskStore((state) => state.setCurrentBoardId);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
   const router = useRouter();
 
   useEffect(() => {
+    fetchBoards();
     setCurrentBoardId('');
     return () => {
       setCurrentBoardId('');
     };
-  }, [setCurrentBoardId]);
+  }, [setCurrentBoardId, fetchBoards]);
 
   if (loading) {
     return <div>Loading...</div>;
