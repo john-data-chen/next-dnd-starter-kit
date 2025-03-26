@@ -156,10 +156,22 @@ export async function createBoardInDb({
 
 export async function updateBoardInDb(
   boardId: string,
-  data: Partial<Board>
+  data: Partial<Board>,
+  userEmail: string
 ): Promise<Board | null> {
   try {
     await connectToDatabase();
+
+    const user = await getUserByEmail(userEmail);
+    if (!user) throw new Error('User not found');
+
+    const existingBoard = await BoardModel.findById(boardId).lean();
+    if (!existingBoard) throw new Error('Board not found');
+
+    if (existingBoard.owner.toString() !== user.id) {
+      throw new Error('Unauthorized: Only board owner can update the board');
+    }
+
     const board = await BoardModel.findByIdAndUpdate(
       boardId,
       { ...data },
@@ -186,11 +198,22 @@ export async function updateBoardInDb(
   }
 }
 
-export async function deleteBoardInDb(boardId: string): Promise<boolean> {
+export async function deleteBoardInDb(
+  boardId: string,
+  userEmail: string
+): Promise<boolean> {
   try {
     await connectToDatabase();
+
+    const user = await getUserByEmail(userEmail);
+    if (!user) throw new Error('User not found');
+
     const board = await BoardModel.findById(boardId).lean();
-    if (!board) return false;
+    if (!board) throw new Error('Board not found');
+
+    if (board.owner.toString() !== user.id) {
+      throw new Error('Unauthorized: Only board owner can delete the board');
+    }
 
     const { TaskModel } = await import('@/models/task.model');
     await TaskModel.deleteMany({
@@ -198,7 +221,6 @@ export async function deleteBoardInDb(boardId: string): Promise<boolean> {
     });
 
     await ProjectModel.deleteMany({ board: boardId });
-
     await BoardModel.findByIdAndDelete(boardId);
 
     return true;

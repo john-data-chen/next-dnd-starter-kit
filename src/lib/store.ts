@@ -63,8 +63,12 @@ interface State {
     userEmail: string,
     description?: string
   ) => Promise<string>;
-  updateBoard: (id: string, data: Partial<Board>) => Promise<void>;
-  removeBoard: (id: string) => Promise<void>;
+  updateBoard: (
+    id: string,
+    data: Partial<Board>,
+    userEmail: string
+  ) => Promise<void>;
+  removeBoard: (id: string, userEmail: string) => Promise<void>;
   myBoards: Board[];
   teamBoards: Board[];
   setMyBoards: (boards: Board[]) => void;
@@ -327,9 +331,13 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      updateBoard: async (id: string, data: Partial<Board>) => {
+      updateBoard: async (
+        id: string,
+        data: Partial<Board>,
+        userEmail: string
+      ) => {
         try {
-          const updatedBoard = await updateBoardInDb(id, data);
+          const updatedBoard = await updateBoardInDb(id, data, userEmail);
           if (!updatedBoard) throw new Error('Failed to update board');
         } catch (error) {
           console.error('Error in updateBoard:', error);
@@ -337,9 +345,9 @@ export const useTaskStore = create<State>()(
         }
       },
 
-      removeBoard: async (id: string) => {
+      removeBoard: async (id: string, userEmail: string) => {
         try {
-          const success = await deleteBoardInDb(id);
+          const success = await deleteBoardInDb(id, userEmail);
           if (!success) throw new Error('Failed to delete board');
         } catch (error) {
           console.error('Error in removeBoard:', error);
