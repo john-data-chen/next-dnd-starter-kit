@@ -95,7 +95,7 @@ export function BoardOverview() {
           <div className="flex items-center gap-2 mb-2 px-4">
             <h2 className="text-2xl font-bold">My Boards</h2>
             <span className="text-sm text-muted-foreground">
-              (Boards you own, they can be edited and default)
+              (Boards you own, they can be edited and deleted by you)
             </span>
           </div>
           {filteredMyBoards?.length === 0 ? (
