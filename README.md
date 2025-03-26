@@ -108,9 +108,9 @@ pnpm run playwright
 - [x] Refactor auth and auto redirect functions
 - [x] Add board switching feature in sidebar
 - [x] Add board creation feature
-- [ ] Add board deletion feature
-- [ ] Add board editing feature
-- [ ] Add board searching and filtering feature
+- [x] Add board deletion feature
+- [x] Add board editing feature
+- [x] Add board searching and filtering feature
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
 - [ ] Add CI/CD pipeline
