@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useBoards } from '@/hooks/useBoards';
 import { useTaskStore } from '@/lib/store';
 import { boardSchema } from '@/types/boardForm';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,6 +31,7 @@ type BoardFormData = z.infer<typeof boardSchema>;
 export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const [open, setOpen] = useState(false);
   const { addBoard, userEmail } = useTaskStore();
+  const { fetchBoards } = useBoards();
 
   const form = useForm<BoardFormData>({
     resolver: zodResolver(boardSchema),
@@ -49,6 +51,7 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
       toast.success('Board created successfully');
       setOpen(false);
       form.reset();
+      await fetchBoards();
       router.push(`/boards/${boardId}`);
     } catch (error) {
       console.error(error);

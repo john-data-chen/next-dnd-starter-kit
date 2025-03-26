@@ -2,42 +2,38 @@
 
 import { fetchBoardsFromDb } from '@/lib/db/board';
 import { useTaskStore } from '@/lib/store';
-import { Board } from '@/types/dbInterface';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export function useBoards() {
-  const [boards, setBoards] = useState<Board[]>([]);
-  const [loading, setLoading] = useState(false);
-  const userId = useTaskStore((state) => state.userId);
-  const userEmail = useTaskStore((state) => state.userEmail);
+  const [loading, setLoading] = useState(true);
+  const { userEmail, userId, myBoards, teamBoards } = useTaskStore();
+
+  const fetchBoards = useCallback(async () => {
+    if (!userEmail) return;
+    setLoading(true);
+    try {
+      const boards = await fetchBoardsFromDb(userEmail);
+
+      const myBoardsList = boards.filter((board) => board.owner.id === userId);
+      const teamBoardsList = boards.filter(
+        (board) =>
+          board.owner.id !== userId &&
+          board.members.some((member) => member.id === userId)
+      );
+
+      const { setMyBoards, setTeamBoards } = useTaskStore.getState();
+      setMyBoards(myBoardsList);
+      setTeamBoards(teamBoardsList);
+    } catch (error) {
+      console.error('Error in fetchBoards:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [userEmail, userId]);
 
   useEffect(() => {
-    async function fetchBoards() {
-      if (!userEmail) return;
-
-      setLoading(true);
-      try {
-        const data = await fetchBoardsFromDb(userEmail);
-        setBoards(data);
-      } catch (error) {
-        console.error('Failed to fetch boards:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchBoards();
-  }, [userEmail]);
+  }, [fetchBoards]);
 
-  const myBoards = boards.filter((board) => board.owner.id === userId);
-  const teamBoards = boards.filter(
-    (board) =>
-      board.members.some((m) => m.id === userId) && board.owner.id !== userId
-  );
-
-  return {
-    myBoards,
-    teamBoards,
-    loading
-  };
+  return { myBoards, teamBoards, loading, fetchBoards };
 }

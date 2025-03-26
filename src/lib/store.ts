@@ -65,6 +65,10 @@ interface State {
   ) => Promise<string>;
   updateBoard: (id: string, data: Partial<Board>) => Promise<void>;
   removeBoard: (id: string) => Promise<void>;
+  myBoards: Board[];
+  teamBoards: Board[];
+  setMyBoards: (boards: Board[]) => void;
+  setTeamBoards: (boards: Board[]) => void;
 }
 
 export const useTaskStore = create<State>()(
@@ -239,7 +243,6 @@ export const useTaskStore = create<State>()(
             taskId,
             newProjectId
           );
-
           set((state) => {
             const oldProject = state.projects.find((project) =>
               project.tasks.some((task) => task._id === taskId)
@@ -324,7 +327,6 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-
       updateBoard: async (id: string, data: Partial<Board>) => {
         try {
           const updatedBoard = await updateBoardInDb(id, data);
@@ -343,7 +345,14 @@ export const useTaskStore = create<State>()(
           console.error('Error in removeBoard:', error);
           throw error;
         }
-      }
+      },
+      myBoards: [],
+      teamBoards: [],
+      setMyBoards: (boards: Board[]) =>
+        set({
+          myBoards: boards
+        }),
+      setTeamBoards: (boards: Board[]) => set({ teamBoards: boards })
     }),
     {
       name: 'task-store'
