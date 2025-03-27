@@ -31,8 +31,6 @@ export default function NewProjectDialog({
   onProjectAdd
 }: NewProjectDialogProps) {
   const addProject = useTaskStore((state) => state.addProject);
-  const fetchProjects = useTaskStore((state) => state.fetchProjects);
-  const currentBoardId = useTaskStore((state) => state.currentBoardId);
   const [isOpen, setIsOpen] = React.useState(false);
 
   const form = useForm<ProjectFormData>({
@@ -54,7 +52,6 @@ export default function NewProjectDialog({
       toast.success('Project created successfully');
       setIsOpen(false);
       form.reset();
-      await fetchProjects(currentBoardId!);
     } catch (error) {
       console.error(error);
       toast.error('Failed to create project');

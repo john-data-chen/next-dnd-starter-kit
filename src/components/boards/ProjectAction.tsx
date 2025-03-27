@@ -57,6 +57,8 @@ export function ProjectActions({
   const [editEnable, setEditEnable] = React.useState(false);
   const updateProject = useTaskStore((state) => state.updateProject);
   const removeProject = useTaskStore((state) => state.removeProject);
+  const currentBoardId = useTaskStore((state) => state.currentBoardId);
+  const fetchProjects = useTaskStore((state) => state.fetchProjects);
 
   type ProjectFormData = z.infer<typeof projectSchema>;
 
@@ -71,6 +73,7 @@ export function ProjectActions({
   async function onSubmit(values: ProjectFormData) {
     try {
       await updateProject(id, values.title, values.description);
+      await fetchProjects(currentBoardId!);
       toast.success('Project is updated!');
       setEditEnable(false);
     } catch (error) {
@@ -166,10 +169,10 @@ export function ProjectActions({
               onClick={() => {
                 setShowDeleteDialog(false);
                 removeProject(id);
-                toast.success(`專案 ${title} 已刪除`);
+                toast.success(`Project: ${title} is deleted`);
               }}
             >
-              刪除
+              Delete
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
