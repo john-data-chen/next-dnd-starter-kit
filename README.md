@@ -107,10 +107,13 @@ pnpm run playwright
 - [x] Add task search by title/description
 - [x] Refactor auth and auto redirect functions
 - [x] Add board switching feature in sidebar
+- [x] Add board switching feature in overview page
 - [x] Add board creation feature
 - [x] Add board deletion feature
 - [x] Add board editing feature
 - [x] Add board searching and filtering feature
+- [x] Add project Description column and modify feature
+- [x] Add auth check in API routes
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
 - [ ] Add CI/CD pipeline
@@ -144,15 +147,20 @@ src/
 │   ├── page.tsx # Root page
 │   ├── layout.tsx # Layout component
 │   ├── not-found.tsx # 404 page
-│   ├── (auth)/login/ # Authentication routes
-│   └──(workspace)/ # Workspace routes (protected routes)
-│       └── kanban/ # Kanban routes
+│   ├── (auth)/ # Authentication routes
+│   └── (workspace)/ # Workspace routes
+│       └── boards/ # Kanban Overview routes
+│           ├── [boardId]/ # Board routes
 ├── components/ # Reusable React components
 ├── constants/ # Application-wide constants
 ├── hooks/ # Custom React hooks
+├── lib/
+│   ├── db/ # Database functions
+│   ├── auth # Authentication functions
+│   └── state # State management functions
+├── models/ # Database models
 ├── styles/ # Global styles
-├── types/ # TypeScript type definitions
-└── utils/ # Utility functions such as Authentication and State management
+└── types/ # Type definitions
 ```
 
 ## Known Issues & Limitations
