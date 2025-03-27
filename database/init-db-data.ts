@@ -78,12 +78,6 @@ async function main() {
         owner: users[1]._id, // John
         members: [users[1]._id, users[2]._id, users[3]._id], // All developers
         projects: []
-      },
-      {
-        ...demoBoards[4], // Marketing Board
-        owner: users[2]._id, // Jane
-        members: [users[1]._id, users[2]._id], // John and Jane
-        projects: []
       }
     ]);
     console.log('Created boards successfully');
