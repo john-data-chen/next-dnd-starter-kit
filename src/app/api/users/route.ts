@@ -1,7 +1,12 @@
+import { auth } from '@/lib/auth';
 import { UserModel } from '@/models/user.model';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export const GET = auth(async (req) => {
+  if (!req.auth) {
+    return NextResponse.json({ error: 'Unauthorized access' }, { status: 401 });
+  }
+
   try {
     const users = await UserModel.find().select('_id email name');
     return NextResponse.json({ users });
@@ -12,4 +17,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});
