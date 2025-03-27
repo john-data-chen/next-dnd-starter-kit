@@ -104,10 +104,14 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
         <ScrollArea className="h-full">
           <div className="mb-2 flex flex-col gap-1">
             <Badge variant="outline" className="text-xs">
-              owner: {project.owner.name}
+              Description:{' '}
+              {project.description ? project.description : 'No description'}
             </Badge>
             <Badge variant="outline" className="text-xs">
-              members: {project.members.map((member) => member.name).join(', ')}
+              Owner: {project.owner.name}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              Members: {project.members.map((member) => member.name).join(', ')}
             </Badge>
           </div>
           <NewTaskDialog projectId={project._id} />
