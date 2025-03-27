@@ -42,10 +42,6 @@ export const demoBoards = [
   {
     title: 'Dev Team Board',
     description: 'public board for Dev Team'
-  },
-  {
-    title: 'Marketing Board',
-    description: 'public board for Marketing Team'
   }
 ];
 
