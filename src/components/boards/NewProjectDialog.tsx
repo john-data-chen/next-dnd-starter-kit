@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
-import { boardSchema } from '@/types/projectForm';
+import { projectSchema } from '@/types/projectForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -25,17 +25,18 @@ export interface NewProjectDialogProps {
   onProjectAdd?: (title: string, description?: string) => void;
 }
 
-type ProjectFormData = z.infer<typeof boardSchema>;
+type ProjectFormData = z.infer<typeof projectSchema>;
 
 export default function NewProjectDialog({
   onProjectAdd
 }: NewProjectDialogProps) {
   const addProject = useTaskStore((state) => state.addProject);
-  const userEmail = useTaskStore((state) => state.userEmail);
+  const fetchProjects = useTaskStore((state) => state.fetchProjects);
+  const currentBoardId = useTaskStore((state) => state.currentBoardId);
   const [isOpen, setIsOpen] = React.useState(false);
 
   const form = useForm<ProjectFormData>({
-    resolver: zodResolver(boardSchema),
+    resolver: zodResolver(projectSchema),
     defaultValues: {
       title: '',
       description: ''
@@ -43,8 +44,6 @@ export default function NewProjectDialog({
   });
 
   const handleSubmit = async (data: ProjectFormData) => {
-    if (!userEmail) return;
-
     try {
       const projectId = await addProject(data.title, data.description || '');
       if (!projectId) {
@@ -55,6 +54,7 @@ export default function NewProjectDialog({
       toast.success('Project created successfully');
       setIsOpen(false);
       form.reset();
+      await fetchProjects(currentBoardId!);
     } catch (error) {
       console.error(error);
       toast.error('Failed to create project');

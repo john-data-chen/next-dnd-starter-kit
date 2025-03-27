@@ -29,7 +29,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   const { filter } = useTaskStore();
 
   const filteredTasks = useMemo(() => {
-    if (!filter.status) return tasks;
+    if (!filter.status || !tasks.length) return tasks;
     return tasks.filter((task) => task.status === filter.status);
   }, [tasks, filter.status]);
 
@@ -87,30 +87,36 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
       className={variants({ dragging: dragState })}
       data-testid={`project-container`}
     >
-      <CardHeader className="space-between flex flex-row items-center border-b-2 p-4 text-left font-semibold">
-        <Button
-          variant="ghost"
-          {...attributes}
-          {...listeners}
-          className="text-primary/50 relative -ml-2 h-auto cursor-grab p-1"
-        >
-          <span className="sr-only">drag project: {project.title}</span>
-          <PointerIcon />
-        </Button>
-        <ProjectActions id={project._id} title={project.title} />
+      <CardHeader className="space-between flex flex-row items-center justify-between border-b-2 p-4">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            {...attributes}
+            {...listeners}
+            className="text-primary/50 h-8 w-8 cursor-grab p-0"
+          >
+            <span className="sr-only">drag project: {project.title}</span>
+            <PointerIcon className="h-4 w-4" />
+          </Button>
+          <h3 className="text-lg font-semibold">{project.title}</h3>
+        </div>
+        <ProjectActions
+          id={project._id}
+          title={project.title}
+          description={project.description}
+        />
       </CardHeader>
 
       <CardContent className="flex grow flex-col gap-4 overflow-x-hidden p-2">
         <ScrollArea className="h-full">
           <div className="mb-2 flex flex-col gap-1">
             <Badge variant="outline" className="text-xs">
-              Description:{' '}
-              {project.description ? project.description : 'No description'}
+              Description: {project.description || 'No description'}
             </Badge>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-xs truncate">
               Owner: {project.owner.name}
             </Badge>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-xs truncate">
               Members: {project.members.map((member) => member.name).join(', ')}
             </Badge>
           </div>

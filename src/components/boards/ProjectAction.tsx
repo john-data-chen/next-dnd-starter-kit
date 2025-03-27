@@ -11,64 +11,134 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
+import { projectSchema } from '@/types/projectForm';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { z } from 'zod';
 
-export function ProjectActions({ title, id }: { title: string; id: string }) {
-  const [newTitle, setNewTitle] = React.useState(title);
+interface ProjectActionsProps {
+  id: string;
+  title: string;
+  description?: string;
+}
+
+export function ProjectActions({
+  id,
+  title,
+  description
+}: ProjectActionsProps) {
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+  const [editEnable, setEditEnable] = React.useState(false);
   const updateProject = useTaskStore((state) => state.updateProject);
   const removeProject = useTaskStore((state) => state.removeProject);
-  const [editDisable, setIsEditDisable] = React.useState(true);
-  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  type ProjectFormData = z.infer<typeof projectSchema>;
+
+  const form = useForm<ProjectFormData>({
+    resolver: zodResolver(projectSchema),
+    defaultValues: {
+      title,
+      description
+    }
+  });
+
+  async function onSubmit(values: ProjectFormData) {
+    try {
+      await updateProject(id, values.title, values.description);
+      toast.success('Project is updated!');
+      setEditEnable(false);
+    } catch (error) {
+      toast.error('Project updated fail：' + (error as Error).message);
+    }
+  }
 
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setIsEditDisable(!editDisable);
-          updateProject(id, newTitle);
-          toast(`Project title: ${title} updated to ${newTitle}`);
-        }}
-      >
-        <Input
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          className="mt-0! mr-auto text-base disabled:cursor-pointer disabled:border-none disabled:opacity-100"
-          disabled={editDisable}
-          ref={inputRef}
-        />
-      </form>
+      <Dialog open={editEnable} onOpenChange={setEditEnable}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Project</DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditEnable(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Save</Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" className="ml-1">
-            <span className="sr-only">Actions</span>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onSelect={() => {
-              setIsEditDisable(!editDisable);
-              setTimeout(() => {
-                inputRef.current?.focus();
-              }, 500);
-            }}
-          >
-            Rename
+          <DropdownMenuItem onSelect={() => setEditEnable(true)}>
+            Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
@@ -77,15 +147,16 @@ export function ProjectActions({ title, id }: { title: string; id: string }) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure to delete Project: {title}?
+              Make sure before you delete Project： {title}？
             </AlertDialogTitle>
             <AlertDialogDescription>
-              NOTE: All tasks related to project: {title} will also be deleted.
-              This action can not be undone.
+              Warning: This action will delete All Tasks in project and it
+              cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -93,15 +164,12 @@ export function ProjectActions({ title, id }: { title: string; id: string }) {
             <Button
               variant="destructive"
               onClick={() => {
-                // yes, you have to set a timeout
-                setTimeout(() => (document.body.style.pointerEvents = ''), 100);
-
                 setShowDeleteDialog(false);
                 removeProject(id);
-                toast(`Project title: ${title} is deleted`);
+                toast.success(`專案 ${title} 已刪除`);
               }}
             >
-              Delete
+              刪除
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

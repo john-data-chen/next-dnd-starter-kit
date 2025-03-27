@@ -11,6 +11,7 @@ import { getUserByEmail, getUserById } from './user';
 interface ProjectBase {
   _id: Types.ObjectId | string;
   title: string;
+  description?: string;
   owner: Types.ObjectId | string | { id: string; name: string };
   members: (Types.ObjectId | string | { id: string; name: string })[];
   createdAt?: Date | string;
@@ -112,6 +113,7 @@ async function convertProjectToPlainObject(
   return {
     _id: docId,
     title: projectDoc.title,
+    description: projectDoc.description || '',
     owner: {
       id: ownerUser.id.toString(),
       name: ownerUser.name
@@ -197,6 +199,7 @@ export async function updateProjectInDb(data: {
   projectId: string;
   userEmail: string;
   newTitle: string;
+  newDescription?: string;
 }): Promise<ProjectType | null> {
   try {
     await connectToDatabase();
@@ -217,7 +220,12 @@ export async function updateProjectInDb(data: {
 
     const updatedProjectDoc = await ProjectModel.findByIdAndUpdate(
       project._id,
-      { ...data, title: data.newTitle, updatedAt: new Date() },
+      {
+        ...data,
+        title: data.newTitle,
+        description: data.newDescription,
+        updatedAt: new Date()
+      },
       { new: true }
     );
 
@@ -229,6 +237,7 @@ export async function updateProjectInDb(data: {
     const updatedProject = convertProjectToPlainObject(
       updatedProjectDoc.toObject() as ProjectBase
     );
+
     return updatedProject;
   } catch (error) {
     console.error('Error updating project:', error);

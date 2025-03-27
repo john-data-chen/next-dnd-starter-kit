@@ -25,7 +25,11 @@ interface State {
   fetchProjects: (boardId: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
   addProject: (title: string, description: string) => Promise<string>;
-  updateProject: (id: string, newTitle: string) => void;
+  updateProject: (
+    id: string,
+    newTitle: string,
+    newDescription?: string
+  ) => void;
   removeProject: (id: string) => void;
   addTask: (
     projectId: string,
@@ -140,7 +144,11 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      updateProject: (id: string, newTitle: string) => {
+      updateProject: (
+        id: string,
+        newTitle: string,
+        newDescription?: string
+      ) => {
         const userEmail = useTaskStore.getState().userEmail;
         if (!userEmail) {
           throw new Error('User email not found');
@@ -148,7 +156,8 @@ export const useTaskStore = create<State>()(
         updateProjectInDb({
           projectId: id,
           userEmail: userEmail,
-          newTitle: newTitle
+          newTitle: newTitle,
+          newDescription: newDescription || ''
         });
         set((state) => ({
           projects: state.projects.map((project) =>
