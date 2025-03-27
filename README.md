@@ -1,4 +1,4 @@
-# Production-Ready Next.js Template | Drag & Drop Support <br>
+# Production-Ready Next.js Project Management Tool Template | Drag & Drop Support <br>
 
 [![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
@@ -15,7 +15,7 @@ The **Enterprise-grade Next.js template** with 85%+ test coverage, featuring dra
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
 - 🎯 Developer-Friendly: Clear documentation and best practices built-in
 - 🎨 Modern UX: Drag-and-drop, animations, dark mode, responsive design for mobile, tablet, and desktop
-- 💾 Persistent data: via local storage
+- 💾 Persistent data: via MongoDB
 
 ---
 
@@ -59,23 +59,32 @@ Every star motivates me to deliver more high-quality templates. 🚀
 echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env
 
 # start mongodb in docker
-cd mongodb
+cd database
 docker-compose up -d
 
-# stop mongodb in docker
+# initialize mongodb
+pnpm init-db
+
+# stop mongodb (in database folder)
 docker-compose down
 
 # Install dependencies
 pnpm install
 
 # Start development server
-pnpm run dev
+pnpm dev
 
 # Run unit and integration tests by Jest
-pnpm run test
+pnpm test
 
 # Run E2E tests by Playwright
-pnpm run playwright
+pnpm playwright
+
+# ESLint
+pnpm lint
+
+# Format code
+pnpm format
 ```
 
 ## 🔜 Roadmap
@@ -117,7 +126,6 @@ pnpm run playwright
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
 - [ ] Add CI/CD pipeline
-```
 
 and more...
 
@@ -138,7 +146,7 @@ and more...
 
 ### Project Structure
 
-```
+```text
 __tests__/ # Test cases
 public/ # Static files such as images and i18n localization
 database/ # MongoDB docker-compose and initialization
