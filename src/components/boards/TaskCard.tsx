@@ -84,7 +84,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     <Card
       ref={setNodeRef}
       style={cardStyle}
-      className={cardVariants({ dragging: dragState })}
+      className={cn('mb-3', cardVariants({ dragging: dragState }))}
       data-testid="task-card"
     >
       <CardHeader className="border-secondary flex flex-row justify-between border-b-2 px-3 py-3">
