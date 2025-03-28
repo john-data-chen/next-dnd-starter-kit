@@ -49,14 +49,13 @@ export function BoardOverview() {
   const shouldShowMyBoards = filter === 'all' || filter === 'my';
   const shouldShowTeamBoards = filter === 'all' || filter === 'team';
 
-  // 修改路由路徑
   const handleBoardClick = (boardId: string) => {
     setCurrentBoardId(boardId);
-    router.push(`/boards/${boardId}`); // 修改這裡，從 /board/ 改為 /boards/
+    router.push(`/boards/${boardId}`);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-y-auto touch-pan-y h-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-4">
         <div className="w-full sm:w-[200px]">
           <NewBoardDialog>
@@ -95,6 +94,8 @@ export function BoardOverview() {
         <section>
           <div className="flex items-center gap-2 mb-2 px-4">
             <h2 className="text-2xl font-bold">My Boards</h2>
+          </div>
+          <div className="flex items-center gap-2 mb-2 px-4">
             <span className="text-sm text-muted-foreground">
               (Boards you own, they can be edited and deleted by you)
             </span>
@@ -140,6 +141,8 @@ export function BoardOverview() {
         <section>
           <div className="flex items-center gap-2 mb-2 px-4">
             <h2 className="text-2xl font-bold">Team Boards</h2>
+          </div>
+          <div className="flex items-center gap-2 mb-2 px-4">
             <span className="text-sm text-muted-foreground">
               (Boards shared with you)
             </span>
