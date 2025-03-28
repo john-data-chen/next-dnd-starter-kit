@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
-import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { Slot } from '@radix-ui/react-slot';
+import { HomeIcon } from 'lucide-react';
 import * as React from 'react';
 
 const Breadcrumb = React.forwardRef<
@@ -79,7 +80,12 @@ const BreadcrumbSeparator = ({
   <li
     role="presentation"
     aria-hidden="true"
-    className={cn('[&>svg]:h-3.5 [&>svg]:w-3.5', className)}
+    className={cn(
+      'flex items-center justify-center min-w-[24px]',
+      '[&>svg]:h-4 [&>svg]:w-4 [&>svg]:text-muted-foreground',
+      'block', // 確保在所有螢幕尺寸下都顯示
+      className
+    )}
     {...props}
   >
     {children ?? <ChevronRightIcon />}
@@ -87,21 +93,25 @@ const BreadcrumbSeparator = ({
 );
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';
 
-const BreadcrumbEllipsis = ({
-  className,
-  ...props
-}: React.ComponentProps<'span'>) => (
-  <span
-    role="presentation"
-    aria-hidden="true"
-    className={cn('flex h-9 w-9 items-center justify-center', className)}
+const BreadcrumbEllipsis = React.forwardRef<
+  HTMLAnchorElement,
+  React.ComponentPropsWithoutRef<'a'>
+>(({ className, href, ...props }, ref) => (
+  <a
+    ref={ref}
+    href={href}
+    role="link"
+    className={cn(
+      'flex h-9 w-9 items-center justify-center hover:text-foreground transition-colors md:hidden',
+      className
+    )}
     {...props}
   >
-    <DotsHorizontalIcon className="h-4 w-4" />
-    <span className="sr-only">More</span>
-  </span>
-);
-BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis';
+    <HomeIcon className="h-4 w-4" />
+    <span className="sr-only">Kanban</span>
+  </a>
+));
+BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis';
 
 export {
   Breadcrumb,

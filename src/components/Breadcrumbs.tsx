@@ -2,40 +2,42 @@
 
 import {
   Breadcrumb,
+  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
-import { SlashIcon } from '@radix-ui/react-icons';
-import { Fragment } from 'react';
+import React from 'react';
 
 export function Breadcrumbs() {
-  const items = useBreadcrumbs();
-  if (items.length === 0) return null;
+  const { items, rootLink } = useBreadcrumbs();
 
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {items.map((item, index) => (
-          <Fragment key={item.title}>
-            {index !== items.length - 1 && (
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href={item.link}>{item.title}</BreadcrumbLink>
-              </BreadcrumbItem>
-            )}
-            {index < items.length - 1 && (
-              <BreadcrumbSeparator className="hidden md:block">
-                <SlashIcon />
-              </BreadcrumbSeparator>
-            )}
-            {index === items.length - 1 && (
-              <BreadcrumbPage>{item.title}</BreadcrumbPage>
-            )}
-          </Fragment>
-        ))}
+        {items.length > 1 && (
+          <>
+            <BreadcrumbItem className="md:hidden">
+              <BreadcrumbEllipsis href={rootLink} />
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="md:hidden" />
+            <BreadcrumbItem className="md:hidden">
+              <BreadcrumbLink href={items[items.length - 1].link}>
+                {items[items.length - 1].title}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem className="hidden md:flex">
+              {items.map((item, index) => (
+                <React.Fragment key={item.link}>
+                  <BreadcrumbLink href={item.link}>{item.title}</BreadcrumbLink>
+                  {index < items.length - 1 && <BreadcrumbSeparator />}
+                </React.Fragment>
+              ))}
+            </BreadcrumbItem>
+          </>
+        )}
       </BreadcrumbList>
     </Breadcrumb>
   );

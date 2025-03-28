@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 type BreadcrumbItem = {
   title: string;
   link: string;
+  isRoot?: boolean;
 };
 
 export function useBreadcrumbs() {
@@ -38,7 +39,11 @@ export function useBreadcrumbs() {
   }, [boardId, userEmail]);
 
   const items: BreadcrumbItem[] = [
-    { title: 'Kanban', link: ROUTES.BOARDS.ROOT }
+    {
+      title: 'Kanban',
+      link: ROUTES.BOARDS.ROOT,
+      isRoot: true
+    }
   ];
 
   if (board) {
@@ -48,5 +53,8 @@ export function useBreadcrumbs() {
     });
   }
 
-  return items;
+  return {
+    items,
+    rootLink: ROUTES.BOARDS.ROOT
+  };
 }
