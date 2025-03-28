@@ -123,6 +123,7 @@ pnpm format
 - [x] Add board searching and filtering feature
 - [x] Add project Description column and modify feature
 - [x] Add auth check in API routes
+- [x] Improve and fix issues of the UI in small screen
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
 - [ ] Add CI/CD pipeline
@@ -180,6 +181,12 @@ src/
   - Impact: Development warning only, no production impact
   - Solution: Keep using `asChild` as per Radix UI docs, warning can be safely ignored
   - Reason: Internal implementation detail of Radix UI
+
+- **Radix UI ARIA Warning**:
+  - Issue: Blocked aria-hidden on a <body> element warning in Dialog components
+  - Impact: Development warning only, no production impact
+  - Solution: Can be safely ignored as most modern browsers handle this correctly
+  - Reason: Internal implementation of Radix UI's Dialog component
 
 ### ESLint
 
