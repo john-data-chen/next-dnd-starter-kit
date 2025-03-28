@@ -44,15 +44,22 @@ const BreadcrumbLink = React.forwardRef<
   React.ComponentPropsWithoutRef<'a'> & {
     asChild?: boolean;
   }
->(({ asChild, className, ...props }, ref) => {
+>(({ asChild, className, children, ...props }, ref) => {
   const Comp = asChild ? Slot : 'a';
+  const isOverview = children === 'Overview';
 
   return (
     <Comp
       ref={ref}
-      className={cn('hover:text-foreground transition-colors', className)}
+      className={cn(
+        'hover:text-foreground transition-colors flex items-center gap-1.5',
+        className
+      )}
       {...props}
-    />
+    >
+      {isOverview && <HomeIcon className="h-4 w-4" />}
+      {children}
+    </Comp>
   );
 });
 BreadcrumbLink.displayName = 'BreadcrumbLink';
@@ -83,7 +90,7 @@ const BreadcrumbSeparator = ({
     className={cn(
       'flex items-center justify-center min-w-[24px]',
       '[&>svg]:h-4 [&>svg]:w-4 [&>svg]:text-muted-foreground',
-      'block', // 確保在所有螢幕尺寸下都顯示
+      'block',
       className
     )}
     {...props}

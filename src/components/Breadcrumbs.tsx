@@ -17,7 +17,13 @@ export function Breadcrumbs() {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {items.length > 1 && (
+        {items.length === 1 ? (
+          <BreadcrumbItem>
+            <BreadcrumbLink href={items[0].link}>
+              {items[0].title}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        ) : (
           <>
             <BreadcrumbItem className="md:hidden">
               <BreadcrumbEllipsis href={rootLink} />
