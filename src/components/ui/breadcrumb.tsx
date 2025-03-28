@@ -108,7 +108,7 @@ const BreadcrumbEllipsis = React.forwardRef<
     {...props}
   >
     <HomeIcon className="h-4 w-4" />
-    <span className="sr-only">Kanban</span>
+    <span className="sr-only">Overview</span>
   </a>
 ));
 BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis';

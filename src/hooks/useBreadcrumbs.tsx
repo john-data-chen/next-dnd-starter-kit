@@ -40,7 +40,7 @@ export function useBreadcrumbs() {
 
   const items: BreadcrumbItem[] = [
     {
-      title: 'Kanban',
+      title: 'Overview',
       link: ROUTES.BOARDS.ROOT,
       isRoot: true
     }
