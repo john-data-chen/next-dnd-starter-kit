@@ -344,7 +344,7 @@ export function Board() {
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-6 py-4">
           <div className="w-full sm:w-[200px]">
             <NewProjectDialog />
           </div>

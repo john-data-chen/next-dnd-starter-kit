@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useTaskStore } from '@/lib/store';
 import { Project, Task } from '@/types/dbInterface';
-import { useDndContext } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
@@ -133,29 +132,12 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 }
 
 export function BoardContainer({ children }: { children: React.ReactNode }) {
-  const dndContext = useDndContext();
-
-  const variations = cva('px-2 pb-4 md:px-0 flex flex-col sm:flex-row', {
-    variants: {
-      dragging: {
-        default: '',
-        active: 'snap-none'
-      }
-    }
-  });
-
   return (
-    <ScrollArea className="w-full rounded-md whitespace-nowrap">
-      <div
-        className={variations({
-          dragging: dndContext.active ? 'active' : 'default'
-        })}
-      >
-        <div className="grid-flow-col-1 grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {children}
-        </div>
+    <ScrollArea className="w-full">
+      <div className="flex flex-col md:flex-row gap-4 px-6 pb-4">
+        {children}
       </div>
-      <ScrollBar orientation="horizontal" />
+      <ScrollBar orientation="horizontal" className="hidden md:flex" />
     </ScrollArea>
   );
 }
