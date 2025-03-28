@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/sidebar';
 import { companyInfo } from '@/constants/sidebar';
 import { useBoards } from '@/hooks/useBoards';
+import { HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -33,6 +34,19 @@ export default function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={pathname === '/boards'}>
+                <Link href="/boards" className="flex items-center gap-2">
+                  <HomeIcon className="h-4 w-4" />
+                  <span>Overview</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
         <SidebarGroup>
           <div className="flex items-center justify-between px-2">
             <SidebarGroupLabel>My Boards</SidebarGroupLabel>
