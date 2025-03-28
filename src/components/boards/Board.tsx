@@ -20,7 +20,7 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import mongoose from 'mongoose';
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import NewProjectDialog from './NewProjectDialog';
 import { BoardContainer, BoardProject } from './Project';
@@ -34,9 +34,6 @@ export function Board() {
   const dragTaskIntoNewProject = useTaskStore(
     (state) => state.dragTaskIntoNewProject
   );
-  const pickedUpTaskProject = useMemo(() => {
-    return { current: null as null | mongoose.Types.ObjectId };
-  }, []);
   const projectsId = useMemo(
     () => projects.map((project: Project) => project._id),
     [projects]
@@ -206,6 +203,8 @@ export function Board() {
 
     setProjects(arrayMove(projects, activeProjectIndex, overProjectIndex));
   }
+
+  const pickedUpTaskProject = useRef<mongoose.Types.ObjectId | null>(null);
 
   const announcements: Announcements = {
     onDragStart({ active }) {
