@@ -28,8 +28,8 @@ export function Breadcrumbs() {
             <BreadcrumbItem className="md:hidden">
               <BreadcrumbEllipsis href={rootLink} />
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="md:hidden" />
             <BreadcrumbItem className="md:hidden">
+              <BreadcrumbSeparator />
               <BreadcrumbLink href={items[items.length - 1].link}>
                 {items[items.length - 1].title}
               </BreadcrumbLink>
