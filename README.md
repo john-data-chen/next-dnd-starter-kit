@@ -90,6 +90,7 @@ pnpm format
 ## 🔐 Permission System
 
 ### Core Concepts
+
 - Each board has one owner and multiple members
 - Tasks can be assigned to any member
 - All modifications of a task are tracked with last modified user
@@ -97,22 +98,24 @@ pnpm format
 ### User Roles & Permissions
 
 **Board Owner**
+
 - Create and delete board
 - Manage all projects and tasks
 - Delete projects (cascading delete tasks)
-- Add or remove board members
 
 **Board Member**
+
 - View board and all projects
 - Create and manage tasks
 - Assign and be assigned to tasks
-- Update task status
+- Update task status and description
 - Cannot delete projects or board
 
 ### Task Operations
+
 - Any member can create tasks
 - Task creator and assignee can edit task
-- All members can comment on tasks
+- Only owner of project and Assigner of task can delete tasks
 - Task status: To Do → In Progress → Done
 
 ## 🔜 Roadmap
