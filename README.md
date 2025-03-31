@@ -115,7 +115,7 @@ pnpm format
 
 - Any member can create tasks
 - Task creator and assignee can edit task
-- Only owner of project and Assigner of task can delete tasks
+- Only owner of project and creator of task can delete tasks
 - Task status: To Do → In Progress → Done
 
 ## 🔜 Roadmap
@@ -129,7 +129,7 @@ pnpm format
 - [x] Add edit task dialog
 - [x] Make Database Schema and initialization script
 - [x] User authentication for secure project/task management
-- [x] Add assigner and owner in task dialog
+- [x] Add creator and assignee in task dialog
 - [x] Persistent data into Database
 - [x] Fix the issues of dragging tasks to another order in the same project
 - [x] Fix the issues of dragging tasks to another project
@@ -155,6 +155,7 @@ pnpm format
 - [x] Add project Description column and modify feature
 - [x] Add auth check in API routes
 - [x] Improve and fix issues of the UI in small screen
+- [ ] Modify data schema and add user permission check
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
 - [ ] Add CI/CD pipeline
