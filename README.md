@@ -87,6 +87,34 @@ pnpm lint
 pnpm format
 ```
 
+## 🔐 Permission System
+
+### Core Concepts
+- Each board has one owner and multiple members
+- Tasks can be assigned to any member
+- All modifications of a task are tracked with last modified user
+
+### User Roles & Permissions
+
+**Board Owner**
+- Create and delete board
+- Manage all projects and tasks
+- Delete projects (cascading delete tasks)
+- Add or remove board members
+
+**Board Member**
+- View board and all projects
+- Create and manage tasks
+- Assign and be assigned to tasks
+- Update task status
+- Cannot delete projects or board
+
+### Task Operations
+- Any member can create tasks
+- Task creator and assignee can edit task
+- All members can comment on tasks
+- Task status: To Do → In Progress → Done
+
 ## 🔜 Roadmap
 
 - [x] Full-stack support by Next.js
