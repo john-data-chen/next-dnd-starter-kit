@@ -57,26 +57,26 @@ async function main() {
     const boards = await BoardModel.insertMany([
       {
         ...demoBoards[0], // Mark's Kanban
-        owner: users[3]._id, // Mark S
-        members: [users[3]._id],
+        owner: users[2]._id, // Mark S
+        members: [users[2]._id],
         projects: []
       },
       {
         ...demoBoards[1], // John's Kanban
-        owner: users[1]._id, // John
-        members: [users[1]._id],
+        owner: users[0]._id, // John
+        members: [users[0]._id],
         projects: []
       },
       {
         ...demoBoards[2], // Jane's Kanban
-        owner: users[2]._id, // Jane
-        members: [users[2]._id],
+        owner: users[1]._id, // Jane
+        members: [users[1]._id],
         projects: []
       },
       {
         ...demoBoards[3], // Dev Team Board
         owner: users[1]._id, // John
-        members: [users[1]._id, users[2]._id, users[3]._id], // All developers
+        members: [users[0]._id, users[1]._id, users[2]._id], // All developers
         projects: []
       }
     ]);
@@ -86,19 +86,19 @@ async function main() {
     const projects = await ProjectModel.insertMany([
       {
         ...demoProjects[0], // Mark's todo list
-        owner: users[3]._id, // Mark S
-        members: [users[3]._id],
+        owner: users[2]._id, // Mark S
+        members: [users[2]._id],
         board: boards[0]._id // In Mark's Kanban
       },
       {
         ...demoProjects[1], // Demo Project 2
-        owner: users[1]._id, // John
-        members: [users[1]._id, users[2]._id],
+        owner: users[0]._id, // John
+        members: [users[0]._id, users[2]._id],
         board: boards[3]._id // In Dev Team Board
       },
       {
         ...demoProjects[2], // Demo Project 3
-        owner: users[2]._id, // Jane
+        owner: users[1]._id, // Jane
         members: [users[1]._id, users[2]._id],
         board: boards[3]._id // In Dev Team Board
       }
@@ -120,25 +120,25 @@ async function main() {
       {
         ...demoTasks[0],
         project: projects[0]._id,
-        assignee: users[3]._id, // Mark S
-        creator: users[3]._id,
-        lastModifier: users[3]._id,
+        assignee: users[2]._id, // Mark S
+        creator: users[2]._id,
+        lastModifier: users[2]._id,
         dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
       },
       {
         ...demoTasks[1],
         project: projects[1]._id,
-        assignee: users[1]._id, // John
-        creator: users[2]._id, // Jane
-        lastModifier: users[2]._id,
+        assignee: users[0]._id, // John
+        creator: users[1]._id, // Jane
+        lastModifier: users[1]._id,
         dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000) // 5 days from now
       },
       {
         ...demoTasks[2],
         project: projects[2]._id,
-        assignee: users[2]._id, // Jane
-        creator: users[1]._id, // John
-        lastModifier: users[2]._id, // Jane
+        assignee: users[1]._id, // Jane
+        creator: users[0]._id, // John
+        lastModifier: users[1]._id, // Jane
         dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) // 3 days from now
       }
     ]);

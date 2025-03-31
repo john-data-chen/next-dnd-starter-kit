@@ -14,8 +14,7 @@ export async function getUserByEmail(email: string) {
     return {
       id: user._id.toString(),
       email: user.email,
-      name: user.name,
-      role: user.role
+      name: user.name
     };
   } catch (error) {
     console.error('Error fetching user:', error);
@@ -34,8 +33,7 @@ export async function getUserById(id: string) {
     return {
       id: user._id.toString(),
       email: user.email,
-      name: user.name,
-      role: user.role
+      name: user.name
     };
   } catch (error) {
     console.error('Error fetching user:', error);

@@ -5,24 +5,16 @@ export const defaultDbUrl =
 
 export const demoUsers = [
   {
-    email: 'admin@example.com',
-    name: 'Admin',
-    role: 'ADMIN'
-  },
-  {
     email: 'john.doe@example.com',
-    name: 'John Doe',
-    role: 'USER'
+    name: 'John Doe'
   },
   {
     email: 'jane.doe@example.com',
-    name: 'Jane Doe',
-    role: 'USER'
+    name: 'Jane Doe'
   },
   {
     email: 'mark.s@example.com',
-    name: 'Mark S',
-    role: 'USER'
+    name: 'Mark S'
   }
 ];
 

@@ -20,7 +20,6 @@ export interface User {
   _id: string;
   email: string;
   name: string;
-  role: 'ADMIN' | 'USER';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -77,7 +76,6 @@ export type UserModel = mongoose.InferSchemaType<
   _id: string;
   email: string;
   name: string;
-  role: 'ADMIN' | 'USER';
 };
 
 export type TaskModel = mongoose.InferSchemaType<
