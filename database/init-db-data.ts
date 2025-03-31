@@ -119,6 +119,7 @@ async function main() {
     const tasks = await TaskModel.insertMany([
       {
         ...demoTasks[0],
+        board: boards[0]._id,
         project: projects[0]._id,
         assignee: users[2]._id, // Mark S
         creator: users[2]._id,
@@ -127,6 +128,7 @@ async function main() {
       },
       {
         ...demoTasks[1],
+        board: boards[1]._id,
         project: projects[1]._id,
         assignee: users[0]._id, // John
         creator: users[1]._id, // Jane
@@ -135,6 +137,7 @@ async function main() {
       },
       {
         ...demoTasks[2],
+        board: boards[2]._id,
         project: projects[2]._id,
         assignee: users[1]._id, // Jane
         creator: users[0]._id, // John

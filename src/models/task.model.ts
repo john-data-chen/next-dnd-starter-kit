@@ -11,6 +11,11 @@ const taskSchema = new mongoose.Schema({
     required: true
   },
   dueDate: { type: Date },
+  board: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Board',
+    required: true
+  },
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project',

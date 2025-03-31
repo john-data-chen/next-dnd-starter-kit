@@ -48,6 +48,7 @@ export interface Task {
   description?: string;
   status: TaskStatus;
   dueDate?: Date;
+  board: string;
   project: string;
   assignee?: UserInfo;
   creator: UserInfo;
@@ -85,6 +86,7 @@ export type TaskModel = mongoose.InferSchemaType<
   title: string;
   description?: string;
   dueDate?: Date;
+  board: string;
   project: string;
   assignee?: string;
   creator: string;

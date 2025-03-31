@@ -14,6 +14,7 @@ interface TaskBase {
   description?: string;
   status: 'TODO' | 'IN_PROGRESS' | 'DONE';
   dueDate?: Date;
+  board: Types.ObjectId | string;
   project: Types.ObjectId | string;
   assignee?: Types.ObjectId | string | { id: string; name: string };
   creator: Types.ObjectId | string | { id: string; name: string };
@@ -60,6 +61,11 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
     throw new Error('Unable to find creator or modifier user data');
   }
 
+  const boardId =
+    typeof taskDoc.board === 'string'
+      ? taskDoc.board
+      : taskDoc.board.toString();
+
   const projectId =
     typeof taskDoc.project === 'string'
       ? taskDoc.project
@@ -74,6 +80,7 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
     description: taskDoc.description || '',
     status: taskDoc.status || 'TODO',
     dueDate: taskDoc.dueDate,
+    board: boardId,
     project: projectId,
     assignee:
       assigneeUser && assigneeId
@@ -99,6 +106,19 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
         ? new Date(taskDoc.updatedAt)
         : taskDoc.updatedAt
   };
+}
+
+async function getBoardByProjectId(
+  projectId: string
+): Promise<string | undefined> {
+  try {
+    await connectToDatabase();
+    const project = await ProjectModel.findById(projectId);
+    return project?.board;
+  } catch (error) {
+    console.error('Error fetching board:', error);
+    throw error;
+  }
 }
 
 export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
@@ -156,11 +176,17 @@ export async function createTaskInDb(
       await ensureUserIsMember(projectId, assigneeId);
     }
 
+    const boardId = await getBoardByProjectId(projectId);
+    if (!boardId) {
+      throw new Error('Board not found');
+    }
+
     const taskData = {
       title,
       description,
       status,
       dueDate,
+      board: boardId,
       project: projectId,
       assignee: assigneeId,
       creator: creator.id,
