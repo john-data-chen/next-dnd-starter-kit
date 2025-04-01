@@ -58,7 +58,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -175,7 +175,7 @@ export function TaskActions({
     toast('Task has been deleted.');
   };
 
-  const checkPermissions = async () => {
+  const checkPermissions = useCallback(async () => {
     try {
       const response = await fetch(`/api/tasks/${id}/permissions`, {
         method: 'GET'
@@ -186,17 +186,16 @@ export function TaskActions({
       }
 
       const data = await response.json();
-      console.log('Permissions:', data);
       setPermissions(data);
     } catch (error) {
       console.error('Error checking permissions:', error);
       setPermissions({ canEdit: false, canDelete: false });
     }
-  };
+  }, [id]); // 依賴於 id
 
   React.useEffect(() => {
     checkPermissions();
-  }, [id]);
+  }, [checkPermissions]); // 添加 checkPermissions 作為依賴
 
   return (
     <>
