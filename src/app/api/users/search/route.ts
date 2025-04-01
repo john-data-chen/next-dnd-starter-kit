@@ -1,9 +1,14 @@
+import { auth } from '@/lib/auth';
 import { UserModel } from '@/models/user.model';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export const GET = auth(async (req) => {
+  if (!req.auth) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = req.nextUrl.searchParams;
     const username = searchParams.get('username');
 
     if (!username) {
@@ -28,4 +33,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
