@@ -95,6 +95,10 @@ export function TaskActions({
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [editEnable, setEditEnable] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [permissions, setPermissions] = React.useState({
+    canEdit: false,
+    canDelete: false
+  });
   const [users, setUsers] = React.useState<User[]>([]);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isSearching, setIsSearching] = React.useState(false);
@@ -171,9 +175,35 @@ export function TaskActions({
     toast('Task has been deleted.');
   };
 
+  const checkPermissions = async () => {
+    try {
+      const response = await fetch(`/api/tasks/${id}/permissions`, {
+        method: 'GET'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to check permissions');
+      }
+
+      const data = await response.json();
+      console.log('Permissions:', data);
+      setPermissions(data);
+    } catch (error) {
+      console.error('Error checking permissions:', error);
+      setPermissions({ canEdit: false, canDelete: false });
+    }
+  };
+
+  React.useEffect(() => {
+    checkPermissions();
+  }, [id]);
+
   return (
     <>
-      <Dialog open={editEnable} onOpenChange={setEditEnable}>
+      <Dialog
+        open={editEnable && permissions.canEdit}
+        onOpenChange={setEditEnable}
+      >
         <DialogContent className="sm:max-w-md" data-testid="edit-task-dialog">
           <DialogHeader>
             <DialogTitle>Edit Task</DialogTitle>
@@ -389,38 +419,48 @@ export function TaskActions({
           </Form>
         </DialogContent>
       </Dialog>
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="secondary"
-            className="ml-1"
-            data-testid="task-actions-trigger"
-          >
-            <span className="sr-only">Actions</span>
-            <DotsHorizontalIcon className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            data-testid="edit-task-button"
-            onSelect={() => {
-              setEditEnable(true);
-            }}
-          >
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-
-          <DropdownMenuItem
-            data-testid="delete-task-button"
-            onSelect={() => setShowDeleteDialog(true)}
-            className="text-red-600"
-          >
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      {(permissions.canEdit || permissions.canDelete) && (
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="secondary"
+              className="ml-1"
+              data-testid="task-actions-trigger"
+            >
+              <span className="sr-only">Actions</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {permissions.canEdit && (
+              <DropdownMenuItem
+                data-testid="edit-task-button"
+                onSelect={() => {
+                  setEditEnable(true);
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
+            )}
+            {permissions.canDelete && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  data-testid="delete-task-button"
+                  onSelect={() => setShowDeleteDialog(true)}
+                  className="text-red-600"
+                >
+                  Delete
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+      <AlertDialog
+        open={showDeleteDialog && permissions.canDelete}
+        onOpenChange={setShowDeleteDialog}
+      >
         <AlertDialogContent data-testid="delete-task-dialog">
           <AlertDialogHeader>
             <AlertDialogTitle>
