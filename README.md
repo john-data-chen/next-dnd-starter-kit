@@ -91,7 +91,9 @@ pnpm format
 
 ### Core Concepts
 
-- Each board has one owner and multiple members
+- Board can have multiple projects, it is the biggest container
+- Project can have multiple tasks, it is the smallest container
+- Each board has one owner and multiple members (member management feature coming soon)
 - Tasks can be assigned to any member
 - All modifications of a task are tracked with last modified user
 
@@ -100,22 +102,19 @@ pnpm format
 **Board Owner**
 
 - Create and delete board
-- Manage all projects and tasks
+- Edit all projects and tasks
 - Delete projects (cascading delete tasks)
 
 **Board Member**
 
-- View board and all projects
-- Create and manage tasks
-- Assign and be assigned to tasks
-- Update task status and description
-- Cannot delete projects or board
+- View all projects and tasks in the board
+- Any member can create projects and tasks
+- Edit their own projects and tasks
+- Delete their own projects and tasks
 
 ### Task Operations
-
-- Any member can create tasks
 - Task creator and assignee can edit task
-- Only owner of project and creator of task can delete tasks
+- Only owner of board, owner of project and creator of task can delete tasks
 - Task status: To Do → In Progress → Done
 
 ## 🔜 Roadmap
@@ -159,6 +158,7 @@ pnpm format
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
 - [ ] Add CI/CD pipeline
+- [ ] Add board member management feature
 
 and more...
 
