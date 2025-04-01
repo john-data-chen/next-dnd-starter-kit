@@ -155,7 +155,7 @@ pnpm format
 - [x] Add project Description column and modify feature
 - [x] Add auth check in API routes
 - [x] Improve and fix issues of the UI in small screen
-- [ ] Modify data schema and add user permission check
+- [x] Modify data schema and add user permission check
 - [ ] Add Unit tests by Jest
 - [ ] Add E2E tests by Playwright
 - [ ] Add CI/CD pipeline
