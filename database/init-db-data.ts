@@ -130,7 +130,7 @@ async function main() {
         ...demoTasks[1],
         board: boards[1]._id,
         project: projects[1]._id,
-        assignee: users[0]._id, // John
+        assignee: users[2]._id, // Mark
         creator: users[1]._id, // Jane
         lastModifier: users[1]._id,
         dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000) // 5 days from now
