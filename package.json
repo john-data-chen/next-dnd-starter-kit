@@ -13,7 +13,8 @@
     "lint": "eslint src --fix",
     "format": "prettier --write .",
     "prepare": "husky",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
     "playwright": "npx playwright test",
     "commit": "git-cz",
     "init-db": "tsx database/init-db-data.ts",
@@ -82,10 +83,10 @@
     "@eslint/compat": "^1.2.8",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.23.0",
-    "@jest/globals": "^29.7.0",
     "@playwright/test": "^1.51.1",
+    "@swc/core": "^1.11.16",
+    "@swc/jest": "^0.2.37",
     "@tailwindcss/postcss": "^4.1.0",
-    "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
@@ -110,13 +111,13 @@
     "tailwind-merge": "^3.1.0",
     "tailwindcss": "^4.1.0",
     "tailwindcss-animate": "^1.0.7",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.29.0"
   },
   "pnpm": {
     "ignoredBuiltDependencies": [
+      "@swc/core",
       "esbuild"
     ],
     "onlyBuiltDependencies": [
