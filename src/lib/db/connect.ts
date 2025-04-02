@@ -4,9 +4,15 @@ import { defaultDbUrl } from '@/constants/demoData';
 import { connect, connection, ConnectOptions } from 'mongoose';
 
 let isConnected = false;
-let dbUrl = process.env.DATABASE_URL;
-if (!process.env.DATABASE_URL) {
-  dbUrl = defaultDbUrl;
+let dbUrl: string;
+
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('Production DATABASE_URL is not defined');
+  }
+  dbUrl = process.env.DATABASE_URL;
+} else {
+  dbUrl = process.env.DATABASE_URL || defaultDbUrl;
 }
 
 // Atlas configuration for production
