@@ -18,6 +18,10 @@ const rl = readline.createInterface({
 });
 
 async function confirmDatabaseReset(): Promise<boolean> {
+  if (process.argv.includes('--force')) {
+    return true;
+  }
+
   return new Promise((resolve) => {
     rl.question(
       '\x1b[31mWarning: This will clear all existing data! Continue? (y/N) \x1b[0m',
@@ -156,10 +160,13 @@ async function main() {
     });
   } catch (error) {
     console.error('Error:', error);
+    process.exit(1);
   } finally {
     await mongoose.disconnect();
     console.log('Disconnected from MongoDB');
+    rl.close();
+    process.exit(0);
   }
 }
 
-main().catch(console.error);
+main();
