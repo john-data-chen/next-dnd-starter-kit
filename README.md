@@ -155,9 +155,11 @@ pnpm format
 - [x] Add auth check in API routes
 - [x] Improve and fix issues of the UI in small screen
 - [x] Modify data schema and add user permission check
-- [ ] Add Unit tests by Jest
-- [ ] Add E2E tests by Playwright
-- [ ] Add CI/CD pipeline
+- [x] Add Unit tests by Jest
+- [x] Add E2E tests by Playwright
+- [x] Add CI/CD pipeline
+- [ ] Upgrade Shadcn UI to latest version
+- [ ] Add more unit tests to make coverage over 85%
 - [ ] Add board member management feature
 
 and more...
