@@ -134,16 +134,17 @@ async function convertProjectToPlainObject(
       description: task.description || '',
       status: task.status,
       project: task.project.toString(),
+      board: task.board,
       creator: {
-        id: task.creator.id.toString(),
+        id: task.creator.id,
         name: task.creator.name
       },
       lastModifier: {
-        id: task.lastModifier.id.toString(),
+        id: task.lastModifier.id,
         name: task.lastModifier.name
       },
-      createdAt: new Date(task.createdAt),
-      updatedAt: new Date(task.updatedAt)
+      createdAt: new Date(task.createdAt), // Changed: return Date object instead of ISO string
+      updatedAt: new Date(task.updatedAt) // Changed: return Date object instead of ISO string
     })),
     board: projectDoc.board.toString()
   };
