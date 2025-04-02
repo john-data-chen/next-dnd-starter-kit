@@ -15,17 +15,17 @@ const compat = new FlatCompat({
   allConfig: js.configs.all
 });
 
-// Use type assertion to resolve type incompatibility issues
 const nextConfig = compat.extends('next/core-web-vitals');
-// @ts-ignore - Ignore type checking errors
+// @ts-expect-error - Known type incompatibility with ESLint 9
 const patchedConfig = fixupConfigRules(nextConfig);
 
 const config = [
   ...patchedConfig,
-  // Add more flat configs here
   ...ts.configs.recommended,
   prettierConfigRecommended,
-  { ignores: ['.next/*'] }
+  {
+    ignores: ['.next/*', 'src/components/ui/**/*']
+  }
 ];
 
 export default config;

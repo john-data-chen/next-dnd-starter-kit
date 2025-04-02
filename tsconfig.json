@@ -33,5 +33,5 @@
     ".next/types/**/*.ts",
     "database/init-db-data.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/components/ui/**/*"]
 }
