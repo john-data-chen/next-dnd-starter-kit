@@ -1,7 +1,7 @@
 'use server';
 
 import { defaultDbUrl } from '@/constants/demoData';
-import { connect } from 'mongoose';
+import { connect, connection, ConnectOptions } from 'mongoose';
 
 let isConnected = false;
 let dbUrl = process.env.DATABASE_URL;
@@ -9,18 +9,39 @@ if (!process.env.DATABASE_URL) {
   dbUrl = defaultDbUrl;
 }
 
+// Atlas configuration for production
+const clientOptions: ConnectOptions =
+  process.env.NODE_ENV === 'production'
+    ? {
+        serverApi: {
+          version: '1' as const,
+          strict: true,
+          deprecationErrors: true
+        }
+      }
+    : {};
+
 export async function connectToDatabase() {
   if (isConnected) {
     return;
   }
 
   try {
-    console.log('connecting to DATABASE_URL:', dbUrl);
+    console.log('Connecting to MongoDB...');
 
-    // Set connection timeout to avoid long waiting
     await connect(dbUrl!, {
-      serverSelectionTimeoutMS: 5000 // 5 seconds timeout
+      ...clientOptions,
+      serverSelectionTimeoutMS: 5000
     });
+
+    // Only verify connection in production
+    if (process.env.NODE_ENV === 'production') {
+      if (connection.db) {
+        await connection.db.admin().command({ ping: 1 });
+      } else {
+        throw new Error('Database connection not established');
+      }
+    }
 
     isConnected = true;
     console.log('MongoDB connected successfully');
