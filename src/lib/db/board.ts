@@ -61,13 +61,10 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
         id: memberId.toString(),
         name: userMap.get(memberId.toString()) || 'unknown user'
       })),
-      projects: board.projects.map(
-        (projectId) =>
-          projectMap.get(projectId.toString()) || {
-            id: projectId.toString(),
-            title: '0'
-          }
-      ),
+      projects: board.projects.map((projectId) => ({
+        id: projectId.toString(),
+        title: projectMap.get(projectId.toString())?.title
+      })),
       createdAt: board.createdAt,
       updatedAt: board.updatedAt
     }));
