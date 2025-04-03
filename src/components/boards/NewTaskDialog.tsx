@@ -190,28 +190,28 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                   <FormLabel>Due Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          aria-label="Select due date"
-                          className={cn(
-                            'w-auto pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, 'yyyy-MM-dd')
-                          ) : (
-                            <span data-testid="task-date-picker-trigger">
-                              Pick a date
-                            </span>
-                          )}
-                          <CalendarIcon
-                            className="ml-auto h-4 w-4 opacity-50"
-                            aria-hidden="true"
-                          />
-                        </Button>
-                      </FormControl>
+                      <Button
+                        variant={'outline'}
+                        aria-label="Select due date"
+                        className={cn(
+                          'w-auto pl-3 text-left font-normal',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                        type="button"
+                        onClick={() => {}}
+                      >
+                        {field.value ? (
+                          format(field.value, 'yyyy-MM-dd')
+                        ) : (
+                          <span data-testid="task-date-picker-trigger">
+                            Pick a date
+                          </span>
+                        )}
+                        <CalendarIcon
+                          className="ml-auto h-4 w-4 opacity-50"
+                          aria-hidden="true"
+                        />
+                      </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
