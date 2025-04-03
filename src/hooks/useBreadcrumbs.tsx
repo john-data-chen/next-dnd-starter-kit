@@ -1,38 +1,60 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
 import { ROUTES } from '@/constants/routes';
+import { fetchBoardsFromDb } from '@/lib/db/board';
+import { useTaskStore } from '@/lib/store';
+import { Board } from '@/types/dbInterface';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type BreadcrumbItem = {
   title: string;
   link: string;
-};
-
-// This allows to add custom title as well
-const routeMapping: Record<string, BreadcrumbItem[]> = {
-  [ROUTES.HOME]: [{ title: 'Next Board', link: ROUTES.HOME }]
+  isRoot?: boolean;
 };
 
 export function useBreadcrumbs() {
-  const pathname = usePathname();
+  const params = useParams();
+  const boardId = params.boardId as string;
+  const [board, setBoard] = useState<Board | null>(null);
+  const userEmail = useTaskStore((state) => state.userEmail);
 
-  const breadcrumbs = useMemo(() => {
-    // Check if we have a custom mapping for this exact path
-    if (routeMapping[pathname]) {
-      return routeMapping[pathname];
+  useEffect(() => {
+    async function fetchBoard() {
+      if (!boardId || !userEmail) return;
+      try {
+        const boards = await fetchBoardsFromDb(userEmail);
+        const currentBoard = boards.find((b) => b._id === boardId);
+        if (currentBoard) {
+          setBoard(currentBoard);
+        }
+      } catch (error) {
+        console.error('Failed to fetch board:', error);
+      }
     }
 
-    // If no exact match, fall back to generating breadcrumbs from the path
-    const segments = pathname.split('/').filter(Boolean);
-    return segments.map((segment, index) => {
-      const path = `/${segments.slice(0, index + 1).join('/')}`;
-      return {
-        title: segment.charAt(0).toUpperCase() + segment.slice(1),
-        link: path
-      };
-    });
-  }, [pathname]);
+    if (boardId) {
+      fetchBoard();
+    }
+  }, [boardId, userEmail]);
 
-  return breadcrumbs;
+  const items: BreadcrumbItem[] = [
+    {
+      title: 'Overview',
+      link: ROUTES.BOARDS.ROOT,
+      isRoot: true
+    }
+  ];
+
+  if (board) {
+    items.push({
+      title: board.title,
+      link: `/boards/${board._id}`
+    });
+  }
+
+  return {
+    items,
+    rootLink: ROUTES.BOARDS.ROOT
+  };
 }

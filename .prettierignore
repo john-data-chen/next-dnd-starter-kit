@@ -46,3 +46,9 @@ node_modules
 build
 dist
 ico
+
+README.md
+
+# Shadcn UI
+src/components/ui
+src/components/ui/**/*
