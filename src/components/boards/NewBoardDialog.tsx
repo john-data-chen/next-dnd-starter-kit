@@ -9,8 +9,15 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useBoards } from '@/hooks/useBoards';
 import { useTaskStore } from '@/lib/store';
@@ -32,6 +39,7 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const [open, setOpen] = useState(false);
   const { addBoard } = useTaskStore();
   const { fetchBoards } = useBoards();
+  const router = useRouter();
 
   const form = useForm<BoardFormData>({
     resolver: zodResolver(boardSchema),
@@ -40,8 +48,6 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
       description: ''
     }
   });
-
-  const router = useRouter();
 
   const handleSubmit = async (data: BoardFormData) => {
     try {
@@ -64,40 +70,52 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
         <DialogHeader>
           <DialogTitle>Create New Board</DialogTitle>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Board Title</Label>
-              <Input
-                {...form.register('title')}
-                placeholder="Enter board title"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2">
+                    <FormLabel>Board Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter board title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {form.formState.errors.title && (
-                <p className="text-sm text-red-500">
-                  {form.formState.errors.title.message}
-                </p>
-              )}
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                {...form.register('description')}
-                placeholder="Enter board description"
-                className="resize-none"
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="grid gap-2">
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter board description"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit">Create</Button>
-          </DialogFooter>
-        </form>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Create</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
