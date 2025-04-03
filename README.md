@@ -158,7 +158,8 @@ pnpm format
 - [x] Add Unit tests by Jest
 - [x] Add E2E tests by Playwright
 - [x] Add CI/CD pipeline
-- [ ] Upgrade Shadcn UI to latest version
+- [ ] Upgrade Shadcn UI to latest version: in progress
+- [ ] Add toaster in sign in page
 - [ ] Add more unit tests to make coverage over 85%
 - [ ] Add board member management feature
 
