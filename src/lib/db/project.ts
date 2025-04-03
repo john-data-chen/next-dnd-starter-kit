@@ -267,6 +267,10 @@ export async function deleteProjectInDb(
       return false;
     }
 
+    await BoardModel.findByIdAndUpdate(project.board, {
+      $pull: { projects: project._id }
+    });
+
     await TaskModel.deleteMany({ project: id });
     const deletedProject = await ProjectModel.findByIdAndDelete(id);
     return deletedProject !== null;
