@@ -25,6 +25,15 @@ const config = [
   prettierConfigRecommended,
   {
     ignores: ['.next/*', 'src/components/ui/**/*']
+  },
+  {
+    files: ['src/components/ui/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'react/display-name': 'off',
+      'no-unused-vars': 'off'
+    }
   }
 ];
 
