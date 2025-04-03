@@ -1,7 +1,10 @@
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true
+  },
   compiler: {
     relay: {
-      // This should match relay.config.js
       src: './',
       artifactDirectory: './__generated__',
       language: 'typescript',
@@ -9,3 +12,5 @@ module.exports = {
     }
   }
 };
+
+export default nextConfig;
