@@ -65,7 +65,7 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
         (projectId) =>
           projectMap.get(projectId.toString()) || {
             id: projectId.toString(),
-            title: 'Unknown Project'
+            title: '0'
           }
       ),
       createdAt: board.createdAt,
