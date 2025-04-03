@@ -1,8 +1,9 @@
 import SignInViewPage from '@/components/auth/SignInView';
+import { projectName } from '@/constants/projectInfo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Next Board',
+  title: projectName,
   description: 'A demo project of project management tool'
 };
 

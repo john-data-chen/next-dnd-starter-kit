@@ -1,6 +1,7 @@
 import { Icons } from '@/components/layout/Icons';
+import { projectName } from './projectInfo';
 
 export const companyInfo = {
-  name: 'Next Project Manager',
+  name: projectName,
   logo: Icons.companyLogo
 };

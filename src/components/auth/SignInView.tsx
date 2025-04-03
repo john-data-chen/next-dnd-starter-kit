@@ -1,3 +1,4 @@
+import { projectName } from '@/constants/projectInfo';
 import { Presentation } from 'lucide-react';
 import UserAuthForm from './UserAuthForm';
 
@@ -12,7 +13,7 @@ export default function SignInViewPage() {
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
           <Presentation className="mr-2 h-6 w-6" />
-          Next Board
+          {projectName}
         </div>
       </div>
       <div className="flex h-full items-center p-4 lg:p-8">

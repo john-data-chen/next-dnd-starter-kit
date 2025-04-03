@@ -1,4 +1,5 @@
 import Providers from '@/components/layout/Providers';
+import { projectName } from '@/constants/projectInfo';
 import { auth } from '@/lib/auth';
 import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
@@ -8,7 +9,7 @@ import NextTopLoader from 'nextjs-toploader';
 export const metadata: Metadata = {
   title: {
     template: '%s',
-    default: 'Next Project Manager'
+    default: projectName
   },
   description: 'A Next.js DnD Kit starter template'
 };
