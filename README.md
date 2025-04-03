@@ -122,7 +122,6 @@ pnpm format
 - [x] Full-stack support by Next.js
 - [x] Enhanced accessibility with Shadcn UI
 - [x] Drag and drop supports
-- [x] CI / CD pipelines
 - [x] Add code quality check with Codecov and SonarQube
 - [x] Add responsive support for multiple screen sizes
 - [x] Add edit task dialog
@@ -160,6 +159,8 @@ pnpm format
 - [x] Add CI/CD pipeline
 - [ ] Upgrade Shadcn UI to latest version: in progress
 - [ ] Add toaster in sign in page
+- [ ] Fix Board overview can't scroll in mobile screen
+- [ ] Fix the form of the task dialog will be covered by keyboard in mobile screen
 - [ ] Add more unit tests to make coverage over 85%
 - [ ] Add board member management feature
 
