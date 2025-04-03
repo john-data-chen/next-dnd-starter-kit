@@ -1,9 +1,6 @@
 'use client';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger
-} from '@/components/ui/collapsible';
+
+import { Icons } from '@/components/layout/Icons';
 import {
   Sidebar,
   SidebarContent,
@@ -12,89 +9,94 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem
+  SidebarMenuItem
 } from '@/components/ui/sidebar';
-import { navItems, companyInfo } from '@/constants/sidebar';
-import { IconArrowRight, IconTopologyStar3 } from '@tabler/icons-react';
+import { companyInfo } from '@/constants/sidebar';
+import { useBoards } from '@/hooks/useBoards';
+import { HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Icons } from '@/components/layout/Icons';
 
 export default function AppSidebar() {
   const pathname = usePathname();
+  const { myBoards, teamBoards, loading } = useBoards();
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <SidebarHeader>
-        <div className="flex gap-2 py-2 text-sidebar-accent-foreground">
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <IconTopologyStar3 className="animate-spin" />
+        <div className="text-sidebar-accent-foreground flex gap-2 py-2">
+          <div className="bg-sidebar-pdivary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            <Icons.companyLogo />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{companyInfo.name}</span>
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className="overflow-x-hidden">
+      <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Overview</SidebarGroupLabel>
           <SidebarMenu>
-            {navItems.map((item) => {
-              const Icon = item.icon ? Icons[item.icon] : null;
-              return item?.items && item?.items?.length > 0 ? (
-                <Collapsible
-                  key={item.title}
-                  asChild
-                  defaultOpen={item.isActive}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.title}
-                        isActive={pathname === item.url}
-                      >
-                        {Icon && <Icon />}
-                        <span>{item.title}</span>
-                        <IconArrowRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={pathname === subItem.url}
-                            >
-                              <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              ) : (
-                <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild isActive={pathname === '/boards'}>
+                <Link href="/boards" className="flex items-center gap-2">
+                  <HomeIcon className="h-4 w-4" />
+                  <span>Overview</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <div className="flex items-center justify-between px-2">
+            <SidebarGroupLabel>My Boards</SidebarGroupLabel>
+          </div>
+          <SidebarMenu>
+            {loading ? (
+              <div className="px-4 py-2 text-sm text-muted-foreground">
+                Loading...
+              </div>
+            ) : (
+              myBoards?.map((board) => (
+                <SidebarMenuItem key={board._id}>
                   <SidebarMenuButton
                     asChild
-                    tooltip={item.title}
-                    isActive={pathname === item.url}
+                    isActive={pathname === `/boards/${board._id}`}
                   >
-                    <Link href={item.url}>
-                      {Icon && <Icon />}
-                      <span>{item.title}</span>
+                    <Link href={`/boards/${board._id}`}>
+                      <span>{board.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              );
-            })}
+              ))
+            )}
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* Team Boards Section */}
+        <SidebarGroup>
+          <div className="flex items-center justify-between px-2">
+            <SidebarGroupLabel>Team Boards</SidebarGroupLabel>
+          </div>
+          <SidebarMenu>
+            {loading ? (
+              <div className="px-4 py-2 text-sm text-muted-foreground">
+                Loading...
+              </div>
+            ) : (
+              teamBoards?.map((board) => (
+                <SidebarMenuItem key={board._id}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === `/boards/${board._id}`}
+                  >
+                    <Link href={`/boards/${board._id}`}>
+                      <span>{board.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))
+            )}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

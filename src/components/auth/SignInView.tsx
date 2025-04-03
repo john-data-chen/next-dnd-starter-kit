@@ -1,5 +1,6 @@
+import { projectName } from '@/constants/projectInfo';
+import { Presentation } from 'lucide-react';
 import UserAuthForm from './UserAuthForm';
-import { IconPresentationAnalytics } from '@tabler/icons-react';
 
 export default function SignInViewPage() {
   return (
@@ -11,8 +12,8 @@ export default function SignInViewPage() {
       <div className="bg-muted relative h-full flex-col p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <IconPresentationAnalytics className="mr-2 h-6 w-6" />
-          Next Board
+          <Presentation className="mr-2 h-6 w-6" />
+          {projectName}
         </div>
       </div>
       <div className="flex h-full items-center p-4 lg:p-8">

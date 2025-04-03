@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { defaultEmail } from '@/constants/auth';
+import { defaultEmail } from '@/constants/demoData';
+import { expect, test } from '@playwright/test';
 
 // Test suite for SignInPage
 
@@ -14,6 +14,6 @@ test.describe('SignInPage', () => {
     await page.goto('/login');
     await page.fill('input[name="email"]', defaultEmail);
     await page.click('button[type="submit"]');
-    await expect(page).toHaveURL('/kanban');
+    await expect(page).toHaveURL('/boards');
   });
 });

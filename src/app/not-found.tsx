@@ -1,8 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
+import { useRouter } from 'next/navigation';
 
 interface NotFoundProps {
   onBack?: () => void;
