@@ -2,7 +2,16 @@ import Providers from '@/components/layout/Providers';
 import { auth } from '@/lib/auth';
 import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
+import { Metadata } from 'next';
 import NextTopLoader from 'nextjs-toploader';
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s',
+    default: 'Next Project Manager'
+  },
+  description: 'A Next.js DnD Kit starter template'
+};
 
 export default async function RootLayout({
   children
@@ -13,7 +22,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-lato overflow-hidden">
+      <body className="overflow-hidden">
         <NextTopLoader showSpinner={false} />
         <Providers session={session}>{children}</Providers>
         <Analytics />

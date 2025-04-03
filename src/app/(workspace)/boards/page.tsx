@@ -1,4 +1,10 @@
 import { BoardOverview } from '@/components/boards/BoardOverview';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Kanban Overview',
+  description: 'Manage your boards'
+};
 
 export default function BoardsPage() {
   return (

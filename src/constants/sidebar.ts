@@ -1,6 +1,6 @@
 import { Icons } from '@/components/layout/Icons';
 
 export const companyInfo = {
-  name: 'Next.js Template',
+  name: 'Next Project Manager',
   logo: Icons.companyLogo
 };
