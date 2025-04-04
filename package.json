@@ -98,6 +98,7 @@
     "@types/react": "^18.3.20",
     "@types/react-dom": "^18.3.6",
     "commitizen": "^4.3.1",
+    "dotenv": "^16.4.7",
     "eslint": "^9.23.0",
     "eslint-config-next": "^14.2.26",
     "eslint-config-prettier": "^10.1.1",

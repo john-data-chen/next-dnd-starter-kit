@@ -52,3 +52,7 @@ README.md
 # Shadcn UI
 src/components/ui
 src/components/ui/**/*
+
+# database
+database
+database/**/*

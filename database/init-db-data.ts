@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
   demoBoards,
   demoProjects,
@@ -24,7 +25,7 @@ async function confirmDatabaseReset(): Promise<boolean> {
 
   return new Promise((resolve) => {
     rl.question(
-      '\x1b[31mWarning: This will clear all existing data! Continue? (y/N) \x1b[0m',
+      '\x1b[33mWarning: This will initialize the database with demo data.\nMake sure your MongoDB is running and .env is configured correctly.\nContinue? (y/N) \x1b[0m',
       (answer) => {
         resolve(answer.toLowerCase() === 'y');
         rl.close();
@@ -35,16 +36,33 @@ async function confirmDatabaseReset(): Promise<boolean> {
 
 async function main() {
   try {
+    console.log('Checking environment variables...');
+    if (!process.env.DATABASE_URL) {
+      console.error(
+        '\x1b[31mError: DATABASE_URL is not found in environment variables\x1b[0m'
+      );
+      process.exit(1);
+    }
+    console.log('\x1b[32mEnvironment variables loaded successfully\x1b[0m');
+
     const shouldContinue = await confirmDatabaseReset();
     if (!shouldContinue) {
-      console.log('Operation cancelled');
+      console.log('\x1b[33mOperation cancelled\x1b[0m');
       process.exit(0);
     }
-
-    await connectToDatabase();
+    console.log('\x1b[36mInitializing database...\x1b[0m');
+    try {
+      await connectToDatabase();
+      console.log('\x1b[32mDatabase connected successfully\x1b[0m');
+    } catch (error) {
+      console.error(
+        '\x1b[31mFailed to connect to database. Please check your MongoDB service and .env configuration\x1b[0m'
+      );
+      throw error;
+    }
 
     // Clear all collections
-    console.log('Clearing database...');
+    console.log('\x1b[36mClearing existing data...\x1b[0m');
     await Promise.all([
       UserModel.deleteMany({}),
       BoardModel.deleteMany({}),
