@@ -21,6 +21,10 @@ The **Enterprise-grade Next.js template** with 85%+ test coverage, featuring dra
 
 ⭐ **Love this template?**
 If you like it, don't forget to [give it a star](https://github.com/john-data-chen/next-dnd-starter-kit) today!
+
+And I have another easier starter kit: [ts-react-drag-and-drop-starter-kit
+](https://github.com/john-data-chen/ts-react-drag-and-drop-starter-kit) for new users of React and TypeScript.
+
 Every star motivates me to deliver more high-quality templates. 🚀
 
 ---
@@ -49,13 +53,18 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 ## 📦 Core Framework Versions Decision
 
-- Next.js: ^14.2.26 (Production-ready version with stable App Router. Will defer 15.x upgrade until its API stabilizes)
-- React: ^18.3.1 (Current stable version with concurrent features. Awaiting broader ecosystem support for 19.x)
+- Next.js: ^14.x (Production-ready version with stable App Router. I will postpone upgrade to 15.x until it is more stable)
+- React: ^18.x (Awaiting broader and better ecosystem and packages support for 19.x)
 
 ## 🚀 Getting Started
 
 - Press **Use this template** to create a new repository.
 - Clone the repository to your local machine.
+
+### Database
+
+- In production , I use [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
+- In local development, I use [Docker Compose](https://docs.docker.com/compose/) in folder **database**, you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
 
 ### Environment Configuration
 
@@ -64,8 +73,6 @@ Create a `.env` file in the project root with the following variables:
 ```text
 # Application Environment
 # Options: development | production
-# - development: Enables detailed logging and development features
-# - production: Optimizes for performance and security
 NODE_ENV=development
 
 # Authentication Secret
@@ -83,7 +90,7 @@ NEXTAUTH_SECRET=[your_secret]
 # - port: MongoDB port (default: 27017)
 # - database: Database name (next-project-manager)
 # - options: Additional connection parameters (authSource=admin required)
-DATABASE_URL="mongodb://[username]:[password]@localhost:27017/next-project-manager?authSource=admin"
+DATABASE_URL="mongodb://[username]:[password]@[host]:[prot]/[database]?authSource=admin"
 ```
 
 ### Commands
@@ -147,6 +154,7 @@ pnpm format
 - Delete their own projects and tasks
 
 ### Task Operations
+
 - Task creator and assignee can edit task
 - Only owner of board, owner of project and creator of task can delete tasks
 - Task status: To Do → In Progress → Done
@@ -204,17 +212,8 @@ and more...
 
 ## 📖 Detailed Technical Documentation
 
-### Database
-
-- In production , I use [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
-- In local development, I use [Docker Compose](https://docs.docker.com/compose/) in folder **database**, you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
-- Execute `docker-compose up -d` to start MongoDB in Docker.
-- Execute `docker-compose down` to stop MongoDB in Docker.
-- Execute `npm run init-db` to initialize MongoDB.
-
 ### 📊 Testing Strategy
 
-- Achieved 85%+ test coverage with unit, integration, and E2E tests.
 - Cross-browser testing ensures functionality across desktop and mobile.
 
 ### Project Structure
@@ -249,6 +248,7 @@ src/
 ### React/Next.js
 
 - **Radix UI Ref Warning**:
+
   - Issue: Function components cannot be given refs warning in Dialog components
   - Impact: Development warning only, no production impact
   - Solution: Keep using `asChild` as per Radix UI docs, warning can be safely ignored
