@@ -191,9 +191,11 @@ pnpm format
 - [x] Add Unit tests by Jest
 - [x] Add E2E tests by Playwright
 - [x] Add CI/CD pipeline
+- [x] Optimize initialize mongodb in development
+- [x] Fix the issue can't scroll in mobile screen
+- [ ] Fix the issue of dragging in mobile screen
 - [ ] Upgrade Shadcn UI to latest version: in progress
 - [ ] Add toaster in sign in page
-- [ ] Fix Board overview can't scroll in mobile screen
 - [ ] Fix the form of the task dialog will be covered by keyboard in mobile screen
 - [ ] Add more unit tests to make coverage over 85%
 - [ ] Add board member management feature
