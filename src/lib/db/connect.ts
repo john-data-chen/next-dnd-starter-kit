@@ -1,18 +1,27 @@
 'use server';
 
-import { defaultDbUrl } from '@/constants/demoData';
 import { connect, connection, ConnectOptions } from 'mongoose';
 
 let isConnected = false;
 let dbUrl: string;
 
-if (process.env.NODE_ENV === 'production') {
+// Check environment variables
+try {
   if (!process.env.DATABASE_URL) {
-    throw new Error('Production DATABASE_URL is not defined');
+    throw new Error(
+      process.env.NODE_ENV === 'production'
+        ? 'Production DATABASE_URL is not defined'
+        : 'Database connection error:\n' +
+          '1. Please check if MongoDB service is running\n' +
+          '2. Verify docker-compose up -d has been executed\n' +
+          '3. Confirm DATABASE_URL is properly configured in .env file'
+    );
   }
   dbUrl = process.env.DATABASE_URL;
-} else {
-  dbUrl = process.env.DATABASE_URL || defaultDbUrl;
+  console.log('Database URL:', dbUrl);
+} catch (error) {
+  console.error('\x1b[31mDatabase URL configuration error:', error, '\x1b[0m');
+  throw error;
 }
 
 // Atlas configuration for production

@@ -1,8 +1,5 @@
 export const defaultEmail = 'mark.s@example.com';
 
-export const defaultDbUrl =
-  'mongodb://root:123456@localhost:27017/next-project-manager?authSource=admin';
-
 export const demoUsers = [
   {
     email: 'john.doe@example.com',
