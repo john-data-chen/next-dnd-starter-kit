@@ -47,10 +47,44 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
+## 📦 Core Framework Versions Decision
+
+- Next.js: ^14.2.26 (Production-ready version with stable App Router. Will defer 15.x upgrade until its API stabilizes)
+- React: ^18.3.1 (Current stable version with concurrent features. Awaiting broader ecosystem support for 19.x)
+
 ## 🚀 Getting Started
 
 - Press **Use this template** to create a new repository.
-- Generate Secret in `.env` file.
+- Clone the repository to your local machine.
+
+### Environment Configuration
+
+Create a `.env` file in the project root with the following variables:
+
+```text
+# Application Environment
+# Options: development | production
+# - development: Enables detailed logging and development features
+# - production: Optimizes for performance and security
+NODE_ENV=development
+
+# Authentication Secret
+# Required: A secure random string for JWT token encryption
+# Generate: openssl rand -base64 32
+# Warning: Keep this value private and unique per environment
+NEXTAUTH_SECRET=[your_secret]
+
+# Database Connection
+# Format: mongodb://[username]:[password]@[host]:[port]/[database]?[options]
+# Required fields:
+# - username: Database user with appropriate permissions
+# - password: User's password (URL encoded if contains special characters)
+# - host: Database host (localhost for development)
+# - port: MongoDB port (default: 27017)
+# - database: Database name (next-project-manager)
+# - options: Additional connection parameters (authSource=admin required)
+DATABASE_URL="mongodb://[username]:[password]@localhost:27017/next-project-manager?authSource=admin"
+```
 
 ### Commands
 
