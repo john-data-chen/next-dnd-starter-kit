@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function BoardsPage() {
   return (
-    <div className="container mx-auto p-6">
+    <main className="container mx-auto p-6 flex-1 overflow-hidden">
       <BoardOverview />
-    </div>
+    </main>
   );
 }
