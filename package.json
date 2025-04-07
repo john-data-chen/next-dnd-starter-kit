@@ -74,7 +74,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.55.0",
     "sonner": "^2.0.3",
-    "tailwind-merge": "^3.1.0",
+    "tailwind-merge": "^3.2.0",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },
@@ -86,7 +86,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.24.0",
     "@playwright/test": "^1.51.1",
-    "@swc/core": "^1.11.16",
+    "@swc/core": "^1.11.18",
     "@swc/jest": "^0.2.37",
     "@tailwindcss/postcss": "^4.1.3",
     "@testing-library/jest-dom": "^6.6.3",

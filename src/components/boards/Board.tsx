@@ -31,9 +31,7 @@ export function Board() {
   const projects = useTaskStore((state) => state.projects);
   const filter = useTaskStore((state) => state.filter);
   const setProjects = useTaskStore((state) => state.setProjects);
-  const dragTaskIntoNewProject = useTaskStore(
-    (state) => state.dragTaskIntoNewProject
-  );
+  const dragTaskOnProject = useTaskStore((state) => state.dragTaskOnProject);
   const projectsId = useMemo(
     () => projects.map((project: Project) => project._id),
     [projects]
@@ -119,15 +117,18 @@ export function Board() {
         console.error('Target project not found');
         return;
       }
-      dragTaskIntoNewProject(activeTask._id, overProject._id)
+      dragTaskOnProject(activeTask._id, overProject._id)
         .then(() => {
           activeTask.project = overProject._id;
           overProject.tasks.push(activeTask);
           activeProject!.tasks.splice(activeTaskIdx, 1);
           setProjects(updatedProjects);
-          toast.success(
-            `Task:"${activeTask.title}" is moved into Project: "${overProject.title}"`
-          );
+
+          if (activeTask.project !== overProject._id.toString()) {
+            toast.success(
+              `Task: "${activeTask.title}" is moved into Project: "${overProject.title}"`
+            );
+          }
         })
         .catch((error) => {
           console.error('Failed to move task:', error);
@@ -148,7 +149,7 @@ export function Board() {
       );
       // move task to a different project
       if (overTask.project !== activeTask.project) {
-        dragTaskIntoNewProject(activeTask._id, overTask.project)
+        dragTaskOnProject(activeTask._id, overTask.project)
           .then(() => {
             activeTask.project = overTask.project;
             overProject!.tasks.splice(overTaskIdx, 0, activeTask);
@@ -170,6 +171,7 @@ export function Board() {
         const tempTask = activeTask;
         activeProject!.tasks.splice(activeTaskIdx, 1);
         overProject!.tasks.splice(overTaskIdx, 0, tempTask);
+
         setProjects(updatedProjects);
       }
     }

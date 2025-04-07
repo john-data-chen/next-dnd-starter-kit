@@ -90,7 +90,7 @@ NEXTAUTH_SECRET=[your_secret]
 # - port: MongoDB port (default: 27017)
 # - database: Database name (next-project-manager)
 # - options: Additional connection parameters (authSource=admin required)
-DATABASE_URL="mongodb://[username]:[password]@[host]:[prot]/[database]?authSource=admin"
+DATABASE_URL="mongodb://[username]:[password]@[host]:[port]/[database]?authSource=admin"
 ```
 
 ### Commands
@@ -201,7 +201,7 @@ pnpm format
 - [x] Add CI/CD pipeline
 - [x] Optimize initialize mongodb in development
 - [x] Fix the issue can't scroll in mobile screen
-- [ ] Fix the issue of dragging in mobile screen
+- [x] Fix the issue of dragging in mobile screen
 - [ ] Upgrade Shadcn UI to latest version: in progress
 - [ ] Add toaster in sign in page
 - [ ] Fix the form of the task dialog will be covered by keyboard in mobile screen
@@ -236,8 +236,9 @@ src/
 ├── hooks/ # Custom React hooks
 ├── lib/
 │   ├── db/ # Database functions
-│   ├── auth # Authentication functions
-│   └── state # State management functions
+│   ├── auth.ts # Authentication functions
+│   └── store.ts # State management functions
+│   └── utils.ts # tailwindcss utils
 ├── models/ # Database models
 ├── styles/ # Global styles
 └── types/ # Type definitions

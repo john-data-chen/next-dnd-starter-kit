@@ -48,10 +48,7 @@ interface State {
     assigneeId?: string
   ) => void;
   removeTask: (taskId: string) => void;
-  dragTaskIntoNewProject: (
-    taskId: string,
-    newProjectId: string
-  ) => Promise<void>;
+  dragTaskOnProject: (taskId: string, newProjectId: string) => Promise<void>;
   filter: {
     status: string | null;
     search: string;
@@ -261,55 +258,81 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      dragTaskIntoNewProject: async (taskId: string, newProjectId: string) => {
+      dragTaskOnProject: async (taskId: string, overlayProjectId: string) => {
         const userEmail = useTaskStore.getState().userEmail;
         if (!userEmail) {
           throw new Error('User email not found');
         }
         try {
+          const state = useTaskStore.getState();
+          const task = state.projects
+            .flatMap((p) => p.tasks)
+            .find((t) => t._id === taskId);
+
+          if (!task) {
+            console.error('Task not found');
+            return;
+          }
+
+          const oldProject = state.projects.find((p) => p._id === task.project);
+          const targetProject = state.projects.find(
+            (p) => p._id === overlayProjectId
+          );
+
+          if (!oldProject || !targetProject) {
+            console.error('Project not found', {
+              oldProjectId: task.project,
+              overlayProjectId
+            });
+            return;
+          }
+
+          if (oldProject._id === targetProject._id) {
+            const task = oldProject.tasks.find((t) => t._id === taskId);
+            if (!task) return;
+
+            const updatedProject = {
+              ...oldProject,
+              tasks: [...oldProject.tasks.filter((t) => t._id !== taskId), task]
+            };
+
+            set((state) => ({
+              projects: state.projects.map((project) =>
+                project._id === oldProject._id ? updatedProject : project
+              )
+            }));
+            return;
+          }
+
           const updatedTask = await updateTaskProjectInDb(
             userEmail,
             taskId,
-            newProjectId
+            overlayProjectId
           );
-          set((state) => {
-            const oldProject = state.projects.find((project) =>
-              project.tasks.some((task) => task._id === taskId)
-            );
 
-            if (!oldProject) {
-              console.error('Task not found in any project');
-              return state;
-            }
+          if (!updatedTask) {
+            console.error('Failed to update task project');
+            return;
+          }
 
-            const targetProject = state.projects.find(
-              (project) => project._id === newProjectId
-            );
+          const updatedOldProject = {
+            ...oldProject,
+            tasks: oldProject.tasks.filter((task) => task._id !== taskId)
+          };
 
-            if (!targetProject) {
-              console.error('Target project not found');
-              return state;
-            }
+          const updatedTargetProject = {
+            ...targetProject,
+            tasks: [...targetProject.tasks, updatedTask]
+          };
 
-            const updatedOldProject = {
-              ...oldProject,
-              tasks: oldProject.tasks.filter((task) => task._id !== taskId)
-            };
-
-            const updatedTargetProject = {
-              ...targetProject,
-              tasks: [...targetProject.tasks, updatedTask]
-            };
-
-            return {
-              projects: state.projects.map((project) => {
-                if (project._id === oldProject._id) return updatedOldProject;
-                if (project._id === targetProject._id)
-                  return updatedTargetProject;
-                return project;
-              })
-            };
-          });
+          set((state) => ({
+            projects: state.projects.map((project) => {
+              if (project._id === oldProject._id) return updatedOldProject;
+              if (project._id === targetProject._id)
+                return updatedTargetProject;
+              return project;
+            })
+          }));
         } catch (error) {
           console.error('Error in dragTaskIntoNewProject:', error);
           throw error;
