@@ -188,7 +188,6 @@ export async function createProjectInDb(data: {
     const project = convertProjectToPlainObject(
       projectDoc.toObject() as ProjectBase
     );
-    console.log('Created project: ', project);
     return project;
   } catch (error) {
     console.error('Error creating project:', error);
