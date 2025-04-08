@@ -134,7 +134,7 @@ pnpm format
 
 - Board can have multiple projects, it is the biggest container
 - Project can have multiple tasks, it is the smallest container
-- Each board has one owner and multiple members (member management feature coming soon)
+- Each board has one owner and multiple members
 - Tasks can be assigned to any member
 - All modifications of a task are tracked with last modified user
 
@@ -202,13 +202,11 @@ pnpm format
 - [x] Optimize initialize mongodb in development
 - [x] Fix the issue can't scroll in mobile screen
 - [x] Fix the issue of dragging in mobile screen
-- [ ] Upgrade Shadcn UI to latest version: in progress
-- [ ] Add toaster in sign in page
+- [x] Add toaster in sign in page
+- [x] Add session check in board and api routes
 - [ ] Fix the form of the task dialog will be covered by keyboard in mobile screen
+- [ ] Fix the test coverage incorrect
 - [ ] Add more unit tests to make coverage over 85%
-- [ ] Add board member management feature
-
-and more...
 
 ## 📖 Detailed Technical Documentation
 
@@ -228,16 +226,17 @@ src/
 │   ├── layout.tsx # Layout component
 │   ├── not-found.tsx # 404 page
 │   ├── (auth)/ # Authentication routes
+│       └── login/ # Login page
 │   └── (workspace)/ # Workspace routes
 │       └── boards/ # Kanban Overview routes
-│           ├── [boardId]/ # Board routes
+│           └── [boardId]/ # Board
 ├── components/ # Reusable React components
 ├── constants/ # Application-wide constants
 ├── hooks/ # Custom React hooks
 ├── lib/
 │   ├── db/ # Database functions
 │   ├── auth.ts # Authentication functions
-│   └── store.ts # State management functions
+│   ├──  store.ts # State management functions
 │   └── utils.ts # tailwindcss utils
 ├── models/ # Database models
 ├── styles/ # Global styles
