@@ -7,7 +7,7 @@
     "url": "https://github.com/john-data-chen/next-dnd-starter-kit"
   },
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbo -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "eslint src --fix",
@@ -112,8 +112,8 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.1.3",
-    "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.19.3",
+    "tw-animate-css": "^1.2.5",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.1"
   },
