@@ -10,7 +10,7 @@ export default function AuthLayout({
   return (
     <>
       {children}
-      <Toaster />
+      <Toaster position="bottom-right" expand={false} closeButton />
     </>
   );
 }

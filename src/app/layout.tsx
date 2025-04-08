@@ -4,7 +4,15 @@ import { auth } from '@/lib/auth';
 import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import { Metadata } from 'next';
+import { Roboto } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
+
+const roboto = Roboto({
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap'
+});
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +31,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="overflow-hidden">
+      <body className={roboto.className}>
         <NextTopLoader showSpinner={false} />
         <Providers session={session}>{children}</Providers>
         <Analytics />
