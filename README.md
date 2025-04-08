@@ -204,6 +204,7 @@ pnpm format
 - [x] Fix the issue of dragging in mobile screen
 - [x] Add toaster in sign in page
 - [x] Add session check in board and api routes
+- [x] Change style of toast to avoid overlap in small screens
 - [ ] Fix the form of the task dialog will be covered by keyboard in mobile screen
 - [ ] Fix the test coverage incorrect
 - [ ] Add more unit tests to make coverage over 85%
