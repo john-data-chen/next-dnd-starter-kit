@@ -20,7 +20,7 @@ export default function RootWrapper({
           {children}
         </SidebarInset>
       </SidebarProvider>
-      <Toaster />
+      <Toaster position="bottom-right" expand={false} closeButton />
     </>
   );
 }

@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function useAuthForm() {
-  const [loading, startTransition] = useTransition();
+  const [loading] = useTransition();
   const { setUserInfo } = useTaskStore();
 
   const form = useForm<SignInFormValue>({
@@ -21,21 +21,33 @@ export default function useAuthForm() {
 
   const onSubmit = async (data: SignInFormValue) => {
     try {
-      startTransition(() => {
-        signIn('credentials', {
-          email: data.email,
-          redirect: true,
-          callbackUrl: ROUTES.BOARDS.ROOT
-        }).catch((error) => {
-          console.error('Authentication error:', error);
-          toast.error('Failed to sign in. Please try again.');
-        });
+      const result = await signIn('credentials', {
+        email: data.email,
+        redirect: false
       });
 
-      setUserInfo(data.email);
+      if (result?.error) {
+        toast.error('Invalid email, retry again.');
+        return;
+      }
+
+      toast.promise(
+        new Promise((resolve) => {
+          setUserInfo(data.email);
+          setTimeout(() => {
+            window.location.href = ROUTES.BOARDS.ROOT;
+            resolve('success');
+          }, 1000);
+        }),
+        {
+          loading: 'Signing in...',
+          success: 'Welcome! Redirecting...',
+          error: 'Authentication failed. Please try again.'
+        }
+      );
     } catch (error) {
-      console.error('Form submission error:', error);
-      toast.error('Failed to submit form.');
+      console.error('Authentication error:', error);
+      toast.error('System error. Please try again later.');
     }
   };
 
