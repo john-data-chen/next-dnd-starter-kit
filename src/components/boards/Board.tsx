@@ -345,11 +345,11 @@ export function Board() {
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 px-6 py-4">
-          <div className="w-full sm:w-[200px]">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
+          <div className="w-full">
             <NewProjectDialog />
           </div>
-          <div className="w-full sm:w-auto">
+          <div className="w-full">
             <TaskFilter />
           </div>
         </div>

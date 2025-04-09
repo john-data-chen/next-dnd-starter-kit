@@ -57,13 +57,13 @@ export function TaskFilter() {
         placeholder="Search title or description..."
         value={filter.search}
         onChange={handleSearchChange}
-        className="w-[240px] bg-background"
+        className="bg-background"
       />
       <Select
         value={filter.status || 'TOTAL'}
         onValueChange={handleFilterChange}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-auto">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>

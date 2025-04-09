@@ -8,7 +8,7 @@ export default function PageContainer({
   children: React.ReactNode;
   scrollable?: boolean;
 }) {
-  const contentClasses = 'h-full p-4 md:px-6';
+  const contentClasses = 'h-full px-4 sm:px-6';
 
   return (
     <div data-testid="page-container">
