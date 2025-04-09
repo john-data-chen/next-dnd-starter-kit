@@ -57,7 +57,7 @@ export function TaskFilter() {
         placeholder="Search title or description..."
         value={filter.search}
         onChange={handleSearchChange}
-        className="w-[200px]"
+        className="w-[240px] bg-background"
       />
       <Select
         value={filter.status || 'TOTAL'}
