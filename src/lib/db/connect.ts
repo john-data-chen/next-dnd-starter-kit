@@ -18,7 +18,6 @@ try {
     );
   }
   dbUrl = process.env.DATABASE_URL;
-  console.log('Database URL:', dbUrl);
 } catch (error) {
   console.error('\x1b[31mDatabase URL configuration error:', error, '\x1b[0m');
   throw error;
