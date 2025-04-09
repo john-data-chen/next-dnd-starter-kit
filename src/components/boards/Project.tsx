@@ -92,7 +92,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
             variant="ghost"
             {...attributes}
             {...listeners}
-            className="text-primary/50 h-8 w-8 cursor-grab p-0"
+            className="text-primary/50 h-8 w-16 cursor-grab p-0"
           >
             <span className="sr-only">drag project: {project.title}</span>
             <PointerIcon className="h-4 w-4" />
