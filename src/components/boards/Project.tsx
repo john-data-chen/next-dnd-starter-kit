@@ -65,7 +65,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 
   // Define card style variants based on drag state
   const variants = cva(
-    'h-[75vh] max-h-[75vh] w-[380px] max-w-full bg-secondary flex flex-col shrink-0 snap-center',
+    'h-[75vh] max-h-[75vh] w-[380px] w-full bg-secondary flex flex-col shrink-0 snap-center',
     {
       variants: {
         dragging: {
@@ -133,7 +133,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 
 export function BoardContainer({ children }: { children: React.ReactNode }) {
   return (
-    <ScrollArea className="w-auto">
+    <ScrollArea className="w-full">
       <div className="flex flex-col md:flex-row gap-4">{children}</div>
       <ScrollBar orientation="horizontal" className="hidden md:flex" />
     </ScrollArea>
