@@ -203,10 +203,12 @@ pnpm format
 - [x] Fix the issue can't scroll in mobile screen
 - [x] Fix the issue of dragging in mobile screen
 - [x] Add toaster in sign in page
-- [x] Add session check in board and api routes
+- [x] Add session check in board routes
 - [x] Change style of toast to avoid overlap in small screens
-- [ ] Fix the form of the task dialog will be covered by keyboard in mobile screen
-- [ ] Fix the test coverage incorrect
+- [x] Optimize the UI layout for mobile screens
+- [x] Fix the form of the task dialog will be covered by keyboard in mobile screen
+- [ ] Add MongoDB in CI of github actions
+- [ ] Fix incorrect test coverage
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
