@@ -104,6 +104,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isSearching, setIsSearching] = React.useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const [calendarOpen, setCalendarOpen] = React.useState(false);
 
   React.useEffect(() => {
     const fetchUsers = async () => {
@@ -127,7 +128,12 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
   return (
     <Dialog open={addTaskOpen} onOpenChange={setAddTaskOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" data-testid="new-task-trigger">
+        <Button
+          variant="outline"
+          size="lg"
+          data-testid="new-task-trigger"
+          className="my-4 w-full"
+        >
           ＋ Add New Task
         </Button>
       </DialogTrigger>
@@ -167,28 +173,11 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
             />
             <FormField
               control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Task Description</FormLabel>
-                  <Textarea
-                    id="description"
-                    placeholder="Task description..."
-                    className="col-span-4"
-                    data-testid="task-description-input"
-                    aria-label="Task description"
-                    {...field}
-                  />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="dueDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Due Date</FormLabel>
-                  <Popover>
+                  <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant={'outline'}
@@ -198,7 +187,6 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                           !field.value && 'text-muted-foreground'
                         )}
                         type="button"
-                        onClick={() => {}}
                       >
                         {field.value ? (
                           format(field.value, 'yyyy-MM-dd')
@@ -217,7 +205,10 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          setCalendarOpen(false);
+                        }}
                         fromDate={new Date()}
                         initialFocus
                         data-testid="task-date-picker-calendar"
@@ -320,6 +311,23 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Task Description</FormLabel>
+                  <Textarea
+                    id="description"
+                    placeholder="Task description..."
+                    className="col-span-4"
+                    data-testid="task-description-input"
+                    aria-label="Task description"
+                    {...field}
+                  />
                 </FormItem>
               )}
             />

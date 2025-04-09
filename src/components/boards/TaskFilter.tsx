@@ -51,19 +51,19 @@ export function TaskFilter() {
   );
 
   return (
-    <div className="flex items-center space-x-2 mb-4">
+    <div className="flex items-center gap-2 mb-4 w-full md:w-auto">
       <Input
         type="text"
         placeholder="Search title or description..."
         value={filter.search}
         onChange={handleSearchChange}
-        className="w-[200px]"
+        className="bg-background w-full md:w-[300px]"
       />
       <Select
         value={filter.status || 'TOTAL'}
         onValueChange={handleFilterChange}
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[140px]">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>

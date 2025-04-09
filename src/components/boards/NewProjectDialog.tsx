@@ -70,8 +70,8 @@ export default function NewProjectDialog({
       <DialogTrigger asChild>
         <Button
           variant="secondary"
-          size="lg"
-          className="w-full"
+          size="default"
+          className="w-full md:w-[200px]"
           data-testid="new-project-trigger"
         >
           ＋ Add New Project
