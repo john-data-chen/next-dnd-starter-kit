@@ -423,7 +423,7 @@ export function TaskActions({
           <DropdownMenuTrigger asChild>
             <Button
               variant="secondary"
-              className="ml-1"
+              className="ml-1 h-8 w-12"
               data-testid="task-actions-trigger"
             >
               <span className="sr-only">Actions</span>
