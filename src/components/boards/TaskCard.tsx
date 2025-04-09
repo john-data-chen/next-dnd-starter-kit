@@ -92,7 +92,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           variant="ghost"
           {...attributes}
           {...listeners}
-          className="text-secondary-foreground/50 -ml-2 h-auto cursor-grab p-1"
+          className="text-secondary-foreground/50 -ml-2 h-auto w-16 cursor-grab p-1"
           data-testid="task-card-drag-button"
           aria-label="Move task"
         >
