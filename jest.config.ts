@@ -15,30 +15,30 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
-  transform: {
-    '^.+\\.(t|j)sx?$': [
-      '@swc/jest',
-      {
-        jsc: {
-          parser: {
-            syntax: 'typescript',
-            tsx: true,
-            decorators: true
-          },
-          transform: {
-            react: {
-              runtime: 'automatic'
-            }
-          }
-        }
-      }
-    ]
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/**/*.stories.{js,jsx,ts,tsx}',
+    '!src/**/*.test.{js,jsx,ts,tsx}',
+    '!src/**/index.{js,jsx,ts,tsx}',
+    '!src/app/layout.tsx',
+    '!src/app/providers.tsx'
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
+    }
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/__tests__/e2e/'],
-  transformIgnorePatterns: [
-    '/node_modules/(?!(@dnd-kit|@radix-ui|class-variance-authority)/)'
-  ]
+
+  testMatch: [
+    '<rootDir>/__tests__/unit/**/*.{spec,test}.{js,jsx,ts,tsx}',
+    '<rootDir>/__tests__/unit/**/*.{js,jsx,ts,tsx}'
+  ],
+  // 排除 e2e 測試
+  testPathIgnorePatterns: ['<rootDir>/__tests__/e2e/']
 };
 
 export default createJestConfig(config);

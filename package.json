@@ -7,14 +7,14 @@
     "url": "https://github.com/john-data-chen/next-dnd-starter-kit"
   },
   "scripts": {
-    "dev": "next dev --turbo -H 0.0.0.0",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "eslint src --fix",
     "format": "prettier --write .",
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch",
+    "test": "jest --coverage --verbose",
+    "test:watch": "jest --watch --coverage --verbose",
     "playwright": "npx playwright test",
     "commit": "git-cz",
     "init-db": "tsx database/init-db-data.ts",

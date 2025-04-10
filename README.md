@@ -207,7 +207,7 @@ pnpm format
 - [x] Change style of toast to avoid overlap in small screens
 - [x] Optimize the UI layout for mobile screens
 - [x] Fix the form of the task dialog will be covered by keyboard in mobile screen
-- [ ] Add MongoDB in CI of github actions
+- [x] Add MongoDB connection in CI of github actions
 - [ ] Fix incorrect test coverage
 - [ ] Add more unit tests to make coverage over 85%
 
