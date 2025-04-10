@@ -25,6 +25,9 @@ jobs:
           version: 10.x
           run_install: true
 
+      - name: init db
+        run: pnpm init-db --force
+
       - name: Run Tests
         run: pnpm test
 
