@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    environment: development
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
