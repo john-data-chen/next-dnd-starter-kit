@@ -1,6 +1,5 @@
 # Production-Ready Next.js Project Management Tool Template | Drag & Drop Support <br>
 
-[![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
@@ -31,7 +30,6 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 **Key Accomplishments**:
 
-- **Test Coverage in Codecov**: 85%+
 - **Reliability, Security, Reliability and Maintainability Rating in SonarQube**: A
 - **Cross-browser Testing**: for both desktop and mobile devices.
 - **CI/CD automation**: in GitHub actions and Vercel.
@@ -215,7 +213,7 @@ pnpm format
 
 ### 📊 Testing Strategy
 
-- Cross-browser testing ensures functionality across desktop and mobile.
+- Cross-browser testing (by Playwright) ensures functionality across desktop and mobile.
 
 ### Project Structure
 
