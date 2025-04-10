@@ -7,14 +7,16 @@ let dbUrl: string;
 
 // Check environment variables
 try {
+  console.log('Current NODE_ENV:', process.env.NODE_ENV);
+  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+
   if (!process.env.DATABASE_URL) {
     throw new Error(
       process.env.NODE_ENV === 'production'
         ? 'Production DATABASE_URL is not defined'
-        : 'Database connection error:\n' +
-          '1. Please check if MongoDB service is running\n' +
-          '2. Verify docker-compose up -d has been executed\n' +
-          '3. Confirm DATABASE_URL is properly configured in .env file'
+        : process.env.CI
+          ? 'CI environment DATABASE_URL is not defined'
+          : 'Local development DATABASE_URL is not defined'
     );
   }
   dbUrl = process.env.DATABASE_URL;
@@ -23,9 +25,9 @@ try {
   throw error;
 }
 
-// Atlas configuration for production
+// Atlas configuration for production and CI
 const clientOptions: ConnectOptions =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === 'production' || process.env.CI
     ? {
         serverApi: {
           version: '1' as const,
