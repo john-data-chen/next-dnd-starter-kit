@@ -26,6 +26,9 @@ jobs:
           run_install: true
 
       - name: init db
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
         run: pnpm init-db --force
 
       - name: Run Tests
