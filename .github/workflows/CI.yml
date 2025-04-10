@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    environment: development
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -16,16 +17,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-
-      - name: Generate Secret
-        run: echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env.local
+          node-version: 22.x
 
       - name: Install PNPM
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 10.x
           run_install: true
+
+      - name: init db
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+        run: pnpm init-db --force
 
       - name: Run Tests
         run: pnpm test

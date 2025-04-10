@@ -5,6 +5,13 @@ import {
   demoTasks,
   demoUsers
 } from '@/constants/demoData';
+
+
+console.log('Environment:', {
+  NODE_ENV: process.env.NODE_ENV,
+  CI: process.env.CI,
+  DATABASE_URL: !!process.env.DATABASE_URL
+});
 import { connectToDatabase } from '@/lib/db/connect';
 import mongoose from 'mongoose';
 import readline from 'readline';
