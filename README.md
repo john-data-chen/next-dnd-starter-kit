@@ -1,5 +1,6 @@
 # Production-Ready Next.js Project Management Tool Template | Drag & Drop Support <br>
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![CI](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml)
@@ -29,6 +30,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 **Key Accomplishments**:
 
+- **Reliability, Security, Reliability and Maintainability Rating in SonarQube**: A
 - **Cross-browser Testing**: for both desktop and mobile devices.
 - **CI/CD automation**: in GitHub actions and Vercel.
 
@@ -204,14 +206,14 @@ pnpm format
 - [x] Optimize the UI layout for mobile screens
 - [x] Fix the form of the task dialog will be covered by keyboard in mobile screen
 - [x] Add MongoDB connection in CI of github actions
-- [x] Fix incorrect test coverage
+- [ ] Fix incorrect test coverage
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
 
 ### 📊 Testing Strategy
 
-- Cross-browser testing ensures functionality across desktop and mobile.
+- Cross-browser testing (by Playwright) ensures functionality across desktop and mobile.
 
 ### Project Structure
 
