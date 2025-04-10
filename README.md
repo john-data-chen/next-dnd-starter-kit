@@ -218,9 +218,13 @@ pnpm format
 ### Project Structure
 
 ```text
-__tests__/ # Test cases
-public/ # Static files such as images and i18n localization
+__tests__/
+│   ├── e2e/ # End-to-end tests (by Playwright)
+│   └── unit/ # Unit tests (by Jest)
+.github/ # GitHub Actions workflows
+.husky/ # Husky configuration
 database/ # MongoDB docker-compose and initialization
+public/ # Static files such as images and i18n localization
 src/
 ├── app/ # Next.js App routes
 │   ├── page.tsx # Root page
@@ -237,7 +241,7 @@ src/
 ├── lib/
 │   ├── db/ # Database functions
 │   ├── auth.ts # Authentication functions
-│   ├──  store.ts # State management functions
+│   ├── store.ts # State management functions
 │   └── utils.ts # tailwindcss utils
 ├── models/ # Database models
 ├── styles/ # Global styles
