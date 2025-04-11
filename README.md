@@ -206,7 +206,10 @@ pnpm format
 - [x] Optimize the UI layout for mobile screens
 - [x] Fix the form of the task dialog will be covered by keyboard in mobile screen
 - [x] Add MongoDB connection in CI of github actions
-- [ ] Fix incorrect test coverage
+- [x] Fix incorrect test coverage
+- [x] Improve middleware auth logic and add suspense to layout
+- [ ] Fix Board state don't fetch data when refresh page
+- [ ] Fix Board state is lost when go to another board
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
@@ -218,9 +221,13 @@ pnpm format
 ### Project Structure
 
 ```text
-__tests__/ # Test cases
-public/ # Static files such as images and i18n localization
+__tests__/
+│   ├── e2e/ # End-to-end tests (by Playwright)
+│   └── unit/ # Unit tests (by Jest)
+.github/ # GitHub Actions workflows
+.husky/ # Husky configuration
 database/ # MongoDB docker-compose and initialization
+public/ # Static files such as images and i18n localization
 src/
 ├── app/ # Next.js App routes
 │   ├── page.tsx # Root page
@@ -237,7 +244,7 @@ src/
 ├── lib/
 │   ├── db/ # Database functions
 │   ├── auth.ts # Authentication functions
-│   ├──  store.ts # State management functions
+│   ├── store.ts # State management functions
 │   └── utils.ts # tailwindcss utils
 ├── models/ # Database models
 ├── styles/ # Global styles
