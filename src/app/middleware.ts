@@ -3,15 +3,26 @@ import { auth } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
 export default auth((req) => {
-  if (!req.auth) {
-    if (req.nextUrl.pathname.startsWith('/api')) {
+  const isAuthenticated = !!req.auth;
+  const isApiRoute = req.nextUrl.pathname.startsWith('/api');
+  const isAuthRoute = req.nextUrl.pathname.startsWith('/login');
+
+  if (isAuthenticated && isAuthRoute) {
+    return Response.redirect(new URL(ROUTES.BOARDS.ROOT, req.url));
+  }
+
+  if (!isAuthenticated) {
+    if (isApiRoute) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const url = req.url.replace(req.nextUrl.pathname, ROUTES.AUTH.LOGIN);
-    return Response.redirect(url);
+    return Response.redirect(new URL(ROUTES.AUTH.LOGIN, req.url));
   }
 });
 
 export const config = {
-  matcher: ['/api/:path*', '/boards/:path*', '/((?!login).*)']
+  matcher: [
+    '/api/:path*',
+    '/boards/:path*',
+    '/((?!login|_next/static|_next/image|favicon.ico).*)'
+  ]
 };
