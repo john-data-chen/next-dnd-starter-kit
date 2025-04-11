@@ -206,7 +206,10 @@ pnpm format
 - [x] Optimize the UI layout for mobile screens
 - [x] Fix the form of the task dialog will be covered by keyboard in mobile screen
 - [x] Add MongoDB connection in CI of github actions
-- [ ] Fix incorrect test coverage
+- [x] Fix incorrect test coverage
+- [x] Improve middleware auth logic and add suspense to layout
+- [ ] Fix Board state don't fetch data when refresh page
+- [ ] Fix Board state is lost when go to another board
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
