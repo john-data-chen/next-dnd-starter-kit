@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -41,25 +42,25 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] }
     },
-
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
+      name: 'Microsoft Edge',
+      use: {
+        ...devices['Desktop Edge'],
+        channel: 'msedge'
+      }
     },
-
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] }
     },
-
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] }
+      use: { ...devices['Pixel 7'] }
     },
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] }
+      use: { ...devices['iPhone 14'] }
     }
 
     /* Test against branded browsers. */
