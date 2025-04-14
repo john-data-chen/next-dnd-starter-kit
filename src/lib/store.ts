@@ -63,6 +63,7 @@ interface State {
   teamBoards: Board[];
   setMyBoards: (boards: Board[]) => void;
   setTeamBoards: (boards: Board[]) => void;
+  resetInBoards: () => void;
 }
 
 export const useTaskStore = create<State>()(
@@ -392,7 +393,6 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-
       removeBoard: async (id: string) => {
         const userEmail = useTaskStore.getState().userEmail;
         if (!userEmail) {
@@ -412,7 +412,15 @@ export const useTaskStore = create<State>()(
         set({
           myBoards: boards
         }),
-      setTeamBoards: (boards: Board[]) => set({ teamBoards: boards })
+      setTeamBoards: (boards: Board[]) => set({ teamBoards: boards }),
+      resetInBoards: () => {
+        set({
+          myBoards: [],
+          teamBoards: [],
+          currentBoardId: null,
+          projects: []
+        });
+      }
     }),
     {
       name: 'task-store'

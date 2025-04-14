@@ -10,9 +10,9 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useBoards } from '@/hooks/useBoards';
-import { useTaskStore } from '@/lib/store';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BoardActions } from './BoardActions';
 import NewBoardDialog from './NewBoardDialog';
@@ -21,18 +21,34 @@ type FilterType = 'all' | 'my' | 'team';
 
 export function BoardOverview() {
   const { myBoards, teamBoards, loading, fetchBoards } = useBoards();
-  const setCurrentBoardId = useTaskStore((state) => state.setCurrentBoardId);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     fetchBoards();
-    setCurrentBoardId('');
-    return () => {
-      setCurrentBoardId('');
+  }, [fetchBoards]);
+
+  useEffect(() => {
+    if (pathname === '/boards') {
+      fetchBoards();
+    }
+  }, [pathname, fetchBoards]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchBoards();
+      }
     };
-  }, [setCurrentBoardId, fetchBoards]);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [fetchBoards]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -50,7 +66,6 @@ export function BoardOverview() {
   const shouldShowTeamBoards = filter === 'all' || filter === 'team';
 
   const handleBoardClick = (boardId: string) => {
-    setCurrentBoardId(boardId);
     router.push(`/boards/${boardId}`);
   };
 
