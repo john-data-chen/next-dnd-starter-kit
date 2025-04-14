@@ -6,7 +6,14 @@ import { useCallback, useEffect, useState } from 'react';
 
 export function useBoards() {
   const [loading, setLoading] = useState(true);
-  const { userEmail, userId, myBoards, teamBoards } = useTaskStore();
+  const {
+    userEmail,
+    userId,
+    myBoards,
+    teamBoards,
+    setMyBoards,
+    setTeamBoards
+  } = useTaskStore();
 
   const fetchBoards = useCallback(async () => {
     if (!userEmail) return;
@@ -21,15 +28,16 @@ export function useBoards() {
           board.members.some((member) => member.id === userId)
       );
 
-      const { setMyBoards, setTeamBoards } = useTaskStore.getState();
       setMyBoards(myBoardsList);
       setTeamBoards(teamBoardsList);
     } catch (error) {
       console.error('Error in fetchBoards:', error);
+      setMyBoards([]);
+      setTeamBoards([]);
     } finally {
       setLoading(false);
     }
-  }, [userEmail, userId]);
+  }, [userEmail, userId, setMyBoards, setTeamBoards]);
 
   useEffect(() => {
     fetchBoards();
