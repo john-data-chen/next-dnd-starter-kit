@@ -208,8 +208,13 @@ pnpm format
 - [x] Add MongoDB connection in CI of github actions
 - [x] Fix incorrect test coverage
 - [x] Improve middleware auth logic and add suspense to layout
-- [ ] Fix Board state don't fetch data when refresh page
-- [ ] Fix Board state is lost when go to another board
+- [x] Fix the assignee of task won't be a member of the board (so the user can't see the board's tasks)
+- [x] Fix Board state don't fetch data when refresh page
+- [x] Fix Board state is lost when go to another board
+- [ ] Add hint of user account when assign a task to another member
+- [ ] Add default value of task assignee when edit a task
+- [ ] Adjust toast display duration and timing when user modify tasks very frequently
+- [ ] Fix ESM issue blocks Jest tests
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
