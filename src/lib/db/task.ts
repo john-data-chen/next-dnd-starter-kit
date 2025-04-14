@@ -1,5 +1,6 @@
 'use server';
 
+import { BoardModel } from '@/models/board.model';
 import { ProjectModel } from '@/models/project.model';
 import { TaskModel, TaskType } from '@/models/task.model';
 import { Task } from '@/types/dbInterface';
@@ -145,13 +146,29 @@ async function ensureUserIsMember(
     throw new Error('Project not found');
   }
 
-  const isMember = project.members.some(
+  const boardId = project.board;
+  const board = await BoardModel.findById(boardId);
+  if (!board) {
+    throw new Error('Board not found');
+  }
+
+  const isProjectMember = project.members.some(
     (member) => member.toString() === userId
   );
 
-  if (!isMember) {
+  const isBoardMember = board.members.some(
+    (member) => member.toString() === userId
+  );
+
+  if (!isProjectMember) {
     await ProjectModel.findByIdAndUpdate(projectId, {
-      $push: { members: userId }
+      $addToSet: { members: userId }
+    });
+  }
+
+  if (!isBoardMember) {
+    await BoardModel.findByIdAndUpdate(boardId, {
+      $addToSet: { members: userId }
     });
   }
 }
@@ -172,13 +189,13 @@ export async function createTaskInDb(
       throw new Error('Creator not found');
     }
 
-    if (assigneeId) {
-      await ensureUserIsMember(projectId, assigneeId);
-    }
-
     const boardId = await getBoardByProjectId(projectId);
     if (!boardId) {
       throw new Error('Board not found');
+    }
+
+    if (assigneeId) {
+      await ensureUserIsMember(projectId, assigneeId);
     }
 
     const taskData = {
