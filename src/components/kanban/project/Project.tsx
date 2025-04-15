@@ -9,9 +9,9 @@ import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { PointerIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import NewTaskDialog from './NewTaskDialog';
+import NewTaskDialog from '../task/NewTaskDialog';
+import { TaskCard } from '../task/TaskCard';
 import { ProjectActions } from './ProjectAction';
-import { TaskCard } from './TaskCard';
 
 export interface ProjectDragData {
   type: 'Project';

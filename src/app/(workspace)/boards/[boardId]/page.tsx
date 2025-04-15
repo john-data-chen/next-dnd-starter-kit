@@ -1,6 +1,6 @@
 'use client';
 
-import { Board } from '@/components/boards/Board';
+import { Board } from '@/components/kanban/board/Board';
 import PageContainer from '@/components/layout/PageContainer';
 import { useTaskStore } from '@/lib/store';
 import { useParams } from 'next/navigation';
