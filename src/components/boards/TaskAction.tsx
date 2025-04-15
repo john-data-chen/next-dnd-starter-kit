@@ -1,5 +1,6 @@
 'use client';
 
+import { TaskForm } from '@/components/boards/TaskForm';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -10,15 +11,6 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from '@/components/ui/command';
 import {
   Dialog,
   DialogContent,
@@ -33,33 +25,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from '@/components/ui/popover';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Textarea } from '@/components/ui/textarea';
-import { useDebounce } from '@/hooks/useDebounce';
 import { useTaskStore } from '@/lib/store';
-import { cn } from '@/lib/utils';
-import { User } from '@/types/dbInterface';
 import { TaskFormSchema } from '@/types/taskForm';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
 import React, { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -94,84 +63,52 @@ export function TaskActions({
   const removeTask = useTaskStore((state) => state.removeTask);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [editEnable, setEditEnable] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [permissions, setPermissions] = React.useState({
     canEdit: false,
     canDelete: false
   });
-  const [users, setUsers] = React.useState<User[]>([]);
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [isSearching, setIsSearching] = React.useState(false);
-  const [AssignOpen, setAssignOpen] = React.useState(false);
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  const searchUsers = async (search: string = '') => {
-    try {
-      const response = await fetch(`/api/users/search?username=${search}`);
-      const data = await response.json();
-      return data.users || [];
-    } catch (error) {
-      console.error('Error searching users:', error);
-      return [];
-    }
-  };
+  const [assigneeName, setAssigneeName] = React.useState('');
 
   React.useEffect(() => {
-    const fetchUsers = async () => {
-      setIsSearching(true);
-      try {
-        const results = await searchUsers(debouncedSearchQuery);
-        setUsers(results);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        setIsSearching(false);
+    const fetchAssigneeName = async () => {
+      if (assignee) {
+        try {
+          const response = await fetch(
+            `/api/users/search?username=${assignee}`
+          );
+          const data = await response.json();
+          if (data.users && data.users.length > 0) {
+            setAssigneeName(data.users[0].name || data.users[0].email);
+          }
+        } catch (error) {
+          console.error('Error fetching assignee details:', error);
+        }
       }
     };
-    if (AssignOpen) {
-      fetchUsers();
-    }
-  }, [debouncedSearchQuery, AssignOpen]);
+    fetchAssigneeName();
+  }, [assignee]);
 
-  React.useEffect(() => {
-    if (AssignOpen) {
-      searchUsers().then((initialUsers) => {
-        setUsers(initialUsers);
-      });
-    }
-  }, [AssignOpen]);
+  const defaultValues = {
+    title: title,
+    description: description ?? '',
+    status: status ?? 'TODO',
+    dueDate: dueDate ?? undefined,
+    assignee: assignee ? { id: assignee, name: assigneeName } : undefined
+  };
 
-  const form = useForm<z.infer<typeof TaskFormSchema>>({
-    resolver: zodResolver(TaskFormSchema),
-    defaultValues: {
-      title: title,
-      description: description ?? '',
-      status: status ?? 'TODO',
-      dueDate: dueDate ?? undefined,
-      assignee: assignee ? { id: assignee } : undefined
-    }
-  });
-
-  async function onSubmit(values: z.infer<typeof TaskFormSchema>) {
-    try {
-      setIsSubmitting(true);
-      await updateTask(
-        id,
-        values.title,
-        values.status,
-        values.description ?? '',
-        values.dueDate,
-        values.assignee?.id
-      );
-      toast.success(`Task is updated: ${values.title}`);
-      form.reset();
-      setEditEnable(false);
-    } catch (error) {
-      toast.error(`Failed to update task: ${error}`);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
+    await updateTask(
+      id,
+      values.title,
+      values.status,
+      values.description ?? '',
+      values.dueDate,
+      values.assignee?.id
+    );
+    toast.success(`Task is updated: ${values.title}`);
+    setEditEnable(false);
+  };
 
   const handleDelete = () => {
     setTimeout(() => (document.body.style.pointerEvents = ''), 100);
@@ -202,6 +139,7 @@ export function TaskActions({
   React.useEffect(() => {
     checkPermissions();
   }, [checkPermissions]);
+
   return (
     <>
       <Dialog
@@ -216,217 +154,12 @@ export function TaskActions({
               done.
             </DialogDescription>
           </DialogHeader>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-8"
-              data-testid="edit-task-form"
-            >
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Task Title</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="title"
-                        className="col-span-4"
-                        autoFocus
-                        data-testid="task-title-input"
-                        aria-label="Task title"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage data-testid="task-title-error-message" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Task Description</FormLabel>
-                    <Textarea
-                      id="description"
-                      className="col-span-4"
-                      data-testid="task-description-input"
-                      aria-label="Task description"
-                      {...field}
-                    />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="dueDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Due Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={'outline'}
-                            aria-label="Select due date"
-                            className={cn(
-                              'w-auto pl-3 text-left font-normal',
-                              !field.value && 'text-muted-foreground'
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, 'yyyy-MM-dd')
-                            ) : (
-                              <span data-testid="task-date-picker-trigger">
-                                {dueDate
-                                  ? format(dueDate, 'yyyy-MM-dd')
-                                  : 'Select'}
-                              </span>
-                            )}
-                            <CalendarIcon
-                              className="ml-auto h-4 w-4 opacity-50"
-                              aria-hidden="true"
-                            />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          fromDate={new Date()}
-                          initialFocus
-                          data-testid="task-date-picker-calendar"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="assignee"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Assign to?</FormLabel>
-                    <FormControl>
-                      <Popover open={AssignOpen} onOpenChange={setAssignOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className="w-full justify-between"
-                          >
-                            {field.value ? field.value.name : 'Select user...'}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="p-0"
-                          side="bottom"
-                          align="start"
-                        >
-                          <Command shouldFilter={false}>
-                            <CommandInput
-                              placeholder="Search users..."
-                              value={searchQuery}
-                              onValueChange={setSearchQuery}
-                            />
-                            <CommandList>
-                              <CommandEmpty>
-                                {isSearching
-                                  ? 'Searching...'
-                                  : 'No users found.'}
-                              </CommandEmpty>
-                              <CommandGroup>
-                                {users.map((user) => (
-                                  <CommandItem
-                                    key={user._id}
-                                    value={user._id}
-                                    onSelect={() => {
-                                      field.onChange({
-                                        id: user._id,
-                                        name: user.name || user.email
-                                      });
-                                      setAssignOpen(false);
-                                    }}
-                                    className="flex flex-col items-start"
-                                  >
-                                    <span>{user.name || user.email}</span>
-                                    {user.name && (
-                                      <span className="text-xs text-muted-foreground">
-                                        {user.email}
-                                      </span>
-                                    )}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col space-y-1 mt-4"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="TODO" />
-                          </FormControl>
-                          <FormLabel className="font-normal">To Do</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="IN_PROGRESS" />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            In Progress
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="DONE" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Done</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                data-testid="submit-task-button"
-                className="mr-2"
-              >
-                {isSubmitting ? 'Creating...' : 'Submit'}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => setEditEnable(false)}
-                data-testid="cancel-task-button"
-                className="ml-2"
-              >
-                Cancel
-              </Button>
-            </form>
-          </Form>
+          <TaskForm
+            defaultValues={defaultValues}
+            onSubmit={handleSubmit}
+            onCancel={() => setEditEnable(false)}
+            submitLabel="Update Task"
+          />
         </DialogContent>
       </Dialog>
       {(permissions.canEdit || permissions.canDelete) && (
