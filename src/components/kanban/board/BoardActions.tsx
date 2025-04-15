@@ -24,31 +24,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useBoards } from '@/hooks/useBoards';
 import { useTaskStore } from '@/lib/store';
+import { boardSchema } from '@/types/boardForm';
 import { Board } from '@/types/dbInterface';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-const BoardFormSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().optional()
-});
+import { BoardForm } from './BoardForm';
 
 interface BoardActionsProps {
   board: Board;
@@ -63,20 +48,11 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
   const router = useRouter();
   const { fetchBoards } = useBoards();
 
-  const form = useForm<z.infer<typeof BoardFormSchema>>({
-    resolver: zodResolver(BoardFormSchema),
-    defaultValues: {
-      title: board.title,
-      description: board.description
-    }
-  });
-
-  async function onSubmit(values: z.infer<typeof BoardFormSchema>) {
+  async function onSubmit(values: z.infer<typeof boardSchema>) {
     try {
       setIsSubmitting(true);
       await updateBoard(board._id, values);
       toast.success(`Board updated: ${values.title}`);
-      form.reset();
       await fetchBoards();
       setEditEnable(false);
       router.refresh();
@@ -110,48 +86,26 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
               Make changes to your board here. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Board Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditEnable(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
-                </Button>
-              </div>
-            </form>
-          </Form>
+          <BoardForm
+            defaultValues={{
+              title: board.title,
+              description: board.description
+            }}
+            onSubmit={onSubmit}
+          >
+            <div className="flex justify-end gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditEnable(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </BoardForm>
         </DialogContent>
       </Dialog>
 

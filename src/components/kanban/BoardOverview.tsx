@@ -14,8 +14,8 @@ import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { BoardActions } from './BoardActions';
-import NewBoardDialog from './NewBoardDialog';
+import { BoardActions } from './board/BoardActions';
+import NewBoardDialog from './board/NewBoardDialog';
 
 type FilterType = 'all' | 'my' | 'team';
 

@@ -22,10 +22,10 @@ import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import mongoose from 'mongoose';
 import { Fragment, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import NewProjectDialog from './NewProjectDialog';
-import { BoardContainer, BoardProject } from './Project';
-import { TaskCard } from './TaskCard';
-import { TaskFilter } from './TaskFilter';
+import NewProjectDialog from '../project/NewProjectDialog';
+import { BoardContainer, BoardProject } from '../project/Project';
+import { TaskCard } from '../task/TaskCard';
+import { TaskFilter } from '../task/TaskFilter';
 
 export function Board() {
   const projects = useTaskStore((state) => state.projects);

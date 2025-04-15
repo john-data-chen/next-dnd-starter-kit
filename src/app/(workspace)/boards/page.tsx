@@ -1,4 +1,4 @@
-import { BoardOverview } from '@/components/boards/BoardOverview';
+import { BoardOverview } from '@/components/kanban/BoardOverview';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

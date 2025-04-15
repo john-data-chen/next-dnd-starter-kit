@@ -211,7 +211,10 @@ pnpm format
 - [x] Fix the assignee of task won't be a member of the board (so the user can't see the board's tasks)
 - [x] Fix Board state don't fetch data when refresh page
 - [x] Fix Board state is lost when go to another board
-- [ ] Add hint of user account when assign a task to another member
+- [x] Add hint of user account when assign a task to another member
+- [x] Refactor the code and folders of board components
+- [ ] Fix day picker can't be opened in edit task dialog
+- [ ] Fix the issue of date format in task dialog
 - [ ] Add default value of task assignee when edit a task
 - [ ] Adjust toast display duration and timing when user modify tasks very frequently
 - [ ] Fix ESM issue blocks Jest tests

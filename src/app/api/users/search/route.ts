@@ -11,19 +11,14 @@ export const GET = auth(async (req) => {
     const searchParams = req.nextUrl.searchParams;
     const username = searchParams.get('username');
 
-    if (!username) {
-      return NextResponse.json(
-        { error: 'Username parameter is required' },
-        { status: 400 }
-      );
+    let query = {};
+    if (username) {
+      query = {
+        $or: [{ name: { $regex: username, $options: 'i' } }]
+      };
     }
 
-    const users = await UserModel.find({
-      $or: [
-        { email: { $regex: username, $options: 'i' } },
-        { name: { $regex: username, $options: 'i' } }
-      ]
-    }).select('_id email name');
+    const users = await UserModel.find(query).select('_id email name');
 
     return NextResponse.json({ users });
   } catch (error) {

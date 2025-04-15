@@ -1,5 +1,5 @@
-import { ProjectDragData } from '@/components/boards/Project';
-import { TaskDragData } from '@/components/boards/TaskCard';
+import { ProjectDragData } from '@/components/kanban/project/Project';
+import { TaskDragData } from '@/components/kanban/task/TaskCard';
 
 type DraggableData = ProjectDragData | TaskDragData;
 

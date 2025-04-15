@@ -23,24 +23,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useTaskStore } from '@/lib/store';
 import { projectSchema } from '@/types/projectForm';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { ProjectForm } from './ProjectForm';
 
 interface ProjectActionsProps {
   id: string;
@@ -62,14 +51,6 @@ export function ProjectActions({
 
   type ProjectFormData = z.infer<typeof projectSchema>;
 
-  const form = useForm<ProjectFormData>({
-    resolver: zodResolver(projectSchema),
-    defaultValues: {
-      title,
-      description
-    }
-  });
-
   async function onSubmit(values: ProjectFormData) {
     try {
       await updateProject(id, values.title, values.description);
@@ -88,46 +69,21 @@ export function ProjectActions({
           <DialogHeader>
             <DialogTitle>Edit Project</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditEnable(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit">Save</Button>
-              </div>
-            </form>
-          </Form>
+          <ProjectForm
+            onSubmit={onSubmit}
+            defaultValues={{ title, description }}
+          >
+            <div className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditEnable(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Save</Button>
+            </div>
+          </ProjectForm>
         </DialogContent>
       </Dialog>
 
