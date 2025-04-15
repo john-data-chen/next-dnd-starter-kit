@@ -1,6 +1,6 @@
 'use client';
 
-import { TaskForm } from '@/components/boards/TaskForm';
+import { TaskForm } from '@/components/kanban/task/TaskForm';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
