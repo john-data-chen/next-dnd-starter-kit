@@ -68,7 +68,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [AssignOpen, setAssignOpen] = React.useState(false);
 
-  const searchUsers = async (search: string) => {
+  const searchUsers = async (search: string = '') => {
     try {
       const response = await fetch(`/api/users/search?username=${search}`);
       const data = await response.json();
@@ -108,22 +108,28 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
 
   React.useEffect(() => {
     const fetchUsers = async () => {
-      if (debouncedSearchQuery) {
-        setIsSearching(true);
-        try {
-          const results = await searchUsers(debouncedSearchQuery);
-          setUsers(results);
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        } finally {
-          setIsSearching(false);
-        }
-      } else {
-        setUsers([]);
+      setIsSearching(true);
+      try {
+        const results = await searchUsers(debouncedSearchQuery);
+        setUsers(results);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setIsSearching(false);
       }
     };
-    fetchUsers();
-  }, [debouncedSearchQuery, projectId]);
+    if (AssignOpen) {
+      fetchUsers();
+    }
+  }, [debouncedSearchQuery, AssignOpen]);
+
+  React.useEffect(() => {
+    if (AssignOpen) {
+      searchUsers().then((initialUsers) => {
+        setUsers(initialUsers);
+      });
+    }
+  }, [AssignOpen]);
 
   return (
     <Dialog open={addTaskOpen} onOpenChange={setAddTaskOpen}>
@@ -263,8 +269,14 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
                                     });
                                     setAssignOpen(false);
                                   }}
+                                  className="flex flex-col items-start"
                                 >
-                                  {user.name || user.email}
+                                  <span>{user.name || user.email}</span>
+                                  {user.name && (
+                                    <span className="text-xs text-muted-foreground">
+                                      {user.email}
+                                    </span>
+                                  )}
                                 </CommandItem>
                               ))}
                             </CommandGroup>
