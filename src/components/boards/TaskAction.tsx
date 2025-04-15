@@ -105,7 +105,7 @@ export function TaskActions({
   const [AssignOpen, setAssignOpen] = React.useState(false);
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  const searchUsers = async (search: string) => {
+  const searchUsers = async (search: string = '') => {
     try {
       const response = await fetch(`/api/users/search?username=${search}`);
       const data = await response.json();
@@ -118,22 +118,28 @@ export function TaskActions({
 
   React.useEffect(() => {
     const fetchUsers = async () => {
-      if (debouncedSearchQuery) {
-        setIsSearching(true);
-        try {
-          const results = await searchUsers(debouncedSearchQuery);
-          setUsers(results);
-        } catch (error) {
-          console.error('Error fetching users:', error);
-        } finally {
-          setIsSearching(false);
-        }
-      } else {
-        setUsers([]);
+      setIsSearching(true);
+      try {
+        const results = await searchUsers(debouncedSearchQuery);
+        setUsers(results);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setIsSearching(false);
       }
     };
-    fetchUsers();
-  }, [debouncedSearchQuery]);
+    if (AssignOpen) {
+      fetchUsers();
+    }
+  }, [debouncedSearchQuery, AssignOpen]);
+
+  React.useEffect(() => {
+    if (AssignOpen) {
+      searchUsers().then((initialUsers) => {
+        setUsers(initialUsers);
+      });
+    }
+  }, [AssignOpen]);
 
   const form = useForm<z.infer<typeof TaskFormSchema>>({
     resolver: zodResolver(TaskFormSchema),
@@ -191,12 +197,11 @@ export function TaskActions({
       console.error('Error checking permissions:', error);
       setPermissions({ canEdit: false, canDelete: false });
     }
-  }, [id]); // 依賴於 id
+  }, [id]);
 
   React.useEffect(() => {
     checkPermissions();
-  }, [checkPermissions]); // 添加 checkPermissions 作為依賴
-
+  }, [checkPermissions]);
   return (
     <>
       <Dialog
@@ -347,8 +352,14 @@ export function TaskActions({
                                       });
                                       setAssignOpen(false);
                                     }}
+                                    className="flex flex-col items-start"
                                   >
-                                    {user.name || user.email}
+                                    <span>{user.name || user.email}</span>
+                                    {user.name && (
+                                      <span className="text-xs text-muted-foreground">
+                                        {user.email}
+                                      </span>
+                                    )}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>
