@@ -246,7 +246,7 @@
     --toast-background: hsl(180 35% 8%); /* dark background */
     --toast-foreground: hsl(180 20% 98%); /* dark foreground */
     --toast-border: hsl(180 20% 18%); /* dark border */
-    --toast-width: min(calc(100vw - 3rem), 320px);
+    --toast-width: min(calc(100vw - 2rem), 280px);
   }
 
   .dark {
@@ -257,14 +257,23 @@
 }
 
 [data-sonner-toaster] {
-  --viewport-padding: 24px !important;
+  --viewport-padding: 16px !important;
   position: fixed !important;
   z-index: 999999 !important;
   width: var(--toast-width) !important;
-  right: var(--viewport-padding) !important;
-  left: unset !important;
-  bottom: var(--viewport-padding) !important;
   transform: none !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  bottom: calc(
+    var(--viewport-padding) + env(safe-area-inset-bottom, 0px)
+  ) !important;
+
+  @media (min-width: 640px) {
+    left: unset !important;
+    right: var(--viewport-padding) !important;
+    transform: none !important;
+    bottom: var(--viewport-padding) !important;
+  }
 }
 
 [data-sonner-toast] {
