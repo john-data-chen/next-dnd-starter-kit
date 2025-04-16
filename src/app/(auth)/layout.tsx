@@ -14,7 +14,9 @@ export default function AuthLayout({
       <Toaster
         position={useIsMobile() ? 'top-right' : 'bottom-right'}
         expand={false}
-        closeButton
+        toastOptions={{
+          duration: 1000
+        }}
         visibleToasts={1}
         mobileOffset={useIsMobile() ? { top: '25%' } : { bottom: '16px' }}
       />
