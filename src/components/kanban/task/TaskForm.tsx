@@ -146,7 +146,9 @@ export function TaskForm({
                       role="combobox"
                       className="w-full justify-between"
                     >
-                      {field.value ? field.value.name : 'Select user...'}
+                      {field.value
+                        ? field.value.name || field.value.id
+                        : 'Select user...'}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent

@@ -1,6 +1,7 @@
 'use client';
 
 import { Toaster } from '@/components/ui/sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function AuthLayout({
   children
@@ -11,10 +12,13 @@ export default function AuthLayout({
     <>
       {children}
       <Toaster
-        position="bottom-right"
+        position={useIsMobile() ? 'top-right' : 'bottom-right'}
         expand={false}
-        closeButton
+        toastOptions={{
+          duration: 1000
+        }}
         visibleToasts={1}
+        mobileOffset={useIsMobile() ? { top: '25%' } : { bottom: '16px' }}
       />
     </>
   );
