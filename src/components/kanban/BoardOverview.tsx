@@ -114,7 +114,7 @@ export function BoardOverview() {
               </div>
               <div className="flex items-center gap-2 mb-2 px-4">
                 <span className="text-sm text-muted-foreground">
-                  (Boards you own, they can be edited and deleted by you)
+                  (Boards which I can edit and delete)
                 </span>
               </div>
               {filteredMyBoards?.length === 0 ? (
@@ -161,7 +161,7 @@ export function BoardOverview() {
               </div>
               <div className="flex items-center gap-2 mb-2 px-4">
                 <span className="text-sm text-muted-foreground">
-                  (Boards shared with you)
+                  (Boards shared with me)
                 </span>
               </div>
               {filteredTeamBoards?.length === 0 ? (

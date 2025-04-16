@@ -8,7 +8,7 @@
 
 ## ✨ Why Choose This Template:
 
-The **Enterprise-grade Next.js template** with 85%+ test coverage, featuring drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
+The **Enterprise-grade Next.js template** with drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
 - 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
@@ -52,7 +52,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 ## 📦 Core Framework Versions Decision
 
 - Next.js: ^14.x (Production-ready version with stable App Router. I will postpone upgrade to 15.x until it is more stable)
-- React: ^18.x (Awaiting broader and better ecosystem and packages support for 19.x)
+- React: ^18.x (Awaiting better ecosystem and packages support for 19.x)
 
 ## 🚀 Getting Started
 
@@ -61,10 +61,12 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 ### Database
 
-- In production , I use [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
+- In production and CI, I use [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
 - In local development, I use [Docker Compose](https://docs.docker.com/compose/) in folder **database**, you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
 
 ### Environment Configuration
+
+Local Development:
 
 Create a `.env` file in the project root with the following variables:
 
@@ -91,7 +93,11 @@ NEXTAUTH_SECRET=[your_secret]
 DATABASE_URL="mongodb://[username]:[password]@[host]:[port]/[database]?authSource=admin"
 ```
 
-### Commands
+Production and CI:
+
+Create environment variables in Vercel or GitHub project settings.
+
+### Useful Commands
 
 ```bash
 # Generate Secret
@@ -213,10 +219,10 @@ pnpm format
 - [x] Fix Board state is lost when go to another board
 - [x] Add hint of user account when assign a task to another member
 - [x] Refactor the code and folders of board components
-- [ ] Fix day picker can't be opened in edit task dialog
-- [ ] Fix the issue of date format in task dialog
-- [ ] Add default value of task assignee when edit a task
-- [ ] Adjust toast display duration and timing when user modify tasks very frequently
+- [x] Fix day picker can't be opened in edit task dialog
+- [x] Fix the issue of task format in task dialog
+- [x] Add default value of task assignee when edit a task
+- [x] Adjust toast display limit for user modify tasks very frequently
 - [ ] Fix ESM issue blocks Jest tests
 - [ ] Add more unit tests to make coverage over 85%
 
