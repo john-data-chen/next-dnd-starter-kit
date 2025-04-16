@@ -72,7 +72,14 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     try {
       setIsSubmitting(true);
-      await onSubmit(values);
+      // Transform the data before submission
+      const submitData = {
+        ...values,
+        assignee: values.assignee
+          ? { id: values.assignee.id, name: values.assignee.name }
+          : undefined
+      };
+      await onSubmit(submitData);
     } catch (error) {
       toast.error(`Failed to submit task: ${error}`);
     } finally {

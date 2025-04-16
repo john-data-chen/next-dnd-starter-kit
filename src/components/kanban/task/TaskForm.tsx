@@ -174,7 +174,7 @@ export function TaskForm({
                               onSelect={() => {
                                 field.onChange({
                                   id: user._id,
-                                  name: user.name || user.email
+                                  name: user.name
                                 });
                                 setAssignOpen(false);
                               }}
