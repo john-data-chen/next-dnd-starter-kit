@@ -89,13 +89,18 @@ export function TaskActions({
     fetchAssigneeName();
   }, [assignee]);
 
-  const defaultValues = {
-    title: title,
-    description: description ?? '',
-    status: status ?? 'TODO',
-    dueDate: dueDate ?? undefined,
-    assignee: assignee ? { id: assignee, name: assigneeName } : undefined
-  };
+  const defaultValues = React.useMemo(
+    () => ({
+      title: title,
+      description: description ?? '',
+      status: status ?? 'TODO',
+      dueDate: dueDate ?? undefined,
+      assignee: assignee
+        ? { id: assignee, name: assigneeName || assignee }
+        : undefined
+    }),
+    [title, description, status, dueDate, assignee, assigneeName]
+  );
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     await updateTask(

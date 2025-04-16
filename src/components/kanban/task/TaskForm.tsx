@@ -31,6 +31,7 @@ import { cn } from '@/lib/utils';
 import { TaskFormSchema } from '@/types/taskForm';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
+import React from 'react';
 import { z } from 'zod';
 
 interface TaskFormProps {
@@ -57,6 +58,7 @@ export function TaskForm({
     setAssignOpen,
     handleSubmit
   } = useTaskForm({ defaultValues, onSubmit });
+  const [calendarOpen, setCalendarOpen] = React.useState(false);
 
   return (
     <Form {...form}>
@@ -88,36 +90,38 @@ export function TaskForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Due Date</FormLabel>
-              <Popover>
+              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                 <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      aria-label="Select due date"
-                      className={cn(
-                        'w-auto pl-3 text-left font-normal',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, 'yyyy-MM-dd')
-                      ) : (
-                        <span data-testid="task-date-picker-trigger">
-                          Pick a date
-                        </span>
-                      )}
-                      <CalendarIcon
-                        className="ml-auto h-4 w-4 opacity-50"
-                        aria-hidden="true"
-                      />
-                    </Button>
-                  </FormControl>
+                  <Button
+                    variant={'outline'}
+                    aria-label="Select due date"
+                    className={cn(
+                      'w-auto pl-3 text-left font-normal',
+                      !field.value && 'text-muted-foreground'
+                    )}
+                    type="button"
+                  >
+                    {field.value ? (
+                      format(field.value, 'yyyy-MM-dd')
+                    ) : (
+                      <span data-testid="task-date-picker-trigger">
+                        Pick a date
+                      </span>
+                    )}
+                    <CalendarIcon
+                      className="ml-auto h-4 w-4 opacity-50"
+                      aria-hidden="true"
+                    />
+                  </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 z-[60]" align="start">
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => {
+                      field.onChange(date);
+                      setCalendarOpen(false);
+                    }}
                     fromDate={new Date()}
                     initialFocus
                     data-testid="task-date-picker-calendar"
@@ -145,7 +149,11 @@ export function TaskForm({
                       {field.value ? field.value.name : 'Select user...'}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="p-0" side="bottom" align="start">
+                  <PopoverContent
+                    className="p-0 z-[60]"
+                    side="bottom"
+                    align="start"
+                  >
                     <Command shouldFilter={false}>
                       <CommandInput
                         placeholder="Search users..."
