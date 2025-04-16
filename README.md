@@ -220,9 +220,9 @@ pnpm format
 - [x] Add hint of user account when assign a task to another member
 - [x] Refactor the code and folders of board components
 - [x] Fix day picker can't be opened in edit task dialog
-- [x] Fix the issue of task format in task dialog
 - [x] Add default value of task assignee when edit a task
 - [x] Adjust toast display limit for user modify tasks very frequently
+- [x] Fix the issue of task assignee data format in task dialog
 - [ ] Fix ESM issue blocks Jest tests
 - [ ] Add more unit tests to make coverage over 85%
 
