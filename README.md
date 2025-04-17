@@ -41,7 +41,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [husky](https://github.com/typicode/husky)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI**: [Shadcn/UI](https://ui.shadcn.com/)
-- **Testing**: [Jest](https://jestjs.io/), [Playwright](https://playwright.dev/)
+- **Testing**: [Vitest](https://vitest.dev/) [Playwright](https://playwright.dev/)
 - **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
@@ -119,7 +119,7 @@ pnpm install
 # Start development server
 pnpm dev
 
-# Run unit and integration tests by Jest
+# Run unit and integration tests by Vitest
 pnpm test
 
 # Run E2E tests by Playwright
@@ -200,7 +200,6 @@ pnpm format
 - [x] Add auth check in API routes
 - [x] Improve and fix issues of the UI in small screen
 - [x] Modify data schema and add user permission check
-- [x] Add Unit tests by Jest
 - [x] Add E2E tests by Playwright
 - [x] Add CI/CD pipeline
 - [x] Optimize initialize mongodb in development
@@ -223,7 +222,7 @@ pnpm format
 - [x] Add default value of task assignee when edit a task
 - [x] Adjust toast display limit for user modify tasks very frequently
 - [x] Fix the issue of task assignee data format in task dialog
-- [ ] Fix ESM issue blocks Jest tests
+- [ ] Change unit test suite to Vitest
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
@@ -237,7 +236,7 @@ pnpm format
 ```text
 __tests__/
 │   ├── e2e/ # End-to-end tests (by Playwright)
-│   └── unit/ # Unit tests (by Jest)
+│   └── unit/ # Unit tests (by Vitest)
 .github/ # GitHub Actions workflows
 .husky/ # Husky configuration
 database/ # MongoDB docker-compose and initialization
