@@ -1,5 +1,6 @@
 # Production-Ready Next.js Project Management Tool Template | Drag & Drop Support <br>
 
+[![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
@@ -165,64 +166,6 @@ pnpm format
 
 ## 🔜 Roadmap
 
-- [x] Full-stack support by Next.js
-- [x] Enhanced accessibility with Shadcn UI
-- [x] Drag and drop supports
-- [x] Add code quality check with Codecov and SonarQube
-- [x] Add responsive support for multiple screen sizes
-- [x] Add edit task dialog
-- [x] Make Database Schema and initialization script
-- [x] User authentication for secure project/task management
-- [x] Add creator and assignee in task dialog
-- [x] Persistent data into Database
-- [x] Fix the issues of dragging tasks to another order in the same project
-- [x] Fix the issues of dragging tasks to another project
-- [x] Add project owner in project column
-- [x] Add user permission check when dragging a task into a project
-- [x] Add a better fetching and reloading strategy of state and database
-- [x] Fix the UI issue of dragging a task into a project
-- [x] Add a toast after dragging a task into a project
-- [x] Add members into project column
-- [x] Temp fix ES lint 9 config type issue
-- [x] Add status of task such as to do, in progress, done
-- [x] Add UI variation of task status
-- [x] Add task filtering by status
-- [x] Add basic task statistics (total, to-do, in progress, done)
-- [x] Add task search by title/description
-- [x] Refactor auth and auto redirect functions
-- [x] Add board switching feature in sidebar
-- [x] Add board switching feature in overview page
-- [x] Add board creation feature
-- [x] Add board deletion feature
-- [x] Add board editing feature
-- [x] Add board searching and filtering feature
-- [x] Add project Description column and modify feature
-- [x] Add auth check in API routes
-- [x] Improve and fix issues of the UI in small screen
-- [x] Modify data schema and add user permission check
-- [x] Add E2E tests by Playwright
-- [x] Add CI/CD pipeline
-- [x] Optimize initialize mongodb in development
-- [x] Fix the issue can't scroll in mobile screen
-- [x] Fix the issue of dragging in mobile screen
-- [x] Add toaster in sign in page
-- [x] Add session check in board routes
-- [x] Change style of toast to avoid overlap in small screens
-- [x] Optimize the UI layout for mobile screens
-- [x] Fix the form of the task dialog will be covered by keyboard in mobile screen
-- [x] Add MongoDB connection in CI of github actions
-- [x] Fix incorrect test coverage
-- [x] Improve middleware auth logic and add suspense to layout
-- [x] Fix the assignee of task won't be a member of the board (so the user can't see the board's tasks)
-- [x] Fix Board state don't fetch data when refresh page
-- [x] Fix Board state is lost when go to another board
-- [x] Add hint of user account when assign a task to another member
-- [x] Refactor the code and folders of board components
-- [x] Fix day picker can't be opened in edit task dialog
-- [x] Add default value of task assignee when edit a task
-- [x] Adjust toast display limit for user modify tasks very frequently
-- [x] Fix the issue of task assignee data format in task dialog
-- [x] Change unit test suite to Vitest
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
