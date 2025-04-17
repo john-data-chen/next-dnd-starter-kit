@@ -41,7 +41,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [husky](https://github.com/typicode/husky)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI**: [Shadcn/UI](https://ui.shadcn.com/)
-- **Testing**: [Vitest](https://vitest.dev/) [Playwright](https://playwright.dev/)
+- **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/)
 - **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
@@ -222,7 +222,7 @@ pnpm format
 - [x] Add default value of task assignee when edit a task
 - [x] Adjust toast display limit for user modify tasks very frequently
 - [x] Fix the issue of task assignee data format in task dialog
-- [ ] Change unit test suite to Vitest
+- [x] Change unit test suite to Vitest
 - [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
@@ -287,6 +287,12 @@ src/
   - Issue: Type incompatibility with @types/eslint
   - Solution: Use type assertions or @ts-ignore for specific cases
   - Status: Waiting for type definitions to catch up with ESLint 9.x
+
+### Server
+
+- **Slow response from server**:
+  - Issue: Sometimes Server response is slow
+  - Status: The resource of free tier is limited, it won't be fix in the near future
 
 ### 📃 License
 
