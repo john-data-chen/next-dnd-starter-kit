@@ -3,6 +3,7 @@ import { projectMetaData } from '@/constants/pageMetaData';
 import { auth } from '@/lib/auth';
 import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
@@ -35,6 +36,7 @@ export default async function RootLayout({
         <NextTopLoader showSpinner={false} />
         <Providers session={session}>{children}</Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
