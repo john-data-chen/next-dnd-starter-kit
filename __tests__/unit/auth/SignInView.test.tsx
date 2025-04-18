@@ -2,7 +2,6 @@ import SignInViewPage from '@/components/auth/SignInView';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-
 // Mock the UserAuthForm component
 vi.mock('@/components/auth/UserAuthForm', () => ({
   // biome-ignore lint/style/useDefaultExport: <explanation>
@@ -27,7 +26,7 @@ describe('SignInViewPage Component', () => {
     render(<SignInViewPage />);
 
     // Add screen.debug() here to see the rendered output in the console
-    screen.debug();
+    // screen.debug();
 
     // Check if the mocked UserAuthForm is present
     expect(screen.getByTestId('mock-user-auth-form')).toBeInTheDocument(); // This line was failing
