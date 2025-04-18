@@ -1,10 +1,10 @@
 import SignInViewPage from '@/components/auth/SignInView';
-import { projectName } from '@/constants/projectInfo';
+import { projectMetaData } from '@/constants/pageMetaData';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: projectName,
-  description: 'A demo project of project management tool'
+  title: projectMetaData.title,
+  description: projectMetaData.description
 };
 
 export default function SignInPage(): JSX.Element {

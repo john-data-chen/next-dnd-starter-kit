@@ -1,5 +1,5 @@
 import Providers from '@/components/layout/Providers';
-import { projectName } from '@/constants/projectInfo';
+import { projectMetaData } from '@/constants/pageMetaData';
 import { auth } from '@/lib/auth';
 import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
@@ -17,9 +17,9 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: {
     template: '%s',
-    default: projectName
+    default: projectMetaData.title
   },
-  description: 'A Next.js DnD Kit starter template'
+  description: projectMetaData.description
 };
 
 export default async function RootLayout({

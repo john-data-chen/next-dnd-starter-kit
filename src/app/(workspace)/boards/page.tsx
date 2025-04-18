@@ -1,9 +1,10 @@
 import { BoardOverview } from '@/components/kanban/BoardOverview';
+import { kanbanOverview } from '@/constants/pageMetaData';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Kanban Overview',
-  description: 'Manage your boards'
+  title: kanbanOverview.title,
+  description: kanbanOverview.description
 };
 
 export default function BoardsPage() {

@@ -1,7 +1,7 @@
 import { Icons } from '@/components/layout/Icons';
-import { projectName } from './projectInfo';
+import { projectMetaData } from './pageMetaData';
 
-export const companyInfo = {
-  name: projectName,
-  logo: Icons.companyLogo
+export const projectInfo = {
+  name: projectMetaData.title,
+  logo: Icons.projectLogo
 };
