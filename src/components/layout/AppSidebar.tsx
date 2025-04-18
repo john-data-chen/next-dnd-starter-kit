@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar';
-import { companyInfo } from '@/constants/sidebar';
+import { projectInfo } from '@/constants/sidebar';
 import { useBoards } from '@/hooks/useBoards';
 import { HomeIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -26,10 +26,10 @@ export default function AppSidebar() {
       <SidebarHeader>
         <div className="text-sidebar-accent-foreground flex gap-2 py-2">
           <div className="bg-sidebar-pdivary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-            <Icons.companyLogo />
+            <Icons.projectLogo />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{companyInfo.name}</span>
+            <span className="truncate font-semibold">{projectInfo.name}</span>
           </div>
         </div>
       </SidebarHeader>
