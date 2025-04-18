@@ -39,7 +39,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 - **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.x, I use [FNM](https://github.com/Schniz/fnm) to install
 - **Frontend**: [Next](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
-- **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [husky](https://github.com/typicode/husky)
+- **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI**: [Shadcn/UI](https://ui.shadcn.com/)
 - **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/)
@@ -69,11 +69,11 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 Local Development:
 
-Create a `.env` file in the project root with the following variables:
+Create a `.env (.env.test for testing)` file in the project root with the following variables:
 
 ```text
 # Application Environment
-# Options: development | production
+# Options: default: development | production | test: for testing
 NODE_ENV=development
 
 # Authentication Secret
