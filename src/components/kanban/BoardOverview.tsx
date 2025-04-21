@@ -93,13 +93,24 @@ export function BoardOverview() {
             value={filter}
             onValueChange={(value: FilterType) => setFilter(value)}
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger
+              className="w-[140px]"
+              data-testid="select-filter-trigger"
+            >
+              {' '}
+              {/* Add data-testid here */}
               <SelectValue placeholder="Filter boards" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Boards</SelectItem>
-              <SelectItem value="my">My Boards</SelectItem>
-              <SelectItem value="team">Team Boards</SelectItem>
+              <SelectItem value="all" data-testid="selectAllBoards">
+                All Boards
+              </SelectItem>
+              <SelectItem value="my" data-testid="selectMyBoards">
+                My Boards
+              </SelectItem>
+              <SelectItem value="team" data-testid="selectTeamBoards">
+                Team Boards
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -110,7 +121,9 @@ export function BoardOverview() {
           {shouldShowMyBoards && (
             <section>
               <div className="flex items-center gap-2 mb-2 px-4">
-                <h2 className="text-2xl font-bold">My Boards</h2>
+                <h2 className="text-2xl font-bold" data-testid="myBoardsTitle">
+                  My Boards
+                </h2>
               </div>
               <div className="flex items-center gap-2 mb-2 px-4">
                 <span className="text-sm text-muted-foreground">
@@ -157,7 +170,12 @@ export function BoardOverview() {
           {shouldShowTeamBoards && (
             <section>
               <div className="flex items-center gap-2 mb-2 px-4">
-                <h2 className="text-2xl font-bold">Team Boards</h2>
+                <h2
+                  className="text-2xl font-bold"
+                  data-testid="teamBoardsTitle"
+                >
+                  Team Boards
+                </h2>
               </div>
               <div className="flex items-center gap-2 mb-2 px-4">
                 <span className="text-sm text-muted-foreground">
