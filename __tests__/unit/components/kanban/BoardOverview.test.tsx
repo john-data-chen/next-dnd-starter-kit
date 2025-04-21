@@ -34,7 +34,13 @@ vi.mock('@/components/kanban/board/BoardActions', () => ({
 vi.mock('@/components/kanban/board/NewBoardDialog', () => ({
   // Adjusted path based on potential location
   default: vi.fn(({ children }) => (
-    <div data-testid="new-board-dialog">{children}</div>
+    <div data-testid="new-board-dialog">
+      <div>
+        <button data-testid="cancel-button">Cancel</button>
+        <button data-testid="create-button">Create</button>
+      </div>
+      {children}
+    </div>
   ))
 }));
 
@@ -378,5 +384,16 @@ describe('BoardOverview Component', () => {
     expect(screen.getByText(mockMyBoard1.title)).toBeInTheDocument();
     expect(screen.getByTestId('teamBoardsTitle')).toBeInTheDocument(); // Check Team Boards title by test ID
     expect(screen.getByText(mockTeamBoard1.title)).toBeInTheDocument();
+  });
+
+  it('should open New Board dialog when trigger button is clicked', async () => {
+    render(<BoardOverview />);
+    const triggerButton = screen.getByTestId('new-board-trigger');
+    expect(triggerButton).toBeInTheDocument();
+    triggerButton.click();
+    const cancelButton = screen.getByTestId('cancel-button');
+    expect(cancelButton).toBeInTheDocument();
+    const createButton = screen.getByTestId('create-button');
+    expect(createButton).toBeInTheDocument();
   });
 });
