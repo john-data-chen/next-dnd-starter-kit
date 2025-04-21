@@ -48,7 +48,9 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Board</DialogTitle>
+          <DialogTitle data-testid="new-board-dialog-title">
+            Create New Board
+          </DialogTitle>
         </DialogHeader>
         <BoardForm onSubmit={handleSubmit}>
           <DialogFooter>
