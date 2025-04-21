@@ -28,10 +28,16 @@ jobs:
       - name: init db
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NODE_ENV: ${{ vars.NODE_ENV }}
+          NODE_ENV: ${{ vars.NODE_ENV }} # Or 'test' if preferred for testing
         run: pnpm init-db --force
 
       - name: Run Tests
+        # highlight-start
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NODE_ENV: ${{ vars.NODE_ENV }} # Or 'test' if preferred for testing
+          # Add any other environment variables needed specifically for tests
+        # highlight-end
         run: pnpm test
 
       - name: Upload coverage to Codecov

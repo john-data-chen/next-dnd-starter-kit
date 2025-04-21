@@ -15,7 +15,11 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "types": ["node"],
+    "types": [
+      "node",
+      "@testing-library/jest-dom",
+      "vitest/globals"
+    ],
     "paths": {
       "@/*": ["./src/*"]
     },
