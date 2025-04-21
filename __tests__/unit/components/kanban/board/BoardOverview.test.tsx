@@ -1,4 +1,3 @@
-// 使用 userEvent 進行更真實的交互模擬
 import { BoardOverview } from '@/components/kanban/BoardOverview';
 import { useBoards } from '@/hooks/useBoards';
 import { Board } from '@/types/dbInterface';
@@ -6,8 +5,6 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { usePathname, useRouter } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-// 引入 Board 類型
 
 // --- Mocking Dependencies ---
 
@@ -34,7 +31,13 @@ vi.mock('@/components/kanban/board/BoardActions', () => ({
 vi.mock('@/components/kanban/board/NewBoardDialog', () => ({
   // Adjusted path based on potential location
   default: vi.fn(({ children }) => (
-    <div data-testid="new-board-dialog">{children}</div>
+    <div data-testid="new-board-dialog">
+      <div>
+        <button data-testid="cancel-button">Cancel</button>
+        <button data-testid="create-button">Create</button>
+      </div>
+      {children}
+    </div>
   ))
 }));
 

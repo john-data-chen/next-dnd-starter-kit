@@ -44,22 +44,27 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} data-testid="new-board-dialog">
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Board</DialogTitle>
+          <DialogTitle data-testid="new-board-dialog-title">
+            Create New Board
+          </DialogTitle>
         </DialogHeader>
         <BoardForm onSubmit={handleSubmit}>
           <DialogFooter>
             <Button
               type="button"
               variant="outline"
+              data-testid="cancel-button"
               onClick={() => setOpen(false)}
             >
               Cancel
             </Button>
-            <Button type="submit">Create</Button>
+            <Button type="submit" data-testid="create-button">
+              Create
+            </Button>
           </DialogFooter>
         </BoardForm>
       </DialogContent>
