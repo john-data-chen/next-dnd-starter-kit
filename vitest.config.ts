@@ -14,7 +14,11 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json', 'html', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.d.ts', '__tests__/**/*.test.{ts,tsx}']
+      exclude: [
+        'src/**/*.d.ts',
+        '__tests__/**/*.test.{ts,tsx}',
+        'src/components/ui/**/*'
+      ]
     }
   },
   resolve: {
