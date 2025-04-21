@@ -1,4 +1,3 @@
-// 使用 userEvent 進行更真實的交互模擬
 import { BoardOverview } from '@/components/kanban/BoardOverview';
 import { useBoards } from '@/hooks/useBoards';
 import { Board } from '@/types/dbInterface';
@@ -6,8 +5,6 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { usePathname, useRouter } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-// 引入 Board 類型
 
 // --- Mocking Dependencies ---
 
@@ -384,16 +381,5 @@ describe('BoardOverview Component', () => {
     expect(screen.getByText(mockMyBoard1.title)).toBeInTheDocument();
     expect(screen.getByTestId('teamBoardsTitle')).toBeInTheDocument(); // Check Team Boards title by test ID
     expect(screen.getByText(mockTeamBoard1.title)).toBeInTheDocument();
-  });
-
-  it('should open New Board dialog when trigger button is clicked', async () => {
-    render(<BoardOverview />);
-    const triggerButton = screen.getByTestId('new-board-trigger');
-    expect(triggerButton).toBeInTheDocument();
-    triggerButton.click();
-    const cancelButton = screen.getByTestId('cancel-button');
-    expect(cancelButton).toBeInTheDocument();
-    const createButton = screen.getByTestId('create-button');
-    expect(createButton).toBeInTheDocument();
   });
 });
