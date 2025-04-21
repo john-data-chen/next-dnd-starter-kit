@@ -63,7 +63,7 @@ export function TaskFilter() {
         value={filter.status || 'TOTAL'}
         onValueChange={handleFilterChange}
       >
-        <SelectTrigger className="w-[140px]">
+        <SelectTrigger className="w-[140px]" data-testid="task-filter">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>
