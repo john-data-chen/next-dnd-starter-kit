@@ -111,16 +111,25 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
 
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            data-testid="board-option-button"
+          >
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => setEditEnable(true)}>
+          <DropdownMenuItem
+            data-testid="edit-board-button"
+            onSelect={() => setEditEnable(true)}
+          >
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
+            data-testid="delete-board-button"
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
           >

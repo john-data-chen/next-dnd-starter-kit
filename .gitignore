@@ -43,5 +43,3 @@ node_modules/
 
 # database by docker
 /database/mongodb/
-
-development-guide.md
