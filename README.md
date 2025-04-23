@@ -145,18 +145,15 @@ pnpm format
 
 ### User Roles & Permissions
 
-**Board Owner**
+| Role         | Create Board | Delete Board | Edit All Projects | Delete Project (Cascade Tasks) | Create Project | Create Task | Edit All Tasks | Edit Own Task | Delete All Tasks | Delete Own Task | View All Projects & Tasks |
+| ------------ | ------------ | ------------ | ----------------- | ------------------------------ | -------------- | ----------- | -------------- | ------------- | ---------------- | --------------- | ------------------------- |
+| Board Owner  | ✔️           | ✔️           | ✔️                | ✔️                             | ✔️             | ✔️          | ✔️             | ✔️            | ✔️               | ✔️              | ✔️                        |
+| Board Member | ✖️           | ✖️           | ✖️                | ✖️                             | ✔️             | ✔️          | ✖️             | ✔️            | ✖️               | ✔️              | ✔️                        |
 
-- Create and delete board
-- Edit all projects and tasks
-- Delete projects (cascading delete tasks)
-
-**Board Member**
-
-- View all projects and tasks in the board
-- Any member can create projects and tasks
-- Edit their own projects and tasks
-- Delete their own projects and tasks
+> Note:
+>
+> - Board Owner has all permissions, including creating, deleting, and editing all projects and tasks.
+> - Board Member can only create projects and tasks, and can only edit and delete their own projects and tasks, but can view all content.
 
 ### Task Operations
 
