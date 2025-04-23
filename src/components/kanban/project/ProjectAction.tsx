@@ -89,18 +89,27 @@ export function ProjectActions({
 
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className="h-8 w-12">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-12"
+            data-testid="project-option-button"
+          >
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => setEditEnable(true)}>
+          <DropdownMenuItem
+            onSelect={() => setEditEnable(true)}
+            data-testid="edit-project-button"
+          >
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
+            data-testid="delete-project-button"
           >
             Delete
           </DropdownMenuItem>
