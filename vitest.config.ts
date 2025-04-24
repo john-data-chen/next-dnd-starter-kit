@@ -17,7 +17,8 @@ export default defineConfig({
       exclude: [
         'src/**/*.d.ts',
         '__tests__/**/*.test.{ts,tsx}',
-        'src/components/ui/**/*'
+        'src/components/ui/**/*',
+        'src/hooks/use-mobile.ts'
       ]
     }
   },
