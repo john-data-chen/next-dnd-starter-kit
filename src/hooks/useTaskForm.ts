@@ -46,19 +46,20 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      if (!assignOpen || !debouncedSearchQuery) return;
+
       setIsSearching(true);
       try {
         const results = await searchUsers(debouncedSearchQuery);
         setUsers(results);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error searching users:', error);
       } finally {
         setIsSearching(false);
       }
     };
-    if (assignOpen) {
-      fetchUsers();
-    }
+
+    fetchUsers();
   }, [debouncedSearchQuery, assignOpen]);
 
   useEffect(() => {
