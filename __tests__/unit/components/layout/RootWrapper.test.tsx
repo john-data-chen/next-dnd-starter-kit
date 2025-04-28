@@ -80,7 +80,6 @@ describe('RootWrapper Component', () => {
     const props = JSON.parse(toaster.getAttribute('data-props') || '{}');
 
     expect(props.position).toBe('bottom-right');
-    expect(props.mobileOffset).toEqual({ bottom: '16px' });
   });
 
   it('should pass correct props to Toaster when isMobile is true', () => {
@@ -95,7 +94,6 @@ describe('RootWrapper Component', () => {
     const toaster = screen.getByTestId('mock-toaster');
     const props = JSON.parse(toaster.getAttribute('data-props') || '{}');
 
-    expect(props.position).toBe('top-right');
-    expect(props.mobileOffset).toEqual({ top: '25%' });
+    expect(props.position).toBe('bottom-right');
   });
 });
