@@ -4,7 +4,6 @@ import AppSidebar from '@/components/layout/AppSidebar';
 import Header from '@/components/layout/Header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
-import { useIsMobile } from '@/hooks/use-mobile';
 import React from 'react';
 
 export default function RootWrapper({
@@ -22,13 +21,13 @@ export default function RootWrapper({
         </SidebarInset>
       </SidebarProvider>
       <Toaster
-        position={useIsMobile() ? 'top-right' : 'bottom-right'}
+        position={'bottom-right'}
         expand={false}
         toastOptions={{
           duration: 1000
         }}
         visibleToasts={1}
-        mobileOffset={useIsMobile() ? { top: '25%' } : { bottom: '16px' }}
+        closeButton
       />
     </>
   );
