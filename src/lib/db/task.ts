@@ -3,7 +3,7 @@
 import { BoardModel } from '@/models/board.model';
 import { ProjectModel } from '@/models/project.model';
 import { TaskModel, TaskType } from '@/models/task.model';
-import { Task } from '@/types/dbInterface';
+import { Task, TaskStatus } from '@/types/dbInterface';
 import { Types } from 'mongoose';
 import { connectToDatabase } from './connect';
 import { getUserByEmail, getUserById } from './user';
@@ -79,7 +79,8 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
     _id: docId,
     title: taskDoc.title,
     description: taskDoc.description || '',
-    status: taskDoc.status || 'TODO',
+    // Cast the string literal union to the TaskStatus enum type
+    status: (taskDoc.status || 'TODO') as TaskStatus,
     dueDate: taskDoc.dueDate,
     board: boardId,
     project: projectId,
