@@ -31,13 +31,12 @@ jobs:
           NODE_ENV: ${{ vars.NODE_ENV }} # Or 'test' if preferred for testing
         run: pnpm init-db --force
 
-      - name: Run Tests
+      - name: Run Unit Tests by Vitest
         # highlight-start
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NODE_ENV: ${{ vars.NODE_ENV }} # Or 'test' if preferred for testing
           # Add any other environment variables needed specifically for tests
-        # highlight-end
         run: pnpm test
 
       - name: Upload coverage to Codecov
@@ -56,7 +55,8 @@ jobs:
       - name: Run Playwright tests
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NODE_ENV: ${{ vars.NODE_ENV }} # Or 'test' if preferred for testing
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
         run: pnpm playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
