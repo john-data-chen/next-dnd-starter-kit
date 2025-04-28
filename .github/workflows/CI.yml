@@ -54,6 +54,9 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: Run Playwright tests
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NODE_ENV: ${{ vars.NODE_ENV }} # Or 'test' if preferred for testing
         run: pnpm playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
