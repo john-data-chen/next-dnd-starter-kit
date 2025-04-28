@@ -58,34 +58,35 @@ export function TaskFilter() {
         value={filter.search}
         onChange={handleSearchChange}
         className="bg-background w-full md:w-[300px]"
+        data-testid="search-input"
       />
       <Select
         value={filter.status || 'TOTAL'}
         onValueChange={handleFilterChange}
       >
-        <SelectTrigger className="w-[140px]" data-testid="task-filter">
+        <SelectTrigger className="w-[140px]" data-testid="status-select">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="TOTAL">
+          <SelectItem value="TOTAL" data-testid="total-item">
             Total
             <Badge variant="outline" className="ml-2">
               {statusCounts.TOTAL}
             </Badge>
           </SelectItem>
-          <SelectItem value="TODO">
+          <SelectItem value="TODO" data-testid="todo-item">
             To Do
             <Badge variant="outline" className="ml-2">
               {statusCounts.TODO}
             </Badge>
           </SelectItem>
-          <SelectItem value="IN_PROGRESS">
+          <SelectItem value="IN_PROGRESS" data-testid="in-progress-item">
             In Progress
             <Badge variant="outline" className="ml-2">
               {statusCounts.IN_PROGRESS}
             </Badge>
           </SelectItem>
-          <SelectItem value="DONE">
+          <SelectItem value="DONE" data-testid="done-item">
             Done
             <Badge variant="outline" className="ml-2">
               {statusCounts.DONE}
@@ -101,6 +102,7 @@ export function TaskFilter() {
           onClick={() => {
             setFilter({ status: null, search: '' });
           }}
+          data-testid="clear-filter-button"
         >
           Clear Filter
         </Button>

@@ -232,4 +232,42 @@ describe('Board Database Functions', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('deleteBoardInDb', () => {
+    it('should delete board successfully', async () => {
+      mockBoardFindById.mockResolvedValueOnce({
+        ...mockBoard,
+        lean: () => mockBoard
+      });
+
+      const result = await deleteBoardInDb(mockBoardId, mockUserEmail);
+
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockGetUserByEmail).toHaveBeenCalledWith(mockUserEmail);
+    });
+
+    it('should return false when board not found', async () => {
+      mockBoardFindById.mockResolvedValueOnce(null);
+
+      const result = await deleteBoardInDb(mockBoardId, mockUserEmail);
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false when user is not owner', async () => {
+      const differentUserId = new Types.ObjectId().toString();
+      mockBoardFindById.mockResolvedValueOnce({
+        ...mockBoard,
+        owner: new Types.ObjectId(differentUserId),
+        lean: () => ({
+          ...mockBoard,
+          owner: new Types.ObjectId(differentUserId)
+        })
+      });
+
+      const result = await deleteBoardInDb(mockBoardId, mockUserEmail);
+
+      expect(result).toBe(false);
+    });
+  });
 });

@@ -9,7 +9,12 @@
 
 ## ✨ Why Choose This Template:
 
-The **Enterprise-grade Next.js template** with drag & drop functionality, WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
+<video width="640" height="480" controls>
+  <source src="./public/assets/Screen_Recording.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+The **Enterprise-grade Next.js template** with 80%+ test coverage drag & drop functionality, and WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
 - 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
@@ -31,6 +36,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 **Key Accomplishments**:
 
+- **Test Coverage**: 80%+
 - **Reliability, Security, Reliability and Maintainability Rating in SonarQube**: A
 - **Cross-browser Testing**: for both desktop and mobile devices.
 - **CI/CD automation**: in GitHub actions and Vercel.
@@ -160,10 +166,6 @@ pnpm format
 - Task creator and assignee can edit task
 - Only owner of board, owner of project and creator of task can delete tasks
 - Task status: To Do → In Progress → Done
-
-## 🔜 Roadmap
-
-- [ ] Add more unit tests to make coverage over 85%
 
 ## 📖 Detailed Technical Documentation
 
