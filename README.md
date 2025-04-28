@@ -9,10 +9,7 @@
 
 ## ✨ Why Choose This Template:
 
-<video width="640" height="480" controls>
-  <source src="./public/assets/Screen_Recording.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<img src="./public/assets/Screen_Recording.gif" alt="Screen Recording" width="270" height="579">
 
 The **Enterprise-grade Next.js template** with 80%+ test coverage drag & drop functionality, and WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
