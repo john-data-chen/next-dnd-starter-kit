@@ -103,13 +103,14 @@ export function TaskActions({
   );
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
+    const assigneeId = values.assignee ? values.assignee.id : undefined;
     await updateTask(
       id,
       values.title,
       values.status,
       values.description ?? '',
       values.dueDate,
-      values.assignee?.id
+      assigneeId
     );
     toast.success(`Task is updated: ${values.title}`);
     setEditEnable(false);
