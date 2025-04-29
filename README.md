@@ -180,7 +180,7 @@ __tests__/
 .github/ # GitHub Actions workflows
 .husky/ # Husky configuration
 database/ # MongoDB docker-compose and initialization
-public/ # Static files such as images and i18n localization
+public/ # Static files such as images
 src/
 ├── app/ # Next.js App routes
 │   ├── page.tsx # Root page
