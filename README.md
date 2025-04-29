@@ -11,12 +11,13 @@
 
 <img src="./public/assets/Screen_Recording.gif" alt="Screen Recording" width="270" height="579">
 
-The **Enterprise-grade Next.js template** with 80%+ test coverage drag & drop functionality, and WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
+The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop functionality, and WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
 - 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
 - 🎯 Developer-Friendly: Clear documentation and best practices built-in
-- 🎨 Modern UX: Drag-and-drop, animations, dark mode, responsive design for mobile, tablet, and desktop
+- 📝 Full Functional: Drag & Drop, Search and Filter, User Permission Management, Multi Kanban and Project Support
+- 🎨 Modern UX: Theme Switcher, Responsive Design for mobile, tablet, and desktop
 - 💾 Persistent data: via MongoDB
 
 ---
@@ -179,7 +180,7 @@ __tests__/
 .github/ # GitHub Actions workflows
 .husky/ # Husky configuration
 database/ # MongoDB docker-compose and initialization
-public/ # Static files such as images and i18n localization
+public/ # Static files such as images
 src/
 ├── app/ # Next.js App routes
 │   ├── page.tsx # Root page
