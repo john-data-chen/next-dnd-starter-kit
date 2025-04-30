@@ -1,11 +1,10 @@
 import { defaultEmail } from '@/constants/demoData';
 import { expect, test } from '@playwright/test';
 
-
-// Test suite for SignInPage
-
 test.describe('SignInPage', () => {
   test('should load the sign-in page', async ({ page }) => {
+    // clear cookies
+    await page.context().clearCookies();
     await page.goto('/login');
     const h1 = await page.locator('h1').textContent();
     expect(h1).toBe('Next.js template for beginner');
