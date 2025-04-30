@@ -1,12 +1,24 @@
 import { defineConfig, devices } from '@playwright/test';
+// Add this line to import dotenv
+import dotenv from 'dotenv';
+import path from 'path';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// Load environment variables from .env file first (as fallback)
+// dotenv will not override existing environment variables (e.g., from CI)
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// Load environment variables from .env.test file
+// Variables in .env.test will override those in .env if they exist
+// Existing environment variables (e.g., from CI) will still take precedence
+dotenv.config({ path: path.resolve(__dirname, '.env.test'), override: true }); // Use override: true here to ensure .env.test takes precedence over .env
+
+// Ensure environment variables are set or use default values
+// process.env will now contain variables loaded according to the priority:
+// 1. System Env (CI)
+// 2. .env.test
+// 3. .env
+const baseURL = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -75,8 +87,15 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI
+    command: 'pnpm dev',
+    url: baseURL, // Use the resolved baseURL
+    reuseExistingServer: !process.env.CI,
+    // Pass the resolved environment variables to the web server process
+    env: {
+      ...process.env, // Pass all resolved environment variables
+      NODE_ENV: process.env.NODE_ENV || 'test' // Ensure NODE_ENV is set, defaulting to 'test'
+    },
+    stdout: 'pipe',
+    stderr: 'pipe'
   }
 });
