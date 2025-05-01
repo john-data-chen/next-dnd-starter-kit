@@ -221,13 +221,6 @@ src/
   - Solution: Can be safely ignored as most modern browsers handle this correctly
   - Reason: Internal implementation of Radix UI's Dialog component
 
-### ESLint
-
-- **ESLint 9.x Type Issues**:
-  - Issue: Type incompatibility with @types/eslint
-  - Solution: Use type assertions or @ts-ignore for specific cases
-  - Status: Waiting for type definitions to catch up with ESLint 9.x
-
 ### Server
 
 - **Slow response from server**:

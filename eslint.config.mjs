@@ -27,7 +27,8 @@ const config = [
     ignores: [
       '.next/**/*',
       'src/components/ui/**/*.{js,jsx,ts,tsx}',
-      'src/components/ui/*.{js,jsx,ts,tsx}'
+      'src/components/ui/*.{js,jsx,ts,tsx}',
+      '__tests__/**/*.{js,jsx,ts,tsx}',
     ]
   }
 ];
