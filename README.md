@@ -35,7 +35,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 **Key Accomplishments**:
 
 - **Test Coverage**: 80%+
-- **Reliability, Security, Reliability and Maintainability Rating in SonarQube**: A
+- **Reliability, Security and Maintainability Rating in SonarQube**: A
 - **Cross-browser Testing**: for both desktop and mobile devices.
 - **CI/CD automation**: in GitHub actions and Vercel.
 
