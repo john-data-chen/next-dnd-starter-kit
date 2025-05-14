@@ -29,6 +29,7 @@ import { useTaskStore } from '@/lib/store';
 import { TaskFormSchema } from '@/types/taskForm';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import React, { useCallback } from 'react';
+// Ensure useState is imported
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -63,10 +64,13 @@ export function TaskActions({
   const removeTask = useTaskStore((state) => state.removeTask);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [editEnable, setEditEnable] = React.useState(false);
-  const [permissions, setPermissions] = React.useState({
-    canEdit: false,
-    canDelete: false
-  });
+
+  // Initialize permissions to null to indicate they haven't been fetched yet
+  const [permissions, setPermissions] = React.useState<{
+    canEdit: boolean;
+    canDelete: boolean;
+  } | null>(null);
+  const [isLoadingPermissions, setIsLoadingPermissions] = React.useState(false);
 
   const [assigneeName, setAssigneeName] = React.useState('');
 
@@ -125,31 +129,38 @@ export function TaskActions({
   };
 
   const checkPermissions = useCallback(async () => {
+    if (!id) {
+      setPermissions({ canEdit: false, canDelete: false });
+      return;
+    }
+    setIsLoadingPermissions(true);
     try {
       const response = await fetch(`/api/tasks/${id}/permissions`, {
         method: 'GET'
       });
 
       if (!response.ok) {
-        throw new Error('Failed to check permissions');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to check permissions');
       }
 
       const data = await response.json();
       setPermissions(data);
     } catch (error) {
-      console.error('Error checking permissions:', error);
-      setPermissions({ canEdit: false, canDelete: false });
+      console.error('Error checking task permissions:', error);
+      setPermissions({ canEdit: false, canDelete: false }); // Fallback on error
+      toast.error(
+        `Could not load task permissions: ${(error as Error).message}`
+      );
+    } finally {
+      setIsLoadingPermissions(false);
     }
   }, [id]);
-
-  React.useEffect(() => {
-    checkPermissions();
-  }, [checkPermissions]);
 
   return (
     <>
       <Dialog
-        open={editEnable && permissions.canEdit}
+        open={editEnable && !!permissions?.canEdit} // Use !! to handle null case
         onOpenChange={setEditEnable}
       >
         <DialogContent className="sm:max-w-md" data-testid="edit-task-dialog">
@@ -168,46 +179,67 @@ export function TaskActions({
           />
         </DialogContent>
       </Dialog>
-      {(permissions.canEdit || permissions.canDelete) && (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="secondary"
-              className="ml-1 h-8 w-12"
-              data-testid="task-actions-trigger"
-            >
-              <span className="sr-only">Actions</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {permissions.canEdit && (
-              <DropdownMenuItem
-                data-testid="edit-task-button"
-                onSelect={() => {
-                  setEditEnable(true);
-                }}
-              >
-                Edit
-              </DropdownMenuItem>
-            )}
-            {permissions.canDelete && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  data-testid="delete-task-button"
-                  onSelect={() => setShowDeleteDialog(true)}
-                  className="text-red-600"
-                >
-                  Delete
-                </DropdownMenuItem>
-              </>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+      <DropdownMenu
+        modal={false}
+        onOpenChange={(isOpen) => {
+          // Fetch permissions only when the menu is opened for the first time
+          // and permissions haven't been fetched yet (permissions is null).
+          if (isOpen && permissions === null && !isLoadingPermissions) {
+            checkPermissions();
+          }
+        }}
+      >
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="secondary"
+            className="ml-1 h-8 w-12"
+            data-testid="task-actions-trigger"
+          >
+            <span className="sr-only">Actions</span>
+            <DotsHorizontalIcon className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            data-testid="edit-task-button"
+            onSelect={() => {
+              if (permissions?.canEdit && !isLoadingPermissions) {
+                setEditEnable(true);
+              }
+            }}
+            disabled={isLoadingPermissions || !permissions?.canEdit}
+            className={
+              !isLoadingPermissions && !permissions?.canEdit
+                ? 'text-muted-foreground line-through cursor-not-allowed'
+                : ''
+            }
+          >
+            Edit
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            data-testid="delete-task-button"
+            onSelect={() => {
+              if (permissions?.canDelete && !isLoadingPermissions) {
+                setShowDeleteDialog(true);
+              }
+            }}
+            disabled={isLoadingPermissions || !permissions?.canDelete}
+            className={`
+              ${
+                isLoadingPermissions || !permissions?.canDelete
+                  ? 'text-muted-foreground line-through cursor-not-allowed'
+                  : 'text-red-600 hover:!text-red-600 hover:!bg-destructive/10'
+              }
+            `}
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <AlertDialog
-        open={showDeleteDialog && permissions.canDelete}
+        open={showDeleteDialog && !!permissions?.canDelete} // Use !! to handle null case
         onOpenChange={setShowDeleteDialog}
       >
         <AlertDialogContent data-testid="delete-task-dialog">
