@@ -37,7 +37,7 @@ export default function useAuthForm() {
           setTimeout(() => {
             window.location.href = ROUTES.BOARDS.ROOT;
             resolve('success');
-          }, 1000);
+          }, 500);
         }),
         {
           loading: 'Signing in...',

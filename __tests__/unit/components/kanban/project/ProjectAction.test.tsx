@@ -1,12 +1,15 @@
 import { ProjectActions } from '@/components/kanban/project/ProjectAction';
 // Make sure fireEvent is imported
-import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { toast } from 'sonner';
-import { vi } from 'vitest';
+import { Mock, vi } from 'vitest';
 
 // --- Mocks ---
+
+// Mock global fetch
+global.fetch = vi.fn();
 
 // Mock useTaskStore
 const mockUpdateProject = vi.fn();
@@ -43,7 +46,8 @@ vi.mock('@/components/kanban/project/ProjectForm', () => ({
   }) => (
     <form
       data-testid="mock-project-form"
-      onSubmit={async (e) => { // Make the handler async
+      onSubmit={async (e) => {
+        // Make the handler async
         e.preventDefault();
         try {
           await onSubmit(defaultValues); // Await the passed onSubmit
@@ -208,60 +212,197 @@ const mockProps = {
   description: 'Initial Description'
 };
 
+// Helper to mock fetch responses
+const mockFetchPermissions = (
+  permissions: { canEditProject: boolean; canDeleteProject: boolean } | null,
+  ok = true,
+  status = 200
+) => {
+  (fetch as Mock).mockResolvedValueOnce({
+    ok,
+    status,
+    json: async () => permissions
+  });
+};
+
 // --- Tests ---
 describe('ProjectActions Component', () => {
   beforeEach(() => {
     // Reset mocks before each test
     vi.clearAllMocks();
+    (fetch as Mock).mockClear(); // Clear fetch mock specifically
     // Reset store mock return values if needed, e.g., for promises
     mockUpdateProject.mockResolvedValue(undefined);
     mockRemoveProject.mockResolvedValue(undefined);
     mockFetchProjects.mockResolvedValue(undefined);
   });
 
-  it('should render the trigger button', () => {
+  it('should render the trigger button and show loading state initially', async () => {
+    // Mock fetch to be pending initially to see loading state
+    (fetch as Mock).mockImplementationOnce(() => new Promise(() => {})); // Never resolves
+
     render(<ProjectActions {...mockProps} />);
-    // Use data-testid to find the button
-    expect(
-      screen.getByTestId('project-option-button') // Updated selector
-    ).toBeInTheDocument();
+    const triggerButton = screen.getByTestId('project-option-button');
+    expect(triggerButton).toBeInTheDocument();
+    // Check for loading indicator (e.g., animate-pulse class or disabled state)
+    // Depending on your loading indicator implementation, this might need adjustment
+    expect(triggerButton).toBeDisabled(); // Button is disabled while loading
+    // If you have a specific loading icon/class:
+    // expect(triggerButton.querySelector('.animate-pulse')).toBeInTheDocument();
   });
 
-  it('should open dropdown menu on trigger click', async () => {
+  it('should open dropdown menu on trigger click after permissions are loaded', async () => {
+    mockFetchPermissions({ canEditProject: true, canDeleteProject: true });
     const user = userEvent.setup();
     render(<ProjectActions {...mockProps} />);
-    // Use data-testid to find the button
-    const triggerButton = screen.getByTestId('project-option-button'); // Updated selector
+
+    const triggerButton = screen.getByTestId('project-option-button');
+    // Wait for permissions to load and button to be enabled
+    await waitFor(() => expect(triggerButton).not.toBeDisabled());
 
     await user.click(triggerButton);
 
-    // Check if dropdown content appears (using the mock's testid)
     expect(screen.getByTestId('dropdown-content')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
+    const editButton = screen.getByRole('button', { name: 'Edit' });
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
+
+    expect(editButton).toBeInTheDocument();
+    expect(editButton).not.toBeDisabled();
+    expect(deleteButton).toBeInTheDocument();
+    expect(deleteButton).not.toBeDisabled();
   });
 
-  it('should open edit dialog when "Edit" is clicked', async () => {
+  describe('With Permissions', () => {
+    beforeEach(() => {
+      mockFetchPermissions({ canEditProject: true, canDeleteProject: true });
+    });
+
+    it('should open edit dialog when "Edit" is clicked and user has permission', async () => {
+      const user = userEvent.setup();
+      render(<ProjectActions {...mockProps} />);
+      const triggerButton = screen.getByTestId('project-option-button');
+      await waitFor(() => expect(triggerButton).not.toBeDisabled());
+      await user.click(triggerButton);
+
+      const editButton = screen.getByRole('button', { name: 'Edit' });
+      expect(editButton).not.toBeDisabled();
+      await user.click(editButton);
+
+      expect(screen.getByTestId('dialog-content')).toBeInTheDocument();
+      expect(screen.getByText('Edit Project')).toBeInTheDocument();
+      expect(screen.getByTestId('mock-project-form')).toBeInTheDocument();
+    });
+
+    it('should open delete dialog when "Delete" is clicked and user has permission', async () => {
+      const user = userEvent.setup();
+      render(<ProjectActions {...mockProps} />);
+      const triggerButton = screen.getByTestId('project-option-button');
+      await waitFor(() => expect(triggerButton).not.toBeDisabled());
+      await user.click(triggerButton);
+
+      const deleteButton = screen.getByRole('button', { name: 'Delete' });
+      expect(deleteButton).not.toBeDisabled();
+      await user.click(deleteButton);
+
+      expect(screen.getByTestId('alert-dialog-content')).toBeInTheDocument();
+    });
+  });
+
+  describe('Without Permissions', () => {
+    beforeEach(() => {
+      mockFetchPermissions({ canEditProject: false, canDeleteProject: false });
+    });
+
+    it('should disable "Edit" and "Delete" options and apply strikethrough style if user lacks permissions', async () => {
+      const user = userEvent.setup();
+      render(<ProjectActions {...mockProps} />);
+      const triggerButton = screen.getByTestId('project-option-button');
+      await waitFor(() => expect(triggerButton).not.toBeDisabled());
+      await user.click(triggerButton);
+
+      const editButton = screen.getByRole('button', { name: 'Edit' });
+      const deleteButton = screen.getByRole('button', { name: 'Delete' });
+
+      expect(editButton).toBeDisabled();
+      expect(editButton).toHaveClass('line-through');
+      expect(editButton).toHaveClass('cursor-not-allowed');
+
+      expect(deleteButton).toBeDisabled();
+      expect(deleteButton).toHaveClass('line-through');
+      expect(deleteButton).toHaveClass('cursor-not-allowed');
+    });
+
+    it('should not open edit dialog when "Edit" is clicked and user lacks permission', async () => {
+      const user = userEvent.setup();
+      render(<ProjectActions {...mockProps} />);
+      const triggerButton = screen.getByTestId('project-option-button');
+      await waitFor(() => expect(triggerButton).not.toBeDisabled());
+      await user.click(triggerButton);
+
+      const editButton = screen.getByRole('button', { name: 'Edit' });
+      // Attempt to click even if disabled (userEvent might not trigger onSelect for disabled)
+      // fireEvent.click(editButton) might be more direct for testing if onSelect is guarded
+      if (!editButton.hasAttribute('disabled')) {
+        // userEvent respects disabled
+        await user.click(editButton);
+      }
+
+      expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
+    });
+
+    it('should not open delete dialog when "Delete" is clicked and user lacks permission', async () => {
+      const user = userEvent.setup();
+      render(<ProjectActions {...mockProps} />);
+      const triggerButton = screen.getByTestId('project-option-button');
+      await waitFor(() => expect(triggerButton).not.toBeDisabled());
+      await user.click(triggerButton);
+
+      const deleteButton = screen.getByRole('button', { name: 'Delete' });
+      if (!deleteButton.hasAttribute('disabled')) {
+        await user.click(deleteButton);
+      }
+
+      expect(
+        screen.queryByTestId('alert-dialog-content')
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('should handle API error when fetching permissions and disable options', async () => {
+    (fetch as Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: async () => ({ error: 'Server Error' })
+    });
     const user = userEvent.setup();
     render(<ProjectActions {...mockProps} />);
-    // Use data-testid to find the button
-    const triggerButton = screen.getByTestId('project-option-button'); // Updated selector
+    const triggerButton = screen.getByTestId('project-option-button');
+
+    // Wait for loading to finish (even on error, it should)
+    await waitFor(() => expect(triggerButton).not.toBeDisabled());
+
+    // Check for toast error
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining('Could not load permissions: Server Error')
+      );
+    });
 
     await user.click(triggerButton);
-    const editButton = screen.getByRole('button', { name: 'Edit' });
-    await user.click(editButton);
 
-    // Check if dialog content appears
-    expect(screen.getByTestId('dialog-content')).toBeInTheDocument();
-    expect(screen.getByText('Edit Project')).toBeInTheDocument(); // DialogTitle
-    expect(screen.getByTestId('mock-project-form')).toBeInTheDocument(); // Mocked form
+    const editButton = screen.getByRole('button', { name: 'Edit' });
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
+
+    expect(editButton).toBeDisabled();
+    expect(deleteButton).toBeDisabled();
   });
 
   it('should close edit dialog when "Cancel" is clicked', async () => {
+    mockFetchPermissions({ canEditProject: true, canDeleteProject: true });
     const user = userEvent.setup();
     render(<ProjectActions {...mockProps} />);
-    // Use data-testid to find the button
-    const triggerButton = screen.getByTestId('project-option-button'); // Updated selector
+    const triggerButton = screen.getByTestId('project-option-button');
+    await waitFor(() => expect(triggerButton).not.toBeDisabled());
 
     // Open edit dialog
     await user.click(triggerButton);
@@ -276,4 +417,4 @@ describe('ProjectActions Component', () => {
       expect(screen.queryByTestId('dialog-content')).not.toBeInTheDocument();
     });
   });
-  });
+});
