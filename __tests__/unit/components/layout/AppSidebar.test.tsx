@@ -23,7 +23,7 @@ vi.mock('@/constants/sidebar', () => ({
 }));
 
 describe('AppSidebar Component', () => {
-  const renderWithProvider = (ui: React.ReactElement) => {
+  const renderWithProvider = (ui: React.ReactElement<any>) => {
     return render(<SidebarProvider>{ui}</SidebarProvider>);
   };
 
