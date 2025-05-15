@@ -71,7 +71,7 @@ describe('ThemeProvider Component', () => {
         defaultTheme: 'system',
         enableSystem: true
       }),
-      expect.anything() // Context object, usually {} or undefined in simple renders
+      undefined // The second argument (context) is undefined in this rendering scenario
     );
   });
 });

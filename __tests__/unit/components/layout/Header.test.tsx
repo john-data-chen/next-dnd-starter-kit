@@ -46,7 +46,7 @@ vi.mock('@/components/layout/ThemeToggle', () => ({
 // We will wrap with SidebarProvider for SidebarTrigger context.
 
 describe('Header Component', () => {
-  const renderWithProvider = (ui: React.ReactElement) => {
+  const renderWithProvider = (ui: React.ReactElement<any>) => {
     return render(<SidebarProvider>{ui}</SidebarProvider>);
   };
 
