@@ -1,6 +1,7 @@
 import SignInViewPage from '@/components/auth/SignInView';
 import { projectMetaData } from '@/constants/pageMetaData';
 import { Metadata } from 'next';
+import type { JSX } from 'react';
 
 export const metadata: Metadata = {
   title: projectMetaData.title,
