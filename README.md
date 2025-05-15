@@ -42,7 +42,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 ## 🛠️ Technical Stack
 
 - **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.x, I use [FNM](https://github.com/Schniz/fnm) to install
-- **Frontend**: [Next](https://nextjs.org/docs/14/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
+- **Frontend**: [Next](https://nextjs.org/docs/app/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
 - **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI**: [Shadcn/UI](https://ui.shadcn.com/)
@@ -54,10 +54,10 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Drag and Drop**: [dnd-kit](https://dndkit.com/)
 - **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
 
-## 📦 Core Framework Versions Decision
+## 📦 Core Framework Versions and Upgrade Decision
 
-- Next.js: ^14.x (Production-ready version with stable App Router. I will postpone upgrade to 15.x until it is more stable)
-- React: ^18.x (Awaiting better ecosystem and packages support for 19.x)
+- At the beginning, I sticked to previous Next 14.x and React 18.x for better ecosystem and packages support. If stability is top priority in your project, I suggest you postpone upgrade to the latest versions.
+- At the late stage, upgraded to Next 15.x and React 19.x for better performance and stability by using new improvements such as [Turbopack](https://nextjs.org/docs/app/api-reference/turbopack)
 
 ## 🚀 Getting Started
 
