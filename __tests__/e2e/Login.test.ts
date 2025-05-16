@@ -14,6 +14,6 @@ test.describe('SignInPage', () => {
     await page.goto('/login');
     await page.fill('input[name="email"]', defaultEmail);
     await page.click('button[type="submit"]');
-    await expect(page).toHaveURL('/boards?login_success=true');
+    await expect(page).toHaveURL('/boards');
   });
 });
