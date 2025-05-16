@@ -10,10 +10,13 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useBoards } from '@/hooks/useBoards';
+import { useTaskStore } from '@/lib/store';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { BoardActions } from './board/BoardActions';
 import NewBoardDialog from './board/NewBoardDialog';
 
@@ -25,6 +28,21 @@ export function BoardOverview() {
   const [filter, setFilter] = useState<FilterType>('all');
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const userEmail = useTaskStore((state) => state.userEmail);
+
+  useEffect(() => {
+    const loginSuccess = searchParams.get('login_success');
+    if (loginSuccess === 'true') {
+      const timer = setTimeout(() => {
+        toast.success('Login successful!');
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('login_success');
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams.toString(), userEmail, router, pathname]);
 
   useEffect(() => {
     fetchBoards();
