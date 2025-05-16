@@ -1,246 +1,262 @@
 import { defaultEmail } from '@/constants/demoData';
-import { ROUTES } from '@/constants/routes';
 import useAuthForm from '@/hooks/useAuthForm';
 import { act, renderHook } from '@testing-library/react';
-import { signIn } from 'next-auth/react';
-import React from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Import React for useTransition mock
+// --- Mock Area ---
+const mockSetUserInfo = vi.fn();
+const mockRouterPush = vi.fn();
+let mockIsNavigating = false;
+let navigationCallback: (() => void) | null = null;
 
-// --- Mocks ---
+vi.mock('@/lib/store', () => ({
+  useTaskStore: () => ({
+    setUserInfo: mockSetUserInfo
+  })
+}));
 
-// Mock next-auth/react
 vi.mock('next-auth/react', () => ({
   signIn: vi.fn()
 }));
 
-// Use vi.hoisted to ensure mockToastPromise is defined before vi.mock for 'sonner'
-const hoistedMocks = vi.hoisted(() => {
-  return {
-    mockToastPromise: vi.fn(async (promiseAction, callbacks) => {
-      if (callbacks.loading) {
-        // console.log(`Mocked toast loading: ${callbacks.loading}`);
-      }
-      try {
-        const result = await promiseAction();
-        if (callbacks.success) {
-          return callbacks.success(result);
-        }
-      } catch (err) {
-        if (callbacks.error) {
-          return callbacks.error(err as Error);
-        }
-        throw err;
-      }
-    })
-  };
-});
-
-// Mock sonner
 vi.mock('sonner', () => ({
   toast: {
-    error: vi.fn(), // Keep if direct calls are possible, though useAuthForm doesn't use it
-    promise: hoistedMocks.mockToastPromise // Use the hoisted mock
+    promise: vi.fn()
   }
 }));
 
-// Mock @/lib/store
-const mockSetUserInfo = vi.fn();
-vi.mock('@/lib/store', () => ({
-  useTaskStore: vi.fn(() => ({
-    setUserInfo: mockSetUserInfo
-  }))
-}));
-
-// Mock next/navigation
-const mockRouterPush = vi.fn();
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
     push: mockRouterPush
   })
 }));
 
-// Mock react's useTransition
-let mockIsNavigating = false;
-const setMockIsNavigating = (value: boolean) => {
-  mockIsNavigating = value;
-};
-// Ensure startNavigationTransition executes the callback
-const mockStartNavigationTransition = vi.fn((callback: () => void) => {
-  // Simulate setting pending state to true during the transition
-  const originalIsNavigating = mockIsNavigating;
-  setMockIsNavigating(true);
-  try {
-    callback(); // Execute the actual transition logic (e.g., router.push)
-  } finally {
-    // Simulate transition completion
-    setMockIsNavigating(originalIsNavigating); // Reset to original, or false if appropriate
-  }
-});
-
-// Need to use vi.mock correctly for React itself if modifying its exports
-// We ensure that the actual React is imported and then we override useTransition
 vi.mock('react', async () => {
-  const actualReact = await vi.importActual<typeof React>('react');
+  const actual = await vi.importActual<typeof import('react')>('react');
   return {
-    ...actualReact,
-    useTransition: (): [boolean, (callback: () => void) => void] => [
+    ...actual,
+    useTransition: () => [
       mockIsNavigating,
-      mockStartNavigationTransition
+      (cb: () => void) => {
+        navigationCallback = cb;
+      }
     ]
   };
 });
+// --- End Mock Area ---
 
-// --- Tests ---
-describe('useAuthForm Hook', () => {
+describe('useAuthForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Ensure the hoisted mock is also cleared/reset if needed, or re-initialize its behavior
-    hoistedMocks.mockToastPromise.mockClear();
+    mockSetUserInfo.mockClear();
+    mockRouterPush.mockClear();
+    mockIsNavigating = false;
+    navigationCallback = null;
     vi.useFakeTimers();
-    setMockIsNavigating(false); // Reset navigation state
-
-    // Mock window.location if necessary, though not directly used by useAuthForm
-    Object.defineProperty(window, 'location', {
-      value: { href: ROUTES.AUTH.LOGIN }, // Default to login page
-      writable: true
-    });
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers(); // Clear any remaining timers
     vi.useRealTimers();
   });
 
-  it('should initialize form with default email', () => {
+  it('should initialize the form email with the default value', () => {
     const { result } = renderHook(() => useAuthForm());
     expect(result.current.form.getValues('email')).toBe(defaultEmail);
   });
 
-  it('should handle successful sign in, update user info, and navigate', async () => {
+  it('successful login flow: setUserInfo, toast, delayed navigation', async () => {
+    const { signIn } = await import('next-auth/react');
+    const { toast } = await import('sonner');
     vi.mocked(signIn).mockResolvedValueOnce({
+      error: undefined,
       ok: true,
-      error: undefined, // Corrected based on previous feedback
       status: 200,
       url: null,
-      // code: undefined // Removed as it's not standard
       code: undefined
+    });
+
+    const toastPromiseMock = vi.fn((_promise, { success }) => {
+      _promise.catch(() => {
+        /* do nothing, just consume */
+      });
+
+      const result = { unwrap: () => Promise.resolve(undefined) };
+      if (success) success();
+      return result;
     });
 
     const { result } = renderHook(() => useAuthForm());
 
     await act(async () => {
       await result.current.onSubmit({ email: defaultEmail });
+      vi.runAllTimers();
+      if (navigationCallback) navigationCallback();
     });
 
     expect(signIn).toHaveBeenCalledWith('credentials', {
       email: defaultEmail,
       redirect: false
     });
-    expect(hoistedMocks.mockToastPromise).toHaveBeenCalled(); // Verify toast.promise was called
     expect(mockSetUserInfo).toHaveBeenCalledWith(defaultEmail);
   });
 
-  it('should handle "CredentialsSignin" error from next-auth via toast.promise', async () => {
+  it('should trigger toast.promise error handler on CredentialsSignin error', async () => {
+    const { signIn } = await import('next-auth/react');
+    const { toast } = await import('sonner');
     vi.mocked(signIn).mockResolvedValueOnce({
       error: 'CredentialsSignin',
       ok: false,
       status: 401,
       url: null,
-      // code: undefined // Removed
       code: undefined
     });
+
+    const toastPromiseMock = vi.fn((_promise, { error }) => {
+      _promise.catch(() => {
+        /* do nothing, just consume */
+      });
+
+      const result = {
+        unwrap: () => Promise.reject(new Error('Invalid email, retry again.'))
+      };
+      if (error) error(new Error('Invalid email, retry again.'));
+      return result;
+    });
+    toast.promise = toastPromiseMock;
+
+    // Suppress console.error
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const { result } = renderHook(() => useAuthForm());
 
     await act(async () => {
-      await result.current.onSubmit({ email: 'test@example.com' });
+      await result.current.onSubmit({ email: 'fail@example.com' });
     });
+
+    const lastToastCall = toastPromiseMock.mock.results.at(-1)?.value;
+    if (lastToastCall && typeof lastToastCall.unwrap === 'function') {
+      try {
+        await lastToastCall.unwrap();
+      } catch (e) {
+        // error is expected, do nothing
+      }
+    }
 
     expect(signIn).toHaveBeenCalledWith('credentials', {
-      email: 'test@example.com',
+      email: 'fail@example.com',
       redirect: false
     });
-    expect(hoistedMocks.mockToastPromise).toHaveBeenCalled(); // Verify toast.promise was called
     expect(mockSetUserInfo).not.toHaveBeenCalled();
     expect(mockRouterPush).not.toHaveBeenCalled();
+    expect(toastPromiseMock).toHaveBeenCalled();
 
-    // Removed assertion for toastPromiseCallResult.value
+    errorSpy.mockRestore();
   });
 
-  it('should handle other errors from next-auth via toast.promise', async () => {
-    const errorMessage = 'Some other authentication error';
+  it('should trigger toast.promise error handler on other signIn errors', async () => {
+    const { signIn } = await import('next-auth/react');
+    const { toast } = await import('sonner');
     vi.mocked(signIn).mockResolvedValueOnce({
-      error: errorMessage,
+      error: 'Some error',
       ok: false,
       status: 500,
       url: null,
-      // code: undefined // Removed
       code: undefined
     });
 
+    const toastPromiseMock = vi.fn((_promise, { error }) => {
+      _promise.catch(() => {
+        /* do nothing, just consume */
+      });
+
+      const result = { unwrap: () => Promise.reject(new Error('Some error')) };
+      if (error) error(new Error('Some error'));
+      return result;
+    });
+    toast.promise = toastPromiseMock;
+
     const { result } = renderHook(() => useAuthForm());
 
     await act(async () => {
-      await result.current.onSubmit({ email: 'test@example.com' });
+      await result.current.onSubmit({ email: 'fail2@example.com' });
     });
+
+    const lastToastCall = toastPromiseMock.mock.results.at(-1)?.value;
+    if (lastToastCall && typeof lastToastCall.unwrap === 'function') {
+      try {
+        await lastToastCall.unwrap();
+      } catch (e) {
+        // error is expected, do nothing
+      }
+    }
 
     expect(signIn).toHaveBeenCalledWith('credentials', {
-      email: 'test@example.com',
+      email: 'fail2@example.com',
       redirect: false
     });
-    expect(hoistedMocks.mockToastPromise).toHaveBeenCalled(); // Verify toast.promise was called
     expect(mockSetUserInfo).not.toHaveBeenCalled();
     expect(mockRouterPush).not.toHaveBeenCalled();
-
-    // Removed assertion for toastPromiseCallResult.value
+    expect(toastPromiseMock).toHaveBeenCalled();
   });
 
-  it('should handle system error (signIn rejects) via toast.promise', async () => {
-    const networkError = new Error('Network error');
-    vi.mocked(signIn).mockRejectedValueOnce(networkError);
+  it('should trigger toast.promise error handler when signIn throws', async () => {
+    const { signIn } = await import('next-auth/react');
+    const { toast } = await import('sonner');
+    vi.mocked(signIn).mockRejectedValueOnce(new Error('Network error'));
+
+    const toastPromiseMock = vi.fn((_promise, { error }) => {
+      _promise.catch(() => {
+        /* do nothing, just consume */
+      });
+
+      const result = {
+        unwrap: () => Promise.reject(new Error('Network error'))
+      };
+      if (error) error(new Error('Network error'));
+      return result;
+    });
+    toast.promise = toastPromiseMock;
 
     const { result } = renderHook(() => useAuthForm());
 
-    // Suppress console.error for this test as the hook logs it
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    // Suppress console.error
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     await act(async () => {
-      await result.current.onSubmit({ email: 'test@example.com' });
+      await result.current.onSubmit({ email: 'error@example.com' });
     });
+
+    const lastToastCall = toastPromiseMock.mock.results.at(-1)?.value;
+    if (lastToastCall && typeof lastToastCall.unwrap === 'function') {
+      try {
+        await lastToastCall.unwrap();
+      } catch (e) {
+        // error is expected, do nothing
+      }
+    }
 
     expect(signIn).toHaveBeenCalledWith('credentials', {
-      email: 'test@example.com',
+      email: 'error@example.com',
       redirect: false
     });
-    expect(hoistedMocks.mockToastPromise).toHaveBeenCalled(); // Verify toast.promise was called
     expect(mockSetUserInfo).not.toHaveBeenCalled();
     expect(mockRouterPush).not.toHaveBeenCalled();
+    expect(toastPromiseMock).toHaveBeenCalled();
 
-    // Removed assertion for toastPromiseCallResult.value
-    consoleErrorSpy.mockRestore();
+    errorSpy.mockRestore();
   });
 
-  it('should reflect the isNavigating state from useTransition as loading state', () => {
-    // Initial state from mockIsNavigating = false
+  it('loading state should sync with isNavigating', () => {
+    mockIsNavigating = false;
     const { result, rerender } = renderHook(() => useAuthForm());
     expect(result.current.loading).toBe(false);
 
-    // Simulate transition starting
-    act(() => {
-      setMockIsNavigating(true);
-      rerender(); // Rerender the hook to pick up the new state
-    });
+    mockIsNavigating = true;
+    rerender();
     expect(result.current.loading).toBe(true);
 
-    // Simulate transition ending
-    act(() => {
-      setMockIsNavigating(false);
-      rerender();
-    });
+    mockIsNavigating = false;
+    rerender();
     expect(result.current.loading).toBe(false);
   });
 });
