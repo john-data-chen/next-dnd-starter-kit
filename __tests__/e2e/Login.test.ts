@@ -1,7 +1,6 @@
 import { defaultEmail } from '@/constants/demoData';
 import { expect, test } from '@playwright/test';
 
-
 test.describe('SignInPage', () => {
   test('should load the sign-in page', async ({ page }) => {
     // clear cookies
