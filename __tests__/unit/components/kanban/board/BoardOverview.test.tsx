@@ -16,7 +16,11 @@ const mockUseBoards = useBoards as ReturnType<typeof vi.fn>; // Alternative cast
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
-  usePathname: vi.fn()
+  usePathname: vi.fn(),
+  useSearchParams: vi.fn(() => ({
+    get: vi.fn(() => null),
+    toString: vi.fn(() => '')
+  }))
 }));
 const mockUseRouter = useRouter as ReturnType<typeof vi.fn>; // Alternative casting
 const mockUsePathname = usePathname as ReturnType<typeof vi.fn>; // Alternative casting
