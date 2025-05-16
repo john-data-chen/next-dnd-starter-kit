@@ -4,13 +4,15 @@ import { useTaskStore } from '@/lib/store';
 import { SignInFormValue, SignInValidation } from '@/types/authUserForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function useAuthForm() {
-  const [loading] = useTransition();
+  const [isNavigating, startNavigationTransition] = useTransition(); // Updated useTransition
   const { setUserInfo } = useTaskStore();
+  const router = useRouter(); // Added router instance
 
   const form = useForm<SignInFormValue>({
     resolver: zodResolver(SignInValidation),
@@ -20,40 +22,54 @@ export default function useAuthForm() {
   });
 
   const onSubmit = async (data: SignInFormValue) => {
-    try {
+    // Define a promise that encapsulates the sign-in logic
+    const signInProcessPromise = async () => {
       const result = await signIn('credentials', {
         email: data.email,
         redirect: false
       });
 
       if (result?.error) {
-        toast.error('Invalid email, retry again.');
-        return;
+        // If signIn resolves with an error, throw an error to be caught by toast.promise's error handler
+        // next-auth typically returns an error string like 'CredentialsSignin'
+        if (result.error === 'CredentialsSignin') {
+          throw new Error('Invalid email, retry again.');
+        }
+        throw new Error(result.error || 'Authentication failed.');
       }
 
-      toast.promise(
-        new Promise((resolve) => {
-          setUserInfo(data.email);
-          setTimeout(() => {
-            window.location.href = ROUTES.BOARDS.ROOT;
-            resolve('success');
-          }, 500);
-        }),
-        {
-          loading: 'Signing in...',
-          success: 'Welcome! Redirecting...',
-          error: 'Authentication failed. Please try again.'
-        }
-      );
-    } catch (error) {
-      console.error('Authentication error:', error);
-      toast.error('System error. Please try again later.');
-    }
+      // If signIn is successful
+      setUserInfo(data.email);
+      // Do not initiate navigation here; it will be handled in the success callback of toast.promise
+    };
+
+    toast.promise(signInProcessPromise(), {
+      loading: 'Authenticating...', // This is L52. It will show during the signIn API call.
+      success: () => {
+        // This message is displayed when signInProcessPromise resolves successfully.
+        // It will appear on the current (login) page.
+        // We will delay the navigation to allow the user to see this message.
+        const navigationDelay = 500;
+
+        setTimeout(() => {
+          startNavigationTransition(() => {
+            router.push(`${ROUTES.BOARDS.ROOT}?login_success=true`);
+          });
+        }, navigationDelay);
+
+        return 'Authentication successful! Redirecting...'; // This is L53.
+      },
+      error: (err: Error) => {
+        // This catches errors thrown from signInProcessPromise (e.g., from a failed signIn attempt)
+        console.error('Sign-in promise error:', err);
+        return err.message || 'An unknown authentication error occurred.';
+      }
+    });
   };
 
   return {
     form,
-    loading,
+    loading: isNavigating, // Reflect navigation pending state
     onSubmit
   };
 }

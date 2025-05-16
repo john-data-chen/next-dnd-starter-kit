@@ -3,48 +3,47 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 
-
 // Mock useTaskStore
 vi.mock('@/lib/store', () => ({
   useTaskStore: () => ({
-    addBoard: vi.fn().mockResolvedValue('mock-board-id'),
-  }),
+    addBoard: vi.fn().mockResolvedValue('mock-board-id')
+  })
 }));
 
 // Mock useBoards
 vi.mock('@/hooks/useBoards', () => ({
   useBoards: () => ({
-    fetchBoards: vi.fn(),
-  }),
+    fetchBoards: vi.fn()
+  })
 }));
 
 // Mock useRouter
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
-    push: vi.fn(),
-  }),
+    push: vi.fn()
+  })
 }));
 
 // Mock toast
 vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
-    error: vi.fn(),
-  },
+    error: vi.fn()
+  }
 }));
 
 // Mock BoardForm
 vi.mock('@/components/kanban/board/BoardForm', () => ({
   BoardForm: ({ onSubmit, children }: any) => (
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
         onSubmit({ title: 'Test Board', description: 'desc' });
       }}
     >
       {children}
     </form>
-  ),
+  )
 }));
 
 describe('NewBoardDialog', () => {

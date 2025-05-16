@@ -130,11 +130,14 @@ pnpm test
 # Run E2E tests by Playwright
 pnpm playwright
 
-# ESLint
+# ESLint fix
 pnpm lint
 
 # Format code
 pnpm format
+
+# Build
+pnpm build
 ```
 
 ## 🔐 Permission System

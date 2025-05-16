@@ -31,7 +31,8 @@ const resetStore = () => {
 describe('Zustand Store: useTaskStore', () => {
   const mockUser: UserInfo = { id: 'user-1', name: 'Test User' };
   // Define a mock user object that includes email, matching the expected return type of getUserByEmail
-  const mockFullUser = { // This could be typed as User if User type matches exactly
+  const mockFullUser = {
+    // This could be typed as User if User type matches exactly
     id: 'user-1',
     name: 'Test User',
     email: defaultEmail // Use the imported defaultEmail
@@ -319,7 +320,9 @@ describe('Zustand Store: useTaskStore', () => {
         newDescription: 'Updated Desc'
       });
       // Check the state update after the async operation completes
-      const updatedProject = useTaskStore.getState().projects.find(p => p._id === mockProjectId);
+      const updatedProject = useTaskStore
+        .getState()
+        .projects.find((p) => p._id === mockProjectId);
       expect(updatedProject?.title).toBe(updatedTitle);
       // Note: Description update is not reflected in state in the current store implementation
       // If description should be updated in state, the store logic needs adjustment.
@@ -524,7 +527,7 @@ describe('Zustand Store: useTaskStore', () => {
       expect(dbTask.updateTaskProjectInDb).toHaveBeenCalledWith(
         mockUserEmail,
         mockTaskId, // Ensure ID is correct
-        'p2'       // Ensure target Project ID is correct
+        'p2' // Ensure target Project ID is correct
       );
       const state = useTaskStore.getState();
       expect(state.projects.find((p) => p._id === 'p1')?.tasks).toHaveLength(0);
