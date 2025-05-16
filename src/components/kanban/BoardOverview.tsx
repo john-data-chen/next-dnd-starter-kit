@@ -10,7 +10,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useBoards } from '@/hooks/useBoards';
-import { useTaskStore } from '@/lib/store';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -29,20 +28,21 @@ export function BoardOverview() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const userEmail = useTaskStore((state) => state.userEmail);
+
+  const searchParamsString = searchParams.toString();
 
   useEffect(() => {
     const loginSuccess = searchParams.get('login_success');
     if (loginSuccess === 'true') {
       const timer = setTimeout(() => {
         toast.success('Login successful!');
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParamsString);
         params.delete('login_success');
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [searchParams.toString(), userEmail, router, pathname]);
+  }, [searchParams, searchParamsString, router, pathname]);
 
   useEffect(() => {
     fetchBoards();
