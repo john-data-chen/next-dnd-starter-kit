@@ -231,5 +231,4 @@ describe('Database Project Functions', () => {
       expect(result).toBeNull();
     });
   });
-
 });

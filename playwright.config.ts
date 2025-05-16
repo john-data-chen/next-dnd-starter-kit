@@ -3,7 +3,6 @@ import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
-
 // Load environment variables from .env file first (as fallback)
 // dotenv will not override existing environment variables (e.g., from CI)
 dotenv.config({ path: path.resolve(__dirname, '.env') });

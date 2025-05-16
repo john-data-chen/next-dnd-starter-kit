@@ -5,7 +5,6 @@ import React from 'react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-
 // Mock toast
 vi.mock('sonner', () => ({
   toast: {
@@ -13,7 +12,6 @@ vi.mock('sonner', () => ({
     error: vi.fn()
   }
 }));
-
 
 // Mock zustand store
 const mockAddTask = vi.fn();
@@ -28,7 +26,7 @@ vi.mock('@/components/kanban/task/TaskForm', () => ({
   TaskForm: ({ onSubmit, onCancel }: any) => (
     <form
       data-testid="mock-task-form"
-      onSubmit={async e => {
+      onSubmit={async (e) => {
         e.preventDefault();
         await onSubmit({
           title: 'Test Task',
@@ -40,7 +38,9 @@ vi.mock('@/components/kanban/task/TaskForm', () => ({
       }}
     >
       <button type="submit">Create Task</button>
-      <button type="button" onClick={onCancel}>Cancel</button>
+      <button type="button" onClick={onCancel}>
+        Cancel
+      </button>
     </form>
   )
 }));
@@ -71,7 +71,6 @@ vi.mock('@/components/ui/dialog', () => ({
   DialogTitle: ({ children }: any) => <h2>{children}</h2>,
   DialogDescription: ({ children }: any) => <p>{children}</p>
 }));
-
 
 describe('NewTaskDialog', () => {
   const projectId = 'p1';

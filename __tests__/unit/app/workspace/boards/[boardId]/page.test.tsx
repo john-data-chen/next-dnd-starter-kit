@@ -1,8 +1,9 @@
+import BoardPage from '@/app/(workspace)/boards/[boardId]/page';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('next/navigation', () => ({
-  useParams: () => ({ boardId: 'test-board-id' }),
+  useParams: () => ({ boardId: 'test-board-id' })
 }));
 
 const setCurrentBoardIdMock = vi.fn();
@@ -12,22 +13,20 @@ vi.mock('@/lib/store', () => ({
   useTaskStore: (selector: any) =>
     selector({
       setCurrentBoardId: setCurrentBoardIdMock,
-      fetchProjects: fetchProjectsMock,
-    }),
+      fetchProjects: fetchProjectsMock
+    })
 }));
 
 vi.mock('@/components/kanban/board/Board', () => ({
-  Board: () => <div data-testid="mock-board">Mock Board</div>,
+  Board: () => <div data-testid="mock-board">Mock Board</div>
 }));
 
 vi.mock('@/components/layout/PageContainer', () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="mock-page-container">{children}</div>
-  ),
+  )
 }));
-
-import BoardPage from '@/app/(workspace)/boards/[boardId]/page';
 
 describe('BoardPage', () => {
   beforeEach(() => {

@@ -1,8 +1,8 @@
 import AppLayout from '@/app/(workspace)/layout';
 import { ROUTES } from '@/constants/routes';
+import { render, screen } from '@testing-library/react';
 import { redirect } from 'next/navigation';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 
 vi.mock('@/lib/auth', () => ({
   auth: vi.fn()
