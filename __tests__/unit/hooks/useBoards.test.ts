@@ -96,7 +96,10 @@ describe('useBoards Hook', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error in fetchBoards:', mockError);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Failed to fetch boards:',
+      mockError
+    );
     expect(mockSetMyBoards).toHaveBeenCalledWith([]);
     expect(mockSetTeamBoards).toHaveBeenCalledWith([]);
     expect(result.current.loading).toBe(false);
