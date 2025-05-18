@@ -22,6 +22,7 @@ interface State {
   userId: string | null;
   setUserInfo: (email: string) => void;
   projects: Project[];
+  isLoadingProjects: boolean;
   fetchProjects: (boardId: string) => Promise<void>;
   setProjects: (projects: Project[]) => void;
   addProject: (title: string, description: string) => Promise<string>;
@@ -72,6 +73,7 @@ export const useTaskStore = create<State>()(
       userEmail: null,
       userId: null,
       projects: [] as Project[],
+      isLoadingProjects: false,
       setUserInfo: async (email: string) => {
         const user = await getUserByEmail(email);
         if (!user) {
@@ -80,6 +82,7 @@ export const useTaskStore = create<State>()(
         set({ userEmail: email, userId: user.id });
       },
       fetchProjects: async (boardId: string) => {
+        set({ isLoadingProjects: true });
         try {
           const projects = await getProjectsFromDb(boardId);
           if (!projects || projects.length === 0) {
@@ -112,6 +115,8 @@ export const useTaskStore = create<State>()(
         } catch (error) {
           console.error('Error fetching projects:', error);
           set({ projects: [] });
+        } finally {
+          set({ isLoadingProjects: false }); // Set loading to false when done
         }
       },
       setProjects: (projects: Project[]) => set({ projects }),
