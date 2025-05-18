@@ -29,30 +29,18 @@ export function BoardOverview() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const searchParamsString = searchParams.toString();
-
   useEffect(() => {
     const loginSuccess = searchParams.get('login_success');
     if (loginSuccess === 'true') {
       const timer = setTimeout(() => {
         toast.success('Login successful!');
-        const params = new URLSearchParams(searchParamsString);
+        const params = new URLSearchParams(searchParams.toString());
         params.delete('login_success');
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [searchParams, searchParamsString, router, pathname]);
-
-  useEffect(() => {
-    fetchBoards();
-  }, [fetchBoards]);
-
-  useEffect(() => {
-    if (pathname === '/boards') {
-      fetchBoards();
-    }
-  }, [pathname, fetchBoards]);
+  }, [searchParams, router, pathname]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
