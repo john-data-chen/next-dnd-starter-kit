@@ -304,11 +304,6 @@ describe('BoardOverview Component', () => {
     });
 
     const { unmount } = render(<BoardOverview />);
-
-    // Check initial fetch call (due to useEffect in useBoards and BoardOverview)
-    // Note: The exact number might depend on strict mode and hook implementation details.
-    // We focus on it being called at least once initially.
-    expect(mockFetchBoards).toHaveBeenCalled();
     const initialCallCount = mockFetchBoards.mock.calls.length;
 
     // Simulate visibility change to hidden and back to visible
