@@ -1,5 +1,6 @@
 'use client';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { useTaskStore } from '@/lib/store';
 import { Project, Task } from '@/types/dbInterface';
 import DraggableData from '@/types/drag&drop';
@@ -29,6 +30,7 @@ import { TaskFilter } from '../task/TaskFilter';
 
 export function Board() {
   const projects = useTaskStore((state) => state.projects);
+  const isLoadingProjects = useTaskStore((state) => state.isLoadingProjects); // Get loading state
   const filter = useTaskStore((state) => state.filter);
   const setProjects = useTaskStore((state) => state.setProjects);
   const dragTaskOnProject = useTaskStore((state) => state.dragTaskOnProject);
@@ -61,7 +63,15 @@ export function Board() {
     const project = projects.find(
       (project: Project) => project._id.toString() === projectId
     );
-    const tasksInProject = project!.tasks.filter(
+    if (!project) {
+      // Handle case where project might not be found, though unlikely with current logic
+      return {
+        tasksInProject: [],
+        taskPosition: -1,
+        project: null
+      };
+    }
+    const tasksInProject = project.tasks.filter(
       (task: Task) => task.project.toString() === projectId
     );
     const taskPosition = tasksInProject.findIndex(
@@ -354,17 +364,20 @@ export function Board() {
           </div>
         </div>
         <BoardContainer>
-          <SortableContext items={projectsId}>
-            {projects?.map((project: Project, index: number) => (
-              <Fragment key={project._id}>
-                <BoardProject
-                  project={project}
-                  tasks={filterTasks(project.tasks)}
-                />
-                {index === projects?.length - 1}
-              </Fragment>
-            ))}
-          </SortableContext>
+          {isLoadingProjects ? (
+            <Skeleton className="h-[75vh] max-h-[75vh] w-full md:w-[380px] bg-secondary flex flex-col shrink-0 snap-center" />
+          ) : (
+            <SortableContext items={projectsId}>
+              {projects?.map((project: Project) => (
+                <Fragment key={project._id}>
+                  <BoardProject
+                    project={project}
+                    tasks={filterTasks(project.tasks)}
+                  />
+                </Fragment>
+              ))}
+            </SortableContext>
+          )}
         </BoardContainer>
         <DragOverlay>
           {activeProject && (
