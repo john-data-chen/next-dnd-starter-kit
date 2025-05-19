@@ -91,6 +91,7 @@ describe('Zustand Store: useTaskStore', () => {
     expect(state.userEmail).toBeNull();
     expect(state.userId).toBeNull();
     expect(state.projects).toEqual([]);
+    expect(state.isLoadingProjects).toBe(false); // Add this line
     expect(state.filter).toEqual({ status: null, search: '' });
     expect(state.currentBoardId).toBeNull();
     expect(state.myBoards).toEqual([]);
@@ -236,7 +237,7 @@ describe('Zustand Store: useTaskStore', () => {
 
   // --- Project Actions ---
   describe('Project Actions', () => {
-    it('fetchProjects should fetch projects and their tasks', async () => {
+    it('fetchProjects should fetch projects and their tasks and manage isLoadingProjects state', async () => {
       const project1: Project = { ...mockProject, _id: 'p1', tasks: [] };
       const project2: Project = { ...mockProject, _id: 'p2', tasks: [] };
       const task1: Task = { ...mockTask, _id: 't1', project: 'p1' };
@@ -250,9 +251,17 @@ describe('Zustand Store: useTaskStore', () => {
         .mockResolvedValueOnce([task1])
         .mockResolvedValueOnce([task2]);
 
-      await act(async () => {
+      // Check isLoadingProjects before fetch
+      expect(useTaskStore.getState().isLoadingProjects).toBe(false);
+
+      const fetchPromise = act(async () => {
         await useTaskStore.getState().fetchProjects(mockBoardId);
       });
+
+      // Check isLoadingProjects during fetch (immediately after calling)
+      expect(useTaskStore.getState().isLoadingProjects).toBe(true);
+
+      await fetchPromise; // Wait for the fetch to complete
 
       expect(dbProject.getProjectsFromDb).toHaveBeenCalledWith(mockBoardId);
       expect(dbTask.getTasksByProjectId).toHaveBeenCalledWith('p1');
@@ -261,15 +270,45 @@ describe('Zustand Store: useTaskStore', () => {
         { ...project1, tasks: [task1] },
         { ...project2, tasks: [task2] }
       ]);
+      // Check isLoadingProjects after fetch
+      expect(useTaskStore.getState().isLoadingProjects).toBe(false);
     });
 
-    it('fetchProjects should set empty array if no projects found', async () => {
+    it('fetchProjects should set empty array and isLoadingProjects to false if no projects found', async () => {
       vi.mocked(dbProject.getProjectsFromDb).mockResolvedValue([]);
-      await act(async () => {
+
+      expect(useTaskStore.getState().isLoadingProjects).toBe(false);
+      const fetchPromise = act(async () => {
         await useTaskStore.getState().fetchProjects(mockBoardId);
       });
+      expect(useTaskStore.getState().isLoadingProjects).toBe(true);
+      await fetchPromise;
+
       expect(useTaskStore.getState().projects).toEqual([]);
       expect(dbTask.getTasksByProjectId).not.toHaveBeenCalled();
+      expect(useTaskStore.getState().isLoadingProjects).toBe(false);
+    });
+
+    it('fetchProjects should set isLoadingProjects to false on error', async () => {
+      vi.mocked(dbProject.getProjectsFromDb).mockRejectedValue(
+        new Error('DB Error')
+      );
+
+      expect(useTaskStore.getState().isLoadingProjects).toBe(false);
+      const fetchPromise = act(async () => {
+        // We expect this to throw an error or handle it internally,
+        // but the isLoadingProjects state should still be managed.
+        try {
+          await useTaskStore.getState().fetchProjects(mockBoardId);
+        } catch (e) {
+          // error is expected
+        }
+      });
+      expect(useTaskStore.getState().isLoadingProjects).toBe(true);
+      await fetchPromise;
+
+      expect(useTaskStore.getState().projects).toEqual([]); // Should be empty on error
+      expect(useTaskStore.getState().isLoadingProjects).toBe(false);
     });
 
     it('addProject should add a project to the state', async () => {
