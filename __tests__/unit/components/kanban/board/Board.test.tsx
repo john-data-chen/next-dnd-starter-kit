@@ -34,8 +34,16 @@ const hoistedToastMocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('@dnd-kit/sortable', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@dnd-kit/sortable')>();
+vi.mock('sonner', () => ({
+  toast: {
+    success: hoistedToastMocks.mockToastSuccess,
+    error: hoistedToastMocks.mockToastError
+  }
+}));
+
+vi.mock('@dnd-kit/sortable', async (importOriginal: () => Promise<any>) => {
+  // Optional: Improved type for importOriginal
+  const actual = (await importOriginal()) as typeof import('@dnd-kit/sortable'); // FIXED
   return {
     ...actual,
     arrayMove: vi.fn((array, from, to) => {
@@ -58,8 +66,9 @@ let capturedDragStart: ((event: DragStartEvent) => void) | undefined;
 let capturedDragOver: ((event: DragOverEvent) => void) | undefined;
 let capturedDragEnd: ((event: DragEndEvent) => void) | undefined;
 
-vi.mock('@dnd-kit/core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@dnd-kit/core')>();
+vi.mock('@dnd-kit/core', async (importOriginal: () => Promise<any>) => {
+  // Optional: Improved type for importOriginal
+  const actual = (await importOriginal()) as typeof import('@dnd-kit/core'); // FIXED
   return {
     ...actual,
     DndContext: vi.fn(
