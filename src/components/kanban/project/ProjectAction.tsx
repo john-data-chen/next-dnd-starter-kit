@@ -54,39 +54,36 @@ export function ProjectActions({
     canEditProject: boolean;
     canDeleteProject: boolean;
   } | null>(null);
-  const [isLoadingPermissions, setIsLoadingPermissions] = React.useState(true);
+  const [isLoadingPermissions, setIsLoadingPermissions] = React.useState(false); // Initialize to false
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false); // State for controlling menu
 
   type ProjectFormData = z.infer<typeof projectSchema>;
 
-  // Effect to fetch permissions
-  React.useEffect(() => {
-    async function fetchProjectPermissions() {
-      if (!id) {
-        setIsLoadingPermissions(false);
-        setPermissions({ canEditProject: false, canDeleteProject: false }); // Default to no permissions if no ID
-        return;
-      }
-      setIsLoadingPermissions(true);
-      try {
-        const response = await fetch(`/api/projects/${id}/permissions`);
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(
-            errorData.error || 'Failed to fetch project permissions'
-          );
-        }
-        const data = await response.json();
-        setPermissions(data);
-      } catch (error) {
-        console.error('Error fetching project permissions:', error);
-        setPermissions({ canEditProject: false, canDeleteProject: false }); // Fallback on error
-        toast.error(`Could not load permissions: ${(error as Error).message}`);
-      } finally {
-        setIsLoadingPermissions(false);
-      }
+  async function fetchProjectPermissions() {
+    if (!id) {
+      setIsLoadingPermissions(false);
+      setPermissions({ canEditProject: false, canDeleteProject: false }); // Default to no permissions if no ID
+      return;
     }
-    fetchProjectPermissions();
-  }, [id]);
+    setIsLoadingPermissions(true);
+    try {
+      const response = await fetch(`/api/projects/${id}/permissions`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || 'Failed to fetch project permissions'
+        );
+      }
+      const data = await response.json();
+      setPermissions(data);
+    } catch (error) {
+      console.error('Error fetching project permissions:', error);
+      setPermissions({ canEditProject: false, canDeleteProject: false }); // Fallback on error
+      toast.error(`Could not load permissions: ${(error as Error).message}`);
+    } finally {
+      setIsLoadingPermissions(false);
+    }
+  }
 
   async function onSubmit(values: ProjectFormData) {
     try {
@@ -124,17 +121,26 @@ export function ProjectActions({
         </DialogContent>
       </Dialog>
 
-      <DropdownMenu modal={false}>
+      <DropdownMenu
+        modal={false}
+        open={isMenuOpen}
+        onOpenChange={(open) => {
+          setIsMenuOpen(open);
+          if (open && !permissions) {
+            // Fetch permissions only when menu is opened and permissions are not yet fetched
+            fetchProjectPermissions();
+          }
+        }}
+      >
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
             size="icon"
             className="h-8 w-12"
             data-testid="project-option-button"
-            disabled={isLoadingPermissions} // Disable button while loading permissions
           >
             {isLoadingPermissions ? (
-              <DotsHorizontalIcon className="h-4 w-4 animate-pulse" /> // Basic loading indicator
+              <DotsHorizontalIcon className="h-4 w-4 animate-pulse" />
             ) : (
               <DotsHorizontalIcon className="h-4 w-4" />
             )}
