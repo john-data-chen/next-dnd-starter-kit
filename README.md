@@ -224,11 +224,11 @@ src/
   - Solution: Can be safely ignored as most modern browsers handle this correctly
   - Reason: Internal implementation of Radix UI's Dialog component
 
-### Server region and response time
+### Server
 
 - **Slow response from server**:
-  - Region: Hong Kong
-  - Issue: Sometimes Server response is slow, especially users are not in Asia
+  - Server Region: Hong Kong
+  - Issue: Sometimes Server response is slow, especially for users are not in Asia
   - Status: The resource of free tier is limited and no plan of CDN, it won't be fix in the near future
 
 ### 📃 License
