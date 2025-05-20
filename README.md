@@ -209,7 +209,7 @@ src/
 
 ## Known Issues & Limitations
 
-### React/Next.js
+### UI library
 
 - **Radix UI Ref Warning**:
 
@@ -227,8 +227,9 @@ src/
 ### Server
 
 - **Slow response from server**:
-  - Issue: Sometimes Server response is slow
-  - Status: The resource of free tier is limited, it won't be fix in the near future
+  - Server Region: Hong Kong
+  - Issue: Sometimes Server response is slow, especially for users are not in Asia
+  - Status: The resource of free tier is limited and no plan of CDN, it won't be fix in the near future
 
 ### 📃 License
 
