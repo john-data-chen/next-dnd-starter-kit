@@ -1,4 +1,4 @@
-import AppLayout from '@/app/(workspace)/layout';
+import AppLayout from '@/app/[locale]/(workspace)/layout';
 import { ROUTES } from '@/constants/routes';
 import { render, screen } from '@testing-library/react';
 import { redirect } from 'next/navigation';

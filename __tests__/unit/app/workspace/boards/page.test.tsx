@@ -1,4 +1,4 @@
-import BoardsPage from '@/app/(workspace)/boards/page';
+import BoardsPage from '@/app/[locale]/(workspace)/boards/page';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
