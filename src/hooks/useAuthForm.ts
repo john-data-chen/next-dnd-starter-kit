@@ -1,10 +1,11 @@
 import { defaultEmail } from '@/constants/demoData';
 import { ROUTES } from '@/constants/routes';
 import { useTaskStore } from '@/lib/store';
+import { getLocalePath } from '@/lib/utils';
 import { SignInFormValue, SignInValidation } from '@/types/authUserForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -13,6 +14,7 @@ export default function useAuthForm() {
   const [isNavigating, startNavigationTransition] = useTransition(); // Updated useTransition
   const { setUserInfo } = useTaskStore();
   const router = useRouter(); // Added router instance
+  const params = useParams();
 
   const form = useForm<SignInFormValue>({
     resolver: zodResolver(SignInValidation),
@@ -53,7 +55,10 @@ export default function useAuthForm() {
 
         setTimeout(() => {
           startNavigationTransition(() => {
-            router.push(`${ROUTES.BOARDS.ROOT}?login_success=true`);
+            const locale = params.locale;
+            router.push(
+              `${getLocalePath(ROUTES.BOARDS.ROOT, locale)}?login_success=true`
+            );
           });
         }, navigationDelay);
 
