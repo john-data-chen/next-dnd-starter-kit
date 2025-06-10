@@ -11,10 +11,24 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { ROUTES } from '@/constants/routes';
+import { useRouter } from '@/i18n/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
 
 export function UserNav() {
   const { data: session } = useSession();
+  const params = useParams();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    // After the session is destroyed, perform a client-side redirect
+    // to the correct localized login page.
+    const rawLocale = params.locale;
+    const locale = Array.isArray(rawLocale) ? rawLocale[0] : rawLocale || 'en';
+    router.push(ROUTES.AUTH.LOGIN, { locale });
+  };
+
   if (session) {
     return (
       <DropdownMenu>
@@ -41,11 +55,7 @@ export function UserNav() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => signOut({ callbackUrl: ROUTES.HOME })}
-          >
-            Log out
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
