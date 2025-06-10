@@ -16,22 +16,16 @@ export default auth((req) => {
   if (i18nResponse) return i18nResponse; // If i18n middleware returns a response, use it
 
   const isAuthenticated = !!req.auth;
-  const url = req.nextUrl.clone(); // Use the potentially rewritten URL by i18n middleware
+  const { nextUrl } = req;
+  const { pathname, locale } = nextUrl;
 
-  const isApiRoute = url.pathname.startsWith('/api'); // Check against the potentially prefixed path
-  // Adjust auth route check to account for potential locale prefixes
-  const authRoutePattern = new RegExp(
-    `^/(${routing.locales.join('|')})?/login`
-  );
-  const isAuthRoute = authRoutePattern.test(url.pathname);
+  const isApiRoute = pathname.startsWith('/api');
+  // After `next-intl` rewrites the path, we check the non-localized path.
+  const isAuthRoute = pathname === ROUTES.AUTH.LOGIN;
 
-  // Construct redirect URLs with locale if present
+  // Construct redirect URLs with the locale determined by `next-intl`
   const getRedirectUrl = (path: string) => {
-    const locale = url.pathname.split('/')[1];
-    if (routing.locales.includes(locale as (typeof routing.locales)[number])) {
-      return new URL(`/${locale}${path}`, req.url);
-    }
-    return new URL(path, req.url);
+    return new URL(`/${locale}${path}`, req.url);
   };
 
   if (isAuthenticated && isAuthRoute) {
