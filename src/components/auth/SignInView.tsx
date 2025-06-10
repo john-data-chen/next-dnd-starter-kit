@@ -1,3 +1,4 @@
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 import { projectMetaData } from '@/constants/pageMetaData';
 import { Presentation } from 'lucide-react';
 import UserAuthForm from './UserAuthForm';
@@ -17,6 +18,9 @@ export default function SignInViewPage() {
         </div>
       </div>
       <div className="flex h-full items-center justify-center p-4 lg:p-8">
+        <div className="absolute right-4 top-4 md:right-8 md:top-8">
+          <LanguageSwitcher />
+        </div>
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
