@@ -17,7 +17,7 @@ The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop f
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
 - 🎯 Developer-Friendly: Clear documentation and best practices built-in
 - 📝 Full Functional: Drag & Drop, Search and Filter, User Permission Management, Multi Kanban and Project Support
-- 🌐 Multi-Language (i18n): English and German
+- 🌐 Internationalization (i18n): English and German
 - 🎨 Modern UX: Theme Switcher, Responsive Design for mobile, tablet, and desktop
 - 💾 Persistent data: via MongoDB
 
@@ -185,17 +185,19 @@ __tests__/
 .github/ # GitHub Actions workflows
 .husky/ # Husky configuration
 database/ # MongoDB docker-compose and initialization
+messages/ # i18n translations
 public/ # Static files such as images
 src/
 ├── app/ # Next.js App routes
-│   ├── page.tsx # Root page
-│   ├── layout.tsx # Layout component
-│   ├── not-found.tsx # 404 page
-│   ├── (auth)/ # Authentication routes
-│       └── login/ # Login page
-│   └── (workspace)/ # Workspace routes
-│       └── boards/ # Kanban Overview routes
-│           └── [boardId]/ # Board
+│   └── [locale] # i18n locale routers
+│        ├── page.tsx # Root page
+│        ├── layout.tsx # Layout component
+│        ├── not-found.tsx # 404 page
+│        ├── (auth)/ # Authentication routes
+│             └── login/ # Login page
+│        └── (workspace)/ # Workspace routes
+│             └── boards/ # Kanban Overview routes
+│                 └── [boardId]/ # Board
 ├── components/ # Reusable React components
 ├── constants/ # Application-wide constants
 ├── hooks/ # Custom React hooks
