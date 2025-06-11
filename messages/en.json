@@ -19,9 +19,7 @@
     "loading": "Loading..."
   },
   "kanban": {
-    "overview": {
-      "title": "Kanban Overview",
-      "description": "Manage your boards in Overview"
-    }
+    "title": "Kanban Overview",
+    "description": "Manage your boards in Overview"
   }
 }
