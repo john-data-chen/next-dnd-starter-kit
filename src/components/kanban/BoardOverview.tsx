@@ -12,6 +12,7 @@ import {
 import { useBoards } from '@/hooks/useBoards';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { useLocale } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -27,6 +28,7 @@ export function BoardOverview() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const locale = useLocale();
 
   useEffect(() => {
     const loginSuccess = searchParams.get('login_success');
@@ -71,7 +73,7 @@ export function BoardOverview() {
   const shouldShowTeamBoards = filter === 'all' || filter === 'team';
 
   const handleBoardClick = (boardId: string) => {
-    router.push(`/boards/${boardId}`);
+    router.push(`/${locale}/boards/${boardId}`);
   };
 
   return (
