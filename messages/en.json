@@ -2,7 +2,10 @@
   "login": {
     "title": "Next Project Manager",
     "description": "Next.js template for beginner",
-    "formHint": "Please press Continue button, you don't need to register."
+    "formHint": "Please press Continue button, you don't need to register.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email...",
+    "continueButton": "Continue With Email"
   },
   "sidebar": {
     "overview": "Overview",

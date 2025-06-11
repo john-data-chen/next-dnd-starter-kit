@@ -11,9 +11,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import useAuthForm from '@/hooks/useAuthForm';
+import { useTranslations } from 'next-intl';
 
 export default function UserAuthForm() {
   const { form, loading, onSubmit } = useAuthForm();
+  const t = useTranslations('login');
 
   return (
     <Form {...form}>
@@ -29,11 +31,11 @@ export default function UserAuthForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('emailLabel')}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="Enter your email..."
+                  placeholder={t('emailPlaceholder')}
                   disabled={loading}
                   data-testid="email-input"
                   {...field}
@@ -50,7 +52,7 @@ export default function UserAuthForm() {
           type="submit"
           data-testid="submit-button"
         >
-          Continue With Email
+          {t('continueButton')}
         </Button>
       </form>
     </Form>
