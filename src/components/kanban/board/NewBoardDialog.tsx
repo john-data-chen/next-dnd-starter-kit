@@ -13,6 +13,7 @@ import { useBoards } from '@/hooks/useBoards';
 import { useRouter } from '@/i18n/navigation';
 import { useTaskStore } from '@/lib/store';
 import { boardSchema } from '@/types/boardForm';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -29,17 +30,18 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const { addBoard } = useTaskStore();
   const { fetchBoards } = useBoards();
   const router = useRouter();
+  const t = useTranslations('kanban.actions');
 
   const handleSubmit = async (data: BoardFormData) => {
     try {
       const boardId = await addBoard(data.title, data.description);
-      toast.success('Board created successfully');
+      toast.success(t('boardCreatedSuccess'));
       setOpen(false);
       await fetchBoards();
       router.push(`/boards/${boardId}`);
     } catch (error) {
       console.error(error);
-      toast.error('Failed to create board');
+      toast.error(t('boardCreateFailed'));
     }
   };
 
@@ -49,7 +51,7 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle data-testid="new-board-dialog-title">
-            Create New Board
+            {t('newBoardTitle')}
           </DialogTitle>
         </DialogHeader>
         <BoardForm onSubmit={handleSubmit}>
@@ -60,10 +62,10 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
               data-testid="cancel-button"
               onClick={() => setOpen(false)}
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button type="submit" data-testid="create-button">
-              Create
+              {t('create')}
             </Button>
           </DialogFooter>
         </BoardForm>
