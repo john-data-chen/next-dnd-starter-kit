@@ -33,7 +33,9 @@ vi.mock('next-intl', () => ({
 }));
 
 // Mock toast
-const toastSuccessMock = vi.fn();
+const { toastSuccessMock } = vi.hoisted(() => {
+  return { toastSuccessMock: vi.fn() };
+});
 vi.mock('sonner', () => ({
   toast: {
     success: toastSuccessMock,
