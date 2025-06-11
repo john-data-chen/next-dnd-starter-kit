@@ -35,7 +35,7 @@ export interface BoardDocument {
   description?: string;
   owner: string | UserInfo;
   members: (string | UserInfo)[];
-  projects: string[];
+  projects: (string | Project)[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -103,6 +103,7 @@ export interface Board {
   description?: string;
   owner: UserInfo;
   members: UserInfo[];
+  projects: Project[];
   createdAt: Date;
   updatedAt: Date;
 }
