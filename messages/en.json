@@ -20,6 +20,21 @@
   },
   "kanban": {
     "title": "Kanban Overview",
-    "description": "Manage your boards in Overview"
+    "description": "Manage your boards in Overview",
+    "loading": "Loading...",
+    "newBoard": "New Board",
+    "searchBoards": "Search boards...",
+    "filterBoards": "Filter boards",
+    "allBoards": "All Boards",
+    "myBoards": "My Boards",
+    "teamBoards": "Team Boards",
+    "myBoardsDescription": "(Boards which I can edit and delete)",
+    "noBoardsFound": "No boards found.",
+    "noDescription": "No description",
+    "projects": "Projects",
+    "members": "Members",
+    "teamBoardsDescription": "(Boards shared with me)",
+    "noTeamBoardsFound": "No team boards found.",
+    "owner": "Owner"
   }
 }
