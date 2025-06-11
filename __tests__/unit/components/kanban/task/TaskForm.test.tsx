@@ -1,55 +1,92 @@
 import { TaskForm } from '@/components/kanban/task/TaskForm';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { useTaskForm } from '@/hooks/useTaskForm';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 
-// Mock ResizeObserver globally
+// --- Global Mocks ---
 global.ResizeObserver = class {
   observe() {}
   unobserve() {}
   disconnect() {}
 };
 
-const mockOnSubmit = vi.fn();
+// --- Vitest Mocks ---
+const mockHandleSubmit = vi.fn((e) => e.preventDefault());
 const mockOnCancel = vi.fn();
+const mockSetSearchQuery = vi.fn();
 
+vi.mock('@/hooks/useTaskForm', () => ({
+  useTaskForm: vi.fn(() => ({
+    form: {
+      control: {},
+      handleSubmit: (fn: any) => fn
+    },
+    isSubmitting: false,
+    users: [],
+    searchQuery: '',
+    setSearchQuery: mockSetSearchQuery,
+    isSearching: false,
+    assignOpen: false,
+    setAssignOpen: vi.fn(),
+    handleSubmit: mockHandleSubmit
+  }))
+}));
+
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key
+}));
+
+// --- Test Suite ---
 describe('TaskForm Component', () => {
-  it('renders task title input', () => {
-    render(<TaskForm onSubmit={mockOnSubmit} />);
-    expect(screen.getByTestId('task-title-input')).toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('renders due date picker', () => {
-    render(<TaskForm onSubmit={mockOnSubmit} />);
-    expect(screen.getByTestId('task-date-picker-trigger')).toBeInTheDocument();
+  it('renders all form fields with translated labels and placeholders', () => {
+    render(<TaskForm onSubmit={vi.fn()} onCancel={mockOnCancel} />);
+
+    // Check for translated labels and placeholders
+    expect(screen.getByLabelText('titleLabel')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('titlePlaceholder')
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText('dueDateLabel')).toBeInTheDocument();
+    expect(screen.getByText('pickDate')).toBeInTheDocument(); // from date picker trigger
+    expect(screen.getByLabelText('assignToLabel')).toBeInTheDocument();
+    expect(screen.getByText('selectUser')).toBeInTheDocument(); // from assignee trigger
+    expect(screen.getByLabelText('statusLabel')).toBeInTheDocument();
+    expect(screen.getByLabelText('descriptionLabel')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('descriptionPlaceholder')
+    ).toBeInTheDocument();
+
+    // Check for translated radio button labels
+    expect(screen.getByLabelText('statusTodo')).toBeInTheDocument();
+    expect(screen.getByLabelText('statusInProgress')).toBeInTheDocument();
+    expect(screen.getByLabelText('statusDone')).toBeInTheDocument();
   });
 
-  it('renders assignee selector', () => {
-    render(<TaskForm onSubmit={mockOnSubmit} />);
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
-  });
-
-  it('renders status radio buttons', () => {
-    render(<TaskForm onSubmit={mockOnSubmit} />);
-    expect(screen.getByLabelText('To Do')).toBeInTheDocument();
-    expect(screen.getByLabelText('In Progress')).toBeInTheDocument();
-    expect(screen.getByLabelText('Done')).toBeInTheDocument();
-  });
-
-  it('renders task description input', () => {
-    render(<TaskForm onSubmit={mockOnSubmit} />);
-    expect(screen.getByTestId('task-description-input')).toBeInTheDocument();
-  });
-
-  it('calls onSubmit when form is submitted', async () => {
-    render(<TaskForm onSubmit={mockOnSubmit} />);
+  it('calls handleSubmit when the submit button is clicked', async () => {
+    render(<TaskForm onSubmit={vi.fn()} />);
     const submitButton = screen.getByTestId('submit-task-button');
     fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockHandleSubmit).toHaveBeenCalled();
+    });
   });
 
-  it('calls onCancel when cancel button is clicked', () => {
-    render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
+  it('calls onCancel when the cancel button is clicked', () => {
+    render(<TaskForm onSubmit={vi.fn()} onCancel={mockOnCancel} />);
     const cancelButton = screen.getByTestId('cancel-task-button');
     fireEvent.click(cancelButton);
     expect(mockOnCancel).toHaveBeenCalled();
+  });
+
+  it('uses the provided submitLabel for the submit button', () => {
+    const customLabel = 'updateTask';
+    render(<TaskForm onSubmit={vi.fn()} submitLabel={customLabel} />);
+    const submitButton = screen.getByTestId('submit-task-button');
+    expect(submitButton).toHaveTextContent(customLabel);
   });
 });
