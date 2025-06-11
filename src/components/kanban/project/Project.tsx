@@ -8,6 +8,7 @@ import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cva } from 'class-variance-authority';
 import { PointerIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import NewTaskDialog from '../task/NewTaskDialog';
 import { TaskCard } from '../task/TaskCard';
@@ -26,6 +27,7 @@ interface BoardProjectProps {
 
 export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   const { filter } = useTaskStore();
+  const t = useTranslations('kanban.project');
 
   const filteredTasks = useMemo(() => {
     if (!filter.status || !tasks.length) return tasks;
@@ -110,13 +112,14 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
         <ScrollArea className="h-full">
           <div className="mb-2 flex flex-col gap-1">
             <Badge variant="outline" className="text-xs">
-              Description: {project.description || 'No description'}
+              {t('description')}: {project.description || t('noDescription')}
             </Badge>
             <Badge variant="outline" className="text-xs truncate">
-              Owner: {project.owner.name}
+              {t('owner')}: {project.owner.name}
             </Badge>
             <Badge variant="outline" className="text-xs truncate">
-              Members: {project.members.map((member) => member.name).join(', ')}
+              {t('members')}:{' '}
+              {project.members.map((member) => member.name).join(', ')}
             </Badge>
           </div>
           <NewTaskDialog projectId={project._id} />
