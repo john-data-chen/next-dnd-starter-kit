@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Next Projektmanager",
+    "description": "Next.js-Vorlage für Anfänger"
+  },
   "login": {
     "title": "Next Projektmanager",
     "description": "Next.js-Vorlage für Anfänger",
@@ -8,6 +12,7 @@
     "continueButton": "Weiter mit Email"
   },
   "sidebar": {
+    "title": "Next Projektmanager",
     "overview": "Überblick",
     "myBoards": "Meine Boards",
     "teamBoards": "Team-Boards",

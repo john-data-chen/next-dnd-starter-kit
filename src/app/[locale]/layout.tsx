@@ -1,5 +1,4 @@
 import Providers from '@/components/layout/Providers';
-import { projectMetaData } from '@/constants/pageMetaData';
 import { routing } from '@/i18n/routing';
 import { auth } from '@/lib/auth';
 import '@/styles/globals.css';
@@ -7,7 +6,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { Roboto } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import NextTopLoader from 'nextjs-toploader';
@@ -19,13 +18,23 @@ const roboto = Roboto({
   display: 'swap'
 });
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s',
-    default: projectMetaData.title
-  },
-  description: projectMetaData.description
+type Props = {
+  params: { locale: string };
 };
+
+export async function generateMetadata({
+  params: { locale }
+}: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+
+  return {
+    title: {
+      template: '%s',
+      default: t('title')
+    },
+    description: t('description')
+  };
+}
 
 export default async function LocaleLayout({
   children,
