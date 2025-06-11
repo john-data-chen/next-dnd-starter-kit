@@ -49,7 +49,15 @@
       "boardUpdated": "Board aktualisiert: {title}",
       "boardUpdateFailed": "Fehler beim Aktualisieren des Boards: {error}",
       "boardDeleted": "Board wurde gelöscht.",
-      "boardDeleteFailed": "Fehler beim Löschen des Boards: {error}"
+      "boardDeleteFailed": "Fehler beim Löschen des Boards: {error}",
+      "boardTitleLabel": "Board-Titel",
+      "boardTitlePlaceholder": "Board-Titel eingeben",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Board-Beschreibung eingeben",
+      "newBoardTitle": "Neues Board erstellen",
+      "boardCreatedSuccess": "Board erfolgreich erstellt",
+      "boardCreateFailed": "Fehler beim Erstellen des Boards",
+      "create": "Erstellen"
     }
   }
 }

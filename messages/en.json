@@ -49,7 +49,15 @@
       "boardUpdated": "Board updated: {title}",
       "boardUpdateFailed": "Failed to update board: {error}",
       "boardDeleted": "Board has been deleted.",
-      "boardDeleteFailed": "Failed to delete board: {error}"
+      "boardDeleteFailed": "Failed to delete board: {error}",
+      "boardTitleLabel": "Board Title",
+      "boardTitlePlaceholder": "Enter board title",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter board description",
+      "newBoardTitle": "Create New Board",
+      "boardCreatedSuccess": "Board created successfully",
+      "boardCreateFailed": "Failed to create board",
+      "create": "Create"
     }
   }
 }
