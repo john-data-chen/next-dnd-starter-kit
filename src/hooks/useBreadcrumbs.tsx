@@ -4,6 +4,7 @@ import { ROUTES } from '@/constants/routes';
 import { fetchBoardsFromDb } from '@/lib/db/board';
 import { useTaskStore } from '@/lib/store';
 import { Board } from '@/types/dbInterface';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -15,9 +16,8 @@ type BreadcrumbItem = {
 
 export function useBreadcrumbs() {
   const params = useParams();
+  const t = useTranslations('sidebar');
   const boardId = params.boardId as string;
-  const locale =
-    (Array.isArray(params.locale) ? params.locale[0] : params.locale) || 'en';
   const [board, setBoard] = useState<Board | null>(null);
   const userEmail = useTaskStore((state) => state.userEmail);
 
@@ -40,12 +40,10 @@ export function useBreadcrumbs() {
     }
   }, [boardId, userEmail]);
 
-  const rootLinkWithLocale = `/${locale}${ROUTES.BOARDS.ROOT}`;
-
   const items: BreadcrumbItem[] = [
     {
-      title: 'Overview',
-      link: rootLinkWithLocale,
+      title: t('overview'),
+      link: ROUTES.BOARDS.ROOT,
       isRoot: true
     }
   ];
@@ -53,12 +51,12 @@ export function useBreadcrumbs() {
   if (board) {
     items.push({
       title: board.title,
-      link: `/${locale}/boards/${board._id}`
+      link: `/boards/${board._id}`
     });
   }
 
   return {
     items,
-    rootLink: rootLinkWithLocale
+    rootLink: ROUTES.BOARDS.ROOT
   };
 }
