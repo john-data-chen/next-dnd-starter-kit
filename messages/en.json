@@ -24,6 +24,7 @@
     "title": "Kanban Overview",
     "description": "Manage your boards in Overview",
     "loading": "Loading...",
+    "loadingBoard": "Loading board...",
     "newBoard": "New Board",
     "searchBoards": "Search boards...",
     "filterBoards": "Filter boards",

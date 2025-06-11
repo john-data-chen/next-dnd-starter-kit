@@ -24,6 +24,7 @@
     "title": "Kanban Überblick",
     "description": "Verwalten Sie Ihre Boards im Überblick",
     "loading": "Wird geladen...",
+    "loadingBoard": "Board wird geladen...",
     "newBoard": "Neues Board",
     "searchBoards": "Boards durchsuchen...",
     "filterBoards": "Boards filtern",
