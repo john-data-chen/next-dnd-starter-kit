@@ -11,6 +11,13 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     exclude: ['**/node_modules/**', '__tests__/e2e/**'],
     globals: true, // Ensure Vitest global APIs are enabled,
+    deps: {
+      optimizer: {
+        web: {
+          include: ['next-intl']
+        }
+      }
+    },
     coverage: {
       reporter: ['text', 'json', 'html', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
