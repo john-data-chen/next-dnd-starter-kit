@@ -10,20 +10,29 @@ import { NextResponse } from 'next/server';
 const intlMiddleware = createMiddleware(routing);
 
 export default auth((req) => {
-  // First, let the i18n middleware handle the request
-  // It will rewrite the URL if necessary and add locale information
-  const i18nResponse = intlMiddleware(req);
-  if (i18nResponse) return i18nResponse; // If i18n middleware returns a response, use it
+  const { pathname } = req.nextUrl;
+
+  if (pathname.startsWith('/api/auth')) {
+    return;
+  }
 
   const isAuthenticated = !!req.auth;
-  const { nextUrl } = req;
-  const { pathname, locale } = nextUrl;
 
-  const isApiRoute = pathname.startsWith('/api');
-  // After `next-intl` rewrites the path, we check the non-localized path.
-  const isAuthRoute = pathname === ROUTES.AUTH.LOGIN;
+  if (pathname.startsWith('/api')) {
+    if (!isAuthenticated) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    return;
+  }
 
-  // Construct redirect URLs with the locale determined by `next-intl`
+  const i18nResponse = intlMiddleware(req);
+  if (i18nResponse) {
+    return i18nResponse;
+  }
+
+  const { locale, pathname: pathnameAfterI18n } = req.nextUrl;
+  const isAuthRoute = pathnameAfterI18n === ROUTES.AUTH.LOGIN;
+
   const getRedirectUrl = (path: string) => {
     return new URL(`/${locale}${path}`, req.url);
   };
@@ -32,20 +41,11 @@ export default auth((req) => {
     return NextResponse.redirect(getRedirectUrl(ROUTES.BOARDS.ROOT));
   }
 
-  if (!isAuthenticated) {
-    if (isApiRoute) {
-      // For API routes, we might not want to redirect to a localized login page
-      // or ensure the API doesn't get locale prefixed if not intended.
-      // The current matcher might need adjustment if API routes shouldn't be localized.
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    // For non-API routes, redirect to the localized login page
-    if (!isAuthRoute) {
-      return NextResponse.redirect(getRedirectUrl(ROUTES.AUTH.LOGIN));
-    }
+  if (!isAuthenticated && !isAuthRoute) {
+    return NextResponse.redirect(getRedirectUrl(ROUTES.AUTH.LOGIN));
   }
-  // If authenticated and not an auth route, or no specific action needed, proceed
-  return NextResponse.next();
+
+  return;
 });
 
 export const config = {
