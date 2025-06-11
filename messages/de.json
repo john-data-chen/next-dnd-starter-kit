@@ -35,6 +35,21 @@
     "members": "Mitglieder",
     "teamBoardsDescription": "(Boards, die mit mir geteilt werden)",
     "noTeamBoardsFound": "Keine Team-Boards gefunden.",
-    "owner": "Eigentümer"
+    "owner": "Eigentümer",
+    "actions": {
+      "editBoardTitle": "Board bearbeiten",
+      "editBoardDescription": "Nehmen Sie hier Änderungen an Ihrem Board vor. Klicken Sie auf „Speichern“, wenn Sie fertig sind.",
+      "cancel": "Abbrechen",
+      "saving": "Speichern...",
+      "saveChanges": "Änderungen speichern",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDeleteTitle": "Sind Sie sicher, dass Sie das Board „{title}“ löschen möchten?",
+      "confirmDeleteDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Alle Projekte und Aufgaben in diesem Board werden dauerhaft gelöscht.",
+      "boardUpdated": "Board aktualisiert: {title}",
+      "boardUpdateFailed": "Fehler beim Aktualisieren des Boards: {error}",
+      "boardDeleted": "Board wurde gelöscht.",
+      "boardDeleteFailed": "Fehler beim Löschen des Boards: {error}"
+    }
   }
 }
