@@ -1,19 +1,22 @@
 import { BoardOverview } from '@/components/kanban/BoardOverview';
-import PageContainer from '@/components/layout/PageContainer';
-import { kanbanOverview } from '@/constants/pageMetaData';
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-export const metadata: Metadata = {
-  title: kanbanOverview.title,
-  description: kanbanOverview.description
+type Props = {
+  params: { locale: string };
 };
 
-export default function BoardsPage() {
-  return (
-    <PageContainer>
-      <main className="container mx-auto p-6 flex-1 overflow-hidden">
-        <BoardOverview />
-      </main>
-    </PageContainer>
-  );
+export async function generateMetadata({
+  params: { locale }
+}: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'kanban' });
+
+  return {
+    title: t('title'),
+    description: t('description')
+  };
+}
+
+export default function BoardPage() {
+  return <BoardOverview />;
 }

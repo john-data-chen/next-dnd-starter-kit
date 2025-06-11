@@ -19,9 +19,7 @@
     "loading": "Wird geladen..."
   },
   "kanban": {
-    "overview": {
-      "title": "Kanban-Übersicht",
-      "description": "Verwalten Sie Ihre Boards in der Übersicht"
-    }
+    "title": "Kanban Überblick",
+    "description": "Verwalten Sie Ihre Boards im Überblick"
   }
 }
