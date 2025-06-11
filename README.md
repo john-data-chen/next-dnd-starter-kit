@@ -48,7 +48,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI**: [Shadcn/UI](https://ui.shadcn.com/)
 - **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/)
-- **Internationalization**: [Next-intl](https://next-intl.dev/)
+- **Internationalization(i18n)**: [Next-intl](https://next-intl.dev/)
 - **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
@@ -201,17 +201,23 @@ src/
 ├── components/ # Reusable React components
 ├── constants/ # Application-wide constants
 ├── hooks/ # Custom React hooks
+├── i18n/ # i18n configs
 ├── lib/
 │   ├── db/ # Database functions
 │   ├── auth.ts # Authentication functions
 │   ├── store.ts # State management functions
 │   └── utils.ts # tailwindcss utils
+├── middleware.ts
 ├── models/ # Database models
 ├── styles/ # Global styles
 └── types/ # Type definitions
 ```
 
 ## Known Issues & Limitations
+
+### German Translations
+
+This is a demo project, and I know little of German, so errors of translations might not be fixed in the near future.
 
 ### UI library
 
