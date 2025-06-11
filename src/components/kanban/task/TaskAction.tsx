@@ -28,6 +28,7 @@ import {
 import { useTaskStore } from '@/lib/store';
 import { TaskFormSchema } from '@/types/taskForm';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { useTranslations } from 'next-intl';
 import React, { useCallback } from 'react';
 // Ensure useState is imported
 import { toast } from 'sonner';
@@ -64,6 +65,7 @@ export function TaskActions({
   const removeTask = useTaskStore((state) => state.removeTask);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [editEnable, setEditEnable] = React.useState(false);
+  const t = useTranslations('kanban.task');
 
   // Initialize permissions to null to indicate they haven't been fetched yet
   const [permissions, setPermissions] = React.useState<{
@@ -116,7 +118,7 @@ export function TaskActions({
       values.dueDate,
       assigneeId
     );
-    toast.success(`Task is updated: ${values.title}`);
+    toast.success(t('updateSuccess', { title: values.title }));
     setEditEnable(false);
   };
 
@@ -125,7 +127,7 @@ export function TaskActions({
     setShowDeleteDialog(false);
     removeTask(id);
     onDelete?.(id);
-    toast('Task has been deleted.');
+    toast.success(t('deleteSuccess'));
   };
 
   const checkPermissions = useCallback(async () => {
@@ -141,7 +143,7 @@ export function TaskActions({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to check permissions');
+        throw new Error(errorData.error || t('checkPermissionsFailed'));
       }
 
       const data = await response.json();
@@ -150,12 +152,12 @@ export function TaskActions({
       console.error('Error checking task permissions:', error);
       setPermissions({ canEdit: false, canDelete: false }); // Fallback on error
       toast.error(
-        `Could not load task permissions: ${(error as Error).message}`
+        t('loadPermissionsFailed', { error: (error as Error).message })
       );
     } finally {
       setIsLoadingPermissions(false);
     }
-  }, [id]);
+  }, [id, t]);
 
   return (
     <>
@@ -165,17 +167,14 @@ export function TaskActions({
       >
         <DialogContent className="sm:max-w-md" data-testid="edit-task-dialog">
           <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
-            <DialogDescription>
-              Make changes to your task here. Click submit when you&apos;re
-              done.
-            </DialogDescription>
+            <DialogTitle>{t('editTaskTitle')}</DialogTitle>
+            <DialogDescription>{t('editTaskDescription')}</DialogDescription>
           </DialogHeader>
           <TaskForm
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
             onCancel={() => setEditEnable(false)}
-            submitLabel="Update Task"
+            submitLabel={t('updateTask')}
           />
         </DialogContent>
       </Dialog>
@@ -195,7 +194,7 @@ export function TaskActions({
             className="ml-1 h-8 w-12"
             data-testid="task-actions-trigger"
           >
-            <span className="sr-only">Actions</span>
+            <span className="sr-only">{t('actions')}</span>
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -214,7 +213,7 @@ export function TaskActions({
                 : ''
             }
           >
-            Edit
+            {t('edit')}
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -234,7 +233,7 @@ export function TaskActions({
               }
             `}
           >
-            Delete
+            {t('delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -245,23 +244,22 @@ export function TaskActions({
         <AlertDialogContent data-testid="delete-task-dialog">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure to delete Task: {title}?
+              {t('confirmDeleteTitle', { title })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              NOTE: Task: {title} will also be deleted. This action can not be
-              undone.
+              {t('confirmDeleteDescription', { title })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="cancel-delete-button">
-              Cancel
+              {t('cancel')}
             </AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDelete}
               data-testid="confirm-delete-button"
             >
-              Delete
+              {t('delete')}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

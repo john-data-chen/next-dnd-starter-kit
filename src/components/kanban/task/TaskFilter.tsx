@@ -11,10 +11,12 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useTaskStore } from '@/lib/store';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 
 export function TaskFilter() {
   const { filter, setFilter, projects } = useTaskStore();
+  const t = useTranslations('kanban.task');
 
   const statusCounts = React.useMemo(() => {
     const counts = {
@@ -54,7 +56,7 @@ export function TaskFilter() {
     <div className="flex items-center gap-2 mb-4 w-full md:w-auto">
       <Input
         type="text"
-        placeholder="Search title or description..."
+        placeholder={t('searchPlaceholder')}
         value={filter.search}
         onChange={handleSearchChange}
         className="bg-background w-full md:w-[300px]"
@@ -65,29 +67,29 @@ export function TaskFilter() {
         onValueChange={handleFilterChange}
       >
         <SelectTrigger className="w-[140px]" data-testid="status-select">
-          <SelectValue placeholder="Filter by status" />
+          <SelectValue placeholder={t('filterByStatus')} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="TOTAL" data-testid="total-item">
-            Total
+            {t('total')}
             <Badge variant="outline" className="ml-2">
               {statusCounts.TOTAL}
             </Badge>
           </SelectItem>
           <SelectItem value="TODO" data-testid="todo-item">
-            To Do
+            {t('statusTodo')}
             <Badge variant="outline" className="ml-2">
               {statusCounts.TODO}
             </Badge>
           </SelectItem>
           <SelectItem value="IN_PROGRESS" data-testid="in-progress-item">
-            In Progress
+            {t('statusInProgress')}
             <Badge variant="outline" className="ml-2">
               {statusCounts.IN_PROGRESS}
             </Badge>
           </SelectItem>
           <SelectItem value="DONE" data-testid="done-item">
-            Done
+            {t('statusDone')}
             <Badge variant="outline" className="ml-2">
               {statusCounts.DONE}
             </Badge>
@@ -104,7 +106,7 @@ export function TaskFilter() {
           }}
           data-testid="clear-filter-button"
         >
-          Clear Filter
+          {t('clearFilter')}
         </Button>
       )}
     </div>
