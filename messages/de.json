@@ -57,7 +57,8 @@
       "newBoardTitle": "Neues Board erstellen",
       "boardCreatedSuccess": "Board erfolgreich erstellt",
       "boardCreateFailed": "Fehler beim Erstellen des Boards",
-      "create": "Erstellen"
+      "create": "Erstellen",
+      "newBoardDescription": "Füllen Sie die Details aus, um ein neues Board zu erstellen."
     }
   }
 }
