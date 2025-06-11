@@ -17,6 +17,12 @@ vi.mock('@/lib/store', () => ({
     })
 }));
 
+// Mock next-intl
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string, values?: any) =>
+    values ? `${key} ${JSON.stringify(values)}` : key
+}));
+
 // Mock toast
 // Use vi.hoisted to define mocks before vi.mock
 const { toastSuccessMock, toastErrorMock } = vi.hoisted(() => ({
@@ -74,19 +80,29 @@ vi.mock('@/components/ui/alert-dialog', () => ({
 }));
 vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuTrigger: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ children, ...props }: any) => (
+    <div {...props}>{children}</div>
+  ),
   DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, ...props }: any) => (
-    <div role="menuitem" {...props}>
+  DropdownMenuItem: ({ children, onSelect, ...props }: any) => (
+    <div
+      role="menuitem"
+      {...props}
+      onClick={() => onSelect && onSelect(new Event('select'))}
+    >
       {children}
     </div>
-  ),
-  DropdownMenuSeparator: () => <div />
+  )
 }));
 
 // Mock fetch for permissions
-const fetchMock = vi.fn();
-global.fetch = fetchMock;
+global.fetch = vi.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () =>
+      Promise.resolve({ canEditProject: true, canDeleteProject: true })
+  })
+) as any;
 
 describe('ProjectActions', () => {
   const baseProps = {
@@ -97,7 +113,6 @@ describe('ProjectActions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    fetchMock.mockReset();
   });
 
   it('should render dropdown menu button', () => {
@@ -105,68 +120,58 @@ describe('ProjectActions', () => {
     expect(screen.getByTestId('project-option-button')).toBeInTheDocument();
   });
 
-  it('should request permissions and show editable options when dropdown is clicked', async () => {
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        canEditProject: true,
-        canDeleteProject: true
-      })
-    });
+  it('should open edit dialog and handle successful submission', async () => {
+    updateProjectMock.mockResolvedValue(undefined);
     render(<ProjectActions {...baseProps} />);
-    fireEvent.click(screen.getByTestId('project-option-button'));
-    expect(screen.getByTestId('edit-project-button')).toBeInTheDocument();
-    expect(screen.getByTestId('delete-project-button')).toBeInTheDocument();
-  });
 
-  it('should open edit dialog and submit when Edit is clicked', async () => {
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        canEditProject: true,
-        canDeleteProject: true
-      })
-    });
-    render(<ProjectActions {...baseProps} />);
     fireEvent.click(screen.getByTestId('project-option-button'));
     fireEvent.click(screen.getByTestId('edit-project-button'));
+    await screen.findByText('editProjectTitle');
+
+    fireEvent.submit(screen.getByTestId('mock-project-form'));
+
+    await waitFor(() => {
+      expect(updateProjectMock).toHaveBeenCalledWith(
+        'p1',
+        'Edited Title',
+        'Edited Desc'
+      );
+      expect(toastSuccessMock).toHaveBeenCalledWith('updateSuccess');
+    });
   });
 
-  it('should open delete dialog and confirm deletion when Delete is clicked', async () => {
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        canEditProject: true,
-        canDeleteProject: true
-      })
-    });
+  it('should open delete dialog and handle successful deletion', async () => {
     render(<ProjectActions {...baseProps} />);
+
     fireEvent.click(screen.getByTestId('project-option-button'));
     fireEvent.click(screen.getByTestId('delete-project-button'));
-    // Click Delete in AlertDialog
-    fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
-    expect(removeProjectMock).toHaveBeenCalledWith('p1');
-    expect(toastSuccessMock).toHaveBeenCalledWith(
-      'Project: Project 1 is deleted'
-    );
-  });
-  it('should show error toast when edit fails', async () => {
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        canEditProject: true,
-        canDeleteProject: true
-      })
+    await screen.findByText('confirmDeleteTitle {"title":"Project 1"}');
+
+    fireEvent.click(screen.getByRole('button', { name: 'delete' }));
+
+    await waitFor(() => {
+      expect(removeProjectMock).toHaveBeenCalledWith('p1');
+      expect(toastSuccessMock).toHaveBeenCalledWith(
+        'deleteSuccess {"title":"Project 1"}'
+      );
     });
-    updateProjectMock.mockRejectedValueOnce(new Error('Update failed'));
+  });
+
+  it('should show error toast when edit fails', async () => {
+    const error = new Error('Update failed');
+    updateProjectMock.mockRejectedValue(error);
     render(<ProjectActions {...baseProps} />);
+
     fireEvent.click(screen.getByTestId('project-option-button'));
     fireEvent.click(screen.getByTestId('edit-project-button'));
+    await screen.findByText('editProjectTitle');
+
     fireEvent.submit(screen.getByTestId('mock-project-form'));
-    await waitFor(() =>
+
+    await waitFor(() => {
       expect(toastErrorMock).toHaveBeenCalledWith(
-        'Project updated fail：Update failed'
-      )
-    );
+        `updateFailed {"error":"${error.message}"}`
+      );
+    });
   });
 });
