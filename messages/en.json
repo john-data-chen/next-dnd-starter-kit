@@ -134,5 +134,8 @@
       "total": "Total",
       "clearFilter": "Clear Filter"
     }
+  },
+  "user": {
+    "logOut": "Log out"
   }
 }

@@ -13,20 +13,18 @@ import {
 import { ROUTES } from '@/constants/routes';
 import { useRouter } from '@/i18n/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 export function UserNav() {
   const { data: session } = useSession();
-  const params = useParams();
   const router = useRouter();
+  const t = useTranslations('user');
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
     // After the session is destroyed, perform a client-side redirect
-    // to the correct localized login page.
-    const rawLocale = params.locale;
-    const locale = Array.isArray(rawLocale) ? rawLocale[0] : rawLocale || 'en';
-    router.push(ROUTES.AUTH.LOGIN, { locale });
+    // to the login page. The i18n router will handle the locale.
+    router.push(ROUTES.AUTH.LOGIN);
   };
 
   if (session) {
@@ -55,7 +53,9 @@ export function UserNav() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut}>Log out</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
+            {t('logOut')}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );

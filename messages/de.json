@@ -134,5 +134,8 @@
       "total": "Gesamt",
       "clearFilter": "Filter löschen"
     }
+  },
+  "user": {
+    "logOut": "Abmelden"
   }
 }
