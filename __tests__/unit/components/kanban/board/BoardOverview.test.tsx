@@ -1,24 +1,29 @@
-import { BoardOverview } from '@/components/kanban/BoardOverview';
+import React from 'react';
+import { describe, expect, it, vi, beforeEach, type Mock } from 'vitest';
 import { useBoards } from '@/hooks/useBoards';
+import { BoardOverview } from '@/components/kanban/BoardOverview';
+import { render, screen } from '../../../test-utils';
 import { Board, Project } from '@/types/dbInterface';
-import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { usePathname, useRouter } from 'next/navigation';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { usePathname, useRouter } from '@/i18n/navigation';
 
 // --- Mocking Dependencies ---
 
 // Mock useBoards hook
 vi.mock('@/hooks/useBoards');
-const mockUseBoards = useBoards as ReturnType<typeof vi.fn>;
+const mockUseBoards = useBoards as Mock;
 
 // Mock next-intl
-vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string) => key
-}));
+vi.mock('next-intl', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('next-intl')>();
+  return {
+    ...actual,
+    useTranslations: () => (key: string) => key
+  };
+});
 
-// Mock next/navigation
-vi.mock('next/navigation', () => ({
+// Mock i18n navigation
+vi.mock('@/i18n/navigation', () => ({
   useRouter: vi.fn(),
   usePathname: vi.fn(),
   useSearchParams: vi.fn(() => ({
@@ -26,8 +31,8 @@ vi.mock('next/navigation', () => ({
     toString: vi.fn(() => '')
   }))
 }));
-const mockUseRouter = useRouter as ReturnType<typeof vi.fn>;
-const mockUsePathname = usePathname as ReturnType<typeof vi.fn>;
+const mockUseRouter = useRouter as Mock;
+const mockUsePathname = usePathname as Mock;
 
 // Mock child components
 vi.mock('@/components/kanban/board/BoardActions', () => ({
@@ -114,16 +119,16 @@ const mockTeamBoard1: Board = {
 // --- Test Suite ---
 
 describe('BoardOverview Component', () => {
-  let mockRouterPush: ReturnType<typeof vi.fn>;
+  let mockRouterPush: Mock;
 
   beforeEach(() => {
     vi.resetAllMocks();
     mockRouterPush = vi.fn();
-    (useRouter as ReturnType<typeof vi.fn>).mockReturnValue({
+    (useRouter as Mock).mockReturnValue({
       push: mockRouterPush
     });
-    (usePathname as ReturnType<typeof vi.fn>).mockReturnValue('/boards');
-    (useBoards as ReturnType<typeof vi.fn>).mockReturnValue({
+    (usePathname as Mock).mockReturnValue('/boards');
+    (useBoards as Mock).mockReturnValue({
       myBoards: [],
       teamBoards: [],
       loading: false,
