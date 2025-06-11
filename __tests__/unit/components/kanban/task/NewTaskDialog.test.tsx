@@ -16,9 +16,10 @@ vi.mock('sonner', () => ({
 // Mock zustand store
 const mockAddTask = vi.fn();
 vi.mock('@/lib/store', () => ({
-  useTaskStore: () => ({
-    addTask: mockAddTask
-  })
+  useTaskStore: (selector: (state: any) => any) =>
+    selector({
+      addTask: mockAddTask
+    })
 }));
 
 // Mock next-intl
@@ -63,7 +64,8 @@ vi.mock('@/components/ui/dialog', () => ({
     <div data-testid="new-task-dialog">{children}</div>
   ),
   DialogHeader: ({ children }: any) => <div>{children}</div>,
-  DialogTitle: ({ children }: any) => <h2>{children}</h2>
+  DialogTitle: ({ children }: any) => <h2>{children}</h2>,
+  DialogDescription: ({ children }: any) => <p>{children}</p>
 }));
 
 describe('NewTaskDialog', () => {
