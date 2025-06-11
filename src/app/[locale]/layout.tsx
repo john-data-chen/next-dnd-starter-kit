@@ -30,10 +30,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
   return {
-    title: {
-      template: `%s | ${t('title')}`,
-      default: t('title')
-    },
+    title: t('title'),
     description: t('description')
   };
 }
