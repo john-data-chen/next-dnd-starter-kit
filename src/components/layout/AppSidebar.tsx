@@ -13,9 +13,8 @@ import {
 } from '@/components/ui/sidebar';
 import { projectInfo } from '@/constants/sidebar';
 import { useBoards } from '@/hooks/useBoards';
+import { Link, usePathname } from '@/i18n/navigation';
 import { HomeIcon } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -37,7 +36,10 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/boards'}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.endsWith('/boards')}
+              >
                 <Link href="/boards" className="flex items-center gap-2">
                   <HomeIcon className="h-4 w-4" />
                   <span>Overview</span>
@@ -61,7 +63,7 @@ export default function AppSidebar() {
                 <SidebarMenuItem key={board._id}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === `/boards/${board._id}`}
+                    isActive={pathname.endsWith(`/boards/${board._id}`)}
                   >
                     <Link href={`/boards/${board._id}`}>
                       <span>{board.title}</span>
@@ -88,7 +90,7 @@ export default function AppSidebar() {
                 <SidebarMenuItem key={board._id}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === `/boards/${board._id}`}
+                    isActive={pathname.endsWith(`/boards/${board._id}`)}
                   >
                     <Link href={`/boards/${board._id}`}>
                       <span>{board.title}</span>
