@@ -1,8 +1,8 @@
 {
   "login": {
-    "title": "Nächster Projektmanager",
+    "title": "Next Projektmanager",
     "description": "Next.js-Vorlage für Anfänger",
-    "formHint": "Bitte drücken Sie die Weiter-Taste, eine Registrierung ist nicht erforderlich."
+    "formHint": "Bitte klicken Sie auf „Weiter“, eine Registrierung ist nicht erforderlich."
   },
   "sidebar": {
     "overview": "Überblick",
