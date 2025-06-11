@@ -59,6 +59,34 @@
       "boardCreateFailed": "Failed to create board",
       "create": "Create",
       "newBoardDescription": "Fill in the details to create a new board."
+    },
+    "project": {
+      "titleLabel": "Title",
+      "titlePlaceholder": "Project title",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter project description",
+      "addNewProject": "＋ Add New Project",
+      "addNewProjectTitle": "Add New Project",
+      "addNewProjectDescription": "What project you want to add?",
+      "cancel": "Cancel",
+      "addProject": "Add Project",
+      "createSuccess": "Project created successfully",
+      "createFailed": "Failed to create project",
+      "editProjectTitle": "Edit Project",
+      "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Make sure before you delete Project: {title}?",
+      "confirmDeleteDescription": "Warning: This action will delete All Tasks in project and it cannot be undone.",
+      "deleteSuccess": "Project: {title} is deleted",
+      "updateSuccess": "Project is updated!",
+      "updateFailed": "Project updated fail: {error}",
+      "fetchPermissionsFailed": "Failed to fetch project permissions",
+      "loadPermissionsFailed": "Could not load permissions: {error}",
+      "description": "Description",
+      "noDescription": "No description",
+      "owner": "Owner",
+      "members": "Members"
     }
   }
 }

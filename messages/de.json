@@ -59,6 +59,34 @@
       "boardCreateFailed": "Fehler beim Erstellen des Boards",
       "create": "Erstellen",
       "newBoardDescription": "Füllen Sie die Details aus, um ein neues Board zu erstellen."
+    },
+    "project": {
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Projekttitel",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Projektbeschreibung eingeben",
+      "addNewProject": "＋ Neues Projekt hinzufügen",
+      "addNewProjectTitle": "Neues Projekt hinzufügen",
+      "addNewProjectDescription": "Welches Projekt möchten Sie hinzufügen?",
+      "cancel": "Abbrechen",
+      "addProject": "Projekt hinzufügen",
+      "createSuccess": "Projekt erfolgreich erstellt",
+      "createFailed": "Fehler beim Erstellen des Projekts",
+      "editProjectTitle": "Projekt bearbeiten",
+      "save": "Speichern",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDeleteTitle": "Sind Sie sicher, dass Sie das Projekt „{title}“ löschen möchten?",
+      "confirmDeleteDescription": "Achtung: Diese Aktion löscht alle Aufgaben im Projekt und kann nicht rückgängig gemacht werden.",
+      "deleteSuccess": "Projekt „{title}“ wurde gelöscht",
+      "updateSuccess": "Projekt wurde aktualisiert!",
+      "updateFailed": "Projektaktualisierung fehlgeschlagen: {error}",
+      "fetchPermissionsFailed": "Projektberechtigungen konnten nicht abgerufen werden",
+      "loadPermissionsFailed": "Berechtigungen konnten nicht geladen werden: {error}",
+      "description": "Beschreibung",
+      "noDescription": "Keine Beschreibung",
+      "owner": "Eigentümer",
+      "members": "Mitglieder"
     }
   }
 }
