@@ -18,31 +18,27 @@ const roboto = Roboto({
   display: 'swap'
 });
 
-type Props = {
+interface Props {
+  children: React.ReactNode;
   params: { locale: string };
-};
+}
 
 export async function generateMetadata({
-  params: { locale }
-}: Props): Promise<Metadata> {
+  params
+}: Omit<Props, 'children'>): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
 
   return {
     title: {
-      template: '%s',
+      template: `%s | ${t('title')}`,
       default: t('title')
     },
     description: t('description')
   };
 }
 
-export default async function LocaleLayout({
-  children,
-  params
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default async function LocaleLayout({ children, params }: Props) {
   const session = await auth();
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
