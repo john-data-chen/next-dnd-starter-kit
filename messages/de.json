@@ -9,7 +9,9 @@
     "formHint": "Bitte klicken Sie auf „Weiter“, eine Registrierung ist nicht erforderlich.",
     "emailLabel": "Email",
     "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein...",
-    "continueButton": "Weiter mit Email"
+    "continueButton": "Weiter mit Email",
+    "success": "Anmeldung erfolgreich!",
+    "authSuccessRedirect": "Authentifizierung erfolgreich! Weiterleitung..."
   },
   "sidebar": {
     "title": "Next Projektmanager",

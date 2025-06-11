@@ -9,7 +9,9 @@
     "formHint": "Please press Continue button, you don't need to register.",
     "emailLabel": "Email",
     "emailPlaceholder": "Enter your email...",
-    "continueButton": "Continue With Email"
+    "continueButton": "Continue With Email",
+    "success": "Login successful!",
+    "authSuccessRedirect": "Authentication successful! Redirecting..."
   },
   "sidebar": {
     "title": "Next Project Manager",

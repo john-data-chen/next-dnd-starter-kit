@@ -29,19 +29,20 @@ export function BoardOverview() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations('kanban');
+  const tLogin = useTranslations('login');
 
   useEffect(() => {
     const loginSuccess = searchParams.get('login_success');
     if (loginSuccess === 'true') {
       const timer = setTimeout(() => {
-        toast.success('Login successful!');
+        toast.success(tLogin('success'));
         const params = new URLSearchParams(searchParams.toString());
         params.delete('login_success');
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [searchParams, router, pathname]);
+  }, [searchParams, router, pathname, tLogin]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {

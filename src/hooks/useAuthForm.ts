@@ -7,16 +7,25 @@ import { useTaskStore } from '@/lib/store';
 import { SignInFormValue, SignInValidation } from '@/types/authUserForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useTransition } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
+interface AuthFormState {
+  message?: string;
+  status: 'error' | 'success' | 'idle' | 'loading';
+}
 
 export default function useAuthForm() {
   const [isNavigating, startNavigationTransition] = useTransition();
   const { setUserInfo } = useTaskStore();
   const router = useRouter();
   const params = useParams();
+  const [status, setStatus] = useState<AuthFormState>({ status: 'idle' });
+  const t = useTranslations('login');
 
   const form = useForm<SignInFormValue>({
     resolver: zodResolver(SignInValidation),
@@ -56,10 +65,11 @@ export default function useAuthForm() {
           });
         }, navigationDelay);
 
-        return 'Authentication successful! Redirecting...';
+        return t('authSuccessRedirect');
       },
       error: (err: Error) => {
         console.error('Sign-in promise error:', err);
+        setStatus({ status: 'error', message: err.message });
         return err.message || 'An unknown authentication error occurred.';
       }
     });
@@ -68,6 +78,7 @@ export default function useAuthForm() {
   return {
     form,
     loading: isNavigating,
-    onSubmit
+    onSubmit,
+    status
   };
 }
