@@ -92,7 +92,8 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
     >
       {children}
     </div>
-  )
+  ),
+  DropdownMenuSeparator: () => <hr />
 }));
 
 // Mock fetch for permissions
