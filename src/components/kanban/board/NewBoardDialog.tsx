@@ -10,9 +10,9 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { useBoards } from '@/hooks/useBoards';
+import { useRouter } from '@/i18n/navigation';
 import { useTaskStore } from '@/lib/store';
 import { boardSchema } from '@/types/boardForm';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
