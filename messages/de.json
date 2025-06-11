@@ -2,7 +2,10 @@
   "login": {
     "title": "Next Projektmanager",
     "description": "Next.js-Vorlage für Anfänger",
-    "formHint": "Bitte klicken Sie auf „Weiter“, eine Registrierung ist nicht erforderlich."
+    "formHint": "Bitte klicken Sie auf „Weiter“, eine Registrierung ist nicht erforderlich.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein...",
+    "continueButton": "Weiter mit Email"
   },
   "sidebar": {
     "overview": "Überblick",
