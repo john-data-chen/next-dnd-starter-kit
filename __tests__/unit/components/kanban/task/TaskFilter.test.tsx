@@ -1,4 +1,5 @@
 import { TaskFilter } from '@/components/kanban/task/TaskFilter';
+import { useTaskStore } from '@/lib/store';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
@@ -13,6 +14,8 @@ vi.mock('@/lib/store', () => ({
     projects: [] // Default empty projects
   }))
 }));
+
+const mockUseTaskStore = vi.mocked(useTaskStore);
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key
@@ -44,6 +47,12 @@ describe('TaskFilter Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     capturedOnValueChange = vi.fn();
+    // Reset to default mock before each test
+    mockUseTaskStore.mockReturnValue({
+      filter: { status: null, search: '' },
+      setFilter: setFilterMock,
+      projects: []
+    });
   });
 
   it('renders search input with translated placeholder', () => {
@@ -79,7 +88,7 @@ describe('TaskFilter Component', () => {
 
   it('calls setFilter to clear filters when clear button is clicked', () => {
     // To show the button, we need to provide a filter in the store mock
-    vi.mocked(require('@/lib/store').useTaskStore).mockReturnValue({
+    mockUseTaskStore.mockReturnValue({
       filter: { status: 'TODO', search: 'query' },
       setFilter: setFilterMock,
       projects: []
