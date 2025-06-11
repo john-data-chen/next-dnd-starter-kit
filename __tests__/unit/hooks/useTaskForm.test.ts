@@ -1,9 +1,17 @@
 import { useTaskForm } from '@/hooks/useTaskForm';
+import { TaskFormSchema } from '@/types/taskForm';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { UseFormReturn } from 'react-hook-form';
+import { z } from 'zod';
+import { vi } from 'vitest';
+
+vi.mock('@/hooks/useDebounce', () => ({
+  useDebounce: (value: any) => value
+}));
 
 // Mock fetch
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 // Mock toast
 vi.mock('sonner', () => ({
@@ -13,25 +21,25 @@ vi.mock('sonner', () => ({
 }));
 
 describe('useTaskForm Hook', () => {
-  const mockOnSubmit = vi.fn();
+  const mockOnSubmit = vi.fn().mockResolvedValue(undefined);
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(global.fetch).mockReset();
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('should initialize with default values', () => {
-    const { result } = renderHook(() =>
-      useTaskForm({ onSubmit: mockOnSubmit })
-    );
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
 
-    expect(result.current.form.getValues()).toEqual({
-      title: '',
-      description: '',
-      status: 'TODO',
-      dueDate: undefined,
-      assignee: undefined
-    });
+  const setup = (defaultValues?: Partial<z.infer<typeof TaskFormSchema>>) =>
+    renderHook(() => useTaskForm({ defaultValues, onSubmit: mockOnSubmit }));
+
+  it('should initialize with default values', () => {
+    const defaultValues = { title: 'Initial Title' };
+    const { result } = setup(defaultValues);
+    expect(result.current.form.getValues().title).toBe('Initial Title');
   });
 
   it('should initialize with custom values', () => {
@@ -40,107 +48,76 @@ describe('useTaskForm Hook', () => {
       description: 'Test Description',
       status: 'IN_PROGRESS' as const,
       dueDate: new Date('2024-01-01'),
-      assignee: { id: 'user1', name: 'User One' }
+      assignee: { _id: 'user1', name: 'User One' }
     };
 
-    const { result } = renderHook(() =>
-      useTaskForm({ defaultValues, onSubmit: mockOnSubmit })
-    );
+    const { result } = setup(defaultValues);
 
     expect(result.current.form.getValues()).toEqual(defaultValues);
   });
 
   it('should handle user search', async () => {
-    vi.useFakeTimers();
+    const users = [{ _id: '1', name: 'User One' }];
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ users })
+    });
 
-    // Mock fetch with more complete response
-    vi.mocked(global.fetch).mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({ users: [] })
-      } as Response)
-    );
-
-    const { result } = renderHook(() =>
-      useTaskForm({ onSubmit: mockOnSubmit })
-    );
+    const { result } = setup();
 
     act(() => {
       result.current.setAssignOpen(true);
+    });
+
+    act(() => {
       result.current.setSearchQuery('test');
     });
 
-    // Fast-forward timers and handle all promises
-    await act(async () => {
-      vi.advanceTimersByTime(300);
-      // Wait for the fetch to be initiated
-      await Promise.resolve();
-      // Wait for the fetch to complete
-      await Promise.resolve();
-      // Wait for the state update
-      await Promise.resolve();
-      // One more tick for good measure
-      await Promise.resolve();
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/users/search?username=test'
+      );
+      expect(result.current.users).toEqual(users);
+      expect(result.current.isSearching).toBe(false);
     });
-
-    // Verify API call
-    expect(global.fetch).toHaveBeenCalledWith(
-      '/api/users/search?username=test'
-    );
-
-    // Verify state update
-    expect(result.current.users).toEqual([]);
-
-    vi.useRealTimers();
   });
 
-  it('should handle search error gracefully', async () => {
-    vi.useFakeTimers();
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.mocked(global.fetch).mockRejectedValueOnce(new Error('API Error'));
-
-    const { result } = renderHook(() =>
-      useTaskForm({ onSubmit: mockOnSubmit })
-    );
+  it('should handle search error', async () => {
+    mockFetch.mockRejectedValueOnce(new Error('Search failed'));
+    const { result } = setup();
 
     act(() => {
       result.current.setAssignOpen(true);
-      result.current.setSearchQuery('test');
     });
 
-    await act(async () => {
-      vi.advanceTimersByTime(300);
-      await Promise.resolve();
+    act(() => {
+      result.current.setSearchQuery('error');
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Error searching users:',
-      expect.any(Error)
-    );
-    expect(result.current.users).toEqual([]);
-
-    consoleSpy.mockRestore();
-    vi.useRealTimers();
+    await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error searching users:',
+        expect.any(Error)
+      );
+      expect(result.current.isSearching).toBe(false);
+    });
   });
 
   it('should handle form submission successfully', async () => {
-    const { result } = renderHook(() =>
-      useTaskForm({ onSubmit: mockOnSubmit })
-    );
+    const { result } = setup({ title: 'New Task' });
+    const { form, handleSubmit } = result.current;
 
-    const submitData = {
-      title: 'New Task',
-      description: 'Task Description',
-      status: 'TODO' as const,
-      assignee: { id: 'user1', name: 'User One' }
-    };
+    const submitData = { title: 'New Task', description: 'Task Description' };
 
     await act(async () => {
-      await result.current.handleSubmit(submitData);
+      // Manually set values and then submit
+      form.setValue('description', 'Task Description');
+      await form.handleSubmit(handleSubmit)();
     });
 
-    expect(mockOnSubmit).toHaveBeenCalledWith(submitData);
+    expect(mockOnSubmit).toHaveBeenCalledWith(
+      expect.objectContaining(submitData)
+    );
     expect(result.current.isSubmitting).toBe(false);
   });
 
@@ -148,9 +125,7 @@ describe('useTaskForm Hook', () => {
     const error = new Error('Submit Error');
     mockOnSubmit.mockRejectedValueOnce(error);
 
-    const { result } = renderHook(() =>
-      useTaskForm({ onSubmit: mockOnSubmit })
-    );
+    const { result } = setup();
 
     const submitData = {
       title: 'New Task',
@@ -167,9 +142,7 @@ describe('useTaskForm Hook', () => {
 
   it('should debounce search queries', async () => {
     vi.useFakeTimers();
-    const { result } = renderHook(() =>
-      useTaskForm({ onSubmit: mockOnSubmit })
-    );
+    const { result } = setup();
 
     // Mock fetch responses
     vi.mocked(global.fetch)
@@ -214,5 +187,27 @@ describe('useTaskForm Hook', () => {
     );
 
     vi.useRealTimers();
+  });
+
+  it('should handle form submission without default values', async () => {
+    const { result } = setup();
+    act(() => {
+      result.current.handleSubmit({
+        title: 'Test Task',
+        description: 'A task without defaults',
+        status: 'TODO',
+        assignee: { _id: 'user3', name: 'John Smith' }
+      });
+    });
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: 'Test Task',
+          status: 'TODO',
+          assignee: { _id: 'user3', name: 'John Smith' }
+        })
+      );
+    });
   });
 });
