@@ -39,15 +39,12 @@ vi.mock('sonner', () => ({
 
 // Mock ProjectForm
 vi.mock('@/components/kanban/project/ProjectForm', () => ({
-  ProjectForm: ({ onSubmit, defaultValues, children }: any) => (
+  ProjectForm: ({ onSubmit, children }: any) => (
     <form
       data-testid="mock-project-form"
-      onSubmit={async (e) => {
+      onSubmit={(e) => {
         e.preventDefault();
-        await onSubmit({
-          title: defaultValues.title || 'Edited Title',
-          description: defaultValues.description || 'Edited Desc'
-        });
+        onSubmit({ title: 'Edited Title', description: 'Edited Desc' });
       }}
     >
       {children}
