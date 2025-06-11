@@ -1,17 +1,22 @@
-import SignInViewPage from '@/components/auth/SignInView';
-import { projectMetaData } from '@/constants/pageMetaData';
+import SignInView from '@/components/auth/SignInView';
 import { Metadata } from 'next';
-import type { JSX } from 'react';
+import { getTranslations } from 'next-intl/server';
 
-export const metadata: Metadata = {
-  title: projectMetaData.title,
-  description: projectMetaData.description
+type Props = {
+  params: { locale: string };
 };
 
-export default function SignInPage(): JSX.Element {
-  return (
-    <div data-testid="signin-page-container">
-      <SignInViewPage />
-    </div>
-  );
+export async function generateMetadata({
+  params: { locale }
+}: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'login' });
+
+  return {
+    title: t('title'),
+    description: t('description')
+  };
+}
+
+export default function LoginPage() {
+  return <SignInView />;
 }

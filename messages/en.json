@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Next Project Manager",
+    "description": "Next.js template for beginner"
+  },
   "login": {
     "title": "Next Project Manager",
     "description": "Next.js template for beginner",
@@ -8,6 +12,7 @@
     "continueButton": "Continue With Email"
   },
   "sidebar": {
+    "title": "Next Project Manager",
     "overview": "Overview",
     "myBoards": "My Boards",
     "teamBoards": "Team Boards",
