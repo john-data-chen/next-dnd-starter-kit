@@ -137,5 +137,11 @@
   },
   "user": {
     "logOut": "Abmelden"
+  },
+  "theme": {
+    "toggleTheme": "Thema wechseln",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System"
   }
 }

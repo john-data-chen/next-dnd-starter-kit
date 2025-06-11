@@ -137,5 +137,11 @@
   },
   "user": {
     "logOut": "Log out"
+  },
+  "theme": {
+    "toggleTheme": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }
