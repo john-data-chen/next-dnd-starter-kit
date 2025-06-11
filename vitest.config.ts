@@ -2,8 +2,6 @@ import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { defineConfig } from 'vitest/config';
 
-// Import the 'path' module
-
 export default defineConfig({
   plugins: [react()],
   test: {
