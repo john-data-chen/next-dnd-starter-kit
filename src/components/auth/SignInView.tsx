@@ -21,7 +21,7 @@ export default function SignInViewPage() {
         </div>
       </div>
       <div className="flex h-full items-center justify-center p-4 lg:p-8">
-        <div className="absolute right-4 top-4 md:right-8 md:top-8">
+        <div className="absolute right-4 top-8 md:right-8">
           <LanguageSwitcher />
         </div>
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
