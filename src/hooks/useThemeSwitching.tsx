@@ -1,7 +1,9 @@
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 
 const useThemeSwitching = () => {
   const { theme, setTheme } = useTheme();
+  const t = useTranslations('theme');
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
@@ -10,19 +12,19 @@ const useThemeSwitching = () => {
   const themeAction = [
     {
       id: 'toggleTheme',
-      name: 'Toggle Theme',
+      name: t('toggleTheme'),
       section: 'Theme',
       perform: toggleTheme
     },
     {
       id: 'setLightTheme',
-      name: 'Set Light Theme',
+      name: t('light'),
       section: 'Theme',
       perform: () => setTheme('light')
     },
     {
       id: 'setDarkTheme',
-      name: 'Set Dark Theme',
+      name: t('dark'),
       section: 'Theme',
       perform: () => setTheme('dark')
     }
