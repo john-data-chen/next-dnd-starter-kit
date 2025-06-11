@@ -149,7 +149,7 @@ export function TaskForm({
                       className="w-full justify-between"
                     >
                       {field.value
-                        ? field.value.name || field.value.id
+                        ? field.value.name || field.value._id
                         : t('selectUser')}
                     </Button>
                   </PopoverTrigger>
@@ -172,12 +172,9 @@ export function TaskForm({
                           {users.map((user) => (
                             <CommandItem
                               key={user._id}
-                              value={user._id}
+                              value={user.name!}
                               onSelect={() => {
-                                field.onChange({
-                                  id: user._id,
-                                  name: user.name
-                                });
+                                field.onChange(user);
                                 setAssignOpen(false);
                               }}
                               className="flex flex-col items-start"
