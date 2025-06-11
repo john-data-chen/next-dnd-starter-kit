@@ -10,9 +10,8 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useBoards } from '@/hooks/useBoards';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
