@@ -1,5 +1,19 @@
 {
   "login": {
-    "title": "Hello world!"
+    "title": "Next Project Manager",
+    "description": "Next.js template for beginner",
+    "formHint": "Please press Continue button, you don't need to register."
+  },
+  "sidebar": {
+    "overview": "Overview",
+    "myBoards": "My Boards",
+    "teamBoards": "Team Boards",
+    "loading": "Loading..."
+  },
+  "kanban": {
+    "overview": {
+      "title": "Kanban Overview",
+      "description": "Manage your boards in Overview"
+    }
   }
 }

@@ -1,5 +1,19 @@
 {
   "login": {
-    "title": "Hello world in deutsch!"
+    "title": "Nächster Projektmanager",
+    "description": "Next.js-Vorlage für Anfänger",
+    "formHint": "Bitte drücken Sie die Weiter-Taste, eine Registrierung ist nicht erforderlich."
+  },
+  "sidebar": {
+    "overview": "Überblick",
+    "myBoards": "Meine Boards",
+    "teamBoards": "Team-Boards",
+    "loading": "Wird geladen..."
+  },
+  "kanban": {
+    "overview": {
+      "title": "Kanban-Übersicht",
+      "description": "Verwalten Sie Ihre Boards in der Übersicht"
+    }
   }
 }
