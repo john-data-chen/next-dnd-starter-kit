@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -53,6 +54,7 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
           <DialogTitle data-testid="new-board-dialog-title">
             {t('newBoardTitle')}
           </DialogTitle>
+          <DialogDescription>{t('newBoardDescription')}</DialogDescription>
         </DialogHeader>
         <BoardForm onSubmit={handleSubmit}>
           <DialogFooter>

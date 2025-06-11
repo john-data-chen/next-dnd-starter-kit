@@ -57,7 +57,8 @@
       "newBoardTitle": "Create New Board",
       "boardCreatedSuccess": "Board created successfully",
       "boardCreateFailed": "Failed to create board",
-      "create": "Create"
+      "create": "Create",
+      "newBoardDescription": "Fill in the details to create a new board."
     }
   }
 }
