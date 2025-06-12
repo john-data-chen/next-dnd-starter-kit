@@ -4,12 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 
 // Mock server-only modules
 vi.mock('next-intl/server', () => ({
-  getTranslations: vi.fn().mockResolvedValue((key: string) => key),
+  getTranslations: vi.fn().mockResolvedValue((key: string) => key)
 }));
 
 // Mock child components
 vi.mock('@/components/kanban/BoardOverview', () => ({
-  BoardOverview: () => <div data-testid="board-overview">BoardOverview</div>,
+  BoardOverview: () => <div data-testid="board-overview">BoardOverview</div>
 }));
 
 describe('BoardPage', () => {

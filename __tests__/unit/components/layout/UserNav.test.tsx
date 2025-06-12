@@ -1,11 +1,11 @@
 import { UserNav } from '@/components/layout/UserNav';
 import { ROUTES } from '@/constants/routes';
-import { render, screen } from '../../test-utils';
+import { useRouter } from '@/i18n/navigation';
 import userEvent from '@testing-library/user-event';
 import { Session } from 'next-auth';
 import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from '@/i18n/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, screen } from '../../test-utils';
 
 // Mock dependencies
 vi.mock('next-auth/react', async (importOriginal) => {

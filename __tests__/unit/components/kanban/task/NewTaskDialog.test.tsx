@@ -52,10 +52,7 @@ vi.mock('@/components/kanban/task/TaskForm', () => ({
 // Mock UI components
 vi.mock('@/components/ui/dialog', () => ({
   Dialog: ({ children, onOpenChange }: any) => (
-    <div
-      onClick={() => onOpenChange(true)}
-      data-testid="mock-dialog-wrapper"
-    >
+    <div onClick={() => onOpenChange(true)} data-testid="mock-dialog-wrapper">
       {children}
     </div>
   ),

@@ -1,5 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import LocaleLayout, { generateMetadata } from '@/app/[locale]/layout';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock dependencies
 vi.mock('@/components/layout/Providers', () => ({
@@ -13,15 +15,19 @@ vi.mock('@/lib/auth', () => ({
 }));
 vi.mock('next-intl', () => ({
   hasLocale: vi.fn((locales, locale) => locales.includes(locale)),
-  NextIntlClientProvider: ({ children }: any) => <div data-testid="intl">{children}</div>
+  NextIntlClientProvider: ({ children }: any) => (
+    <div data-testid="intl">{children}</div>
+  )
 }));
 vi.mock('next-intl/server', () => ({
   getMessages: vi.fn(() => Promise.resolve({ test: 'message' })),
-  getTranslations: vi.fn(() => Promise.resolve((key: string) => {
-    if (key === 'title') return 'Test Title';
-    if (key === 'description') return 'Test Description';
-    return key;
-  }))
+  getTranslations: vi.fn(() =>
+    Promise.resolve((key: string) => {
+      if (key === 'title') return 'Test Title';
+      if (key === 'description') return 'Test Description';
+      return key;
+    })
+  )
 }));
 vi.mock('next/font/google', () => ({
   Roboto: vi.fn(() => ({ className: 'roboto' }))
@@ -39,9 +45,6 @@ vi.mock('@vercel/speed-insights/next', () => ({
   SpeedInsights: () => <div data-testid="speedinsights" />
 }));
 vi.mock('@/styles/globals.css', () => ({}));
-
-import { render, screen } from '@testing-library/react';
-import LocaleLayout, { generateMetadata } from '@/app/[locale]/layout';
 
 describe('LocaleLayout', () => {
   it('should render layout with children and providers', async () => {
