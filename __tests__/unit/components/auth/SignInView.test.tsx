@@ -2,12 +2,19 @@ import SignInViewPage from '@/components/auth/SignInView';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-// Mock the UserAuthForm component
+// Mock child components
 vi.mock('@/components/auth/UserAuthForm', () => ({
-  // biome-ignore lint/style/useDefaultExport: <explanation>
   default: () => (
     <div data-testid="mock-user-auth-form">Mock User Auth Form</div>
   )
+}));
+vi.mock('@/components/layout/LanguageSwitcher', () => ({
+  default: () => <div data-testid="mock-language-switcher" />
+}));
+
+// Mock next-intl
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key
 }));
 
 // Mock the lucide-react Presentation icon
@@ -19,17 +26,18 @@ vi.mock('lucide-react', async (importOriginal) => {
   };
 });
 
-describe('SignInViewPage Component', () => {
-  // ... other test case ...
-
-  it('should render the UserAuthForm component', () => {
+describe('SignInView Component', () => {
+  it('should render all child components and translated text keys', () => {
     render(<SignInViewPage />);
 
-    // Add screen.debug() here to see the rendered output in the console
-    // screen.debug();
+    // Check for translated text keys
+    expect(screen.getByText('title')).toBeInTheDocument();
+    expect(screen.getByText('description')).toBeInTheDocument();
+    expect(screen.getByText('formHint')).toBeInTheDocument();
 
-    // Check if the mocked UserAuthForm is present
-    expect(screen.getByTestId('mock-user-auth-form')).toBeInTheDocument(); // This line was failing
-    expect(screen.getByText('Mock User Auth Form')).toBeInTheDocument();
+    // Check for mocked components
+    expect(screen.getByTestId('mock-user-auth-form')).toBeInTheDocument();
+    expect(screen.getByTestId('mock-language-switcher')).toBeInTheDocument();
+    expect(screen.getByTestId('mock-presentation-icon')).toBeInTheDocument();
   });
 });

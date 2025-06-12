@@ -30,13 +30,17 @@ vi.mock('next/navigation', () => ({
   })
 }));
 
+// Mock next-intl
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string, values?: any) =>
+    values ? `${key} ${JSON.stringify(values)}` : key
+}));
+
 // --- Mock sonner (toast) using vi.hoisted ---
-const toastMocks = vi.hoisted(() => {
-  return {
-    toastSuccessMock: vi.fn(),
-    toastErrorMock: vi.fn()
-  };
-});
+const toastMocks = vi.hoisted(() => ({
+  toastSuccessMock: vi.fn(),
+  toastErrorMock: vi.fn()
+}));
 
 vi.mock('sonner', () => ({
   toast: {
@@ -85,10 +89,10 @@ vi.mock('@/components/ui/dropdown-menu', async (importOriginal) => {
   return {
     ...original,
     DropdownMenu: ({ children }: { children: React.ReactNode }) => (
-      <>{children}</>
+      <div>{children}</div>
     ),
     DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => (
-      <>{children}</>
+      <div>{children}</div>
     ),
     DropdownMenuContent: ({ children }: { children: React.ReactNode }) => (
       <div>{children}</div>
@@ -132,12 +136,12 @@ describe('BoardActions', () => {
     const editButton = screen.getByTestId('edit-board-button');
     fireEvent.click(editButton);
 
-    await screen.findByText('Edit Board');
-    expect(screen.getByText('Edit Board')).toBeInTheDocument();
+    await screen.findByText('editBoardTitle');
+    expect(screen.getByText('editBoardDescription')).toBeInTheDocument();
 
     // Assuming BoardForm mock doesn't render the button,
     // we need to find the button rendered by the actual DialogFooter inside BoardActions
-    const saveButton = screen.getByRole('button', { name: 'Save Changes' });
+    const saveButton = screen.getByRole('button', { name: 'saveChanges' });
     fireEvent.click(saveButton);
 
     await waitFor(() => {
@@ -145,12 +149,9 @@ describe('BoardActions', () => {
         title: 'Edited Title',
         description: 'Edited Desc'
       });
-    });
-    await waitFor(() => {
-      // Use the specific mock function for assertion
       expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith(
-        'Board updated: Edited Title'
-      ); // Use hoisted mock
+        'boardUpdated {"title":"Edited Title"}'
+      );
       expect(fetchBoardsMock).toHaveBeenCalled();
       expect(refreshMock).toHaveBeenCalled();
     });
@@ -162,23 +163,16 @@ describe('BoardActions', () => {
     const deleteButtonDropdown = screen.getByTestId('delete-board-button');
     fireEvent.click(deleteButtonDropdown);
 
-    await screen.findByText(`Are you sure to delete board: ${board.title}?`);
-    expect(
-      screen.getByText(`Are you sure to delete board: ${board.title}?`)
-    ).toBeInTheDocument();
+    await screen.findByText('confirmDeleteTitle {"title":"Test Board"}');
+    expect(screen.getByText('confirmDeleteDescription')).toBeInTheDocument();
 
     // Find the delete button within the AlertDialog
-    const confirmDeleteButton = screen.getByRole('button', { name: 'Delete' });
+    const confirmDeleteButton = screen.getByRole('button', { name: 'delete' });
     fireEvent.click(confirmDeleteButton);
 
     await waitFor(() => {
       expect(removeBoardMock).toHaveBeenCalledWith('b1');
-    });
-    await waitFor(() => {
-      // Use the specific mock function for assertion
-      expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith(
-        'Board has been deleted.'
-      ); // Use hoisted mock
+      expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith('boardDeleted');
       expect(fetchBoardsMock).toHaveBeenCalled();
       expect(refreshMock).toHaveBeenCalled();
     });
@@ -186,42 +180,40 @@ describe('BoardActions', () => {
 
   // Test for update failure
   it('should show error toast if updateBoard fails', async () => {
-    updateBoardMock.mockRejectedValueOnce(new Error('Update failed'));
+    const error = new Error('Update failed');
+    updateBoardMock.mockRejectedValueOnce(error);
     render(<BoardActions board={board} />);
 
     const editButton = screen.getByTestId('edit-board-button');
     fireEvent.click(editButton);
 
-    await screen.findByText('Edit Board');
-    const saveButton = screen.getByRole('button', { name: 'Save Changes' });
+    await screen.findByText('editBoardTitle');
+    const saveButton = screen.getByRole('button', { name: 'saveChanges' });
     fireEvent.click(saveButton);
 
     await waitFor(() => {
-      // Use the specific mock function for assertion
       expect(toastMocks.toastErrorMock).toHaveBeenCalledWith(
-        // Use hoisted mock
-        'Failed to update board: Error: Update failed'
+        `boardUpdateFailed {"error":"${String(error)}"}`
       );
     });
   });
 
   // Test for delete failure
   it('should show error toast if removeBoard fails', async () => {
-    removeBoardMock.mockRejectedValueOnce(new Error('Delete failed'));
+    const error = new Error('Delete failed');
+    removeBoardMock.mockRejectedValueOnce(error);
     render(<BoardActions board={board} />);
 
     const deleteButtonDropdown = screen.getByTestId('delete-board-button');
     fireEvent.click(deleteButtonDropdown);
 
-    await screen.findByText(`Are you sure to delete board: ${board.title}?`);
-    const confirmDeleteButton = screen.getByRole('button', { name: 'Delete' });
+    await screen.findByText('confirmDeleteTitle {"title":"Test Board"}');
+    const confirmDeleteButton = screen.getByRole('button', { name: 'delete' });
     fireEvent.click(confirmDeleteButton);
 
     await waitFor(() => {
-      // Use the specific mock function for assertion
       expect(toastMocks.toastErrorMock).toHaveBeenCalledWith(
-        // Use hoisted mock
-        'Failed to delete board: Error: Delete failed'
+        `boardDeleteFailed {"error":"${String(error)}"}`
       );
     });
   });

@@ -10,6 +10,7 @@ import { cva } from 'class-variance-authority';
 import { format } from 'date-fns';
 import { PointerIcon } from 'lucide-react';
 import { Calendar1Icon, FileTextIcon, UserIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { TaskActions } from './TaskAction';
 
 interface TaskCardProps {
@@ -24,28 +25,8 @@ export interface TaskDragData {
   task: Task;
 }
 
-const statusConfig: Record<
-  TaskStatus,
-  {
-    label: string;
-    className: string;
-  }
-> = {
-  TODO: {
-    label: 'To Do',
-    className: 'bg-slate-500 hover:bg-slate-500'
-  },
-  IN_PROGRESS: {
-    label: 'In Progress',
-    className: 'bg-blue-500 hover:bg-blue-500'
-  },
-  DONE: {
-    label: 'Done',
-    className: 'bg-green-500 hover:bg-green-500'
-  }
-};
-
 export function TaskCard({ task, isOverlay }: TaskCardProps) {
+  const t = useTranslations('kanban.task');
   const {
     setNodeRef,
     attributes,
@@ -80,6 +61,27 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
 
   const dragState = isOverlay ? 'overlay' : isDragging ? 'over' : undefined;
 
+  const statusConfig: Record<
+    TaskStatus,
+    {
+      label: string;
+      className: string;
+    }
+  > = {
+    TODO: {
+      label: t('statusTodo'),
+      className: 'bg-slate-500 hover:bg-slate-500'
+    },
+    IN_PROGRESS: {
+      label: t('statusInProgress'),
+      className: 'bg-blue-500 hover:bg-blue-500'
+    },
+    DONE: {
+      label: t('statusDone'),
+      className: 'bg-green-500 hover:bg-green-500'
+    }
+  };
+
   return (
     <Card
       ref={setNodeRef}
@@ -94,7 +96,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           {...listeners}
           className="text-secondary-foreground/50 -ml-2 h-auto w-16 cursor-grab p-1"
           data-testid="task-card-drag-button"
-          aria-label="Move task"
+          aria-label={t('moveTask')}
         >
           <PointerIcon />
         </Button>
@@ -111,7 +113,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
               task.status && statusConfig[task.status]?.className
             )}
           >
-            {task.status ? statusConfig[task.status]?.label : 'No Status'}
+            {task.status ? statusConfig[task.status]?.label : t('noStatus')}
           </Badge>
         </div>
         <TaskActions
@@ -129,7 +131,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             {task.creator.name && (
               <div className="flex items-center gap-1">
                 <UserIcon className="h-4 w-4" />
-                <span>Created by: {task.creator.name}</span>
+                <span>{t('createdBy', { name: task.creator.name })}</span>
               </div>
             )}
           </div>
@@ -141,7 +143,9 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             {task.lastModifier.name && (
               <div className="flex items-center gap-1">
                 <UserIcon className="h-4 w-4" />
-                <span>Last Modified by: {task.lastModifier.name}</span>
+                <span>
+                  {t('lastModifiedBy', { name: task.lastModifier.name })}
+                </span>
               </div>
             )}
           </div>
@@ -153,7 +157,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
             {task.assignee && (
               <div className="flex items-center gap-1">
                 <UserIcon className="h-4 w-4" />
-                <span>Assignee: {task.assignee.name}</span>
+                <span>{t('assignee', { name: task.assignee.name })}</span>
               </div>
             )}
           </div>
@@ -166,7 +170,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
               <div className="flex items-center gap-1">
                 <Calendar1Icon className="h-4 w-4" />
                 <span>
-                  Due Date: {format(new Date(task.dueDate), 'yyyy/MM/dd')}
+                  {t('dueDate')}: {format(new Date(task.dueDate), 'yyyy/MM/dd')}
                 </span>
               </div>
             )}

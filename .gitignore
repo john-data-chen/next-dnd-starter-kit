@@ -43,3 +43,6 @@ node_modules/
 
 # database by docker
 /database/mongodb/
+
+.vscode/
+.cursorrules

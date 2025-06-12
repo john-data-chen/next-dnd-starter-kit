@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -32,6 +33,7 @@ export function BoardForm({
   onSubmit,
   children
 }: BoardFormProps) {
+  const t = useTranslations('kanban.actions');
   const form = useForm<BoardFormValues>({
     resolver: zodResolver(BoardFormSchema),
     defaultValues: {
@@ -49,9 +51,9 @@ export function BoardForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Board Title</FormLabel>
+              <FormLabel>{t('boardTitleLabel')}</FormLabel>
               <FormControl>
-                <Input placeholder="Enter board title" {...field} />
+                <Input placeholder={t('boardTitlePlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -62,10 +64,10 @@ export function BoardForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>{t('descriptionLabel')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Enter board description"
+                  placeholder={t('descriptionPlaceholder')}
                   className="resize-none"
                   {...field}
                 />

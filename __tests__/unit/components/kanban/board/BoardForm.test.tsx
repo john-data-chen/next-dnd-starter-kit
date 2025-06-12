@@ -3,6 +3,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 
+// Mock next-intl
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key
+}));
+
 // Helper function to wrap BoardForm with a submit button for testing
 const renderBoardForm = (props: React.ComponentProps<typeof BoardForm>) => {
   return render(
@@ -13,12 +18,12 @@ const renderBoardForm = (props: React.ComponentProps<typeof BoardForm>) => {
 };
 
 describe('BoardForm', () => {
-  it('should render the form with empty fields by default', () => {
+  it('should render the form with translated labels', () => {
     const handleSubmit = vi.fn();
     renderBoardForm({ onSubmit: handleSubmit });
 
-    expect(screen.getByLabelText('Board Title')).toHaveValue('');
-    expect(screen.getByLabelText('Description')).toHaveValue('');
+    expect(screen.getByLabelText('boardTitleLabel')).toHaveValue('');
+    expect(screen.getByLabelText('descriptionLabel')).toHaveValue('');
   });
 
   it('should render the form with default values', () => {
@@ -29,16 +34,20 @@ describe('BoardForm', () => {
     };
     renderBoardForm({ onSubmit: handleSubmit, defaultValues });
 
-    expect(screen.getByLabelText('Board Title')).toHaveValue('Default Title');
-    expect(screen.getByLabelText('Description')).toHaveValue('Default Desc');
+    expect(screen.getByLabelText('boardTitleLabel')).toHaveValue(
+      'Default Title'
+    );
+    expect(screen.getByLabelText('descriptionLabel')).toHaveValue(
+      'Default Desc'
+    );
   });
 
   it('should allow typing into fields', () => {
     const handleSubmit = vi.fn();
     renderBoardForm({ onSubmit: handleSubmit });
 
-    const titleInput = screen.getByLabelText('Board Title');
-    const descriptionInput = screen.getByLabelText('Description');
+    const titleInput = screen.getByLabelText('boardTitleLabel');
+    const descriptionInput = screen.getByLabelText('descriptionLabel');
 
     fireEvent.change(titleInput, { target: { value: 'New Title' } });
     fireEvent.change(descriptionInput, { target: { value: 'New Desc' } });
@@ -48,11 +57,11 @@ describe('BoardForm', () => {
   });
 
   it('should call onSubmit with form values when submitted successfully', async () => {
-    const handleSubmit = vi.fn().mockResolvedValue(undefined); // Mock async submit
+    const handleSubmit = vi.fn().mockResolvedValue(undefined);
     renderBoardForm({ onSubmit: handleSubmit });
 
-    const titleInput = screen.getByLabelText('Board Title');
-    const descriptionInput = screen.getByLabelText('Description');
+    const titleInput = screen.getByLabelText('boardTitleLabel');
+    const descriptionInput = screen.getByLabelText('descriptionLabel');
     const submitButton = screen.getByRole('button', { name: 'Submit' });
 
     fireEvent.change(titleInput, { target: { value: 'Valid Title' } });
@@ -61,20 +70,13 @@ describe('BoardForm', () => {
 
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledTimes(1);
-      // Check only the first argument received by the mock
       expect(handleSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          // Use expect.objectContaining for flexibility
           title: 'Valid Title',
           description: 'Valid Desc'
         }),
-        expect.anything() // Acknowledge the second argument (event object)
+        expect.anything()
       );
-      // Alternatively, you could access the first argument directly:
-      // expect(handleSubmit.mock.calls[0][0]).toEqual({
-      //   title: 'Valid Title',
-      //   description: 'Valid Desc'
-      // });
     });
   });
 
@@ -85,7 +87,6 @@ describe('BoardForm', () => {
     const submitButton = screen.getByRole('button', { name: 'Submit' });
     fireEvent.click(submitButton);
 
-    // Wait for the validation message to appear
     const errorMessage = await screen.findByText('Title is required');
     expect(errorMessage).toBeInTheDocument();
     expect(handleSubmit).not.toHaveBeenCalled();

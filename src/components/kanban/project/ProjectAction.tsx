@@ -26,6 +26,7 @@ import {
 import { useTaskStore } from '@/lib/store';
 import { projectSchema } from '@/types/projectForm';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { useTranslations } from 'next-intl';
 import * as React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -48,6 +49,7 @@ export function ProjectActions({
   const removeProject = useTaskStore((state) => state.removeProject);
   const currentBoardId = useTaskStore((state) => state.currentBoardId);
   const fetchProjects = useTaskStore((state) => state.fetchProjects);
+  const t = useTranslations('kanban.project');
 
   // State for permissions
   const [permissions, setPermissions] = React.useState<{
@@ -70,16 +72,16 @@ export function ProjectActions({
       const response = await fetch(`/api/projects/${id}/permissions`);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.error || 'Failed to fetch project permissions'
-        );
+        throw new Error(errorData.error || t('fetchPermissionsFailed'));
       }
       const data = await response.json();
       setPermissions(data);
     } catch (error) {
       console.error('Error fetching project permissions:', error);
       setPermissions({ canEditProject: false, canDeleteProject: false }); // Fallback on error
-      toast.error(`Could not load permissions: ${(error as Error).message}`);
+      toast.error(
+        t('loadPermissionsFailed', { error: (error as Error).message })
+      );
     } finally {
       setIsLoadingPermissions(false);
     }
@@ -89,10 +91,10 @@ export function ProjectActions({
     try {
       await updateProject(id, values.title, values.description);
       await fetchProjects(currentBoardId!);
-      toast.success('Project is updated!');
+      toast.success(t('updateSuccess'));
       setEditEnable(false);
     } catch (error) {
-      toast.error('Project updated fail：' + (error as Error).message);
+      toast.error(t('updateFailed', { error: (error as Error).message }));
     }
   }
 
@@ -101,7 +103,7 @@ export function ProjectActions({
       <Dialog open={editEnable} onOpenChange={setEditEnable}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Project</DialogTitle>
+            <DialogTitle>{t('editProjectTitle')}</DialogTitle>
           </DialogHeader>
           <ProjectForm
             onSubmit={onSubmit}
@@ -113,9 +115,9 @@ export function ProjectActions({
                 variant="outline"
                 onClick={() => setEditEnable(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
-              <Button type="submit">Save</Button>
+              <Button type="submit">{t('save')}</Button>
             </div>
           </ProjectForm>
         </DialogContent>
@@ -161,7 +163,7 @@ export function ProjectActions({
             }
             data-testid="edit-project-button"
           >
-            Edit
+            {t('edit')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -180,7 +182,7 @@ export function ProjectActions({
             `}
             data-testid="delete-project-button"
           >
-            Delete
+            {t('delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -189,24 +191,23 @@ export function ProjectActions({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Make sure before you delete Project： {title}？
+              {t('confirmDeleteTitle', { title })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Warning: This action will delete All Tasks in project and it
-              cannot be undone.
+              {t('confirmDeleteDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={() => {
                 setShowDeleteDialog(false);
                 removeProject(id);
-                toast.success(`Project: ${title} is deleted`);
+                toast.success(t('deleteSuccess', { title }));
               }}
             >
-              Delete
+              {t('delete')}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

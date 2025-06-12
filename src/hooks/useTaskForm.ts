@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { useDebounce } from './useDebounce';
 
 interface UseTaskFormProps {
-  defaultValues?: z.infer<typeof TaskFormSchema>;
+  defaultValues?: Partial<z.infer<typeof TaskFormSchema>>;
   onSubmit: (values: z.infer<typeof TaskFormSchema>) => Promise<void>;
 }
 
@@ -77,7 +77,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
       const submitData = {
         ...values,
         assignee: values.assignee
-          ? { id: values.assignee.id, name: values.assignee.name }
+          ? { _id: values.assignee._id, name: values.assignee.name }
           : undefined
       };
       await onSubmit(submitData);

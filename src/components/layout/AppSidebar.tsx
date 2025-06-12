@@ -11,13 +11,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar';
-import { projectInfo } from '@/constants/sidebar';
 import { useBoards } from '@/hooks/useBoards';
+import { Link, usePathname } from '@/i18n/navigation';
 import { HomeIcon } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function AppSidebar() {
+  const t = useTranslations('sidebar');
   const pathname = usePathname();
   const { myBoards, teamBoards, loading } = useBoards();
 
@@ -25,11 +25,11 @@ export default function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="text-sidebar-accent-foreground flex gap-2 py-2">
-          <div className="bg-sidebar-pdivary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
             <Icons.projectLogo />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{projectInfo.name}</span>
+            <span className="truncate font-semibold">{t('title')}</span>
           </div>
         </div>
       </SidebarHeader>
@@ -37,10 +37,13 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={pathname === '/boards'}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.endsWith('/boards')}
+              >
                 <Link href="/boards" className="flex items-center gap-2">
                   <HomeIcon className="h-4 w-4" />
-                  <span>Overview</span>
+                  <span>{t('overview')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -49,19 +52,19 @@ export default function AppSidebar() {
 
         <SidebarGroup>
           <div className="flex items-center justify-between px-2">
-            <SidebarGroupLabel>My Boards</SidebarGroupLabel>
+            <SidebarGroupLabel>{t('myBoards')}</SidebarGroupLabel>
           </div>
           <SidebarMenu>
             {loading ? (
               <div className="px-4 py-2 text-sm text-muted-foreground">
-                Loading...
+                {t('loading')}
               </div>
             ) : (
               myBoards?.map((board) => (
                 <SidebarMenuItem key={board._id}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === `/boards/${board._id}`}
+                    isActive={pathname.endsWith(`/boards/${board._id}`)}
                   >
                     <Link href={`/boards/${board._id}`}>
                       <span>{board.title}</span>
@@ -76,19 +79,19 @@ export default function AppSidebar() {
         {/* Team Boards Section */}
         <SidebarGroup>
           <div className="flex items-center justify-between px-2">
-            <SidebarGroupLabel>Team Boards</SidebarGroupLabel>
+            <SidebarGroupLabel>{t('teamBoards')}</SidebarGroupLabel>
           </div>
           <SidebarMenu>
             {loading ? (
               <div className="px-4 py-2 text-sm text-muted-foreground">
-                Loading...
+                {t('loading')}
               </div>
             ) : (
               teamBoards?.map((board) => (
                 <SidebarMenuItem key={board._id}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === `/boards/${board._id}`}
+                    isActive={pathname.endsWith(`/boards/${board._id}`)}
                   >
                     <Link href={`/boards/${board._id}`}>
                       <span>{board.title}</span>

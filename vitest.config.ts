@@ -2,8 +2,6 @@ import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { defineConfig } from 'vitest/config';
 
-// Import the 'path' module
-
 export default defineConfig({
   plugins: [react()],
   test: {
@@ -11,6 +9,13 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     exclude: ['**/node_modules/**', '__tests__/e2e/**'],
     globals: true, // Ensure Vitest global APIs are enabled,
+    deps: {
+      optimizer: {
+        web: {
+          include: ['next-intl']
+        }
+      }
+    },
     coverage: {
       reporter: ['text', 'json', 'html', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],

@@ -17,6 +17,7 @@ The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop f
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
 - 🎯 Developer-Friendly: Clear documentation and best practices built-in
 - 📝 Full Functional: Drag & Drop, Search and Filter, User Permission Management, Multi Kanban and Project Support
+- 🌐 Internationalization (i18n): English and German
 - 🎨 Modern UX: Theme Switcher, Responsive Design for mobile, tablet, and desktop
 - 💾 Persistent data: via MongoDB
 
@@ -47,6 +48,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI**: [Shadcn/UI](https://ui.shadcn.com/)
 - **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/)
+- **Internationalization(i18n)**: [Next-intl](https://next-intl.dev/)
 - **Authentication**: [Auth.js](https://authjs.dev/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
 - **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
@@ -183,31 +185,39 @@ __tests__/
 .github/ # GitHub Actions workflows
 .husky/ # Husky configuration
 database/ # MongoDB docker-compose and initialization
+messages/ # i18n translations
 public/ # Static files such as images
 src/
 ├── app/ # Next.js App routes
-│   ├── page.tsx # Root page
-│   ├── layout.tsx # Layout component
-│   ├── not-found.tsx # 404 page
-│   ├── (auth)/ # Authentication routes
-│       └── login/ # Login page
-│   └── (workspace)/ # Workspace routes
-│       └── boards/ # Kanban Overview routes
-│           └── [boardId]/ # Board
+│   └── [locale] # i18n locale routers
+│        ├── page.tsx # Root page
+│        ├── layout.tsx # Layout component
+│        ├── not-found.tsx # 404 page
+│        ├── (auth)/ # Authentication routes
+│             └── login/ # Login page
+│        └── (workspace)/ # Workspace routes
+│             └── boards/ # Kanban Overview routes
+│                 └── [boardId]/ # Board
 ├── components/ # Reusable React components
 ├── constants/ # Application-wide constants
 ├── hooks/ # Custom React hooks
+├── i18n/ # i18n configs
 ├── lib/
 │   ├── db/ # Database functions
 │   ├── auth.ts # Authentication functions
 │   ├── store.ts # State management functions
 │   └── utils.ts # tailwindcss utils
+├── middleware.ts
 ├── models/ # Database models
 ├── styles/ # Global styles
 └── types/ # Type definitions
 ```
 
 ## Known Issues & Limitations
+
+### German Translations
+
+This is a demo project, and I know little of German, so errors of translations might not be fixed in the near future.
 
 ### UI library
 

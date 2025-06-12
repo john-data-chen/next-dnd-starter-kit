@@ -6,13 +6,11 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 // Import UseFormReturn type
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-// --- Refined Mocking Setup ---
-// 1. Declare placeholder variables (use appropriate types)
+// --- Mocking Setup ---
 let mockFormInstance: UseFormReturn<{ email: string }>;
 let mockIsLoading: boolean;
-let mockSubmitFunction: ReturnType<typeof vi.fn>; // Use ReturnType of vi.fn
+let mockSubmitFunction: ReturnType<typeof vi.fn>;
 
-// 2. Mock the hook. The factory now returns a function accessing placeholders.
 vi.mock('@/hooks/useAuthForm', () => ({
   default: () => ({
     form: mockFormInstance,
@@ -20,7 +18,11 @@ vi.mock('@/hooks/useAuthForm', () => ({
     onSubmit: mockSubmitFunction
   })
 }));
-// --- End of Refined Mocking Setup ---
+
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key
+}));
+// --- End of Mocking Setup ---
 
 // Helper component to provide actual react-hook-form context
 const TestWrapper = ({ loading = false }: { loading?: boolean }) => {
@@ -47,16 +49,21 @@ describe('UserAuthForm Component', () => {
     // No need to clear mockUseAuthForm as it's not used directly anymore
   });
 
-  it('should render the email input and submit button with default value', () => {
+  it('should render form elements with translated text keys', () => {
     render(<TestWrapper />);
 
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    const emailInput = screen.getByTestId('email-input');
+    // Check for translated label
+    expect(screen.getByLabelText('emailLabel')).toBeInTheDocument();
+
+    // Check for input with translated placeholder
+    const emailInput = screen.getByPlaceholderText('emailPlaceholder');
     expect(emailInput).toBeInTheDocument();
-    // Check the default value from the form setup in TestWrapper
     expect(emailInput).toHaveValue(defaultEmail);
+    expect(emailInput).toHaveAttribute('data-testid', 'email-input');
+
+    // Check for translated button text
     expect(
-      screen.getByRole('button', { name: /continue with email/i })
+      screen.getByRole('button', { name: 'continueButton' })
     ).toBeInTheDocument();
     expect(screen.getByTestId('submit-button')).toBeInTheDocument();
   });
