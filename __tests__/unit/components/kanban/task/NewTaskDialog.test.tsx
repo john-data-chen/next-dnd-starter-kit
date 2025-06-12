@@ -16,53 +16,49 @@ vi.mock('sonner', () => ({
 // Mock zustand store
 const mockAddTask = vi.fn();
 vi.mock('@/lib/store', () => ({
-  useTaskStore: () => ({
-    addTask: mockAddTask
-  })
+  useTaskStore: (selector: (state: any) => any) =>
+    selector({
+      addTask: mockAddTask
+    })
+}));
+
+// Mock next-intl
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string, values?: any) =>
+    values ? `${key} ${JSON.stringify(values)}` : key
 }));
 
 // Mock TaskForm
 vi.mock('@/components/kanban/task/TaskForm', () => ({
-  TaskForm: ({ onSubmit, onCancel }: any) => (
+  TaskForm: ({ onSubmit, onCancel, submitLabel }: any) => (
     <form
       data-testid="mock-task-form"
-      onSubmit={async (e) => {
+      onSubmit={(e) => {
         e.preventDefault();
-        await onSubmit({
+        onSubmit({
           title: 'Test Task',
-          status: 'TODO',
-          description: 'desc',
-          dueDate: undefined,
-          assignee: undefined
+          status: 'TODO'
         });
       }}
     >
-      <button type="submit">Create Task</button>
+      <button type="submit">{submitLabel}</button>
       <button type="button" onClick={onCancel}>
-        Cancel
+        cancel
       </button>
     </form>
   )
 }));
 
-// Mock Button
-vi.mock('@/components/ui/button', async () => {
-  const React = await vi.importActual<typeof import('react')>('react');
-  return {
-    Button: React.forwardRef<
-      HTMLButtonElement,
-      React.ButtonHTMLAttributes<HTMLButtonElement>
-    >(({ children, ...props }, ref) => (
-      <button ref={ref} {...props}>
-        {children}
-      </button>
-    ))
-  };
-});
-
-// Mock Dialog components
+// Mock UI components
 vi.mock('@/components/ui/dialog', () => ({
-  Dialog: ({ children }: any) => <div>{children}</div>,
+  Dialog: ({ children, onOpenChange }: any) => (
+    <div
+      onClick={() => onOpenChange(true)}
+      data-testid="mock-dialog-wrapper"
+    >
+      {children}
+    </div>
+  ),
   DialogTrigger: ({ children }: any) => <>{children}</>,
   DialogContent: ({ children }: any) => (
     <div data-testid="new-task-dialog">{children}</div>
@@ -77,25 +73,49 @@ describe('NewTaskDialog', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockAddTask.mockResolvedValue(undefined);
   });
 
-  it('should render the new task button', () => {
+  it('should render trigger button with translated text', () => {
     render(<NewTaskDialog projectId={projectId} />);
-    expect(screen.getByTestId('new-task-trigger')).toBeInTheDocument();
+    expect(screen.getByTestId('new-task-trigger')).toHaveTextContent(
+      'addNewTask'
+    );
   });
 
-  it('should open dialog after clicking the new task button', async () => {
-    render(<NewTaskDialog projectId={projectId} />);
-    const trigger = screen.getByTestId('new-task-trigger');
-    await userEvent.click(trigger);
-    expect(screen.getByTestId('new-task-dialog')).toBeInTheDocument();
-    expect(screen.getByText('Add New Task')).toBeInTheDocument();
-  });
-
-  it('should close dialog after clicking Cancel', async () => {
+  it('should open dialog and display translated headers', async () => {
     render(<NewTaskDialog projectId={projectId} />);
     await userEvent.click(screen.getByTestId('new-task-trigger'));
-    const cancelBtn = screen.getByRole('button', { name: 'Cancel' });
-    await userEvent.click(cancelBtn);
+
+    expect(await screen.findByTestId('new-task-dialog')).toBeInTheDocument();
+    expect(screen.getByText('addNewTaskTitle')).toBeInTheDocument();
+    expect(screen.getByText('addNewTaskDescription')).toBeInTheDocument();
+  });
+
+  it('should call addTask and show success toast on submit', async () => {
+    render(<NewTaskDialog projectId={projectId} />);
+    await userEvent.click(screen.getByTestId('new-task-trigger'));
+
+    const submitButton = await screen.findByRole('button', {
+      name: 'createTask'
+    });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockAddTask).toHaveBeenCalledWith(
+        'p1',
+        'Test Task',
+        'TODO',
+        '',
+        undefined,
+        undefined
+      );
+    });
+
+    await waitFor(() => {
+      expect(toast.success).toHaveBeenCalledWith(
+        'createSuccess {"title":"Test Task"}'
+      );
+    });
   });
 });

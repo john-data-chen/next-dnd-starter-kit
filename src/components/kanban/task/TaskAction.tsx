@@ -28,8 +28,8 @@ import {
 import { useTaskStore } from '@/lib/store';
 import { TaskFormSchema } from '@/types/taskForm';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import React, { useCallback } from 'react';
-// Ensure useState is imported
+import { useTranslations } from 'next-intl';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -62,61 +62,58 @@ export function TaskActions({
 }: TaskActionsProps) {
   const updateTask = useTaskStore((state) => state.updateTask);
   const removeTask = useTaskStore((state) => state.removeTask);
-  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-  const [editEnable, setEditEnable] = React.useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [editEnable, setEditEnable] = useState(false);
+  const t = useTranslations('kanban.task');
+  const [assigneeInfo, setAssigneeInfo] = useState<{
+    _id: string;
+    name: string | null;
+  } | null>(null);
 
-  // Initialize permissions to null to indicate they haven't been fetched yet
+  useEffect(() => {
+    const fetchAssigneeInfo = async () => {
+      if (assignee) {
+        // Assume an API endpoint to fetch user details by ID
+        // This is a placeholder, you might need to implement this endpoint
+        try {
+          const response = await fetch(`/api/users/search?id=${assignee}`);
+          const data = await response.json();
+          if (data && data.length > 0) {
+            setAssigneeInfo({ _id: data[0]._id, name: data[0].name });
+          }
+        } catch (error) {
+          console.error('Failed to fetch assignee details', error);
+        }
+      }
+    };
+    fetchAssigneeInfo();
+  }, [assignee]);
+
   const [permissions, setPermissions] = React.useState<{
     canEdit: boolean;
     canDelete: boolean;
   } | null>(null);
-  const [isLoadingPermissions, setIsLoadingPermissions] = React.useState(false);
+  const [isLoadingPermissions, setIsLoadingPermissions] = React.useState(true);
 
-  const [assigneeName, setAssigneeName] = React.useState('');
-
-  React.useEffect(() => {
-    const fetchAssigneeName = async () => {
-      if (assignee) {
-        try {
-          const response = await fetch(
-            `/api/users/search?username=${assignee}`
-          );
-          const data = await response.json();
-          if (data.users && data.users.length > 0) {
-            setAssigneeName(data.users[0].name || data.users[0].email);
-          }
-        } catch (error) {
-          console.error('Error fetching assignee details:', error);
-        }
-      }
-    };
-    fetchAssigneeName();
-  }, [assignee]);
-
-  const defaultValues = React.useMemo(
-    () => ({
-      title: title,
-      description: description ?? '',
-      status: status ?? 'TODO',
-      dueDate: dueDate ?? undefined,
-      assignee: assignee
-        ? { id: assignee, name: assigneeName || assignee }
-        : undefined
-    }),
-    [title, description, status, dueDate, assignee, assigneeName]
-  );
+  const defaultValues = {
+    title,
+    description,
+    status,
+    dueDate: dueDate ? new Date(dueDate) : undefined,
+    assignee: assigneeInfo ?? undefined
+  };
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
-    const assigneeId = values.assignee ? values.assignee.id : undefined;
-    await updateTask(
+    const assigneeId = values.assignee?._id;
+    updateTask(
       id,
       values.title,
-      values.status,
-      values.description ?? '',
+      values.status ?? 'TODO',
+      values.description,
       values.dueDate,
       assigneeId
     );
-    toast.success(`Task is updated: ${values.title}`);
+    toast.success(t('updateSuccess', { title: values.title }));
     setEditEnable(false);
   };
 
@@ -125,23 +122,20 @@ export function TaskActions({
     setShowDeleteDialog(false);
     removeTask(id);
     onDelete?.(id);
-    toast('Task has been deleted.');
+    toast.success(t('deleteSuccess'));
   };
 
   const checkPermissions = useCallback(async () => {
     if (!id) {
-      setPermissions({ canEdit: false, canDelete: false });
+      setIsLoadingPermissions(false);
       return;
     }
-    setIsLoadingPermissions(true);
     try {
-      const response = await fetch(`/api/tasks/${id}/permissions`, {
-        method: 'GET'
-      });
+      const response = await fetch(`/api/tasks/${id}/permissions`);
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to check permissions');
+        throw new Error(errorData.error || t('checkPermissionsFailed'));
       }
 
       const data = await response.json();
@@ -150,118 +144,101 @@ export function TaskActions({
       console.error('Error checking task permissions:', error);
       setPermissions({ canEdit: false, canDelete: false }); // Fallback on error
       toast.error(
-        `Could not load task permissions: ${(error as Error).message}`
+        t('loadPermissionsFailed', { error: (error as Error).message })
       );
     } finally {
       setIsLoadingPermissions(false);
     }
-  }, [id]);
+  }, [id, t]);
 
   return (
     <>
       <Dialog
-        open={editEnable && !!permissions?.canEdit} // Use !! to handle null case
+        open={editEnable && !!permissions?.canEdit}
         onOpenChange={setEditEnable}
       >
         <DialogContent className="sm:max-w-md" data-testid="edit-task-dialog">
           <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
-            <DialogDescription>
-              Make changes to your task here. Click submit when you&apos;re
-              done.
-            </DialogDescription>
+            <DialogTitle>{t('editTaskTitle')}</DialogTitle>
+            <DialogDescription>{t('editTaskDescription')}</DialogDescription>
           </DialogHeader>
           <TaskForm
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
             onCancel={() => setEditEnable(false)}
-            submitLabel="Update Task"
+            submitLabel={t('updateTask')}
           />
         </DialogContent>
       </Dialog>
-      <DropdownMenu
-        modal={false}
-        onOpenChange={(isOpen) => {
-          // Fetch permissions only when the menu is opened for the first time
-          // and permissions haven't been fetched yet (permissions is null).
-          if (isOpen && permissions === null && !isLoadingPermissions) {
-            checkPermissions();
-          }
-        }}
-      >
+      <DropdownMenu modal={false} onOpenChange={checkPermissions}>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="secondary"
-            className="ml-1 h-8 w-12"
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
             data-testid="task-actions-trigger"
           >
-            <span className="sr-only">Actions</span>
+            <span className="sr-only">{t('actions')}</span>
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent
+          align="end"
+          className="w-40"
+          hidden={isLoadingPermissions}
+        >
           <DropdownMenuItem
-            data-testid="edit-task-button"
-            onSelect={() => {
-              if (permissions?.canEdit && !isLoadingPermissions) {
-                setEditEnable(true);
-              }
-            }}
-            disabled={isLoadingPermissions || !permissions?.canEdit}
+            onSelect={() => setEditEnable(true)}
+            disabled={!permissions?.canEdit}
             className={
-              !isLoadingPermissions && !permissions?.canEdit
+              !permissions?.canEdit
                 ? 'text-muted-foreground line-through cursor-not-allowed'
                 : ''
             }
           >
-            Edit
+            {t('edit')}
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            data-testid="delete-task-button"
-            onSelect={() => {
-              if (permissions?.canDelete && !isLoadingPermissions) {
-                setShowDeleteDialog(true);
-              }
-            }}
-            disabled={isLoadingPermissions || !permissions?.canDelete}
+            onSelect={() => setShowDeleteDialog(true)}
+            disabled={!permissions?.canDelete}
             className={`
+              w-full text-left
               ${
-                isLoadingPermissions || !permissions?.canDelete
+                !permissions?.canDelete
                   ? 'text-muted-foreground line-through cursor-not-allowed'
                   : 'text-red-600 hover:!text-red-600 hover:!bg-destructive/10'
               }
             `}
           >
-            Delete
+            {t('delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog
-        open={showDeleteDialog && !!permissions?.canDelete} // Use !! to handle null case
+        open={showDeleteDialog && !!permissions?.canDelete}
         onOpenChange={setShowDeleteDialog}
       >
         <AlertDialogContent data-testid="delete-task-dialog">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure to delete Task: {title}?
+              {t('confirmDeleteTitle', { title })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              NOTE: Task: {title} will also be deleted. This action can not be
-              undone.
+              {t('confirmDeleteDescription', { title })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="cancel-delete-button">
-              Cancel
+              {t('cancel')}
             </AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDelete}
               data-testid="confirm-delete-button"
             >
-              Delete
+              {t('delete')}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

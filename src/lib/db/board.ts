@@ -2,111 +2,114 @@
 
 import { BoardModel } from '@/models/board.model';
 import { ProjectModel } from '@/models/project.model';
-import { Board, BoardDocument } from '@/types/dbInterface';
+import { Board, BoardDocument, Project } from '@/types/dbInterface';
+import { Types } from 'mongoose';
 import { connectToDatabase } from './connect';
-import { getUserByEmail } from './user';
+import { getUserByEmail, getUserById } from './user';
 
 export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
   try {
     await connectToDatabase();
     const user = await getUserByEmail(userEmail);
-    if (!user) throw new Error('User not found');
+    if (!user) {
+      console.warn(
+        `User not found for email: ${userEmail}. Returning empty board list.`
+      );
+      return [];
+    }
 
-    const boards = await BoardModel.find({
+    const boardsFromDb = await BoardModel.find({
       $or: [{ owner: user.id }, { members: user.id }]
-    }).lean();
+    })
+      .populate({
+        path: 'projects',
+        populate: {
+          path: 'owner members',
+          select: 'name' // Only select name for nested owner/members
+        }
+      })
+      .lean();
 
-    const projectIds = boards.reduce((ids: string[], board) => {
-      return ids.concat(board.projects.map((id) => id.toString()));
-    }, []);
-
-    const projects = await ProjectModel.find({
-      _id: { $in: projectIds }
-    }).lean();
-
-    const projectMap = new Map();
-    projects.forEach((project) => {
-      projectMap.set(project._id.toString(), {
-        id: project._id.toString(),
-        title: project.title
-      });
+    const allUserIds = new Set<string>();
+    boardsFromDb.forEach((board) => {
+      allUserIds.add(board.owner.toString());
+      board.members.forEach((memberId) => allUserIds.add(memberId.toString()));
     });
 
-    const userIds = new Set<string>();
-    boards.forEach((board) => {
-      userIds.add(board.owner.toString());
-      board.members.forEach((memberId) => userIds.add(memberId.toString()));
-    });
+    const userMap = await getUserMap(Array.from(allUserIds));
 
-    const { getUserById } = await import('./user');
-    const userPromises = Array.from(userIds).map((id) => getUserById(id));
-    const users = await Promise.all(userPromises);
-
-    const userMap = new Map();
-    users.forEach((user) => {
-      if (user) {
-        userMap.set(user.id, user.name);
-      }
-    });
-
-    return boards.map((board) => ({
-      _id: board._id.toString(),
-      title: board.title,
-      description: board.description,
-      owner: {
-        id: board.owner.toString(),
-        name: userMap.get(board.owner.toString()) || 'unknown user'
-      },
-      members: board.members.map((memberId) => ({
-        id: memberId.toString(),
-        name: userMap.get(memberId.toString()) || 'unknown user'
-      })),
-      projects: board.projects.map((projectId) => ({
-        id: projectId.toString(),
-        title: projectMap.get(projectId.toString())?.title
-      })),
-      createdAt: board.createdAt,
-      updatedAt: board.updatedAt
-    }));
+    return boardsFromDb.map((board) =>
+      convertBoardToPlainObject(board as BoardDocument, userMap)
+    );
   } catch (error) {
     console.error('Error in getBoardsFromDb:', error);
     return [];
   }
 }
 
-async function convertBoardToPlainObject(
-  boardDoc: BoardDocument
-): Promise<Board> {
+async function getUserMap(userIds: string[]): Promise<Map<string, string>> {
+  const userMap = new Map<string, string>();
+  const users = await Promise.all(userIds.map((id) => getUserById(id)));
+  users.forEach((user) => {
+    if (user) {
+      userMap.set(user.id, user.name);
+    }
+  });
+  return userMap;
+}
+
+function convertBoardToPlainObject(
+  boardDoc: BoardDocument,
+  userMap: Map<string, string>
+): Board {
+  const ownerId = boardDoc.owner.toString();
   return {
     _id: boardDoc._id.toString(),
     title: boardDoc.title,
     description: boardDoc.description || '',
     owner: {
-      id:
-        typeof boardDoc.owner === 'object' && 'name' in boardDoc.owner
-          ? boardDoc.owner.id.toString()
-          : boardDoc.owner.toString(),
-      name:
-        typeof boardDoc.owner === 'object' && 'name' in boardDoc.owner
-          ? boardDoc.owner.name
-          : 'unknown user'
+      id: ownerId,
+      name: userMap.get(ownerId) || 'Unknown User'
     },
-    members: (boardDoc.members || []).map((member) => ({
-      id:
-        typeof member === 'object' && 'name' in member
-          ? member.id.toString()
-          : member.toString(),
-      name:
-        typeof member === 'object' && 'name' in member
-          ? member.name
-          : 'unknown user'
-    })),
-    projects: (boardDoc.projects || []).map((project) => ({
-      id: project.toString(),
-      title: 'Unknown Project'
-    })),
-    createdAt: boardDoc.createdAt ? new Date(boardDoc.createdAt) : new Date(),
-    updatedAt: boardDoc.updatedAt ? new Date(boardDoc.updatedAt) : new Date()
+    members: boardDoc.members.filter(Boolean).map((memberId) => {
+      const id = memberId.toString();
+      return {
+        id,
+        name: userMap.get(id) || 'Unknown User'
+      };
+    }),
+    projects: (boardDoc.projects || []).filter(Boolean).map((p): Project => {
+      const projectDoc = p as unknown as {
+        _id: Types.ObjectId;
+        title: string;
+        description?: string;
+        board: Types.ObjectId;
+        owner: { _id: Types.ObjectId; name: string };
+        members: { _id: Types.ObjectId; name: string }[];
+        createdAt: Date;
+        updatedAt: Date;
+      };
+      return {
+        _id: projectDoc._id.toString(),
+        title: projectDoc.title,
+        description: projectDoc.description || '',
+        board: projectDoc.board.toString(),
+        owner: projectDoc.owner
+          ? { id: projectDoc.owner._id.toString(), name: projectDoc.owner.name }
+          : { id: '', name: 'Unknown' },
+        members: (projectDoc.members || [])
+          .filter(Boolean)
+          .map((m: { _id: Types.ObjectId; name: string }) => ({
+            id: m._id.toString(),
+            name: m.name
+          })),
+        tasks: [],
+        createdAt: new Date(projectDoc.createdAt).toISOString(),
+        updatedAt: new Date(projectDoc.updatedAt).toISOString()
+      };
+    }),
+    createdAt: new Date(boardDoc.createdAt),
+    updatedAt: new Date(boardDoc.updatedAt)
   };
 }
 
@@ -132,19 +135,8 @@ export async function createBoardInDb({
       projects: []
     });
 
-    // Convert to plain object and ensure correct types
-    const plainBoard = {
-      _id: newBoard._id,
-      title: newBoard.title,
-      description: newBoard.description,
-      owner: user.id,
-      members: [user.id],
-      projects: [],
-      createdAt: newBoard.createdAt,
-      updatedAt: newBoard.updatedAt
-    };
-
-    return convertBoardToPlainObject(plainBoard);
+    const userMap = new Map([[user.id, user.name]]);
+    return convertBoardToPlainObject(newBoard.toObject(), userMap);
   } catch (error) {
     console.error('Error in createBoardInDb:', error);
     return null;
@@ -177,18 +169,12 @@ export async function updateBoardInDb(
 
     if (!board) return null;
 
-    const boardDoc = {
-      _id: board._id,
-      title: board.title,
-      description: board.description,
-      owner: board.owner,
-      members: board.members,
-      projects: board.projects.map((p) => p.id || p),
-      createdAt: board.createdAt,
-      updatedAt: board.updatedAt
-    };
+    const allUserIds = new Set<string>();
+    allUserIds.add(board.owner.toString());
+    board.members.forEach((memberId) => allUserIds.add(memberId.toString()));
+    const userMap = await getUserMap(Array.from(allUserIds));
 
-    return convertBoardToPlainObject(boardDoc as BoardDocument);
+    return convertBoardToPlainObject(board as BoardDocument, userMap);
   } catch (error) {
     console.error('Error in updateBoardInDb:', error);
     return null;

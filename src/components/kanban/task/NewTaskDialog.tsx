@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { useTaskStore } from '@/lib/store';
 import { TaskFormSchema } from '@/types/taskForm';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -23,6 +24,7 @@ export interface NewTaskDialogProps {
 export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
   const addTask = useTaskStore((state) => state.addTask);
   const [addTaskOpen, setAddTaskOpen] = React.useState(false);
+  const t = useTranslations('kanban.task');
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     await addTask(
@@ -33,7 +35,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
       values.dueDate ?? undefined,
       values.assignee?.id ?? undefined
     );
-    toast.success(`New Task: ${values.title}`);
+    toast.success(t('createSuccess', { title: values.title }));
     setAddTaskOpen(false);
   };
 
@@ -46,19 +48,17 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
           data-testid="new-task-trigger"
           className="my-4 w-full"
         >
-          ＋ Add New Task
+          {t('addNewTask')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md" data-testid="new-task-dialog">
         <DialogHeader>
-          <DialogTitle>Add New Task</DialogTitle>
-          <DialogDescription>
-            What do you want to get done today?
-          </DialogDescription>
+          <DialogTitle>{t('addNewTaskTitle')}</DialogTitle>
+          <DialogDescription>{t('addNewTaskDescription')}</DialogDescription>
         </DialogHeader>
         <TaskForm
           onSubmit={handleSubmit}
-          submitLabel="Create Task"
+          submitLabel={t('createTask')}
           onCancel={() => setAddTaskOpen(false)}
         />
       </DialogContent>

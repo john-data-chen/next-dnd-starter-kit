@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { projectSchema } from '@/types/projectForm';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -32,6 +33,7 @@ export function ProjectForm({
   onSubmit,
   defaultValues
 }: ProjectFormProps) {
+  const t = useTranslations('kanban.project');
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
     defaultValues: defaultValues || {
@@ -48,9 +50,9 @@ export function ProjectForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>{t('titleLabel')}</FormLabel>
               <FormControl>
-                <Input placeholder="Project title" {...field} />
+                <Input placeholder={t('titlePlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -61,10 +63,10 @@ export function ProjectForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>{t('descriptionLabel')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Enter project description"
+                  placeholder={t('descriptionPlaceholder')}
                   className="resize-none"
                   {...field}
                 />

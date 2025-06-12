@@ -11,6 +11,10 @@ vi.mock('next/navigation', () => ({
   useParams: vi.fn()
 }));
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => key
+}));
+
 vi.mock('@/lib/db/board', () => ({
   fetchBoardsFromDb: vi.fn()
 }));
@@ -44,7 +48,7 @@ describe('useBreadcrumbs Hook', () => {
 
     expect(result.current.items).toEqual([
       {
-        title: 'Overview',
+        title: 'overview',
         link: ROUTES.BOARDS.ROOT,
         isRoot: true
       }
@@ -63,7 +67,7 @@ describe('useBreadcrumbs Hook', () => {
 
     expect(result.current.items).toEqual([
       {
-        title: 'Overview',
+        title: 'overview',
         link: ROUTES.BOARDS.ROOT,
         isRoot: true
       },

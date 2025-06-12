@@ -29,6 +29,7 @@ import { useTaskStore } from '@/lib/store';
 import { boardSchema } from '@/types/boardForm';
 import { Board } from '@/types/dbInterface';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'sonner';
@@ -47,17 +48,18 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
   const { updateBoard, removeBoard } = useTaskStore();
   const router = useRouter();
   const { fetchBoards } = useBoards();
+  const t = useTranslations('kanban.actions');
 
   async function onSubmit(values: z.infer<typeof boardSchema>) {
     try {
       setIsSubmitting(true);
       await updateBoard(board._id, values);
-      toast.success(`Board updated: ${values.title}`);
+      toast.success(t('boardUpdated', { title: values.title }));
       await fetchBoards();
       setEditEnable(false);
       router.refresh();
     } catch (error) {
-      toast.error(`Failed to update board: ${error}`);
+      toast.error(t('boardUpdateFailed', { error: String(error) }));
     } finally {
       setIsSubmitting(false);
     }
@@ -67,12 +69,12 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
     try {
       await removeBoard(board._id);
       setShowDeleteDialog(false);
-      toast.success('Board has been deleted.');
+      toast.success(t('boardDeleted'));
       onDelete?.();
       await fetchBoards();
       router.refresh();
     } catch (error) {
-      toast.error(`Failed to delete board: ${error}`);
+      toast.error(t('boardDeleteFailed', { error: String(error) }));
     }
   };
 
@@ -81,10 +83,8 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
       <Dialog open={editEnable} onOpenChange={setEditEnable}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Board</DialogTitle>
-            <DialogDescription>
-              Make changes to your board here. Click save when you&apos;re done.
-            </DialogDescription>
+            <DialogTitle>{t('editBoardTitle')}</DialogTitle>
+            <DialogDescription>{t('editBoardDescription')}</DialogDescription>
           </DialogHeader>
           <BoardForm
             defaultValues={{
@@ -99,10 +99,10 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
                 variant="outline"
                 onClick={() => setEditEnable(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Saving...' : 'Save Changes'}
+                {isSubmitting ? t('saving') : t('saveChanges')}
               </Button>
             </div>
           </BoardForm>
@@ -125,7 +125,7 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
             data-testid="edit-board-button"
             onSelect={() => setEditEnable(true)}
           >
-            Edit
+            {t('edit')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -133,7 +133,7 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600"
           >
-            Delete
+            {t('delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -142,17 +142,16 @@ export function BoardActions({ board, onDelete }: BoardActionsProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure to delete board: {board.title}?
+              {t('confirmDeleteTitle', { title: board.title })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. All projects and tasks in this board
-              will be permanently deleted.
+              {t('confirmDeleteDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
             <Button variant="destructive" onClick={handleDelete}>
-              Delete
+              {t('delete')}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

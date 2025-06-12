@@ -45,7 +45,7 @@ export async function getProjectsFromDb(
     return plainProjects;
   } catch (error) {
     console.error('Error fetching projects:', error);
-    return null;
+    return [];
   }
 }
 

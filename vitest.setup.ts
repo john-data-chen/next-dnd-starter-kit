@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
-import dotenv from 'dotenv';
-import path from 'path';
 import { beforeAll, vi } from 'vitest';
+import 'dotenv/config';
+import path from 'path';
+import dotenv from 'dotenv';
 
 // Import vi for mocking if needed
 
@@ -18,6 +19,9 @@ if (result.error) {
   console.log('.env.test file loaded successfully.'); // Debugging line
   // console.log('DATABASE_URL loaded:', process.env.DATABASE_URL); // Optional: Check if variable is loaded
 }
+
+console.log('Current NODE_ENV:', process.env.NODE_ENV);
+console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
 
 // --- Add other global test setups below ---
 
@@ -41,3 +45,22 @@ beforeAll(() => {
 });
 
 // You can add other global mocks or configurations here
+
+vi.mock('next/navigation', () => {
+  const actual = vi.importActual('next/navigation');
+  return {
+    ...actual,
+    useRouter: vi.fn(() => ({
+      push: vi.fn(),
+      replace: vi.fn(),
+    })),
+    usePathname: vi.fn(() => '/'),
+    useSearchParams: vi.fn(() => new URLSearchParams()),
+    redirect: vi.fn((path) => {
+      console.log(`Mock redirect to: ${path}`);
+    }),
+    permanentRedirect: vi.fn((path) => {
+      console.log(`Mock permanent redirect to: ${path}`);
+    }),
+  };
+});

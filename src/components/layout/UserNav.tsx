@@ -11,10 +11,22 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { ROUTES } from '@/constants/routes';
+import { useRouter } from '@/i18n/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 
 export function UserNav() {
   const { data: session } = useSession();
+  const router = useRouter();
+  const t = useTranslations('user');
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    // After the session is destroyed, perform a client-side redirect
+    // to the login page. The i18n router will handle the locale.
+    router.push(ROUTES.AUTH.LOGIN);
+  };
+
   if (session) {
     return (
       <DropdownMenu>
@@ -41,10 +53,8 @@ export function UserNav() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => signOut({ callbackUrl: ROUTES.HOME })}
-          >
-            Log out
+          <DropdownMenuItem onClick={handleSignOut}>
+            {t('logOut')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

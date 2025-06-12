@@ -35,7 +35,7 @@ export interface BoardDocument {
   description?: string;
   owner: string | UserInfo;
   members: (string | UserInfo)[];
-  projects: string[];
+  projects: (string | Project)[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -97,18 +97,13 @@ export type TaskModel = mongoose.InferSchemaType<
   lastModifier: string;
 };
 
-export interface ProjectInfo {
-  id: string;
-  title: string;
-}
-
 export interface Board {
   _id: string;
   title: string;
   description?: string;
   owner: UserInfo;
   members: UserInfo[];
-  projects: ProjectInfo[];
+  projects: Project[];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,8 +1,13 @@
-import AppLayout from '@/app/(workspace)/layout';
+import AppLayout from '@/app/[locale]/(workspace)/layout';
 import { ROUTES } from '@/constants/routes';
 import { render, screen } from '@testing-library/react';
 import { redirect } from 'next/navigation';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+// Mock server-only modules
+vi.mock('next-intl/server', () => ({
+  getTranslations: vi.fn().mockResolvedValue((key: string) => key)
+}));
 
 vi.mock('@/lib/auth', () => ({
   auth: vi.fn()
@@ -22,6 +27,8 @@ vi.mock('@/components/layout/RootWrapper', () => ({
 }));
 
 describe('AppLayout', () => {
+  const mockParams = { locale: 'en' };
+
   afterEach(() => {
     vi.clearAllMocks();
   });
@@ -31,7 +38,7 @@ describe('AppLayout', () => {
     (auth as any).mockResolvedValue(null);
 
     // @ts-ignore
-    await AppLayout({ children: <div>Test</div> });
+    await AppLayout({ children: <div>Test</div>, params: mockParams });
     expect(redirect).toHaveBeenCalledWith(ROUTES.AUTH.LOGIN);
   });
 
@@ -40,7 +47,10 @@ describe('AppLayout', () => {
     (auth as any).mockResolvedValue({ user: { id: '1' } });
 
     // Render the async component and await its result
-    const result = await AppLayout({ children: <div>Test</div> });
+    const result = await AppLayout({
+      children: <div>Test</div>,
+      params: mockParams
+    });
     render(result);
 
     expect(screen.getByTestId('root-wrapper')).toBeInTheDocument();
