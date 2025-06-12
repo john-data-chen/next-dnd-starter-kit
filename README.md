@@ -39,6 +39,9 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Reliability, Security and Maintainability Rating in SonarQube**: A
 - **Cross-browser Testing**: for both desktop and mobile devices.
 - **CI/CD automation**: in GitHub actions and Vercel.
+- **Lighthouse Performance, Accessibility, Best Practices and SEO Scores**: 95+
+<img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
+
 
 ## 🛠️ Technical Stack
 
