@@ -1,6 +1,7 @@
 import { defaultEmail } from '@/constants/demoData';
 import { expect, test } from '@playwright/test';
 
+
 test.describe('SignInPage', () => {
   test('should load the sign-in page', async ({ page }) => {
     // clear cookies
@@ -14,6 +15,6 @@ test.describe('SignInPage', () => {
     await page.goto('/login');
     await page.fill('input[name="email"]', defaultEmail);
     await page.click('button[type="submit"]');
-    await expect(page).toHaveURL('/boards');
+    await expect(page).toHaveURL('/en/boards?login_success=true');
   });
 });
