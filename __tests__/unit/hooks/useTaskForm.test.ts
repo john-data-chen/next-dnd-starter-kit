@@ -2,8 +2,8 @@ import { useTaskForm } from '@/hooks/useTaskForm';
 import { TaskFormSchema } from '@/types/taskForm';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
 import { vi } from 'vitest';
+import { z } from 'zod';
 
 vi.mock('@/hooks/useDebounce', () => ({
   useDebounce: (value: any) => value
@@ -74,9 +74,7 @@ describe('useTaskForm Hook', () => {
     });
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith(
-        '/api/users/search?username=test'
-      );
+      expect(mockFetch).toHaveBeenCalledWith('/api/users/search?username=test');
       expect(result.current.users).toEqual(users);
       expect(result.current.isSearching).toBe(false);
     });

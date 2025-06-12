@@ -1,4 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import {
+  getPathname,
+  Link,
+  redirect,
+  usePathname,
+  useRouter
+} from '@/i18n/navigation';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock next-intl/navigation and routing
 vi.mock('next-intl/navigation', () => ({
@@ -13,8 +20,6 @@ vi.mock('next-intl/navigation', () => ({
 vi.mock('@/i18n/routing', () => ({
   routing: {}
 }));
-
-import { Link, redirect, usePathname, useRouter, getPathname } from '@/i18n/navigation';
 
 describe('navigation exports', () => {
   it('should export Link, redirect, usePathname, useRouter, getPathname', () => {

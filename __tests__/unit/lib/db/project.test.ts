@@ -1,16 +1,12 @@
 /// <reference types="vitest/globals" />
-
-import {
-  createProjectInDb,
-  getProjectsFromDb
-} from '@/lib/db/project';
 import { connectToDatabase } from '@/lib/db/connect';
+import { createProjectInDb, getProjectsFromDb } from '@/lib/db/project';
+import { getUserByEmail, getUserById } from '@/lib/db/user';
 import { BoardModel } from '@/models/board.model';
 import { ProjectModel } from '@/models/project.model';
-import { getUserByEmail, getUserById } from '@/lib/db/user';
-import { z } from 'zod';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Types } from 'mongoose';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { z } from 'zod';
 
 // Mock dependencies
 vi.mock('@/lib/db/connect');

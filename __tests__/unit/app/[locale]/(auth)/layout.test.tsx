@@ -1,13 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import AuthLayout from '@/app/[locale]/(auth)/layout';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { describe, expect, it } from 'vitest';
 
 // Mock Toaster component
 vi.mock('@/components/ui/sonner', () => ({
   Toaster: (props: any) => <div data-testid="toaster" {...props} />
 }));
-
-import { render, screen } from '@testing-library/react';
-import AuthLayout from '@/app/[locale]/(auth)/layout';
 
 describe('AuthLayout', () => {
   it('should render children and Toaster', () => {
