@@ -1,4 +1,5 @@
-import { describe, expect, it, vi, beforeEach, Mock } from 'vitest';
+import RootPage from '@/app/[locale]/page';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 vi.mock('@/constants/routes', () => ({
   ROUTES: {
@@ -15,8 +16,6 @@ vi.mock('next/navigation', () => ({
   redirect: vi.fn()
 }));
 
-import RootPage from '@/app/[locale]/page';
-
 describe('RootPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -25,12 +24,18 @@ describe('RootPage', () => {
   it('should redirect to login if not authenticated', async () => {
     ((await import('@/lib/auth')).auth as Mock).mockResolvedValueOnce(null);
     await RootPage();
-    expect((await import('next/navigation')).redirect).toHaveBeenCalledWith('/login');
+    expect((await import('next/navigation')).redirect).toHaveBeenCalledWith(
+      '/login'
+    );
   });
 
   it('should redirect to boards if authenticated', async () => {
-    ((await import('@/lib/auth')).auth as Mock).mockResolvedValueOnce({ user: { name: 'Test' } });
+    ((await import('@/lib/auth')).auth as Mock).mockResolvedValueOnce({
+      user: { name: 'Test' }
+    });
     await RootPage();
-    expect((await import('next/navigation')).redirect).toHaveBeenCalledWith('/boards');
+    expect((await import('next/navigation')).redirect).toHaveBeenCalledWith(
+      '/boards'
+    );
   });
 });
