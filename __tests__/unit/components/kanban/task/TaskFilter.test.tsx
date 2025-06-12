@@ -57,7 +57,9 @@ describe('TaskFilter Component', () => {
 
   it('renders search input with translated placeholder', () => {
     render(<TaskFilter />);
-    expect(screen.getByPlaceholderText('searchPlaceholder')).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText('searchPlaceholder')
+    ).toBeInTheDocument();
   });
 
   it('renders status filter with translated placeholder', () => {

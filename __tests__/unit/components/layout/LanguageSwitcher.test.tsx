@@ -1,15 +1,31 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock UI components
 vi.mock('@/components/ui/button', () => ({
-  Button: (props: any) => <button data-testid="button" {...props}>{props.children}</button>
+  Button: (props: any) => (
+    <button data-testid="button" {...props}>
+      {props.children}
+    </button>
+  )
 }));
 vi.mock('@/components/ui/dropdown-menu', () => ({
-  DropdownMenu: (props: any) => <div data-testid="dropdown-menu">{props.children}</div>,
-  DropdownMenuContent: (props: any) => <div data-testid="dropdown-menu-content">{props.children}</div>,
-  DropdownMenuItem: (props: any) => <div data-testid="dropdown-menu-item" onClick={props.onClick}>{props.children}</div>,
-  DropdownMenuTrigger: (props: any) => <div data-testid="dropdown-menu-trigger">{props.children}</div>
+  DropdownMenu: (props: any) => (
+    <div data-testid="dropdown-menu">{props.children}</div>
+  ),
+  DropdownMenuContent: (props: any) => (
+    <div data-testid="dropdown-menu-content">{props.children}</div>
+  ),
+  DropdownMenuItem: (props: any) => (
+    <div data-testid="dropdown-menu-item" onClick={props.onClick}>
+      {props.children}
+    </div>
+  ),
+  DropdownMenuTrigger: (props: any) => (
+    <div data-testid="dropdown-menu-trigger">{props.children}</div>
+  )
 }));
 
 // Mock i18n/navigation hooks
@@ -23,9 +39,6 @@ vi.mock('@/i18n/navigation', () => ({
 vi.mock('next/navigation', () => ({
   useParams: () => ({ locale: 'en' })
 }));
-
-import { render, screen, fireEvent } from '@testing-library/react';
-import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 
 describe('LanguageSwitcher', () => {
   beforeEach(() => {

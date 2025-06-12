@@ -1,10 +1,10 @@
-import React from 'react';
-import { describe, expect, it, vi } from 'vitest';
-import { usePathname } from '@/i18n/navigation';
-import { useSession } from 'next-auth/react';
-import type { Session } from 'next-auth';
 import Header from '@/components/layout/Header';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { usePathname } from '@/i18n/navigation';
+import type { Session } from 'next-auth';
+import { useSession } from 'next-auth/react';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '../../test-utils';
 
 // Mock child components and hooks

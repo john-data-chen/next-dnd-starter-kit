@@ -1,11 +1,11 @@
-import React from 'react';
-import { describe, expect, it, vi, beforeEach, type Mock } from 'vitest';
-import { useBoards } from '@/hooks/useBoards';
 import { BoardOverview } from '@/components/kanban/BoardOverview';
-import { render, screen } from '../../../test-utils';
+import { useBoards } from '@/hooks/useBoards';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { Board, Project } from '@/types/dbInterface';
 import userEvent from '@testing-library/user-event';
-import { usePathname, useRouter } from '@/i18n/navigation';
+import React from 'react';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
+import { render, screen } from '../../../test-utils';
 
 // --- Mocking Dependencies ---
 

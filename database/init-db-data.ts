@@ -1,24 +1,23 @@
-import 'dotenv/config';
 import {
   demoBoards,
   demoProjects,
   demoTasks,
   demoUsers
 } from '@/constants/demoData';
-
-
-console.log('Environment:', {
-  NODE_ENV: process.env.NODE_ENV,
-  CI: process.env.CI,
-  DATABASE_URL: !!process.env.DATABASE_URL
-});
 import { connectToDatabase } from '@/lib/db/connect';
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import readline from 'readline';
 import { BoardModel } from '../src/models/board.model';
 import { ProjectModel } from '../src/models/project.model';
 import { TaskModel } from '../src/models/task.model';
 import { UserModel } from '../src/models/user.model';
+
+console.log('Environment:', {
+  NODE_ENV: process.env.NODE_ENV,
+  CI: process.env.CI,
+  DATABASE_URL: !!process.env.DATABASE_URL
+});
 
 const rl = readline.createInterface({
   input: process.stdin,

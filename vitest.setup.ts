@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
-import { beforeAll, vi } from 'vitest';
+import dotenv from 'dotenv';
 import 'dotenv/config';
 import path from 'path';
-import dotenv from 'dotenv';
+import { beforeAll, vi } from 'vitest';
 
 // Import vi for mocking if needed
 
@@ -52,7 +52,7 @@ vi.mock('next/navigation', () => {
     ...actual,
     useRouter: vi.fn(() => ({
       push: vi.fn(),
-      replace: vi.fn(),
+      replace: vi.fn()
     })),
     usePathname: vi.fn(() => '/'),
     useSearchParams: vi.fn(() => new URLSearchParams()),
@@ -61,6 +61,6 @@ vi.mock('next/navigation', () => {
     }),
     permanentRedirect: vi.fn((path) => {
       console.log(`Mock permanent redirect to: ${path}`);
-    }),
+    })
   };
 });

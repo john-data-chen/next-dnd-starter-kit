@@ -1,12 +1,12 @@
 import { defaultEmail } from '@/constants/demoData';
 import { ROUTES } from '@/constants/routes';
 import useAuthForm from '@/hooks/useAuthForm';
+import { useRouter } from '@/i18n/navigation';
 import { useTaskStore } from '@/lib/store';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { useRouter } from '@/i18n/navigation';
 import { toast } from 'sonner';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AllTheProviders } from '../test-utils';

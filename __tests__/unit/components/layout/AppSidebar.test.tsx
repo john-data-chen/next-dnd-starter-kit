@@ -2,9 +2,9 @@ import AppSidebar from '@/components/layout/AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { useBoards } from '@/hooks/useBoards';
 import { usePathname } from '@/i18n/navigation';
+import { Board } from '@/types/dbInterface';
 import { describe, expect, it, vi } from 'vitest';
 import { render as customRender, screen } from '../../test-utils';
-import { Board } from '@/types/dbInterface';
 
 // Mock i18n navigation
 vi.mock('@/i18n/navigation', () => ({
