@@ -93,12 +93,12 @@ NEXTAUTH_SECRET=[your_secret]
 # Database Connection
 # Format: mongodb://[username]:[password]@[host]:[port]/[database]?[options]
 # Required fields:
-# - username: Database user with appropriate permissions
-# - password: User's password (URL encoded if contains special characters)
+# - username: Database user with appropriate permissions (default: root)
+# - password: User's password (default: 123456)
 # - host: Database host (localhost for development)
 # - port: MongoDB port (default: 27017)
-# - database: Database name (next-project-manager)
-# - options: Additional connection parameters (authSource=admin required)
+# - database: Database name (default: next-project-manager)
+# - options: Additional connection parameters (default: authSource=admin)
 DATABASE_URL="mongodb://[username]:[password]@[host]:[port]/[database]?authSource=admin"
 ```
 
