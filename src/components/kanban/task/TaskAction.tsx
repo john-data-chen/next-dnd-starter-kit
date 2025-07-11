@@ -173,9 +173,9 @@ export function TaskActions({
       <DropdownMenu modal={false} onOpenChange={checkPermissions}>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="ghost"
+            variant="default"
             size="icon"
-            className="h-6 w-6"
+            className="h-8 w-12"
             data-testid="task-actions-trigger"
           >
             <span className="sr-only">{t('actions')}</span>
