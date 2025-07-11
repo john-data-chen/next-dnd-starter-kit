@@ -33,7 +33,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
       values.status!,
       values.description ?? '',
       values.dueDate ?? undefined,
-      values.assignee?.id ?? undefined
+      values.assignee?._id ?? undefined
     );
     toast.success(t('createSuccess', { title: values.title }));
     setAddTaskOpen(false);
