@@ -28,7 +28,8 @@ const config = [
     ignores: [
       '.next/**/*',
       'src/components/ui/**/*.{js,jsx,ts,tsx}',
-      'src/components/ui/*.{js,jsx,ts,tsx}'
+      'src/components/ui/*.{js,jsx,ts,tsx}',
+      'src/hooks/use-mobile.ts'
     ]
   }
 ];
