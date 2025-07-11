@@ -89,7 +89,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       className={cn('mb-3', cardVariants({ dragging: dragState }))}
       data-testid="task-card"
     >
-      <CardHeader className="border-secondary flex flex-row justify-between border-b-2 px-3 py-3">
+      <CardHeader className="flex flex-row border-b-2 px-3 pb-2">
         <Button
           variant="ghost"
           {...attributes}
