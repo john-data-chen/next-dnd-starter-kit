@@ -1,7 +1,13 @@
-import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+
+// Mock useIsMobile hook
+vi.mock('@/hooks/use-mobile', () => ({
+  useIsMobile: vi.fn()
+}));
 
 // Mock useBreadcrumbs hook
 vi.mock('@/hooks/useBreadcrumbs', () => ({
@@ -22,6 +28,9 @@ describe('Breadcrumbs Component', () => {
   });
 
   it('should render multiple breadcrumb items correctly for desktop', () => {
+    // Mock desktop view
+    vi.mocked(useIsMobile).mockReturnValue(false);
+
     vi.mocked(useBreadcrumbs).mockReturnValue({
       items: [
         { title: 'Home', link: '/boards' },
@@ -33,19 +42,29 @@ describe('Breadcrumbs Component', () => {
 
     render(<Breadcrumbs />);
 
-    const desktopContainer = screen
-      .getByRole('list')
-      .querySelector('.hidden.md\\:flex');
-    expect(desktopContainer).toBeInTheDocument();
+    // Check if the navigation is rendered
+    const nav = screen.getByRole('navigation', { name: 'breadcrumb' });
+    expect(nav).toBeInTheDocument();
 
+    // Check all breadcrumb items are rendered
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(5);
+
+    // Check each breadcrumb item
+    expect(links[0]).toHaveTextContent('More');
+    expect(links[0]).toHaveAttribute('href', '/boards');
+
+    expect(links[1]).toHaveTextContent('Project');
+    expect(links[1]).toHaveAttribute('href', '/boards/1');
+
     expect(links[2]).toHaveTextContent('Home');
-    expect(links[3]).toHaveAttribute('href', '/boards');
-    expect(links[3]).toHaveTextContent('Boards');
+    expect(links[2]).toHaveAttribute('href', '/boards');
   });
 
   it('should render mobile view correctly for multiple items', () => {
+    // Mock mobile view
+    vi.mocked(useIsMobile).mockReturnValue(true);
+
     vi.mocked(useBreadcrumbs).mockReturnValue({
       items: [
         { title: 'Home', link: '/boards' },
@@ -57,20 +76,20 @@ describe('Breadcrumbs Component', () => {
 
     render(<Breadcrumbs />);
 
-    // Verify mobile items
-    const mobileItems = screen
-      .getAllByRole('listitem')
-      .filter((item) => item.className.includes('md:hidden'));
-    expect(mobileItems).toHaveLength(2);
+    // Check if the navigation is rendered
+    const mobileContainer = screen.getByRole('navigation', {
+      name: 'breadcrumb'
+    });
+    expect(mobileContainer).toBeInTheDocument();
 
-    // Verify home icon link
-    const homeLink = screen.getByRole('link', { name: 'Overview' });
-    expect(homeLink).toHaveAttribute('href', '/boards');
+    // Check for the ellipsis link (first link in mobile view)
+    const links = screen.getAllByRole('link');
+    expect(links[0]).toHaveAttribute('href', '/boards');
+    expect(links[0].querySelector('svg')).toBeInTheDocument(); // Check for ellipsis icon
 
-    // Verify last item in mobile view - using container query to be specific
-    const mobileProjectLink = mobileItems[1].querySelector('a');
-    expect(mobileProjectLink).toHaveAttribute('href', '/boards/1');
-    expect(mobileProjectLink).toHaveTextContent('Project');
+    // Check for the last item link
+    expect(links[1]).toHaveTextContent('Project');
+    expect(links[1]).toHaveAttribute('href', '/boards/1');
   });
 
   it('should handle separator rendering correctly', () => {
