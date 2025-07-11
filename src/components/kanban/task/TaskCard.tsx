@@ -25,7 +25,18 @@ export interface TaskDragData {
   task: Task;
 }
 
-export function TaskCard({ task, isOverlay }: TaskCardProps) {
+function getLastField(task: Task): string {
+  const visibleFields = [];
+  if (task.creator) visibleFields.push('creator');
+  if (task.lastModifier) visibleFields.push('lastModifier');
+  if (task.assignee) visibleFields.push('assignee');
+  if (task.dueDate) visibleFields.push('dueDate');
+  if (task.description) visibleFields.push('description');
+
+  return visibleFields[visibleFields.length - 1] || '';
+}
+
+export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
   const t = useTranslations('kanban.task');
   const {
     setNodeRef,
@@ -89,12 +100,12 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       className={cn('mb-3', cardVariants({ dragging: dragState }))}
       data-testid="task-card"
     >
-      <CardHeader className="border-secondary flex flex-row justify-between border-b-2 px-3 py-3">
+      <CardHeader className="flex flex-row border-b-2 px-3 pb-2">
         <Button
           variant="ghost"
           {...attributes}
           {...listeners}
-          className="text-secondary-foreground/50 -ml-2 h-auto w-16 cursor-grab p-1"
+          className="text-secondary-foreground/50 -ml-2 h-8 w-16 cursor-grab p-1"
           data-testid="task-card-drag-button"
           aria-label={t('moveTask')}
         >
@@ -125,71 +136,69 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           status={task.status}
         />
       </CardHeader>
-      {task.creator && (
-        <CardContent className="px-3 py-2 border-b">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            {task.creator.name && (
-              <div className="flex items-center gap-1">
-                <UserIcon className="h-4 w-4" />
+      <div className="space-y-0">
+        {task.creator && (
+          <div className={getLastField(task) !== 'creator' ? 'border-b' : ''}>
+            <CardContent className="px-3 py-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <UserIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
                 <span>{t('createdBy', { name: task.creator.name })}</span>
               </div>
-            )}
+            </CardContent>
           </div>
-        </CardContent>
-      )}
-      {task.lastModifier && (
-        <CardContent className="px-3 py-2 border-b">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            {task.lastModifier.name && (
-              <div className="flex items-center gap-1">
-                <UserIcon className="h-4 w-4" />
+        )}
+        {task.lastModifier && (
+          <div
+            className={getLastField(task) !== 'lastModifier' ? 'border-b' : ''}
+          >
+            <CardContent className="px-3 py-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <UserIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
                 <span>
                   {t('lastModifiedBy', { name: task.lastModifier.name })}
                 </span>
               </div>
-            )}
+            </CardContent>
           </div>
-        </CardContent>
-      )}
-      {task.assignee && (
-        <CardContent className="px-3 py-2 border-b">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            {task.assignee && (
-              <div className="flex items-center gap-1">
-                <UserIcon className="h-4 w-4" />
+        )}
+        {task.assignee && (
+          <div className={getLastField(task) !== 'assignee' ? 'border-b' : ''}>
+            <CardContent className="px-3 py-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <UserIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
                 <span>{t('assignee', { name: task.assignee.name })}</span>
               </div>
-            )}
+            </CardContent>
           </div>
-        </CardContent>
-      )}
-      {task.dueDate && (
-        <CardContent className="px-3 py-2 border-b">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            {task.dueDate && (
-              <div className="flex items-center gap-1">
-                <Calendar1Icon className="h-4 w-4" />
+        )}
+        {task.dueDate && (
+          <div className={getLastField(task) !== 'dueDate' ? 'border-b' : ''}>
+            <CardContent className="px-3 py-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Calendar1Icon className="h-4 w-4 flex-shrink-0 mt-0.5" />
                 <span>
                   {t('dueDate')}: {format(new Date(task.dueDate), 'yyyy/MM/dd')}
                 </span>
               </div>
-            )}
+            </CardContent>
           </div>
-        </CardContent>
-      )}
-      {task.description && (
-        <CardContent className="px-3 py-2 text-left whitespace-pre-wrap">
-          <div className="flex items-start gap-1">
-            <FileTextIcon className="h-4 w-4 mt-1 text-muted-foreground" />
-            <p
-              className="text-sl text-muted-foreground"
-              data-testid="task-card-description"
-            >
-              {task.description}
-            </p>
+        )}
+        {task.description && (
+          <div>
+            <CardContent className="px-3 py-2">
+              <div className="flex items-start gap-2">
+                <FileTextIcon className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground" />
+                <p
+                  className="text-sm text-muted-foreground leading-relaxed"
+                  data-testid="task-card-description"
+                >
+                  {task.description}
+                </p>
+              </div>
+            </CardContent>
           </div>
-        </CardContent>
-      )}
+        )}
+      </div>
     </Card>
   );
 }

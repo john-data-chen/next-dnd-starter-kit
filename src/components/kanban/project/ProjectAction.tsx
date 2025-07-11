@@ -136,9 +136,9 @@ export function ProjectActions({
       >
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
-            className="h-8 w-12"
+            className="h-8 w-12 p-0 bg-background hover:bg-secondary/80 text-muted-foreground hover:text-foreground"
             data-testid="project-option-button"
           >
             {isLoadingPermissions ? (
