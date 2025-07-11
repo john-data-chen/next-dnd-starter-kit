@@ -25,23 +25,30 @@ export function Breadcrumbs() {
           </BreadcrumbItem>
         ) : (
           <>
+            {/* Mobile view */}
             <BreadcrumbItem className="md:hidden">
-              <BreadcrumbEllipsis href={rootLink} />
+              <BreadcrumbLink href={rootLink}>
+                <BreadcrumbEllipsis />
+              </BreadcrumbLink>
             </BreadcrumbItem>
+            <BreadcrumbSeparator className="md:hidden" />
             <BreadcrumbItem className="md:hidden">
-              <BreadcrumbSeparator />
               <BreadcrumbLink href={items[items.length - 1].link}>
                 {items[items.length - 1].title}
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbItem className="hidden md:flex">
-              {items.map((item, index) => (
-                <React.Fragment key={item.link}>
+
+            {/* Desktop view */}
+            {items.map((item, index) => (
+              <React.Fragment key={item.link}>
+                <BreadcrumbItem className="hidden md:inline-flex">
                   <BreadcrumbLink href={item.link}>{item.title}</BreadcrumbLink>
-                  {index < items.length - 1 && <BreadcrumbSeparator />}
-                </React.Fragment>
-              ))}
-            </BreadcrumbItem>
+                </BreadcrumbItem>
+                {index < items.length - 1 && (
+                  <BreadcrumbSeparator className="hidden md:inline-flex" />
+                )}
+              </React.Fragment>
+            ))}
           </>
         )}
       </BreadcrumbList>
