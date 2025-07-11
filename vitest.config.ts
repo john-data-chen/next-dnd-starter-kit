@@ -24,7 +24,8 @@ export default defineConfig({
         '__tests__/**/*.test.{ts,tsx}',
         'src/components/ui/**/*',
         'src/app/api/**/*',
-        'src/hooks/use-mobile.ts'
+        'src/hooks/use-mobile.ts',
+        'src/types/**/*'
       ]
     }
   },
