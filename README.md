@@ -23,7 +23,7 @@ The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop f
 
 ---
 
-⭐ **Love this template?**
+**Love this template?**
 If you like it, don't forget to [give it a star](https://github.com/john-data-chen/next-dnd-starter-kit) today!
 
 And I have another easier starter kit: [ts-react-drag-and-drop-starter-kit
@@ -39,34 +39,36 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - **Reliability, Security and Maintainability Rating in SonarQube**: A
 - **Cross-browser Testing**: for both desktop and mobile devices.
 - **CI/CD automation**: in GitHub actions and Vercel.
-- **Lighthouse Performance, Accessibility, Best Practices and SEO Scores**: 95+
+- **Lighthouse Performance, Accessibility, Best Practices and SEO Scores**: 90+ (Desktop)
   <img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
-## 🛠️ Technical Stack
+---
 
-- **Requirements**: [Node.JS](https://nodejs.org/en/download/) v22.x, I use [FNM](https://github.com/Schniz/fnm) to install
-- **Frontend**: [Next](https://nextjs.org/docs/app/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
-- **Build**: [PNPM](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI**: [Shadcn/UI](https://ui.shadcn.com/)
-- **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/)
-- **Internationalization(i18n)**: [Next-intl](https://next-intl.dev/)
-- **Authentication**: [Auth.js](https://authjs.dev/)
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
-- **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
-- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/), [Mongoose](https://github.com/Automattic/mongoose)
-- **Drag and Drop**: [dnd-kit](https://dndkit.com/)
-- **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/)
+## 🛠️ Technical Decision
 
-## 📦 Core Framework Versions and Upgrade Decision
+- **Frontend**: [Next](https://nextjs.org/docs/app/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/) - modern UI with strong type safety and server-side rendering
+- **Build**: [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky) - automated code quality checks and style formatting during commit, preventing problems into codebase and make consistent code style in team work
+- **UI**: [Tailwind CSS](https://tailwindcss.com/), [Shadcn/UI](https://ui.shadcn.com/) - consistent, responsive, and scalable styling, enabling rapid and maintainable UI development
+- **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) - easier to setup and faster execution than Jest and Cypress, chosen for their efficiency and comprehensive testing capabilities
+- **Internationalization(i18n)**: [Next-intl](https://next-intl.dev/) - internationalization (i18n) support for Next.js applications
+- **Authentication**: [Auth.js](https://authjs.dev/) - authentication and authorization for Next.js applications
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) - minimal and testable global state management, 40% code reduction compared to Redux
+- **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/) - composable form logic and schema validation.
+- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/), [Mongoose](https://github.com/Automattic/mongoose) - NoSQL database for storing data in a document-oriented format.
+- **Drag and Drop**: [dnd-kit](https://dndkit.com/) - A lightweight, performant, accessible and extensible drag & drop toolkit
+- **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/) - Every pull request triggers a comprehensive pipeline, enforcing code quality gates and ensuring production-readiness through automated testing and deployment
 
-- At the beginning, I sticked to previous Next 14.x and React 18.x for better ecosystem and packages support. If stability is top priority in your project, I suggest you postpone upgrade to the latest versions.
-- At the late stage, upgraded to Next 15.x and React 19.x for better performance and stability by using new improvements such as [Turbopack](https://nextjs.org/docs/app/api-reference/turbopack)
+---
 
 ## 🚀 Getting Started
 
 - Press **Use this template** to create a new repository.
 - Clone the repository to your local machine.
+
+### Requirements
+
+- Node.JS v22.x, please use [NVM](https://github.com/nvm-sh/nvm) or [FNM](https://github.com/Schniz/fnm) to install
+- [PNPM](https://pnpm.io/) (Recommended, you can use NPM or Yarn)
 
 ### Database
 
@@ -147,6 +149,8 @@ pnpm format
 pnpm build
 ```
 
+---
+
 ## 🔐 Permission System
 
 ### Core Concepts
@@ -175,11 +179,16 @@ pnpm build
 - Only owner of board, owner of project and creator of task can delete tasks
 - Task status: To Do → In Progress → Done
 
+---
+
 ## 📖 Detailed Technical Documentation
 
 ### 📊 Testing Strategy
 
-- Cross-browser testing (by Playwright) ensures functionality across desktop and mobile.
+- Unit Tests: Focused on critical store logic, complex form validations, and isolated component behaviors, ensuring granular code reliability.
+- Test Coverage: Maintained above 80%+ (verified via npx vitest run --coverage), reflecting a commitment to robust code coverage without sacrificing test quality.
+- E2E Tests: Critical user flows, such as the Login page, are validated end-to-end using Playwright, simulating real user interactions to guarantee system integrity.
+- Cross-browser Testing Strategy: Ensures consistent functionality and user experience across a carefully selected range of desktop and mobile browsers based on market share, mitigating compatibility issues.
 
 ### Project Structure
 
@@ -245,6 +254,8 @@ This is a demo project, and I know little of German, so errors of translations m
   - Server Region: Hong Kong
   - Issue: Sometimes Server response is slow, especially for users are not in Asia
   - Status: The resource of free tier is limited and no plan of CDN, it won't be fix in the near future
+
+---
 
 ### 📃 License
 
