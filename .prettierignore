@@ -50,6 +50,7 @@ ico
 # Shadcn UI
 src/components/ui
 src/components/ui/**/*
+src/hooks/use-mobile.ts
 
 # database
 database
