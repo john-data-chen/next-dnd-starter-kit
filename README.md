@@ -99,7 +99,7 @@ NEXTAUTH_SECRET=[your_secret]
 # - port: MongoDB port (default: 27017)
 # - database: Database name (default: next-project-manager)
 # - options: Additional connection parameters (default: authSource=admin)
-DATABASE_URL="mongodb://[username]:[password]@[host]:[port]/[database]?authSource=admin"
+# Example: DATABASE_URL="mongodb://root:123456@localhost:27017/next-project-manager?authSource=admin"
 ```
 
 Production and CI:
@@ -109,8 +109,11 @@ Create environment variables in Vercel or GitHub project settings.
 ### Useful Commands
 
 ```bash
-# Generate Secret
-echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" > .env
+# rename env.example to .env
+mv env.example .env
+
+# Generate Secret and replace NEXTAUTH_SECRET in .env
+openssl rand -base64 32
 
 # start mongodb in docker
 cd database
@@ -212,7 +215,8 @@ src/
 ├── middleware.ts
 ├── models/ # Database models
 ├── styles/ # Global styles
-└── types/ # Type definitions
+├── types/ # Type definitions
+└── env.example # Environment variables example
 ```
 
 ## Known Issues & Limitations
@@ -224,7 +228,6 @@ This is a demo project, and I know little of German, so errors of translations m
 ### UI library
 
 - **Radix UI Ref Warning**:
-
   - Issue: Function components cannot be given refs warning in Dialog components
   - Impact: Development warning only, no production impact
   - Solution: Keep using `asChild` as per Radix UI docs, warning can be safely ignored

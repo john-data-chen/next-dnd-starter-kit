@@ -2,53 +2,62 @@
 
 import { connect, connection, ConnectOptions } from 'mongoose';
 
+// This file is used in both server and client components
+// We need to be careful about what we import/use here
+
 let isConnected = false;
-let dbUrl: string;
+let dbUrl: string | undefined;
 
-// Check environment variables
-try {
-  console.log('Current NODE_ENV:', process.env.NODE_ENV);
-  console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+// MongoDB connection options
+const getClientOptions = (): ConnectOptions => {
+  const isProduction = process.env.NODE_ENV === 'production';
 
-  if (!process.env.DATABASE_URL) {
-    throw new Error(
-      process.env.NODE_ENV === 'production'
-        ? 'Production DATABASE_URL is not defined'
-        : process.env.CI
-          ? 'CI environment DATABASE_URL is not defined'
-          : 'Local development DATABASE_URL is not defined'
-    );
-  }
-  dbUrl = process.env.DATABASE_URL;
-} catch (error) {
-  console.error('\x1b[31mDatabase URL configuration error:', error, '\x1b[0m');
-  throw error;
-}
-
-// Atlas configuration for production and CI
-const clientOptions: ConnectOptions =
-  process.env.NODE_ENV === 'production' || process.env.CI
-    ? {
-        serverApi: {
-          version: '1' as const,
-          strict: true,
-          deprecationErrors: true
+  return {
+    autoIndex: !isProduction, // Only auto-create indexes in development
+    connectTimeoutMS: 10000, // 10 seconds
+    socketTimeoutMS: 45000, // 45 seconds
+    serverSelectionTimeoutMS: 10000, // 10 seconds
+    ...(isProduction || process.env.CI
+      ? {
+          serverApi: {
+            version: '1' as const,
+            strict: true,
+            deprecationErrors: true
+          }
         }
-      }
-    : {};
+      : {})
+  };
+};
 
 export async function connectToDatabase() {
   if (isConnected) {
     return;
   }
 
+  // Only try to access process.env in Node.js environment
+  if (typeof process !== 'undefined') {
+    // In Node.js environment, we can use environment variables
+    dbUrl = process.env.DATABASE_URL;
+
+    if (!dbUrl) {
+      console.error(
+        '\x1b[31mError: DATABASE_URL is not defined in environment variables\x1b[0m'
+      );
+      if (process.env.NODE_ENV !== 'production') {
+        throw new Error(
+          'DATABASE_URL is required. Please check your .env file.'
+        );
+      }
+    } else {
+      console.log('\x1b[32mDatabase URL configured successfully\x1b[0m');
+    }
+  }
+
   try {
     console.log('Connecting to MongoDB...');
 
-    await connect(dbUrl!, {
-      ...clientOptions,
-      serverSelectionTimeoutMS: 5000
-    });
+    const options = getClientOptions();
+    await connect(dbUrl || '', options);
 
     // Only verify connection in production
     if (process.env.NODE_ENV === 'production') {
