@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useTaskStore } from '@/lib/store';
+import { cn } from '@/lib/utils';
 import { Project, Task } from '@/types/dbInterface';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -85,10 +86,13 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
     <Card
       ref={setNodeRef}
       style={style}
-      className={variants({ dragging: dragState })}
+      className={cn(
+        variants({ dragging: dragState }),
+        'overflow-hidden' // Prevent content from overflowing
+      )}
       data-testid={`project-container`}
     >
-      <CardHeader className="space-between flex flex-row items-center justify-between border-b-2 p-4">
+      <CardHeader className="flex flex-row items-center justify-between border-b-2 p-4 space-y-0">
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -108,9 +112,9 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
         />
       </CardHeader>
 
-      <CardContent className="flex grow flex-col gap-4 overflow-x-hidden p-2">
-        <ScrollArea className="h-full">
-          <div className="mb-2 flex flex-col gap-1">
+      <CardContent className="flex flex-col gap-4 p-0 overflow-hidden">
+        <ScrollArea className="h-full px-2 pt-2">
+          <div className="flex flex-col gap-1">
             <Badge variant="outline" className="text-xs">
               {t('description')}: {project.description || t('noDescription')}
             </Badge>
@@ -122,12 +126,18 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
               {project.members.map((member) => member.name).join(', ')}
             </Badge>
           </div>
-          <NewTaskDialog projectId={project._id} />
-          <SortableContext items={tasksIds}>
-            {filteredTasks.map((task) => (
-              <TaskCard key={task._id} task={task} />
-            ))}
-          </SortableContext>
+          <div className="px-2">
+            <NewTaskDialog projectId={project._id} />
+          </div>
+          <div className="flex-1 overflow-y-auto px-2 pb-2">
+            <SortableContext items={tasksIds}>
+              <div className="space-y-2">
+                {filteredTasks.map((task) => (
+                  <TaskCard key={task._id} task={task} />
+                ))}
+              </div>
+            </SortableContext>
+          </div>
         </ScrollArea>
       </CardContent>
     </Card>
