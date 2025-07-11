@@ -16,6 +16,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// This page is statically generated at build time
+export const dynamic = 'force-static';
+
 export default function LoginPage() {
   return <SignInView />;
 }
