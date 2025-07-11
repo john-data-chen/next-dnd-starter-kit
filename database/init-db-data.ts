@@ -1,3 +1,25 @@
+// This script should only run in Node.js environment
+if (typeof process === 'undefined') {
+  throw new Error('This script must be run in a Node.js environment');
+}
+
+// Load environment variables
+import dotenv from 'dotenv';
+dotenv.config();
+
+// Verify required environment variables
+if (!process.env.DATABASE_URL) {
+  console.error('\x1b[31mError: DATABASE_URL is required in .env file\x1b[0m');
+  console.error('Current working directory:', process.cwd());
+  process.exit(1);
+}
+
+console.log('Environment:', {
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  DATABASE_URL: process.env.DATABASE_URL ? '***' + process.env.DATABASE_URL.split('@').pop() : 'Not set',
+});
+
+// Now import other dependencies
 import {
   demoBoards,
   demoProjects,
@@ -5,7 +27,6 @@ import {
   demoUsers
 } from '@/constants/demoData';
 import { connectToDatabase } from '@/lib/db/connect';
-import 'dotenv/config';
 import mongoose from 'mongoose';
 import readline from 'readline';
 import { BoardModel } from '../src/models/board.model';
@@ -42,14 +63,8 @@ async function confirmDatabaseReset(): Promise<boolean> {
 
 async function main() {
   try {
-    console.log('Checking environment variables...');
-    if (!process.env.DATABASE_URL) {
-      console.error(
-        '\x1b[31mError: DATABASE_URL is not found in environment variables\x1b[0m'
-      );
-      process.exit(1);
-    }
-    console.log('\x1b[32mEnvironment variables loaded successfully\x1b[0m');
+    console.log('\x1b[32mEnvironment variables verified successfully\x1b[0m');
+    console.log('Connecting to database...');
 
     const shouldContinue = await confirmDatabaseReset();
     if (!shouldContinue) {
