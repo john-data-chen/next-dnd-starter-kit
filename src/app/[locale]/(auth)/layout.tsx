@@ -2,11 +2,11 @@
 
 import { Toaster } from '@/components/ui/sonner';
 
-export default function AuthLayout({
-  children
-}: {
+interface AuthLayoutProps {
   children: React.ReactNode;
-}) {
+}
+
+export default function AuthLayout({ children }: Readonly<AuthLayoutProps>) {
   return (
     <>
       {children}
