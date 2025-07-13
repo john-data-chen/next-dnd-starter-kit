@@ -41,7 +41,7 @@ interface BoardActionsProps {
   onDelete?: () => void;
 }
 
-export function BoardActions({ board, onDelete }: BoardActionsProps) {
+export function BoardActions({ board, onDelete }: Readonly<BoardActionsProps>) {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [editEnable, setEditEnable] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
