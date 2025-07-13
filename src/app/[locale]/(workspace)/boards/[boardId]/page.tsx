@@ -24,11 +24,11 @@ export default function BoardPage() {
 
   return (
     <PageContainer>
-      <div role="main" className="space-y-4">
+      <main className="space-y-4">
         <Suspense fallback={<div>{t('loadingBoard')}</div>}>
           <MemoizedBoard />
         </Suspense>
-      </div>
+      </main>
     </PageContainer>
   );
 }
