@@ -158,6 +158,12 @@ export function BoardOverview() {
                         <button
                           type="button"
                           onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }
+                          }}
                           aria-label={
                             board.title
                               ? `${board.title} actions`
