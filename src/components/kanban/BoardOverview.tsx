@@ -155,7 +155,21 @@ export function BoardOverview() {
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle>{board.title}</CardTitle>
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.stopPropagation();
+                            }
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={
+                            board.title
+                              ? `${board.title} actions`
+                              : 'Board actions'
+                          }
+                        >
                           <BoardActions board={board} />
                         </div>
                       </CardHeader>
