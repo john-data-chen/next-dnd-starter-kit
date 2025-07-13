@@ -20,7 +20,7 @@ import { getUserByEmail } from './db/user';
 interface State {
   userEmail: string | null;
   userId: string | null;
-  setUserInfo: (email: string) => void;
+  setUserInfo: (email: string) => Promise<void>;
   projects: Project[];
   isLoadingProjects: boolean;
   fetchProjects: (boardId: string) => Promise<void>;
@@ -31,7 +31,7 @@ interface State {
     newTitle: string,
     newDescription?: string
   ) => void;
-  removeProject: (id: string) => void;
+  removeProject: (id: string) => Promise<void>;
   addTask: (
     projectId: string,
     title: string,
@@ -47,8 +47,8 @@ interface State {
     description?: string,
     dueDate?: Date,
     assigneeId?: string
-  ) => void;
-  removeTask: (taskId: string) => void;
+  ) => Promise<void>;
+  removeTask: (taskId: string) => Promise<void>;
   dragTaskOnProject: (taskId: string, newProjectId: string) => Promise<void>;
   filter: {
     status: string | null;
