@@ -155,23 +155,18 @@ export function BoardOverview() {
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle>{board.title}</CardTitle>
-                        <div
+                        <button
+                          type="button"
                           onClick={(e) => e.stopPropagation()}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.stopPropagation();
-                            }
-                          }}
-                          role="button"
-                          tabIndex={0}
                           aria-label={
                             board.title
                               ? `${board.title} actions`
                               : 'Board actions'
                           }
+                          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded-full p-1 -mr-2"
                         >
                           <BoardActions board={board} />
-                        </div>
+                        </button>
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-muted-foreground">
