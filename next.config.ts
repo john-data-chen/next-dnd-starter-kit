@@ -13,7 +13,8 @@ const nextConfig: NextConfig = {
       artifactDirectory: './__generated__',
       language: 'typescript',
       eagerEsModules: false
-    }
+    },
+    removeConsole: true
   }
 };
 
