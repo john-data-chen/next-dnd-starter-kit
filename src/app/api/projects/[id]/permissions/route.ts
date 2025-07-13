@@ -6,7 +6,7 @@ import { UserModel } from '@/models/user.model';
 import { NextResponse } from 'next/server';
 
 export const GET = auth(async (req) => {
-  if (!req.auth || !req.auth.user?.email) {
+  if (!req.auth?.user?.email) {
     return NextResponse.json(
       { error: 'Unauthorized - No session or email' },
       { status: 401 }
