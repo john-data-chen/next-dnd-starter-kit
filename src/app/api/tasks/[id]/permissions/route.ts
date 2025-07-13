@@ -38,8 +38,8 @@ export const GET = auth(async (req) => {
       );
     }
     const canDelete =
-      board.owner.toString() === userId ||
-      project.owner.toString() === userId ||
+      board.owner.id === userId ||
+      project.owner.id === userId ||
       task.creator.id === userId;
 
     const canEdit = canDelete || task.assignee?.toString() === userId;
