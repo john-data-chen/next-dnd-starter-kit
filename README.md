@@ -35,11 +35,13 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 **Key Accomplishments**:
 
-- **Test Coverage**: 80%+
-- **Reliability, Security and Maintainability Rating in SonarQube**: A
-- **Cross-browser Testing**: for both desktop and mobile devices.
-- **CI/CD automation**: in GitHub actions and Vercel.
-- **Lighthouse Performance, Accessibility, Best Practices and SEO Scores**: 90+ (Desktop)
+- Responsive Design: Ensures optimal user experience across all devices, reflecting a product-centric development approach.
+- Exceptional Test Coverage (80%+): Achieved through comprehensive unit tests, significantly reducing potential bugs and enhancing long-term maintainability.
+- Reliable User Experience: Validated the critical login flow across all major browsers (Chrome, Safari, Edge) on both desktop and mobile using Playwright E2E tests.
+- Superior Code Quality (SonarQube All A Rating): Rigorous analysis confirms high standards in Security, Reliability, and Maintainability, minimizing technical debt and ensuring a healthy codebase.
+- Automated CI/CD Pipeline (GitHub Actions, SonarQube, Codecov, Vercel): Establishes a streamlined, production-ready deployment process, ensuring rapid, reliable, and high-quality releases.
+- Live Demo Deployment (Vercel): Provides immediate access to a functional application, showcasing practical deployment skills.
+- Elite Web Performance & Quality (Lighthouse 90+): Achieved scores of 90+ across Performance, Accessibility, Best Practices, and SEO in Google Lighthouse (Desktop), ensuring a top-tier user experience and technical excellence.
   <img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
 ---
