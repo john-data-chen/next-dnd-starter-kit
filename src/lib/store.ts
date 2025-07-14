@@ -75,19 +75,21 @@ export const useTaskStore = create<State>()(
       projects: [] as Project[],
       isLoadingProjects: false,
       setUserInfo: (email: string) => {
-        // Start the async operation but don't wait for it
-        void (async () => {
+        return new Promise<void>(async (resolve, reject) => {
           try {
             const user = await getUserByEmail(email);
             if (!user) {
               console.error('User not found');
+              reject(new Error('User not found'));
               return;
             }
             set({ userEmail: email, userId: user.id });
+            resolve();
           } catch (error) {
             console.error('Error in setUserInfo:', error);
+            reject(error);
           }
-        })();
+        });
       },
       fetchProjects: async (boardId: string) => {
         set({ isLoadingProjects: true });
