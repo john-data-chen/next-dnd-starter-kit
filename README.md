@@ -46,7 +46,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 
 ## 🛠️ Technical Decision
 
-- **Frontend**: [Next](https://nextjs.org/docs/app/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/) - modern UI with strong type safety and server-side rendering
+- **Frontend**: [Next](https://nextjs.org/docs/app/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/) - modern UI with strong type safety and server-side rendering (using SSG in login page for better performance, SSR in workspace pages for dynamic content)
 - **Build**: [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky) - automated code quality checks and style formatting during commit, preventing problems into codebase and make consistent code style in team work
 - **UI**: [Tailwind CSS](https://tailwindcss.com/), [Shadcn/UI](https://ui.shadcn.com/) - consistent, responsive, and scalable styling, enabling rapid and maintainable UI development
 - **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) - easier to setup and faster execution than Jest and Cypress, chosen for their efficiency and comprehensive testing capabilities
