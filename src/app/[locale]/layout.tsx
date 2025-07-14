@@ -35,7 +35,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function LocaleLayout({ children, params }: Props) {
+export default async function LocaleLayout({
+  children,
+  params
+}: Readonly<Props>) {
   const session = await auth();
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {

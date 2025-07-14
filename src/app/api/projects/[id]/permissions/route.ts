@@ -6,7 +6,7 @@ import { UserModel } from '@/models/user.model';
 import { NextResponse } from 'next/server';
 
 export const GET = auth(async (req) => {
-  if (!req.auth || !req.auth.user?.email) {
+  if (!req.auth?.user?.email) {
     return NextResponse.json(
       { error: 'Unauthorized - No session or email' },
       { status: 401 }
@@ -49,8 +49,11 @@ export const GET = auth(async (req) => {
     }
 
     // Permission logic: User can modify if they are project owner or board owner
-    const isProjectOwner = project.owner.toString() === currentUserId;
-    const isBoardOwner = board.owner.toString() === currentUserId;
+    const projectOwnerId = project.owner?.toString();
+    const boardOwnerId = board.owner?.toString();
+
+    const isProjectOwner = projectOwnerId === currentUserId;
+    const isBoardOwner = boardOwnerId === currentUserId;
 
     const canModify = isProjectOwner || isBoardOwner;
 

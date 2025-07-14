@@ -31,7 +31,7 @@ interface State {
     newTitle: string,
     newDescription?: string
   ) => void;
-  removeProject: (id: string) => void;
+  removeProject: (id: string) => Promise<void>;
   addTask: (
     projectId: string,
     title: string,
@@ -47,8 +47,8 @@ interface State {
     description?: string,
     dueDate?: Date,
     assigneeId?: string
-  ) => void;
-  removeTask: (taskId: string) => void;
+  ) => Promise<void>;
+  removeTask: (taskId: string) => Promise<void>;
   dragTaskOnProject: (taskId: string, newProjectId: string) => Promise<void>;
   filter: {
     status: string | null;
@@ -74,12 +74,22 @@ export const useTaskStore = create<State>()(
       userId: null,
       projects: [] as Project[],
       isLoadingProjects: false,
-      setUserInfo: async (email: string) => {
-        const user = await getUserByEmail(email);
-        if (!user) {
-          throw new Error('User not found');
-        }
-        set({ userEmail: email, userId: user.id });
+      setUserInfo: (email: string) => {
+        return new Promise<void>(async (resolve, reject) => {
+          try {
+            const user = await getUserByEmail(email);
+            if (!user) {
+              console.error('User not found');
+              reject(new Error('User not found'));
+              return;
+            }
+            set({ userEmail: email, userId: user.id });
+            resolve();
+          } catch (error) {
+            console.error('Error in setUserInfo:', error);
+            reject(error);
+          }
+        });
       },
       fetchProjects: async (boardId: string) => {
         set({ isLoadingProjects: true });
@@ -173,10 +183,15 @@ export const useTaskStore = create<State>()(
         if (!userEmail) {
           throw new Error('User email not found');
         }
-        await deleteProjectInDb(id, userEmail);
-        set((state) => ({
-          projects: state.projects.filter((project) => project._id !== id)
-        }));
+        try {
+          await deleteProjectInDb(id, userEmail);
+          set((state) => ({
+            projects: state.projects.filter((project) => project._id !== id)
+          }));
+        } catch (error) {
+          console.error('Error removing project:', error);
+          throw error;
+        }
       },
       addTask: async (
         projectId: string,
@@ -213,7 +228,7 @@ export const useTaskStore = create<State>()(
           throw error;
         }
       },
-      updateTask: async (
+      updateTask: (
         taskId: string,
         title: string,
         status: 'TODO' | 'IN_PROGRESS' | 'DONE',
@@ -225,44 +240,53 @@ export const useTaskStore = create<State>()(
         if (!userEmail) {
           throw new Error('User email not found');
         }
-        try {
-          const updatedTask = await updateTaskInDb(
-            taskId,
-            title,
-            userEmail,
-            status,
-            description || '',
-            dueDate,
-            assigneeId
-          );
 
-          set((state) => ({
-            projects: state.projects.map((project) => ({
-              ...project,
-              tasks: project.tasks.map((task) =>
-                task._id === taskId ? updatedTask : task
-              )
-            }))
-          }));
-        } catch (error) {
-          console.error('Error in updateTask:', error);
-          throw error;
-        }
+        return (async () => {
+          try {
+            const updatedTask = await updateTaskInDb(
+              taskId,
+              title,
+              userEmail,
+              status,
+              description,
+              dueDate,
+              assigneeId
+            );
+
+            if (!updatedTask) {
+              throw new Error('Failed to update task');
+            }
+
+            set((state) => ({
+              projects: state.projects.map((project) => ({
+                ...project,
+                tasks: project.tasks.map((task) =>
+                  task._id === taskId ? { ...task, ...updatedTask } : task
+                )
+              }))
+            }));
+          } catch (error) {
+            console.error('Error updating task:', error);
+            throw error;
+          }
+        })();
       },
-      removeTask: async (taskId: string) => {
-        try {
-          await deleteTaskInDb(taskId);
+      removeTask: (taskId: string) => {
+        return (async () => {
+          try {
+            await deleteTaskInDb(taskId);
 
-          set((state) => ({
-            projects: state.projects.map((project) => ({
-              ...project,
-              tasks: project.tasks.filter((task) => task._id !== taskId)
-            }))
-          }));
-        } catch (error) {
-          console.error('Error in removeTask:', error);
-          throw error;
-        }
+            set((state) => ({
+              projects: state.projects.map((project) => ({
+                ...project,
+                tasks: project.tasks.filter((task) => task._id !== taskId)
+              }))
+            }));
+          } catch (error) {
+            console.error('Error in removeTask:', error);
+            throw error;
+          }
+        })();
       },
       dragTaskOnProject: async (taskId: string, overlayProjectId: string) => {
         const userEmail = useTaskStore.getState().userEmail;
