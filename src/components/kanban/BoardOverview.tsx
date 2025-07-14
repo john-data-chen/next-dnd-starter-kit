@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -82,12 +83,12 @@ export function BoardOverview() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-4 bg-background sticky top-0 z-10">
         <div className="w-full sm:w-[200px]">
           <NewBoardDialog>
-            <button
+            <Button
               className="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
               data-testid="new-board-trigger"
             >
               {t('newBoard')}
-            </button>
+            </Button>
           </NewBoardDialog>
         </div>
         <div className="flex w-full sm:w-auto gap-2">
@@ -155,8 +156,7 @@ export function BoardOverview() {
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle>{board.title}</CardTitle>
-                        <button
-                          type="button"
+                        <div
                           onClick={(e) => e.stopPropagation()}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
@@ -169,10 +169,12 @@ export function BoardOverview() {
                               ? `${board.title} actions`
                               : 'Board actions'
                           }
-                          className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded-full p-1 -mr-2"
+                          role="button"
+                          tabIndex={0}
+                          className="inline-flex items-center justify-center rounded-full p-1 -mr-2 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                         >
                           <BoardActions board={board} />
-                        </button>
+                        </div>
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-muted-foreground">
