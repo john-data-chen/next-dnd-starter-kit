@@ -113,15 +113,28 @@ describe('Zustand Store: useTaskStore', () => {
       expect(state.userId).toBe(mockFullUser.id);
     });
 
-    it('should throw error if user not found', async () => {
+    it('should log error if user not found', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       vi.mocked(dbUser.getUserByEmail).mockResolvedValue(null);
-      await expect(
-        useTaskStore.getState().setUserInfo('notfound@example.com')
-      ).rejects.toThrow('User not found');
+
+      // Call the function and wait for any async operations to complete
+      useTaskStore.getState().setUserInfo('notfound@example.com');
+
+      // Wait for the next tick to allow any pending promises to resolve
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      // Verify error was logged
+      expect(consoleErrorSpy).toHaveBeenCalledWith('User not found');
+
+      // Verify state remains unchanged
       const state = useTaskStore.getState();
-      // Ensure state remains unchanged from beforeEach setup
       expect(state.userEmail).toBe(mockUserEmail);
       expect(state.userId).toBe(mockUser.id);
+
+      // Clean up
+      consoleErrorSpy.mockRestore();
     });
   });
 
