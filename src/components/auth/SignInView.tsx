@@ -8,8 +8,7 @@ import UserAuthForm from './UserAuthForm';
 export default function SignInViewPage() {
   const t = useTranslations('login');
   return (
-    <div
-      role="main"
+    <main
       aria-label="Sign in page"
       className="relative min-h-screen grid grid-rows-2 md:grid-rows-2 lg:grid-rows-1 lg:grid-cols-2 lg:px-0"
     >
@@ -34,6 +33,6 @@ export default function SignInViewPage() {
           <UserAuthForm />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

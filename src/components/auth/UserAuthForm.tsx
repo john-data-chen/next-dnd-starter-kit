@@ -23,7 +23,6 @@ export default function UserAuthForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full space-y-2"
         aria-label="Sign in form"
-        role="form"
         data-testid="auth-form"
       >
         <FormField

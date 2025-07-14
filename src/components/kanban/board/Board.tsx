@@ -93,7 +93,6 @@ export function Board() {
     }
     if (data?.type === 'Task') {
       setActiveTask(data?.task);
-      return;
     }
   }
 
