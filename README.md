@@ -26,8 +26,7 @@ The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop f
 **Love this template?**
 If you like it, don't forget to [give it a star](https://github.com/john-data-chen/next-dnd-starter-kit) today!
 
-And I have another easier starter kit: [ts-react-drag-and-drop-starter-kit
-](https://github.com/john-data-chen/ts-react-drag-and-drop-starter-kit) for new users of React and TypeScript.
+And I have another easier template: [websocket-template](https://github.com/john-data-chen/websocket-template)
 
 Every star motivates me to deliver more high-quality templates. 🚀
 
@@ -42,7 +41,8 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - Automated CI/CD Pipeline (GitHub Actions, SonarQube, Codecov, Vercel): Establishes a streamlined, production-ready deployment process, ensuring rapid, reliable, and high-quality releases.
 - Live Demo Deployment (Vercel): Provides immediate access to a functional application, showcasing practical deployment skills.
 - Elite Web Performance & Quality (Lighthouse 90+): Achieved scores of 90+ across Performance, Accessibility, Best Practices, and SEO in Google Lighthouse (Desktop), ensuring a top-tier user experience and technical excellence.
-  <img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
+
+<img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
 ---
 
@@ -70,7 +70,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 ### Requirements
 
 - Node.JS v22.x, please use [NVM](https://github.com/nvm-sh/nvm) or [FNM](https://github.com/Schniz/fnm) to install
-- [PNPM](https://pnpm.io/) (Recommended, you can use NPM or Yarn)
+- [PNPM](https://pnpm.io/) 10.x
 
 ### Database
 
