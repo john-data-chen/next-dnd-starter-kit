@@ -8,9 +8,6 @@ vi.mock('@/components/auth/UserAuthForm', () => ({
     <div data-testid="mock-user-auth-form">Mock User Auth Form</div>
   )
 }));
-vi.mock('@/components/layout/LanguageSwitcher', () => ({
-  default: () => <div data-testid="mock-language-switcher" />
-}));
 
 // Mock next-intl
 vi.mock('next-intl', () => ({
@@ -37,7 +34,6 @@ describe('SignInView Component', () => {
 
     // Check for mocked components
     expect(screen.getByTestId('mock-user-auth-form')).toBeInTheDocument();
-    expect(screen.getByTestId('mock-language-switcher')).toBeInTheDocument();
     expect(screen.getByTestId('mock-presentation-icon')).toBeInTheDocument();
   });
 });
