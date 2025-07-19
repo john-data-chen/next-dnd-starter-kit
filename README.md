@@ -40,7 +40,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 - Superior Code Quality (SonarQube All A Rating): Rigorous analysis confirms high standards in Security, Reliability, and Maintainability, minimizing technical debt and ensuring a healthy codebase.
 - Automated CI/CD Pipeline (GitHub Actions, SonarQube, Codecov, Vercel): Establishes a streamlined, production-ready deployment process, ensuring rapid, reliable, and high-quality releases.
 - Live Demo Deployment (Vercel): Provides immediate access to a functional application, showcasing practical deployment skills.
-- Elite Web Performance & Quality (Lighthouse 90+): Achieved scores of 90+ across Performance, Accessibility, Best Practices, and SEO in Google Lighthouse (Desktop), ensuring a top-tier user experience and technical excellence.
+- Elite Web Performance & Quality (Lighthouse 90+): Achieved scores of 90+ across Performance, Accessibility, Best Practices, and SEO in Google Lighthouse, ensuring a top-tier user experience and technical excellence.
 
 <img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
@@ -215,6 +215,7 @@ src/
 │             └── boards/ # Kanban Overview routes
 │                 └── [boardId]/ # Board
 ├── components/ # Reusable React components
+│   └── ui/ # Shadcn UI components
 ├── constants/ # Application-wide constants
 ├── hooks/ # Custom React hooks
 ├── i18n/ # i18n configs
