@@ -41,9 +41,6 @@ vi.mock('nextjs-toploader', () => ({
 vi.mock('@vercel/analytics/react', () => ({
   Analytics: () => <div data-testid="analytics" />
 }));
-vi.mock('@vercel/speed-insights/next', () => ({
-  SpeedInsights: () => <div data-testid="speedinsights" />
-}));
 vi.mock('@/styles/globals.css', () => ({}));
 
 describe('LocaleLayout', () => {
