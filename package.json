@@ -21,7 +21,8 @@
     "init-db:force": "tsx database/init-db-data.ts --force"
   },
   "engines": {
-    "node": "==22.x"
+    "node": "22.x",
+    "pnpm": "10.x"
   },
   "lint-staged": {
     "./src/**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
@@ -46,7 +47,6 @@
     "@radix-ui/react-toast": "^1.2.14",
     "@tailwindcss/postcss": "^4.1.11",
     "@vercel/analytics": "^1.5.0",
-    "@vercel/speed-insights": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
@@ -88,6 +88,7 @@
     "@types/react-dom": "19.1.5",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "@vitest/coverage-v8": "^3.2.4",
+    "babel-plugin-react-compiler": "19.1.0-rc.2",
     "commitizen": "^4.3.1",
     "dotenv": "^16.6.1",
     "eslint": "^9.31.0",
@@ -113,7 +114,6 @@
     "onlyBuiltDependencies": [
       "@swc/core",
       "@tailwindcss/oxide",
-      "@vercel/speed-insights",
       "esbuild",
       "sharp",
       "unrs-resolver"
