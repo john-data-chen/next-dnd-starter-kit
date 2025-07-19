@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
       language: 'typescript',
       eagerEsModules: false
     }
+  },
+  experimental: {
+    reactCompiler: true
   }
 };
 

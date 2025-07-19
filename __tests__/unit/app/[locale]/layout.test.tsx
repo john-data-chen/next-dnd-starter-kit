@@ -41,9 +41,6 @@ vi.mock('nextjs-toploader', () => ({
 vi.mock('@vercel/analytics/react', () => ({
   Analytics: () => <div data-testid="analytics" />
 }));
-vi.mock('@vercel/speed-insights/next', () => ({
-  SpeedInsights: () => <div data-testid="speedinsights" />
-}));
 vi.mock('@/styles/globals.css', () => ({}));
 
 describe('LocaleLayout', () => {
@@ -60,7 +57,6 @@ describe('LocaleLayout', () => {
     expect(screen.getByTestId('intl')).toBeInTheDocument();
     expect(screen.getByTestId('toploader')).toBeInTheDocument();
     expect(screen.getByTestId('analytics')).toBeInTheDocument();
-    expect(screen.getByTestId('speedinsights')).toBeInTheDocument();
   });
 
   it('should call notFound if locale is not supported', async () => {
