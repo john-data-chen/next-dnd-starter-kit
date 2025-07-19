@@ -24,6 +24,7 @@
     "node": "22.x",
     "pnpm": "10.x"
   },
+  "packageManager": "pnpm@10.13.1",
   "lint-staged": {
     "./src/**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
       "prettier --write --no-error-on-unmatched-pattern"
