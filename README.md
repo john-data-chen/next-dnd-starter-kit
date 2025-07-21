@@ -49,7 +49,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 ## 🛠️ Technical Decision
 
 - **Frontend**: [Next](https://nextjs.org/docs/app/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/) - modern UI with strong type safety and server-side rendering (using SSG in login page for better performance, SSR in workspace pages for dynamic content)
-- **Build**: [ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky) - automated code quality checks and style formatting during commit, preventing problems into codebase and make consistent code style in team work
+- **Build**: [OxLint](https://oxc.rs/docs/guide/usage/linter), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky) - automated code quality checks and style formatting during commit, preventing problems into codebase and make consistent code style in team work
 - **UI**: [Tailwind CSS](https://tailwindcss.com/), [Shadcn/UI](https://ui.shadcn.com/) - consistent, responsive, and scalable styling, enabling rapid and maintainable UI development
 - **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) - easier to setup and faster execution than Jest and Cypress, chosen for their efficiency and comprehensive testing capabilities
 - **Internationalization(i18n)**: [Next-intl](https://next-intl.dev/) - internationalization (i18n) support for Next.js applications
@@ -141,7 +141,7 @@ pnpm test
 # Run E2E tests by Playwright
 pnpm playwright
 
-# ESLint fix
+# Lint fix
 pnpm lint
 
 # Format code
@@ -230,6 +230,18 @@ src/
 ├── types/ # Type definitions
 └── env.example # Environment variables example
 ```
+
+## Experimental Tools
+
+### React Compiler
+
+- status: disabled (It increase build time 30~40%)
+- benefit: It can increase the performance score in lighthouse test 5~10 %
+
+### Oxlint
+
+- status: enabled
+- benefit: 50~100 times faster than ESLint, easier to setup, clearer instructions, many ESLint packages can be removed
 
 ## Known Issues & Limitations
 
