@@ -76,7 +76,6 @@ export function TaskForm({
                   id="title"
                   placeholder={t('titlePlaceholder')}
                   className="col-span-4"
-                  autoFocus
                   data-testid="task-title-input"
                   aria-label="Task title"
                   {...field}
@@ -146,6 +145,8 @@ export function TaskForm({
                     <Button
                       variant="outline"
                       role="combobox"
+                      aria-expanded={assignOpen}
+                      aria-controls="assignee-options"
                       className="w-full justify-between"
                     >
                       {field.value
@@ -154,6 +155,8 @@ export function TaskForm({
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent
+                    id="assignee-options"
+                    role="listbox"
                     className="p-0 z-[60]"
                     side="bottom"
                     align="start"
