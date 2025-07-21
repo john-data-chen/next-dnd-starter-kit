@@ -13,6 +13,7 @@ import {
 import { useBoards } from '@/hooks/useBoards';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -156,25 +157,29 @@ export function BoardOverview() {
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle>{board.title}</CardTitle>
-                        <div
-                          onClick={(e) => e.stopPropagation()}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
+                        <BoardActions board={board} asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 -mr-2"
+                            onClick={(e) => {
                               e.stopPropagation();
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            }}
+                            aria-label={
+                              board.title
+                                ? `${board.title} actions`
+                                : 'Board actions'
                             }
-                          }}
-                          aria-label={
-                            board.title
-                              ? `${board.title} actions`
-                              : 'Board actions'
-                          }
-                          role="button"
-                          tabIndex={0}
-                          className="inline-flex items-center justify-center rounded-full p-1 -mr-2 hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                        >
-                          <BoardActions board={board} />
-                        </div>
+                          >
+                            <DotsHorizontalIcon className="h-4 w-4" />
+                          </Button>
+                        </BoardActions>
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-muted-foreground">

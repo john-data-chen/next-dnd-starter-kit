@@ -39,9 +39,14 @@ import { BoardForm } from './BoardForm';
 interface BoardActionsProps {
   board: Board;
   onDelete?: () => void;
+  asChild?: boolean;
+  children?: React.ReactNode;
 }
 
-export function BoardActions({ board, onDelete }: Readonly<BoardActionsProps>) {
+export const BoardActions = React.forwardRef<
+  HTMLButtonElement,
+  BoardActionsProps
+>(({ board, onDelete, asChild = false, children }, ref) => {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const [editEnable, setEditEnable] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -111,14 +116,19 @@ export function BoardActions({ board, onDelete }: Readonly<BoardActionsProps>) {
 
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            data-testid="board-option-button"
-          >
-            <DotsHorizontalIcon className="h-4 w-4" />
-          </Button>
+          {asChild ? (
+            React.Children.only(children)
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              data-testid="board-option-button"
+              ref={ref}
+            >
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem
@@ -158,4 +168,6 @@ export function BoardActions({ board, onDelete }: Readonly<BoardActionsProps>) {
       </AlertDialog>
     </>
   );
-}
+});
+
+BoardActions.displayName = 'BoardActions';
