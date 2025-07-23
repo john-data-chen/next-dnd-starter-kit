@@ -241,7 +241,11 @@ src/
 ### Oxlint
 
 - status: enabled
-- benefit: 50~100 times faster than ESLint, easier to setup, clearer instructions, many ESLint packages can be removed
+- benefit:
+  - 50~100 times faster than ESLint (it can lint this small project in 15ms, it has more potential in big projects with thousands of files)
+  - easier to setup
+  - clearer instructions showing how to fix each issue
+  - many ESLint packages can be removed (in my case 10 packages)
 
 ## Known Issues & Limitations
 
