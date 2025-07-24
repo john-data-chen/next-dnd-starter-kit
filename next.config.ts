@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
     }
   },
   experimental: {
-    // enable react compiler will increase build time 30~40%
+    // react compiler only enhances performance a little bit, but it will increase build time 30~40%, so disable until it is stable
     reactCompiler: false
   }
 };
