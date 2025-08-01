@@ -78,36 +78,59 @@ function convertBoardToPlainObject(
         name: userMap.get(id) || 'Unknown User'
       };
     }),
-    projects: (boardDoc.projects || []).filter(Boolean).map((p): Project => {
-      const projectDoc = p as unknown as {
-        _id: Types.ObjectId;
-        title: string;
-        description?: string;
-        board: Types.ObjectId;
-        owner: { _id: Types.ObjectId; name: string };
-        members: { _id: Types.ObjectId; name: string }[];
-        createdAt: Date;
-        updatedAt: Date;
-      };
-      return {
-        _id: projectDoc._id.toString(),
-        title: projectDoc.title,
-        description: projectDoc.description || '',
-        board: projectDoc.board.toString(),
-        owner: projectDoc.owner
-          ? { id: projectDoc.owner._id.toString(), name: projectDoc.owner.name }
-          : { id: '', name: 'Unknown' },
-        members: (projectDoc.members || [])
-          .filter(Boolean)
-          .map((m: { _id: Types.ObjectId; name: string }) => ({
-            id: m._id.toString(),
-            name: m.name
-          })),
-        tasks: [],
-        createdAt: new Date(projectDoc.createdAt).toISOString(),
-        updatedAt: new Date(projectDoc.updatedAt).toISOString()
-      };
-    }),
+    projects: (boardDoc.projects || [])
+      .filter(Boolean)
+      .map((p): Project => {
+        const projectDoc = p as unknown as {
+          _id: Types.ObjectId;
+          title: string;
+          description?: string;
+          board?: Types.ObjectId | { toString(): string };
+          owner: { _id: Types.ObjectId; name: string };
+          members: { _id: Types.ObjectId; name: string }[];
+          createdAt: Date | string;
+          updatedAt: Date | string;
+        };
+
+        // Safely handle the board reference
+        let boardId = '';
+        if (projectDoc.board) {
+          boardId =
+            typeof projectDoc.board === 'object'
+              ? projectDoc.board.toString()
+              : String(projectDoc.board);
+        }
+
+        return {
+          _id: projectDoc._id?.toString() || '',
+          title: projectDoc.title || 'Untitled Project',
+          description: projectDoc.description || '',
+          board: boardId,
+          owner: projectDoc.owner
+            ? {
+                id: projectDoc.owner?._id?.toString() || '',
+                name: projectDoc.owner?.name || 'Unknown'
+              }
+            : { id: '', name: 'Unknown' },
+          members: (projectDoc.members || [])
+            .filter(Boolean)
+            .map((m: { _id: Types.ObjectId | string; name: string }) => ({
+              id:
+                typeof m._id === 'object'
+                  ? m._id.toString()
+                  : String(m._id || ''),
+              name: m.name || 'Unknown'
+            })),
+          tasks: [],
+          createdAt: projectDoc.createdAt
+            ? new Date(projectDoc.createdAt).toISOString()
+            : new Date().toISOString(),
+          updatedAt: projectDoc.updatedAt
+            ? new Date(projectDoc.updatedAt).toISOString()
+            : new Date().toISOString()
+        };
+      })
+      .filter(Boolean),
     createdAt: new Date(boardDoc.createdAt),
     updatedAt: new Date(boardDoc.updatedAt)
   };
