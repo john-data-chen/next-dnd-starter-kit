@@ -415,10 +415,17 @@ export const useTaskStore = create<State>()(
         }
         try {
           const updatedBoard = await updateBoardInDb(id, data, userEmail);
-          if (!updatedBoard) throw new Error('Failed to update board');
+          if (!updatedBoard) {
+            throw new Error(
+              'Failed to update board: No board was returned from the database'
+            );
+          }
+          // Don't return anything to match the State interface
         } catch (error) {
           console.error('Error in updateBoard:', error);
-          throw error;
+          const errorMessage =
+            error instanceof Error ? error.message : 'Unknown error occurred';
+          throw new Error(`Failed to update board: ${errorMessage}`);
         }
       },
       removeBoard: async (id: string) => {
