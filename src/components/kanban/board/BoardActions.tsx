@@ -62,6 +62,7 @@ export const BoardActions = React.forwardRef<
       toast.success(t('boardUpdated', { title: values.title }));
       await fetchBoards();
       setEditEnable(false);
+      router.refresh();
     } catch (error) {
       toast.error(t('boardUpdateFailed', { error: String(error) }));
     } finally {
