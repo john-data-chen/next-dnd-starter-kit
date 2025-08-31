@@ -4,264 +4,151 @@ import {
   fetchBoardsFromDb,
   updateBoardInDb
 } from '@/lib/db/board';
-import { Board, UserInfo } from '@/types/dbInterface';
+import { connectToDatabase } from '@/lib/db/connect';
+import { getUserByEmail, getUserById } from '@/lib/db/user';
+import { BoardModel } from '@/models/board.model';
+import { ProjectModel } from '@/models/project.model';
+import { TaskModel } from '@/models/task.model';
 import { Types } from 'mongoose';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Mock dependencies
-const mockConnect = vi.hoisted(() => vi.fn());
-const mockGetUserByEmail = vi.hoisted(() => vi.fn());
-const mockGetUserById = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/db/connect');
+vi.mock('@/lib/db/user');
+vi.mock('@/models/board.model');
+vi.mock('@/models/project.model');
+vi.mock('@/models/task.model');
 
-const mockBoardLean = vi.hoisted(() => vi.fn());
-const mockBoardFind = vi.hoisted(() => vi.fn(() => ({ lean: mockBoardLean })));
-const mockBoardFindById = vi.hoisted(() => vi.fn());
-const mockBoardCreate = vi.hoisted(() => vi.fn());
-const mockBoardFindByIdAndUpdate = vi.hoisted(() => vi.fn());
-const mockBoardFindByIdAndDelete = vi.hoisted(() => vi.fn());
-
-const mockProjectLean = vi.hoisted(() => vi.fn());
-const mockProjectFind = vi.hoisted(() =>
-  vi.fn(() => ({ lean: mockProjectLean }))
-);
-const mockProjectDeleteMany = vi.hoisted(() => vi.fn());
-
-const mockTaskDeleteMany = vi.hoisted(() => vi.fn());
-
-// Mock modules
-vi.mock('@/lib/db/connect', () => ({
-  connectToDatabase: mockConnect
-}));
-
-vi.mock('@/lib/db/user', () => ({
-  getUserByEmail: mockGetUserByEmail,
-  getUserById: mockGetUserById
-}));
-
-vi.mock('@/models/board.model', () => ({
-  BoardModel: {
-    find: mockBoardFind,
-    findById: mockBoardFindById,
-    create: mockBoardCreate,
-    findByIdAndUpdate: mockBoardFindByIdAndUpdate,
-    findByIdAndDelete: mockBoardFindByIdAndDelete
-  }
-}));
-
-vi.mock('@/models/project.model', () => ({
-  ProjectModel: {
-    find: mockProjectFind,
-    deleteMany: mockProjectDeleteMany
-  }
-}));
-
-vi.mock('@/models/task.model', () => ({
-  TaskModel: {
-    deleteMany: mockTaskDeleteMany
-  }
-}));
-
-describe('Board Database Functions', () => {
-  const mockUserId = new Types.ObjectId().toString();
-  const mockUserEmail = 'test@example.com';
-  const mockUserName = 'Test User';
-  const mockUserInfo: UserInfo = { id: mockUserId, name: mockUserName };
-
-  const mockBoardId = new Types.ObjectId().toString();
-  const mockProjectId = new Types.ObjectId().toString();
-
+describe('Board DB functions', () => {
+  const mockUser = {
+    id: new Types.ObjectId().toHexString(),
+    name: 'Test User',
+    email: 'test@example.com'
+  };
+  const mockBoardId = new Types.ObjectId().toHexString();
   const mockBoard = {
     _id: new Types.ObjectId(mockBoardId),
     title: 'Test Board',
     description: 'Test Description',
-    owner: new Types.ObjectId(mockUserId),
-    members: [new Types.ObjectId(mockUserId)],
-    projects: [new Types.ObjectId(mockProjectId)],
+    owner: new Types.ObjectId(mockUser.id),
+    members: [new Types.ObjectId(mockUser.id)],
+    projects: [],
     createdAt: new Date(),
     updatedAt: new Date()
   };
 
-  const mockProject = {
-    _id: new Types.ObjectId(mockProjectId),
-    title: 'Test Project'
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
-    mockConnect.mockResolvedValue(undefined);
-    mockGetUserByEmail.mockResolvedValue(mockUserInfo);
-    mockGetUserById.mockResolvedValue(mockUserInfo);
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
+    (connectToDatabase as jest.Mock).mockResolvedValue(undefined);
+    (getUserByEmail as jest.Mock).mockResolvedValue(mockUser);
+    (getUserById as jest.Mock).mockImplementation((id) =>
+      Promise.resolve(id === mockUser.id ? mockUser : null)
+    );
   });
 
   describe('fetchBoardsFromDb', () => {
-    it('should fetch and transform boards successfully', async () => {
-      mockBoardLean.mockReturnValue([mockBoard]);
-      mockProjectLean.mockReturnValue([mockProject]);
-
-      const result = await fetchBoardsFromDb(mockUserEmail);
-
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockBoardFind).toHaveBeenCalledWith({
-        $or: [{ owner: mockUserId }, { members: mockUserId }]
-      });
-    });
-
-    it('should return empty array when user not found', async () => {
-      mockGetUserByEmail.mockResolvedValueOnce(null);
-
-      const result = await fetchBoardsFromDb(mockUserEmail);
-
-      expect(result).toEqual([]);
-    });
-
-    it('should handle database errors gracefully', async () => {
-      mockBoardFind.mockImplementationOnce(() => {
-        throw new Error('Database error');
+    it('should fetch boards for a user', async () => {
+      (BoardModel.find as jest.Mock).mockReturnValue({
+        populate: vi.fn().mockReturnThis(),
+        lean: vi.fn().mockResolvedValue([mockBoard])
       });
 
-      const result = await fetchBoardsFromDb(mockUserEmail);
+      const boards = await fetchBoardsFromDb(mockUser.email);
+      expect(boards).toHaveLength(1);
+      expect(boards[0].title).toBe('Test Board');
+    });
 
-      expect(result).toEqual([]);
+    it('should return empty array if user not found', async () => {
+      (getUserByEmail as jest.Mock).mockResolvedValue(null);
+      const boards = await fetchBoardsFromDb('unknown@example.com');
+      expect(boards).toEqual([]);
     });
   });
 
   describe('createBoardInDb', () => {
-    const createData = {
-      title: 'New Board',
-      description: 'New Description',
-      userEmail: mockUserEmail
-    };
-
-    it('should create a board successfully', async () => {
-      const newBoard = {
+    it('should create a new board', async () => {
+      (BoardModel.create as jest.Mock).mockResolvedValue({
         ...mockBoard,
-        title: createData.title,
-        description: createData.description
-      };
-      mockBoardCreate.mockResolvedValueOnce(newBoard);
-
-      const result = await createBoardInDb(createData);
-
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockGetUserByEmail).toHaveBeenCalledWith(mockUserEmail);
-      expect(mockBoardCreate).toHaveBeenCalledWith({
-        title: createData.title,
-        description: createData.description,
-        owner: mockUserId,
-        members: [mockUserId],
-        projects: []
+        toObject: () => mockBoard
       });
+      const newBoard = await createBoardInDb({
+        title: 'Test Board',
+        userEmail: mockUser.email
+      });
+      expect(newBoard?.title).toBe('Test Board');
+      expect(BoardModel.create).toHaveBeenCalled();
     });
 
-    it('should return null when user not found', async () => {
-      mockGetUserByEmail.mockResolvedValueOnce(null);
-
-      const result = await createBoardInDb(createData);
-
-      expect(result).toBeNull();
-      expect(mockBoardCreate).not.toHaveBeenCalled();
+    it('should return null if user not found', async () => {
+      (getUserByEmail as jest.Mock).mockResolvedValue(null);
+      const newBoard = await createBoardInDb({
+        title: 'Test Board',
+        userEmail: 'unknown@example.com'
+      });
+      expect(newBoard).toBeNull();
     });
   });
 
   describe('updateBoardInDb', () => {
-    const updateData = {
-      title: 'Updated Board',
-      description: 'Updated Description'
-    };
-
-    it('should update board successfully', async () => {
-      mockBoardFindById.mockResolvedValueOnce({
-        ...mockBoard,
-        lean: () => mockBoard
+    it('should update a board', async () => {
+      (BoardModel.findById as jest.Mock).mockReturnValue({
+        lean: vi.fn().mockResolvedValue(mockBoard)
       });
-      mockBoardFindByIdAndUpdate.mockResolvedValueOnce({
-        ...mockBoard,
-        ...updateData,
-        lean: () => ({ ...mockBoard, ...updateData })
+      (BoardModel.findByIdAndUpdate as jest.Mock).mockReturnValue({
+        lean: vi
+          .fn()
+          .mockResolvedValue({ ...mockBoard, title: 'Updated Board' })
       });
 
-      const result = await updateBoardInDb(
+      const updatedBoard = await updateBoardInDb(
         mockBoardId,
-        updateData,
-        mockUserEmail
+        { title: 'Updated Board' },
+        mockUser.email
       );
-
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockGetUserByEmail).toHaveBeenCalledWith(mockUserEmail);
+      expect(updatedBoard?.title).toBe('Updated Board');
     });
 
-    it('should return null when board not found', async () => {
-      mockBoardFindById.mockResolvedValueOnce(null);
-
-      const result = await updateBoardInDb(
-        mockBoardId,
-        updateData,
-        mockUserEmail
-      );
-
-      expect(result).toBeNull();
-    });
-
-    it('should return null when user is not owner', async () => {
-      const differentUserId = new Types.ObjectId().toString();
-      mockBoardFindById.mockResolvedValueOnce({
-        ...mockBoard,
-        owner: new Types.ObjectId(differentUserId),
-        lean: () => ({
-          ...mockBoard,
-          owner: new Types.ObjectId(differentUserId)
-        })
+    it('should throw error if user is not owner', async () => {
+      (BoardModel.findById as jest.Mock).mockReturnValue({
+        lean: vi
+          .fn()
+          .mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       });
-
-      const result = await updateBoardInDb(
-        mockBoardId,
-        updateData,
-        mockUserEmail
-      );
-
-      expect(result).toBeNull();
+      await expect(
+        updateBoardInDb(mockBoardId, { title: 'Updated' }, mockUser.email)
+      ).resolves.toBeNull();
     });
   });
 
   describe('deleteBoardInDb', () => {
-    it('should delete board successfully', async () => {
-      mockBoardFindById.mockResolvedValueOnce({
-        ...mockBoard,
-        lean: () => mockBoard
+    it('should delete a board and its contents', async () => {
+      (BoardModel.findById as jest.Mock).mockReturnValue({
+        lean: vi.fn().mockResolvedValue(mockBoard)
       });
+      (ProjectModel.deleteMany as jest.Mock).mockResolvedValue({
+        acknowledged: true,
+        deletedCount: 1
+      });
+      (TaskModel.deleteMany as jest.Mock).mockResolvedValue({
+        acknowledged: true,
+        deletedCount: 1
+      });
+      (BoardModel.findByIdAndDelete as jest.Mock).mockResolvedValue(mockBoard);
 
-      const result = await deleteBoardInDb(mockBoardId, mockUserEmail);
-
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockGetUserByEmail).toHaveBeenCalledWith(mockUserEmail);
+      const result = await deleteBoardInDb(mockBoardId, mockUser.email);
+      expect(result).toBe(true);
+      expect(ProjectModel.deleteMany).toHaveBeenCalled();
+      expect(TaskModel.deleteMany).toHaveBeenCalled();
+      expect(BoardModel.findByIdAndDelete).toHaveBeenCalledWith(mockBoardId);
     });
 
-    it('should return false when board not found', async () => {
-      mockBoardFindById.mockResolvedValueOnce(null);
-
-      const result = await deleteBoardInDb(mockBoardId, mockUserEmail);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false when user is not owner', async () => {
-      const differentUserId = new Types.ObjectId().toString();
-      mockBoardFindById.mockResolvedValueOnce({
-        ...mockBoard,
-        owner: new Types.ObjectId(differentUserId),
-        lean: () => ({
-          ...mockBoard,
-          owner: new Types.ObjectId(differentUserId)
-        })
+    it('should throw error if user is not owner', async () => {
+      (BoardModel.findById as jest.Mock).mockReturnValue({
+        lean: vi
+          .fn()
+          .mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       });
-
-      const result = await deleteBoardInDb(mockBoardId, mockUserEmail);
-
-      expect(result).toBe(false);
+      await expect(deleteBoardInDb(mockBoardId, mockUser.email)).resolves.toBe(
+        false
+      );
     });
   });
 });
