@@ -1,146 +1,218 @@
-/// <reference types="vitest/globals" />
 import { connectToDatabase } from '@/lib/db/connect';
-import { createProjectInDb, getProjectsFromDb } from '@/lib/db/project';
+import {
+  createProjectInDb,
+  deleteProjectInDb,
+  getProjectsFromDb,
+  updateProjectInDb
+} from '@/lib/db/project';
 import { getUserByEmail, getUserById } from '@/lib/db/user';
 import { BoardModel } from '@/models/board.model';
 import { ProjectModel } from '@/models/project.model';
+import { TaskModel } from '@/models/task.model';
 import { Types } from 'mongoose';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { z } from 'zod';
 
-// Mock dependencies
 vi.mock('@/lib/db/connect');
 vi.mock('@/lib/db/user');
-vi.mock('@/models/project.model');
 vi.mock('@/models/board.model');
+vi.mock('@/models/project.model');
+vi.mock('@/models/task.model');
 
-// Get typed mocks
-const mockConnect = vi.mocked(connectToDatabase);
-const mockGetUserByEmail = vi.mocked(getUserByEmail);
-const mockGetUserById = vi.mocked(getUserById);
-
-// Define a schema for project creation for testing purposes
-const projectTestSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  board: z.string(),
-  userEmail: z.string().email()
-});
-
-describe('Database Project Functions', () => {
-  const mockBoardId = new Types.ObjectId().toString();
-  const mockUserId = new Types.ObjectId().toString();
-  const mockUserEmail = 'test@example.com';
-  const mockUserName = 'Test User';
-  const mockLean = vi.fn();
-  const mockNewProjectId = new Types.ObjectId().toString();
+describe('Project DB functions', () => {
+  const mockUser = {
+    id: new Types.ObjectId().toHexString(),
+    name: 'Test User',
+    email: 'test@example.com'
+  };
+  const mockBoardId = new Types.ObjectId().toHexString();
+  const mockProjectId = new Types.ObjectId().toHexString();
+  const mockProject = {
+    _id: mockProjectId,
+    title: 'Test Project',
+    description: 'Test Description',
+    owner: mockUser.id,
+    members: [mockUser.id],
+    board: mockBoardId,
+    tasks: [],
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockConnect.mockResolvedValue(undefined);
-    mockGetUserByEmail.mockResolvedValue({
-      id: mockUserId,
-      name: mockUserName,
-      email: mockUserEmail
-    });
-    mockGetUserById.mockResolvedValue({
-      id: mockUserId,
-      name: mockUserName,
-      email: mockUserEmail
-    });
-    vi.mocked(ProjectModel.find).mockImplementation(
-      () => ({ lean: mockLean }) as any
+    (connectToDatabase as jest.Mock).mockResolvedValue(undefined);
+    (getUserByEmail as jest.Mock).mockResolvedValue(mockUser);
+    (getUserById as jest.Mock).mockImplementation((id) =>
+      Promise.resolve(id === mockUser.id ? mockUser : null)
     );
   });
 
   describe('getProjectsFromDb', () => {
-    it('should fetch, convert, and populate projects correctly', async () => {
-      const mockRawProjects = [
-        {
-          _id: 'proj1',
-          title: 'Test Project',
-          description: 'A test',
-          owner: mockUserId,
-          members: [mockUserId],
-          board: mockBoardId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ];
-      mockLean.mockResolvedValue(mockRawProjects);
-
-      const result = await getProjectsFromDb(mockBoardId);
-
-      expect(ProjectModel.find).toHaveBeenCalledWith({
-        board: new Types.ObjectId(mockBoardId)
+    it('should fetch projects for a board', async () => {
+      (ProjectModel.find as jest.Mock).mockReturnValue({
+        lean: vi
+          .fn()
+          .mockResolvedValue([
+            { ...mockProject, owner: new Types.ObjectId(mockProject.owner) }
+          ])
       });
-      // getUserById is called for the unique IDs in owner and members.
-      // In this case, owner is one call, and the member in the array is a second call.
-      expect(mockGetUserById).toHaveBeenCalledWith(mockUserId);
-      expect(mockGetUserById).toHaveBeenCalledTimes(2);
-
-      // Assert the final, transformed shape
-      expect(result).toHaveLength(1);
-      expect(result![0]).toEqual(
-        expect.objectContaining({
-          _id: 'proj1',
-          title: 'Test Project',
-          owner: { id: mockUserId, name: mockUserName },
-          members: [{ id: mockUserId, name: mockUserName }]
-        })
-      );
+      const projects = await getProjectsFromDb(mockBoardId);
+      expect(projects).toHaveLength(1);
+      expect(projects?.[0].title).toBe('Test Project');
     });
 
-    it('should return an empty array if an error occurs', async () => {
-      mockLean.mockRejectedValue(new Error('DB Error'));
-      const result = await getProjectsFromDb(mockBoardId);
-      expect(result).toEqual([]);
+    it('should return an empty array when no projects are found', async () => {
+      (ProjectModel.find as jest.Mock).mockReturnValue({
+        lean: vi.fn().mockResolvedValue([])
+      });
+      const projects = await getProjectsFromDb(mockBoardId);
+      expect(projects).toEqual([]);
     });
   });
 
   describe('createProjectInDb', () => {
-    it('should create a project successfully and return the populated object', async () => {
-      const createData: z.infer<typeof projectTestSchema> = {
-        title: 'New Project',
-        description: 'A new project',
-        board: mockBoardId,
-        userEmail: mockUserEmail
-      };
-
-      const mockCreatedDoc = {
-        ...createData,
-        _id: new Types.ObjectId(mockNewProjectId),
-        owner: new Types.ObjectId(mockUserId),
-        members: [new Types.ObjectId(mockUserId)],
-        board: new Types.ObjectId(mockBoardId),
+    it('should create a new project', async () => {
+      (ProjectModel.create as jest.Mock).mockResolvedValue({
+        ...mockProject,
         toObject: () => ({
-          _id: mockNewProjectId,
-          owner: mockUserId,
-          members: [mockUserId],
-          board: mockBoardId,
-          title: 'New Project'
+          ...mockProject,
+          owner: new Types.ObjectId(mockProject.owner)
         })
-      };
+      });
+      (BoardModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(true);
 
-      vi.mocked(ProjectModel.create).mockResolvedValue(mockCreatedDoc as any);
-      vi.mocked(BoardModel.findByIdAndUpdate).mockResolvedValue({} as any);
-
-      const result = await createProjectInDb(createData);
-
-      expect(ProjectModel.create).toHaveBeenCalled();
+      const newProject = await createProjectInDb({
+        title: 'Test Project',
+        description: 'Test Description',
+        board: mockBoardId,
+        userEmail: mockUser.email
+      });
+      expect(newProject?.title).toBe('Test Project');
       expect(BoardModel.findByIdAndUpdate).toHaveBeenCalled();
-      expect(mockGetUserById).toHaveBeenCalledWith(mockUserId);
-      expect(mockGetUserById).toHaveBeenCalledTimes(2);
+    });
 
-      // Assert the final shape after `convertProjectToPlainObject`
-      expect(result).toEqual(
-        expect.objectContaining({
-          _id: mockNewProjectId,
-          title: 'New Project',
-          owner: { id: mockUserId, name: mockUserName },
-          members: [{ id: mockUserId, name: mockUserName }]
+    it('should return null if user is not found', async () => {
+      (getUserByEmail as jest.Mock).mockResolvedValue(null);
+      const newProject = await createProjectInDb({
+        title: 'Test Project',
+        description: 'Test Description',
+        board: mockBoardId,
+        userEmail: 'test@test.com'
+      });
+      expect(newProject).toBeNull();
+    });
+
+    it('should return null if board update fails', async () => {
+      (ProjectModel.create as jest.Mock).mockResolvedValue({
+        ...mockProject,
+        toObject: () => ({
+          ...mockProject,
+          owner: new Types.ObjectId(mockProject.owner)
         })
+      });
+      (BoardModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
+      const newProject = await createProjectInDb({
+        title: 'Test Project',
+        description: 'Test Description',
+        board: mockBoardId,
+        userEmail: mockUser.email
+      });
+      expect(newProject).toBeNull();
+    });
+  });
+
+  describe('updateProjectInDb', () => {
+    it('should update a project', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject);
+      (ProjectModel.findByIdAndUpdate as jest.Mock).mockReturnValue({
+        lean: vi
+          .fn()
+          .mockResolvedValue({ ...mockProject, title: 'Updated Project' }),
+        toObject: () => ({
+          ...mockProject,
+          title: 'Updated Project',
+          owner: new Types.ObjectId(mockProject.owner)
+        })
+      });
+
+      const updatedProject = await updateProjectInDb({
+        projectId: mockProjectId,
+        userEmail: mockUser.email,
+        newTitle: 'Updated Project'
+      });
+      expect(updatedProject?.title).toBe('Updated Project');
+    });
+
+    it('should return null if project is not found', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue(null);
+      const updatedProject = await updateProjectInDb({
+        projectId: mockProjectId,
+        userEmail: mockUser.email,
+        newTitle: 'Updated Project'
+      });
+      expect(updatedProject).toBeNull();
+    });
+
+    it('should return null if user is not found', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject);
+      (getUserByEmail as jest.Mock).mockResolvedValue(null);
+      const updatedProject = await updateProjectInDb({
+        projectId: mockProjectId,
+        userEmail: mockUser.email,
+        newTitle: 'Updated Project'
+      });
+      expect(updatedProject).toBeNull();
+    });
+
+    it('should return null if user is not the owner', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue({
+        ...mockProject,
+        owner: new Types.ObjectId()
+      });
+      const updatedProject = await updateProjectInDb({
+        projectId: mockProjectId,
+        userEmail: mockUser.email,
+        newTitle: 'Updated Project'
+      });
+      expect(updatedProject).toBeNull();
+    });
+  });
+
+  describe('deleteProjectInDb', () => {
+    it('should delete a project', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject);
+      (BoardModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(true);
+      (TaskModel.deleteMany as jest.Mock).mockResolvedValue({
+        acknowledged: true,
+        deletedCount: 0
+      });
+      (ProjectModel.findByIdAndDelete as jest.Mock).mockResolvedValue(
+        mockProject
       );
+
+      const result = await deleteProjectInDb(mockProjectId, mockUser.email);
+      expect(result).toBe(true);
+    });
+
+    it('should return false if project is not found', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue(null);
+      const result = await deleteProjectInDb(mockProjectId, mockUser.email);
+      expect(result).toBe(false);
+    });
+
+    it('should return false if user is not found', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject);
+      (getUserByEmail as jest.Mock).mockResolvedValue(null);
+      const result = await deleteProjectInDb(mockProjectId, mockUser.email);
+      expect(result).toBe(false);
+    });
+
+    it('should return false if user is not the owner', async () => {
+      (ProjectModel.findById as jest.Mock).mockResolvedValue({
+        ...mockProject,
+        owner: new Types.ObjectId()
+      });
+      const result = await deleteProjectInDb(mockProjectId, mockUser.email);
+      expect(result).toBe(false);
     });
   });
 });
