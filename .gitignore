@@ -45,4 +45,8 @@ node_modules/
 /database/mongodb/
 
 .vscode/
+
+# AI files
 .cursorrules
+GEMINI.md
+.windsurfrules
