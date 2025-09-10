@@ -29,9 +29,22 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
       .lean()
 
     const allUserIds = new Set<string>()
-    boardsFromDb.forEach((board: any) => {
-      allUserIds.add((board.owner as Types.ObjectId).toHexString())
-      ;(board.members as Types.ObjectId[]).forEach((memberId) => allUserIds.add(memberId.toHexString()))
+    boardsFromDb.forEach((board) => {
+      // Handle owner ID (could be ObjectId or string)
+      const ownerId =
+        board.owner instanceof Types.ObjectId
+          ? board.owner.toHexString()
+          : (board.owner as { _id?: Types.ObjectId })?._id?.toHexString() || String(board.owner)
+      allUserIds.add(ownerId)
+
+      // Handle member IDs
+      ;(board.members || []).forEach((member) => {
+        const memberId =
+          member instanceof Types.ObjectId
+            ? member.toHexString()
+            : (member as { _id?: Types.ObjectId })?._id?.toHexString() || String(member)
+        allUserIds.add(memberId)
+      })
     })
 
     const userMap = await getUserMap(Array.from(allUserIds))
@@ -55,16 +68,16 @@ async function getUserMap(userIds: string[]): Promise<Map<string, string>> {
 }
 
 function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
-  const getOwnerId = (owner: any): string => {
-    if (owner instanceof Types.ObjectId) {
-      return owner.toHexString()
+  const getObjectIdString = (id: any): string => {
+    if (id instanceof Types.ObjectId) {
+      return id.toHexString()
     }
-    if (typeof owner === 'object' && owner !== null && 'id' in owner) {
-      return owner.id
+    if (id?._id) {
+      return getObjectIdString(id._id)
     }
-    return String(owner)
+    return String(id)
   }
-  const ownerId = getOwnerId(boardDoc.owner)
+  const ownerId = getObjectIdString(boardDoc.owner)
   return {
     _id: boardDoc._id.toString(),
     title: boardDoc.title,
@@ -74,12 +87,7 @@ function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string,
       name: userMap.get(ownerId) || 'Unknown User'
     },
     members: boardDoc.members.filter(Boolean).map((member) => {
-      const id =
-        member instanceof Types.ObjectId
-          ? member.toHexString()
-          : typeof member === 'object' && member !== null && 'id' in member
-            ? member.id
-            : String(member)
+      const id = getObjectIdString(member)
       return {
         id,
         name: userMap.get(id) || 'Unknown User'
@@ -179,17 +187,11 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
       throw new Error('Board not found')
     }
 
-    const getOwnerId = (owner: any): string => {
-      if (owner instanceof Types.ObjectId) {
-        return owner.toHexString()
-      }
-      if (typeof owner === 'object' && owner !== null && 'id' in owner) {
-        return owner.id
-      }
-      return String(owner)
-    }
-    const ownerId = getOwnerId(existingBoard.owner)
-    if (ownerId !== user.id) {
+    const existingOwnerId =
+      existingBoard.owner instanceof Types.ObjectId
+        ? existingBoard.owner.toHexString()
+        : (existingBoard.owner as { _id?: Types.ObjectId | string })._id?.toString() || String(existingBoard.owner)
+    if (existingOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can update the board')
     }
 
@@ -200,8 +202,21 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
     }
 
     const allUserIds = new Set<string>()
-    allUserIds.add((board as any).owner.toHexString())
-    ;((board as any).members as Types.ObjectId[]).forEach((memberId) => allUserIds.add(memberId.toHexString()))
+    // Handle owner ID
+    const ownerId =
+      board.owner instanceof Types.ObjectId
+        ? board.owner.toHexString()
+        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() || String(board.owner)
+    allUserIds.add(ownerId)
+
+    // Handle member IDs
+    ;(board.members || []).forEach((member) => {
+      const memberId =
+        member instanceof Types.ObjectId
+          ? member.toHexString()
+          : (member as { _id?: Types.ObjectId | string })._id?.toString() || String(member)
+      allUserIds.add(memberId)
+    })
     const userMap = await getUserMap(Array.from(allUserIds))
 
     return convertBoardToPlainObject(board as BoardDocument, userMap)
@@ -225,17 +240,11 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
       throw new Error('Board not found')
     }
 
-    const getOwnerId = (owner: any): string => {
-      if (owner instanceof Types.ObjectId) {
-        return owner.toHexString()
-      }
-      if (typeof owner === 'object' && owner !== null && 'id' in owner) {
-        return owner.id
-      }
-      return String(owner)
-    }
-    const ownerId = getOwnerId(board.owner)
-    if (ownerId !== user.id) {
+    const boardOwnerId =
+      board.owner instanceof Types.ObjectId
+        ? board.owner.toHexString()
+        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() || String(board.owner)
+    if (boardOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can delete the board')
     }
 
