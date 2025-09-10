@@ -22,7 +22,6 @@
     "no-restricted-globals": ["error", "isFinite", "isNaN"],
     "no-return-assign": "error",
     "curly": "error",
-    "new-cap": "error",
     "prefer-rest-params": "error",
     "no-else-return": "error",
     "max-depth": ["error", 5],
