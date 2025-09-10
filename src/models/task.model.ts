@@ -38,7 +38,7 @@ const taskSchema = new mongoose.Schema({
 
 let TaskModel: Model<TaskType>
 if (mongoose.models.Task) {
-  TaskModel = mongoose.models.Task as Model<TaskType>
+  TaskModel = mongoose.models.Task
 } else {
   TaskModel = mongoose.model<TaskType>('Task', taskSchema)
 }
