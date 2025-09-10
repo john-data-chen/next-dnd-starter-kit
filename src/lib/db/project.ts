@@ -35,7 +35,7 @@ export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] 
     }
 
     const plainProjects = await Promise.all(
-      projects.map((project) => convertProjectToPlainObject(project as ProjectBase))
+      projects.map(async (project) => await convertProjectToPlainObject(project as ProjectBase))
     )
 
     return plainProjects
@@ -163,7 +163,7 @@ export async function createProjectInDb(data: {
     }
 
     // Convert to plain object using toObject()
-    const project = convertProjectToPlainObject(projectDoc.toObject() as ProjectBase)
+    const project = await convertProjectToPlainObject(projectDoc.toObject() as ProjectBase)
     return project
   } catch (error) {
     console.error('Error creating project:', error)
@@ -189,7 +189,7 @@ export async function updateProjectInDb(data: {
       console.error('Owner not found')
       return null
     }
-    if (project.owner.toString() !== owner.id.toString()) {
+    if ((project.owner as any).toString() !== owner.id.toString()) {
       console.error('Permission denied: User is not the project owner')
       return null
     }
@@ -210,7 +210,7 @@ export async function updateProjectInDb(data: {
     }
 
     // Convert to plain object using toObject() and cast to ProjectBase type
-    const updatedProject = convertProjectToPlainObject(updatedProjectDoc.toObject() as ProjectBase)
+    const updatedProject = await convertProjectToPlainObject(updatedProjectDoc.toObject() as ProjectBase)
 
     return updatedProject
   } catch (error) {
@@ -232,7 +232,7 @@ export async function deleteProjectInDb(id: string, userEmail: string): Promise<
       console.error('User not found')
       return false
     }
-    if (project.owner.toString() !== owner.id.toString()) {
+    if ((project.owner as any).toString() !== owner.id.toString()) {
       console.error('Permission denied: User is not the project owner')
       return false
     }
