@@ -24,9 +24,9 @@ The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop f
 ---
 
 **Love this template?**
-If you like it, don't forget to [give it a star](https://github.com/john-data-chen/next-dnd-starter-kit) today!
+If you like my templates, don't forget to [give it a star](https://github.com/john-data-chen/next-dnd-starter-kit) today!
 
-And I have another easier template: [websocket-template](https://github.com/john-data-chen/websocket-template)
+And its next version: monorepo template is development in progress, you can check it out here: [turborepo-starter-kit](https://github.com/john-data-chen/turborepo-starter-kit)
 
 Every star motivates me to deliver more high-quality templates. 🚀
 
@@ -233,19 +233,31 @@ src/
 
 ## Experimental Tools
 
+### Prettier-oxc-parser
+
+- status: enabled
+- benefit: Increase Prettier formatting speed, on this [benchmark](https://github.com/ArnaudBarre/prettier-oxc-parser/blob/main/benchmark/report.md), this plugin is faster than [@prettier/plugin-oxc](https://www.npmjs.com/package/@prettier/plugin-oxc)
+
+### Oxlint and Type-Aware plug-in
+
+- status: enabled
+- benefit:
+  - 50~100 times faster than ESLint (it can lint this small project in 500 ms, it has more potential in big projects with thousands of files)
+  - easier to setup
+  - clearer instructions showing how to fix each issue
+  - many ESLint packages can be removed (in my case 10 packages)
+- note: Oxlint is in a stable version, and I have used it in production for a long time.
+  But Type-Aware plug-in is in a preview version. It is not recommended to use it in production. It is a experimental in this project.
+
+### Turbopack
+
+- status: enabled
+- benefit: the Rust-based successor of webpack by Vercel, offers near-instantaneous server startup and lightning-fast Hot Module Replacement (HMR). This is achieved through its incremental architecture, which caches function-level computations, ensuring we only build what's necessary.
+
 ### React Compiler
 
 - status: disabled (enable it will increase build time 30~40%, so I disable it)
 - benefit: It can increase the performance score in lighthouse test 5~10% (not significant)
-
-### Oxlint
-
-- status: enabled
-- benefit:
-  - 50~100 times faster than ESLint (it can lint this small project in 15ms, it has more potential in big projects with thousands of files)
-  - easier to setup
-  - clearer instructions showing how to fix each issue
-  - many ESLint packages can be removed (in my case 10 packages)
 
 ## Known Issues & Limitations
 
