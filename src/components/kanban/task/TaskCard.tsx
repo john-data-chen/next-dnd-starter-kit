@@ -1,51 +1,54 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { Task } from '@/types/dbInterface';
-import { TaskStatus } from '@/types/dbInterface';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { cva } from 'class-variance-authority';
-import { format } from 'date-fns';
-import { PointerIcon } from 'lucide-react';
-import { Calendar1Icon, FileTextIcon, UserIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { TaskActions } from './TaskAction';
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import { Task } from '@/types/dbInterface'
+import { TaskStatus } from '@/types/dbInterface'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { cva } from 'class-variance-authority'
+import { format } from 'date-fns'
+import { PointerIcon } from 'lucide-react'
+import { Calendar1Icon, FileTextIcon, UserIcon } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { TaskActions } from './TaskAction'
 
 interface TaskCardProps {
-  task: Task;
-  isOverlay?: boolean;
+  task: Task
+  isOverlay?: boolean
 }
 
-export type TaskType = 'Task';
+export type TaskType = 'Task'
 
 export interface TaskDragData {
-  type: TaskType;
-  task: Task;
+  type: TaskType
+  task: Task
 }
 
 function getLastField(task: Task): string {
-  const visibleFields = [];
-  if (task.creator) visibleFields.push('creator');
-  if (task.lastModifier) visibleFields.push('lastModifier');
-  if (task.assignee) visibleFields.push('assignee');
-  if (task.dueDate) visibleFields.push('dueDate');
-  if (task.description) visibleFields.push('description');
+  const visibleFields = []
+  if (task.creator) {
+    visibleFields.push('creator')
+  }
+  if (task.lastModifier) {
+    visibleFields.push('lastModifier')
+  }
+  if (task.assignee) {
+    visibleFields.push('assignee')
+  }
+  if (task.dueDate) {
+    visibleFields.push('dueDate')
+  }
+  if (task.description) {
+    visibleFields.push('description')
+  }
 
-  return visibleFields[visibleFields.length - 1] || '';
+  return visibleFields[visibleFields.length - 1] || ''
 }
 
 export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
-  const t = useTranslations('kanban.task');
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({
+  const t = useTranslations('kanban.task')
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: task._id,
     data: {
       type: 'Task',
@@ -54,12 +57,12 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
     attributes: {
       roleDescription: 'Task'
     }
-  });
+  })
 
   const cardStyle = {
     transition,
     transform: CSS.Translate.toString(transform)
-  };
+  }
 
   const cardVariants = cva('', {
     variants: {
@@ -68,15 +71,15 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
         overlay: 'ring-2 ring-primary'
       }
     }
-  });
+  })
 
-  const dragState = isOverlay ? 'overlay' : isDragging ? 'over' : undefined;
+  const dragState = isOverlay ? 'overlay' : isDragging ? 'over' : undefined
 
   const statusConfig: Record<
     TaskStatus,
     {
-      label: string;
-      className: string;
+      label: string
+      className: string
     }
   > = {
     TODO: {
@@ -91,7 +94,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
       label: t('statusDone'),
       className: 'bg-green-500 hover:bg-green-500'
     }
-  };
+  }
 
   return (
     <Card
@@ -112,18 +115,8 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <PointerIcon />
         </Button>
         <div className="flex flex-col gap-2 items-start flex-1 mx-2">
-          {task.title && (
-            <h3 className="text-lg leading-none font-medium tracking-tight">
-              {task.title}
-            </h3>
-          )}
-          <Badge
-            variant="secondary"
-            className={cn(
-              'text-white',
-              task.status && statusConfig[task.status]?.className
-            )}
-          >
+          {task.title && <h3 className="text-lg leading-none font-medium tracking-tight">{task.title}</h3>}
+          <Badge variant="secondary" className={cn('text-white', task.status && statusConfig[task.status]?.className)}>
             {task.status ? statusConfig[task.status]?.label : t('noStatus')}
           </Badge>
         </div>
@@ -148,15 +141,11 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           </div>
         )}
         {task.lastModifier && (
-          <div
-            className={getLastField(task) !== 'lastModifier' ? 'border-b' : ''}
-          >
+          <div className={getLastField(task) !== 'lastModifier' ? 'border-b' : ''}>
             <CardContent className="px-3 py-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <UserIcon className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                <span>
-                  {t('lastModifiedBy', { name: task.lastModifier.name })}
-                </span>
+                <span>{t('lastModifiedBy', { name: task.lastModifier.name })}</span>
               </div>
             </CardContent>
           </div>
@@ -188,10 +177,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
             <CardContent className="px-3 py-2">
               <div className="flex items-start gap-2">
                 <FileTextIcon className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground" />
-                <p
-                  className="text-sm text-muted-foreground leading-relaxed"
-                  data-testid="task-card-description"
-                >
+                <p className="text-sm text-muted-foreground leading-relaxed" data-testid="task-card-description">
                   {task.description}
                 </p>
               </div>
@@ -200,5 +186,5 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
         )}
       </div>
     </Card>
-  );
+  )
 }
