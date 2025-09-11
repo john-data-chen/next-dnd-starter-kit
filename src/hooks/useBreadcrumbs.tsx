@@ -1,12 +1,12 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { ROUTES } from '@/constants/routes'
 import { fetchBoardsFromDb } from '@/lib/db/board'
 import { useTaskStore } from '@/lib/store'
 import { Board } from '@/types/dbInterface'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
 
 interface BreadcrumbItem {
   title: string

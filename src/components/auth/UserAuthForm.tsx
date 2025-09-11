@@ -1,21 +1,14 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import useAuthForm from '@/hooks/useAuthForm';
-import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import useAuthForm from '@/hooks/useAuthForm'
+import { useTranslations } from 'next-intl'
 
 export default function UserAuthForm() {
-  const { form, loading, onSubmit } = useAuthForm();
-  const t = useTranslations('login');
+  const { form, loading, onSubmit } = useAuthForm()
+  const t = useTranslations('login')
 
   return (
     <Form {...form}>
@@ -45,15 +38,10 @@ export default function UserAuthForm() {
           )}
         />
 
-        <Button
-          disabled={loading}
-          className="ml-auto w-full"
-          type="submit"
-          data-testid="submit-button"
-        >
+        <Button disabled={loading} className="ml-auto w-full" type="submit" data-testid="submit-button">
           {t('continueButton')}
         </Button>
       </form>
     </Form>
-  );
+  )
 }
