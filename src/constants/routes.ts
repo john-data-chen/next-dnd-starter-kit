@@ -14,4 +14,4 @@ export const ROUTES = {
       SEARCH: '/api/users/search'
     }
   }
-} as const;
+} as const

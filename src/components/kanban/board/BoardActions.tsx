@@ -1,5 +1,6 @@
-'use client';
+'use client'
 
+import React from 'react'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -8,194 +9,169 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { useBoards } from '@/hooks/useBoards';
-import { useTaskStore } from '@/lib/store';
-import { boardSchema } from '@/types/boardForm';
-import { Board } from '@/types/dbInterface';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { BoardForm } from './BoardForm';
+} from '@/components/ui/dropdown-menu'
+import { useBoards } from '@/hooks/useBoards'
+import { useTaskStore } from '@/lib/store'
+import { boardSchema } from '@/types/boardForm'
+import { Board } from '@/types/dbInterface'
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { BoardForm } from './BoardForm'
 
 interface BoardActionsProps {
-  board: Board;
-  onDelete?: () => void;
-  asChild?: boolean;
-  children?: React.ReactNode;
+  board: Board
+  onDelete?: () => void
+  asChild?: boolean
+  children?: React.ReactNode
 }
 
-export const BoardActions = React.forwardRef<
-  HTMLButtonElement,
-  BoardActionsProps
->(({ board, onDelete, asChild = false, children }, ref) => {
-  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-  const [editEnable, setEditEnable] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const { updateBoard, removeBoard } = useTaskStore();
-  const router = useRouter();
-  const { fetchBoards } = useBoards();
-  const t = useTranslations('kanban.actions');
+export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProps>(
+  ({ board, onDelete, asChild = false, children }, ref) => {
+    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+    const [editEnable, setEditEnable] = React.useState(false)
+    const [isSubmitting, setIsSubmitting] = React.useState(false)
+    const { updateBoard, removeBoard } = useTaskStore()
+    const router = useRouter()
+    const { fetchBoards } = useBoards()
+    const t = useTranslations('kanban.actions')
 
-  async function onSubmit(values: z.infer<typeof boardSchema>) {
-    try {
-      setIsSubmitting(true);
-      await updateBoard(board._id, values);
-      toast.success(t('boardUpdated', { title: values.title }));
-      await fetchBoards();
-      setEditEnable(false);
-      router.refresh();
-    } catch (error) {
-      toast.error(t('boardUpdateFailed', { error: String(error) }));
-    } finally {
-      setIsSubmitting(false);
+    async function onSubmit(values: z.infer<typeof boardSchema>) {
+      try {
+        setIsSubmitting(true)
+        await updateBoard(board._id, values)
+        toast.success(t('boardUpdated', { title: values.title }))
+        await fetchBoards()
+        setEditEnable(false)
+        router.refresh()
+      } catch (error) {
+        toast.error(t('boardUpdateFailed', { error: String(error) }))
+      } finally {
+        setIsSubmitting(false)
+      }
     }
-  }
 
-  const handleDelete = async () => {
-    try {
-      await removeBoard(board._id);
-      setShowDeleteDialog(false);
-      toast.success(t('boardDeleted'));
-      onDelete?.();
-      await fetchBoards();
-      router.refresh();
-    } catch (error) {
-      toast.error(t('boardDeleteFailed', { error: String(error) }));
+    const handleDelete = async () => {
+      try {
+        await removeBoard(board._id)
+        setShowDeleteDialog(false)
+        toast.success(t('boardDeleted'))
+        onDelete?.()
+        await fetchBoards()
+        router.refresh()
+      } catch (error) {
+        toast.error(t('boardDeleteFailed', { error: String(error) }))
+      }
     }
-  };
 
-  return (
-    <>
-      <Dialog
-        open={editEnable}
-        onOpenChange={(open) => {
-          setEditEnable(open);
-        }}
-      >
-        <button
-          type="button"
-          onClick={(e) => e.stopPropagation()}
-          className="w-full text-left"
-          style={{ background: 'transparent', border: 'none', padding: 0 }}
-        >
-          <DialogContent
-            className="sm:max-w-md"
-            onInteractOutside={(e) => {
-              e.preventDefault();
-              setEditEnable(false);
-            }}
-            onPointerDownOutside={(e) => {
-              e.preventDefault();
-              setEditEnable(false);
-            }}
-          >
-            <DialogHeader>
-              <DialogTitle>{t('editBoardTitle')}</DialogTitle>
-              <DialogDescription>{t('editBoardDescription')}</DialogDescription>
-            </DialogHeader>
-            <BoardForm
-              defaultValues={{
-                title: board.title,
-                description: board.description
-              }}
-              onSubmit={onSubmit}
-            >
-              <div className="flex justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditEnable(false)}
-                >
-                  {t('cancel')}
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? t('saving') : t('saveChanges')}
-                </Button>
-              </div>
-            </BoardForm>
-          </DialogContent>
-        </button>
-      </Dialog>
-
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          {asChild ? (
-            React.Children.only(children)
-          ) : (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              data-testid="board-option-button"
-              ref={ref}
-            >
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          )}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="end"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
+    return (
+      <>
+        <Dialog
+          open={editEnable}
+          onOpenChange={(open) => {
+            setEditEnable(open)
           }}
         >
-          <DropdownMenuItem
-            data-testid="edit-board-button"
-            onSelect={() => setEditEnable(true)}
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full text-left"
+            style={{ background: 'transparent', border: 'none', padding: 0 }}
           >
-            {t('edit')}
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            data-testid="delete-board-button"
-            onSelect={() => setShowDeleteDialog(true)}
-            className="text-red-600"
-          >
-            {t('delete')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <DialogContent
+              className="sm:max-w-md"
+              onInteractOutside={(e) => {
+                e.preventDefault()
+                setEditEnable(false)
+              }}
+              onPointerDownOutside={(e) => {
+                e.preventDefault()
+                setEditEnable(false)
+              }}
+            >
+              <DialogHeader>
+                <DialogTitle>{t('editBoardTitle')}</DialogTitle>
+                <DialogDescription>{t('editBoardDescription')}</DialogDescription>
+              </DialogHeader>
+              <BoardForm
+                defaultValues={{
+                  title: board.title,
+                  description: board.description
+                }}
+                onSubmit={onSubmit}
+              >
+                <div className="flex justify-end gap-4">
+                  <Button type="button" variant="outline" onClick={() => setEditEnable(false)}>
+                    {t('cancel')}
+                  </Button>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? t('saving') : t('saveChanges')}
+                  </Button>
+                </div>
+              </BoardForm>
+            </DialogContent>
+          </button>
+        </Dialog>
 
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('confirmDeleteTitle', { title: board.title })}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('confirmDeleteDescription')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <Button variant="destructive" onClick={handleDelete}>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild>
+            {asChild ? (
+              React.Children.only(children)
+            ) : (
+              <Button variant="ghost" size="icon" className="h-8 w-8" data-testid="board-option-button" ref={ref}>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            )}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+          >
+            <DropdownMenuItem data-testid="edit-board-button" onSelect={() => setEditEnable(true)}>
+              {t('edit')}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              data-testid="delete-board-button"
+              onSelect={() => setShowDeleteDialog(true)}
+              className="text-red-600"
+            >
               {t('delete')}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
-  );
-});
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-BoardActions.displayName = 'BoardActions';
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('confirmDeleteTitle', { title: board.title })}</AlertDialogTitle>
+              <AlertDialogDescription>{t('confirmDeleteDescription')}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+              <Button variant="destructive" onClick={handleDelete}>
+                {t('delete')}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </>
+    )
+  }
+)
+
+BoardActions.displayName = 'BoardActions'
