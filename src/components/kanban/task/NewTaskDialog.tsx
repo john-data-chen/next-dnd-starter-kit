@@ -1,7 +1,8 @@
-'use client';
+'use client'
 
-import { TaskForm } from '@/components/kanban/task/TaskForm';
-import { Button } from '@/components/ui/button';
+import React from 'react'
+import { TaskForm } from '@/components/kanban/task/TaskForm'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -9,22 +10,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog';
-import { useTaskStore } from '@/lib/store';
-import { TaskFormSchema } from '@/types/taskForm';
-import { useTranslations } from 'next-intl';
-import React from 'react';
-import { toast } from 'sonner';
-import { z } from 'zod';
+} from '@/components/ui/dialog'
+import { useTaskStore } from '@/lib/store'
+import { TaskFormSchema } from '@/types/taskForm'
+import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 export interface NewTaskDialogProps {
-  projectId: string;
+  projectId: string
 }
 
 export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
-  const addTask = useTaskStore((state) => state.addTask);
-  const [addTaskOpen, setAddTaskOpen] = React.useState(false);
-  const t = useTranslations('kanban.task');
+  const addTask = useTaskStore((state) => state.addTask)
+  const [addTaskOpen, setAddTaskOpen] = React.useState(false)
+  const t = useTranslations('kanban.task')
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     await addTask(
@@ -34,10 +34,10 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
       values.description ?? '',
       values.dueDate ?? undefined,
       values.assignee?._id ?? undefined
-    );
-    toast.success(t('createSuccess', { title: values.title }));
-    setAddTaskOpen(false);
-  };
+    )
+    toast.success(t('createSuccess', { title: values.title }))
+    setAddTaskOpen(false)
+  }
 
   return (
     <Dialog open={addTaskOpen} onOpenChange={setAddTaskOpen}>
@@ -56,12 +56,8 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
           <DialogTitle>{t('addNewTaskTitle')}</DialogTitle>
           <DialogDescription>{t('addNewTaskDescription')}</DialogDescription>
         </DialogHeader>
-        <TaskForm
-          onSubmit={handleSubmit}
-          submitLabel={t('createTask')}
-          onCancel={() => setAddTaskOpen(false)}
-        />
+        <TaskForm onSubmit={handleSubmit} submitLabel={t('createTask')} onCancel={() => setAddTaskOpen(false)} />
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment, useMemo, useRef, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTaskStore } from '@/lib/store'
 import { Project, Task } from '@/types/dbInterface'
@@ -9,19 +10,18 @@ import {
   Announcements,
   DataRef,
   DndContext,
-  type DragEndEvent,
-  type DragOverEvent,
   DragOverlay,
-  type DragStartEvent,
   MouseSensor,
   Over,
   TouchSensor,
   useSensor,
-  useSensors
+  useSensors,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent
 } from '@dnd-kit/core'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
 import mongoose from 'mongoose'
-import { Fragment, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import NewProjectDialog from '../project/NewProjectDialog'
 import { BoardContainer, BoardProject } from '../project/Project'
