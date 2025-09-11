@@ -10,9 +10,22 @@
   "tabWidth": 2,
   "trailingComma": "none",
   "useTabs": false,
-  "importOrder": ["^@core/(.*)$", "", "^@server/(.*)$", "", "^@ui/(.*)$", "", "^[./]"],
-  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "importOrder": [
+    "^react$",
+    "<THIRD_PARTY_MODULES>",
+    "^@ui/(.*)$",
+    "^[./]"
+  ],
+  "importOrderParserPlugins": [
+    "typescript",
+    "jsx",
+    "decorators-legacy"
+  ],
   "importOrderTypeScriptVersion": "5.9.2",
   "importOrderCaseSensitive": false,
-  "plugins": ["prettier-plugin-tailwindcss", "prettier-oxc-parser", "@ianvs/prettier-plugin-sort-imports"]
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@prettier/plugin-oxc",
+    "@ianvs/prettier-plugin-sort-imports"
+  ]
 }
