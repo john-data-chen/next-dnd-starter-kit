@@ -80,5 +80,11 @@
     "typescript/unbound-method": "error",
     "typescript/use-unknown-in-catch-callback-variable": "error"
   },
-  "ignorePatterns": ["node_modules/", "__tests__/", "src/components/ui/", "src/styles/globals.css"]
+  "ignorePatterns": [
+    "node_modules/",
+    "__tests__/",
+    "src/components/ui/",
+    "src/styles/globals.css",
+    "src/hooks/use-mobile.ts"
+  ]
 }
