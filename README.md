@@ -261,28 +261,14 @@ src/
 
 ## Known Issues & Limitations
 
-### The errors of Oxlint and Type-Aware plug-in
+### The errors / code smells of Oxlint and Type-Aware plug-in
 
-- Enable new rules of Oxlint, it finds more code smell in the project, but they are not issues, no effect in functional.
+- Enable new rules of Oxlint and Type-Aware plug-in, Oxlint finds more code smells in the project, but errors of linter are not issues, no effect in functional.
 - Cleaning technical debt is a long term plan, it is impossibel to finish at once. I will clean by small steps each time.
 
 ### German Translations
 
 This is a demo project, and I know little of German, so errors of translations might not be fixed in the near future.
-
-### UI library
-
-- **Radix UI Ref Warning**:
-  - Issue: Function components cannot be given refs warning in Dialog components
-  - Impact: Development warning only, no production impact
-  - Solution: Keep using `asChild` as per Radix UI docs, warning can be safely ignored
-  - Reason: Internal implementation detail of Radix UI
-
-- **Radix UI ARIA Warning**:
-  - Issue: Blocked aria-hidden on a <body> element warning in Dialog components
-  - Impact: Development warning only, no production impact
-  - Solution: Can be safely ignored as most modern browsers handle this correctly
-  - Reason: Internal implementation of Radix UI's Dialog component
 
 ### Server
 
