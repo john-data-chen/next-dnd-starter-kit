@@ -261,6 +261,11 @@ src/
 
 ## Known Issues & Limitations
 
+### The errors of Oxlint and Type-Aware plug-in
+
+- Enable new rules of Oxlint, it finds more code smell in the project, but they are not issues, no effect in functional.
+- Cleaning technical debt is a long term plan, it is impossibel to finish at once. I will clean by small steps each time.
+
 ### German Translations
 
 This is a demo project, and I know little of German, so errors of translations might not be fixed in the near future.
