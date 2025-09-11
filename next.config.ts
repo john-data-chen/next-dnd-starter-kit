@@ -1,7 +1,7 @@
-import { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
+import { NextConfig } from 'next'
+import createNextIntlPlugin from 'next-intl/plugin'
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin()
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -19,6 +19,6 @@ const nextConfig: NextConfig = {
     // react compiler only enhances performance a little bit, but it will increase build time 30~40%, so disable until it is stable
     reactCompiler: false
   }
-};
+}
 
-export default withNextIntl(nextConfig);
+export default withNextIntl(nextConfig)

@@ -233,31 +233,39 @@ src/
 
 ## Experimental Tools
 
-### Prettier-oxc-parser
+### Prettier oxc plugin
 
 - status: enabled
-- benefit: Increase Prettier formatting speed, on this [benchmark](https://github.com/ArnaudBarre/prettier-oxc-parser/blob/main/benchmark/report.md), this plugin is faster than [@prettier/plugin-oxc](https://www.npmjs.com/package/@prettier/plugin-oxc)
+- benefit: Increase Prettier formatting speed
+- [introduction](https://www.npmjs.com/package/@prettier/plugin-oxc)
 
 ### Oxlint and Type-Aware plug-in
 
 - status: enabled
 - benefit:
-  - 50~100 times faster than ESLint (it can lint this small project in 500 ms, it has more potential in big projects with thousands of files)
+  - 50~100 times faster than ESLint (it can lint this small project in 1.5 seconds, it has more potential in big projects with thousands of files)
   - easier to setup
   - clearer instructions showing how to fix each issue
   - many ESLint packages can be removed (in my case 10 packages)
 - note: Oxlint is in a stable version, and I have used it in production for a long time.
   But Type-Aware plug-in is in a preview version. It is not recommended to use it in production. It is a experimental in this project.
 
+#### Introductions
+
+- [Oxlint](https://oxc.rs/blog/2025-06-10-oxlint-stable.html)
+- [Oxlint Type-Aware Preview](https://oxc.rs/blog/2025-08-17-oxlint-type-aware.html)
+
 ### Turbopack
 
-- status: enabled
+- status: enabled (dev and build mode)
 - benefit: the Rust-based successor of webpack by Vercel, offers near-instantaneous server startup and lightning-fast Hot Module Replacement (HMR). This is achieved through its incremental architecture, which caches function-level computations, ensuring we only build what's necessary.
+- [introduction](https://nextjs.org/docs/app/api-reference/turbopack)
 
 ### React Compiler
 
 - status: disabled (enable it will increase build time 30~40%, so I disable it)
 - benefit: It can increase the performance score in lighthouse test 5~10% (not significant)
+- [introduction](https://react.dev/learn/react-compiler)
 
 ## Known Issues & Limitations
 

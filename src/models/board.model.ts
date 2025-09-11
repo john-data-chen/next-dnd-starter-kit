@@ -1,5 +1,5 @@
-import { Board as BoardType } from '@/types/dbInterface';
-import mongoose, { Model } from 'mongoose';
+import { Board as BoardType } from '@/types/dbInterface'
+import mongoose, { Model } from 'mongoose'
 
 const boardSchema = new mongoose.Schema(
   {
@@ -16,17 +16,17 @@ const boardSchema = new mongoose.Schema(
   {
     timestamps: true
   }
-);
+)
 
-boardSchema.index({ owner: 1 });
-boardSchema.index({ members: 1 });
+boardSchema.index({ owner: 1 })
+boardSchema.index({ members: 1 })
 
-let BoardModel: Model<BoardType>;
+let BoardModel: Model<BoardType>
 try {
-  BoardModel = mongoose.model<BoardType>('Board');
+  BoardModel = mongoose.model<BoardType>('Board')
 } catch {
-  BoardModel = mongoose.model<BoardType>('Board', boardSchema);
+  BoardModel = mongoose.model<BoardType>('Board', boardSchema)
 }
 
-export { BoardModel };
-export type { BoardType };
+export { BoardModel }
+export type { BoardType }

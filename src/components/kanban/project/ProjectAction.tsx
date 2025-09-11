@@ -1,5 +1,6 @@
-'use client';
+'use client'
 
+import * as React from 'react'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -8,93 +9,81 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { useTaskStore } from '@/lib/store';
-import { projectSchema } from '@/types/projectForm';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useTranslations } from 'next-intl';
-import * as React from 'react';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { ProjectForm } from './ProjectForm';
+} from '@/components/ui/dropdown-menu'
+import { useTaskStore } from '@/lib/store'
+import { projectSchema } from '@/types/projectForm'
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { ProjectForm } from './ProjectForm'
 
 interface ProjectActionsProps {
-  id: string;
-  title: string;
-  description?: string;
+  id: string
+  title: string
+  description?: string
 }
 
-export function ProjectActions({
-  id,
-  title,
-  description
-}: ProjectActionsProps) {
-  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
-  const [editEnable, setEditEnable] = React.useState(false);
-  const updateProject = useTaskStore((state) => state.updateProject);
-  const removeProject = useTaskStore((state) => state.removeProject);
-  const currentBoardId = useTaskStore((state) => state.currentBoardId);
-  const fetchProjects = useTaskStore((state) => state.fetchProjects);
-  const t = useTranslations('kanban.project');
+export function ProjectActions({ id, title, description }: ProjectActionsProps) {
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+  const [editEnable, setEditEnable] = React.useState(false)
+  const updateProject = useTaskStore((state) => state.updateProject)
+  const removeProject = useTaskStore((state) => state.removeProject)
+  const currentBoardId = useTaskStore((state) => state.currentBoardId)
+  const fetchProjects = useTaskStore((state) => state.fetchProjects)
+  const t = useTranslations('kanban.project')
 
   // State for permissions
   const [permissions, setPermissions] = React.useState<{
-    canEditProject: boolean;
-    canDeleteProject: boolean;
-  } | null>(null);
-  const [isLoadingPermissions, setIsLoadingPermissions] = React.useState(false); // Initialize to false
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false); // State for controlling menu
+    canEditProject: boolean
+    canDeleteProject: boolean
+  } | null>(null)
+  const [isLoadingPermissions, setIsLoadingPermissions] = React.useState(false) // Initialize to false
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false) // State for controlling menu
 
-  type ProjectFormData = z.infer<typeof projectSchema>;
+  type ProjectFormData = z.infer<typeof projectSchema>
 
   async function fetchProjectPermissions() {
     if (!id) {
-      setIsLoadingPermissions(false);
-      setPermissions({ canEditProject: false, canDeleteProject: false }); // Default to no permissions if no ID
-      return;
+      setIsLoadingPermissions(false)
+      setPermissions({ canEditProject: false, canDeleteProject: false }) // Default to no permissions if no ID
+      return
     }
-    setIsLoadingPermissions(true);
+    setIsLoadingPermissions(true)
     try {
-      const response = await fetch(`/api/projects/${id}/permissions`);
+      const response = await fetch(`/api/projects/${id}/permissions`)
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || t('fetchPermissionsFailed'));
+        const errorData = await response.json()
+        throw new Error(errorData.error || t('fetchPermissionsFailed'))
       }
-      const data = await response.json();
-      setPermissions(data);
+      const data = await response.json()
+      setPermissions(data)
     } catch (error) {
-      console.error('Error fetching project permissions:', error);
-      setPermissions({ canEditProject: false, canDeleteProject: false }); // Fallback on error
-      toast.error(
-        t('loadPermissionsFailed', { error: (error as Error).message })
-      );
+      console.error('Error fetching project permissions:', error)
+      setPermissions({ canEditProject: false, canDeleteProject: false }) // Fallback on error
+      toast.error(t('loadPermissionsFailed', { error: (error as Error).message }))
     } finally {
-      setIsLoadingPermissions(false);
+      setIsLoadingPermissions(false)
     }
   }
 
   async function onSubmit(values: ProjectFormData) {
     try {
-      await updateProject(id, values.title, values.description);
-      await fetchProjects(currentBoardId!);
-      toast.success(t('updateSuccess'));
-      setEditEnable(false);
+      await updateProject(id, values.title, values.description)
+      await fetchProjects(currentBoardId!)
+      toast.success(t('updateSuccess'))
+      setEditEnable(false)
     } catch (error) {
-      toast.error(t('updateFailed', { error: (error as Error).message }));
+      toast.error(t('updateFailed', { error: (error as Error).message }))
     }
   }
 
@@ -105,16 +94,9 @@ export function ProjectActions({
           <DialogHeader>
             <DialogTitle>{t('editProjectTitle')}</DialogTitle>
           </DialogHeader>
-          <ProjectForm
-            onSubmit={onSubmit}
-            defaultValues={{ title, description }}
-          >
+          <ProjectForm onSubmit={onSubmit} defaultValues={{ title, description }}>
             <div className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditEnable(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => setEditEnable(false)}>
                 {t('cancel')}
               </Button>
               <Button type="submit">{t('save')}</Button>
@@ -127,10 +109,10 @@ export function ProjectActions({
         modal={false}
         open={isMenuOpen}
         onOpenChange={(open) => {
-          setIsMenuOpen(open);
+          setIsMenuOpen(open)
           if (open && !permissions) {
             // Fetch permissions only when menu is opened and permissions are not yet fetched
-            fetchProjectPermissions();
+            fetchProjectPermissions()
           }
         }}
       >
@@ -152,7 +134,7 @@ export function ProjectActions({
           <DropdownMenuItem
             onSelect={() => {
               if (permissions?.canEditProject && !isLoadingPermissions) {
-                setEditEnable(true);
+                setEditEnable(true)
               }
             }}
             disabled={isLoadingPermissions || !permissions?.canEditProject}
@@ -169,7 +151,7 @@ export function ProjectActions({
           <DropdownMenuItem
             onSelect={() => {
               if (permissions?.canDeleteProject && !isLoadingPermissions) {
-                setShowDeleteDialog(true);
+                setShowDeleteDialog(true)
               }
             }}
             disabled={isLoadingPermissions || !permissions?.canDeleteProject}
@@ -190,21 +172,17 @@ export function ProjectActions({
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('confirmDeleteTitle', { title })}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('confirmDeleteDescription')}
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('confirmDeleteTitle', { title })}</AlertDialogTitle>
+            <AlertDialogDescription>{t('confirmDeleteDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={() => {
-                setShowDeleteDialog(false);
-                removeProject(id);
-                toast.success(t('deleteSuccess', { title }));
+                setShowDeleteDialog(false)
+                removeProject(id)
+                toast.success(t('deleteSuccess', { title }))
               }}
             >
               {t('delete')}
@@ -213,5 +191,5 @@ export function ProjectActions({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 }
