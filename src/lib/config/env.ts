@@ -23,7 +23,9 @@ if (typeof process !== 'undefined' && !process.env.VERCEL) {
     } catch (error) {
       console.warn('Failed to load .env file:', error)
     }
-  })()
+  })().catch((error: unknown) => {
+    console.error('Error in dotenv setup:', error)
+  })
 }
 
 // Get environment variables with defaults

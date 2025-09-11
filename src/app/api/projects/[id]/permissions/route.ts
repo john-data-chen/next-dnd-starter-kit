@@ -38,8 +38,8 @@ export const GET = auth(async (req) => {
     }
 
     // Permission logic: User can modify if they are project owner or board owner
-    const projectOwnerId = project.owner?.toString()
-    const boardOwnerId = board.owner?.toString()
+    const projectOwnerId = (project.owner as any)?._id.toString()
+    const boardOwnerId = (board.owner as any)?._id.toString()
 
     const isProjectOwner = projectOwnerId === currentUserId
     const isBoardOwner = boardOwnerId === currentUserId

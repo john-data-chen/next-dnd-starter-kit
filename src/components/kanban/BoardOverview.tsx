@@ -88,10 +88,17 @@ export function BoardOverview() {
               placeholder={t('searchBoards')}
               className="pl-8"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value)
+              }}
             />
           </div>
-          <Select value={filter} onValueChange={(value: FilterType) => setFilter(value)}>
+          <Select
+            value={filter}
+            onValueChange={(value: FilterType) => {
+              setFilter(value)
+            }}
+          >
             <SelectTrigger className="w-[140px]" data-testid="select-filter-trigger">
               {' '}
               {/* Add data-testid here */}
@@ -132,7 +139,9 @@ export function BoardOverview() {
                     <Card
                       key={board._id}
                       className="cursor-pointer hover:border-primary transition-colors"
-                      onClick={() => handleBoardClick(board._id)}
+                      onClick={() => {
+                        handleBoardClick(board._id)
+                      }}
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle>{board.title}</CardTitle>
@@ -191,7 +200,9 @@ export function BoardOverview() {
                     <Card
                       key={board._id}
                       className="cursor-pointer hover:border-primary transition-colors"
-                      onClick={() => handleBoardClick(board._id)}
+                      onClick={() => {
+                        handleBoardClick(board._id)
+                      }}
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle>{board.title}</CardTitle>

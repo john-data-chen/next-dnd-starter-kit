@@ -12,7 +12,7 @@ const MemoizedBoard = memo(Board)
 export default function BoardPage() {
   const params = useParams()
   const t = useTranslations('kanban')
-  const boardId = params?.boardId as string
+  const boardId = params?.boardId
   const setCurrentBoardId = useTaskStore((state) => state.setCurrentBoardId)
   const fetchProjects = useTaskStore((state) => state.fetchProjects)
 
@@ -21,7 +21,9 @@ export default function BoardPage() {
       return
     }
     setCurrentBoardId(boardId)
-    fetchProjects(boardId)
+    fetchProjects(boardId).catch((error: unknown) => {
+      console.error(error)
+    })
   }, [boardId, setCurrentBoardId, fetchProjects])
 
   return (
