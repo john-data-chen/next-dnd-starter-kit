@@ -10,8 +10,9 @@
   "tabWidth": 2,
   "trailingComma": "none",
   "useTabs": false,
-  "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
-  "importOrderSortSpecifiers": true,
-  "importOrderCaseInsensitive": true,
-  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports", "prettier-oxc-parser"]
+  "importOrder": ["^@core/(.*)$", "", "^@server/(.*)$", "", "^@ui/(.*)$", "", "^[./]"],
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "importOrderTypeScriptVersion": "5.9.2",
+  "importOrderCaseSensitive": false,
+  "plugins": ["prettier-plugin-tailwindcss", "prettier-oxc-parser", "@ianvs/prettier-plugin-sort-imports"]
 }
