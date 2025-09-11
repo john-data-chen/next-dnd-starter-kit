@@ -23,7 +23,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Omit<Props, 'children'>): Promise<Metadata> {
-  const { locale } = await params
+  const { locale } = await Promise.resolve(params)
   const t = await getTranslations({ locale, namespace: 'metadata' })
 
   return {
@@ -33,8 +33,7 @@ export async function generateMetadata({ params }: Omit<Props, 'children'>): Pro
 }
 
 export default async function LocaleLayout({ children, params }: Readonly<Props>) {
-  const session = await auth()
-  const { locale } = await params
+  const [session, { locale }] = await Promise.all([auth(), Promise.resolve(params)])
   if (!hasLocale(routing.locales, locale)) {
     notFound()
   }

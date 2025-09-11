@@ -37,7 +37,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
   const searchUsers = async (search = '') => {
     try {
       const response = await fetch(`/api/users/search?username=${search}`)
-      const data = await response.json()
+      const data: Record<string, any> = await response.json()
       return data.users || []
     } catch (error) {
       console.error('Error searching users:', error)
@@ -67,9 +67,11 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
 
   useEffect(() => {
     if (assignOpen) {
-      searchUsers().then((initialUsers) => {
-        setUsers(initialUsers)
-      })
+      searchUsers()
+        .then((initialUsers) => {
+          setUsers(initialUsers)
+        })
+        .catch((error) => console.error(error))
     }
   }, [assignOpen])
 
@@ -83,7 +85,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
       }
       await onSubmit(submitData)
     } catch (error) {
-      toast.error(`Failed to submit task: ${error}`)
+      toast.error(`Failed to submit task: ${(error as Error).message}`)
     } finally {
       setIsSubmitting(false)
     }

@@ -31,9 +31,12 @@ export const GET = auth(async (req) => {
     if (!board || !project) {
       return NextResponse.json({ error: 'Resource not found' }, { status: 404 })
     }
-    const canDelete = board.owner.id === userId || project.owner.id === userId || task.creator.id === userId
+    const canDelete =
+      (board.owner as { id: string }).id === userId ||
+      (project.owner as { id: string }).id === userId ||
+      (task.creator as { id: string }).id === userId
 
-    const canEdit = canDelete || task.assignee?.toString() === userId
+    const canEdit = canDelete || (task.assignee as { _id: { toString: () => string } })?._id.toString() === userId
 
     return NextResponse.json({ canDelete, canEdit })
   } catch (error) {
