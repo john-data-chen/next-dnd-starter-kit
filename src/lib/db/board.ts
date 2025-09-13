@@ -34,7 +34,8 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
       const ownerId =
         board.owner instanceof Types.ObjectId
           ? board.owner.toHexString()
-          : (board.owner as { _id?: Types.ObjectId })?._id?.toHexString() || String(board.owner)
+          : (board.owner as { _id?: Types.ObjectId })?._id?.toHexString() ||
+            String(board.owner as BoardDocument['owner'])
       allUserIds.add(ownerId)
 
       // Handle member IDs
@@ -42,7 +43,7 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
         const memberId =
           member instanceof Types.ObjectId
             ? member.toHexString()
-            : (member as { _id?: Types.ObjectId })?._id?.toHexString() || String(member)
+            : (member as { _id?: Types.ObjectId })?._id?.toHexString() || String(member as BoardDocument['members'][0])
         allUserIds.add(memberId)
       })
     })
@@ -190,7 +191,8 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
     const existingOwnerId =
       existingBoard.owner instanceof Types.ObjectId
         ? existingBoard.owner.toHexString()
-        : (existingBoard.owner as { _id?: Types.ObjectId | string })._id?.toString() || String(existingBoard.owner)
+        : (existingBoard.owner as { _id?: Types.ObjectId | string })._id?.toString() ||
+          String(existingBoard.owner as BoardDocument['owner'])
     if (existingOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can update the board')
     }
@@ -206,7 +208,8 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
     const ownerId =
       board.owner instanceof Types.ObjectId
         ? board.owner.toHexString()
-        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() || String(board.owner)
+        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() ||
+          String(board.owner as BoardDocument['owner'])
     allUserIds.add(ownerId)
 
     // Handle member IDs
@@ -214,7 +217,8 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
       const memberId =
         member instanceof Types.ObjectId
           ? member.toHexString()
-          : (member as { _id?: Types.ObjectId | string })._id?.toString() || String(member)
+          : (member as { _id?: Types.ObjectId | string })._id?.toString() ||
+            String(member as BoardDocument['members'][0])
       allUserIds.add(memberId)
     })
     const userMap = await getUserMap(Array.from(allUserIds))
@@ -243,7 +247,8 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
     const boardOwnerId =
       board.owner instanceof Types.ObjectId
         ? board.owner.toHexString()
-        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() || String(board.owner)
+        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() ||
+          String(board.owner as BoardDocument['owner'])
     if (boardOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can delete the board')
     }

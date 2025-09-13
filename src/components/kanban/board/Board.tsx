@@ -3,7 +3,7 @@
 import { Fragment, useMemo, useRef, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTaskStore } from '@/lib/store'
-import { Project, Task } from '@/types/dbInterface'
+import { Project, Task, TaskStatus } from '@/types/dbInterface'
 import DraggableData from '@/types/drag&drop'
 import {
   Active,
@@ -286,7 +286,7 @@ export function Board() {
 
   const filterTasks = (tasks: Task[]) => {
     return tasks.filter((task) => {
-      if (filter.status && task.status !== filter.status) {
+      if (filter.status && task.status !== (filter.status as TaskStatus)) {
         return false
       }
 
