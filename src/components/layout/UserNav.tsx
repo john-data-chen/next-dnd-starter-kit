@@ -46,7 +46,15 @@ export function UserNav() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut}>{t('logOut')}</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              handleSignOut().catch((error: unknown) => {
+                console.error(error)
+              })
+            }}
+          >
+            {t('logOut')}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     )

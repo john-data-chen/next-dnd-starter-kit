@@ -12,17 +12,24 @@ const MemoizedBoard = memo(Board)
 export default function BoardPage() {
   const params = useParams()
   const t = useTranslations('kanban')
-  const boardId = params?.boardId as string
+  const boardId = params?.boardId as string | string[] | undefined
+  const normalizedBoardId = Array.isArray(boardId) ? boardId[0] : boardId
   const setCurrentBoardId = useTaskStore((state) => state.setCurrentBoardId)
   const fetchProjects = useTaskStore((state) => state.fetchProjects)
 
   useEffect(() => {
-    if (!boardId) {
+    if (!normalizedBoardId) {
       return
     }
-    setCurrentBoardId(boardId)
-    fetchProjects(boardId)
-  }, [boardId, setCurrentBoardId, fetchProjects])
+    setCurrentBoardId(normalizedBoardId)
+    ;(async () => {
+      try {
+        await fetchProjects(normalizedBoardId)
+      } catch (error) {
+        console.error(error)
+      }
+    })()
+  }, [normalizedBoardId, setCurrentBoardId, fetchProjects])
 
   return (
     <PageContainer>
