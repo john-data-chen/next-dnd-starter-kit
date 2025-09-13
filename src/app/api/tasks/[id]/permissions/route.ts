@@ -36,7 +36,8 @@ export const GET = auth(async (req) => {
       (project.owner as { id: string }).id === userId ||
       (task.creator as { id: string }).id === userId
 
-    const canEdit = canDelete || (task.assignee as { _id: { toString: () => string } })?._id.toString() === userId
+    /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
+    const canEdit = canDelete || (task.assignee && (task.assignee as any).toString() === userId)
 
     return NextResponse.json({ canDelete, canEdit })
   } catch (error) {
