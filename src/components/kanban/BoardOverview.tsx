@@ -144,7 +144,7 @@ export function BoardOverview() {
                       }}
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle>{board.title}</CardTitle>
+                        <CardTitle className="whitespace-nowrap">{board.title}</CardTitle>
                         <BoardActions board={board} asChild>
                           <Button
                             variant="ghost"
@@ -205,7 +205,7 @@ export function BoardOverview() {
                       }}
                     >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle>{board.title}</CardTitle>
+                        <CardTitle className="whitespace-nowrap">{board.title}</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-muted-foreground">{board.description || t('noDescription')}</p>
