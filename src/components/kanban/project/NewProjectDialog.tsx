@@ -70,7 +70,13 @@ export default function NewProjectDialog({ onProjectAdd }: NewProjectDialogProps
         </DialogHeader>
         <ProjectForm onSubmit={handleSubmit} data-testid="new-project-form">
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setIsOpen(false)
+              }}
+            >
               {t('cancel')}
             </Button>
             <Button type="submit" data-testid="submit-project-button">
