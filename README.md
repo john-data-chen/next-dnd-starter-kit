@@ -233,12 +233,6 @@ src/
 
 ## Experimental Tools
 
-### Prettier oxc plugin
-
-- status: enabled
-- benefit: Increase Prettier formatting speed
-- [introduction](https://www.npmjs.com/package/@prettier/plugin-oxc)
-
 ### Oxlint and Type-Aware plug-in
 
 - status: enabled
@@ -260,6 +254,12 @@ src/
 - status: enabled (dev and build mode)
 - benefit: the Rust-based successor of webpack by Vercel, offers near-instantaneous server startup and lightning-fast Hot Module Replacement (HMR). This is achieved through its incremental architecture, which caches function-level computations, ensuring we only build what's necessary.
 - [introduction](https://nextjs.org/docs/app/api-reference/turbopack)
+
+### Prettier oxc plugin
+
+- status: disabled (it is conflict with Windsurf, since this is a small project, the speed difference is not significant)
+- benefit: Increase Prettier formatting speed
+- [introduction](https://www.npmjs.com/package/@prettier/plugin-oxc)
 
 ### React Compiler
 
