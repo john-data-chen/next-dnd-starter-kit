@@ -120,7 +120,7 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-12 p-0 bg-background hover:bg-secondary/80 text-muted-foreground hover:text-foreground"
+            className="bg-background hover:bg-secondary/80 text-muted-foreground hover:text-foreground h-8 w-12 p-0"
             data-testid="project-option-button"
           >
             {isLoadingPermissions ? (
@@ -140,7 +140,7 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
             disabled={isLoadingPermissions || !permissions?.canEditProject}
             className={
               !isLoadingPermissions && !permissions?.canEditProject
-                ? 'text-muted-foreground line-through cursor-not-allowed'
+                ? 'text-muted-foreground cursor-not-allowed line-through'
                 : ''
             }
             data-testid="edit-project-button"
@@ -155,13 +155,11 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
               }
             }}
             disabled={isLoadingPermissions || !permissions?.canDeleteProject}
-            className={`
-              ${
-                isLoadingPermissions || !permissions?.canDeleteProject
-                  ? 'text-muted-foreground line-through cursor-not-allowed'
-                  : 'text-red-600 hover:!text-red-600 hover:!bg-destructive/10'
-              }
-            `}
+            className={` ${
+              isLoadingPermissions || !permissions?.canDeleteProject
+                ? 'text-muted-foreground cursor-not-allowed line-through'
+                : 'hover:!bg-destructive/10 text-red-600 hover:!text-red-600'
+            } `}
             data-testid="delete-project-button"
           >
             {t('delete')}

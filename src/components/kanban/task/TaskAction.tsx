@@ -155,7 +155,7 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
           <DropdownMenuItem
             onSelect={() => setEditEnable(true)}
             disabled={!permissions?.canEdit}
-            className={!permissions?.canEdit ? 'text-muted-foreground line-through cursor-not-allowed' : ''}
+            className={!permissions?.canEdit ? 'text-muted-foreground cursor-not-allowed line-through' : ''}
           >
             {t('edit')}
           </DropdownMenuItem>
@@ -164,14 +164,11 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
           <DropdownMenuItem
             onSelect={() => setShowDeleteDialog(true)}
             disabled={!permissions?.canDelete}
-            className={`
-              w-full text-left
-              ${
-                !permissions?.canDelete
-                  ? 'text-muted-foreground line-through cursor-not-allowed'
-                  : 'text-red-600 hover:!text-red-600 hover:!bg-destructive/10'
-              }
-            `}
+            className={`w-full text-left ${
+              !permissions?.canDelete
+                ? 'text-muted-foreground cursor-not-allowed line-through'
+                : 'hover:!bg-destructive/10 text-red-600 hover:!text-red-600'
+            } `}
           >
             {t('delete')}
           </DropdownMenuItem>
