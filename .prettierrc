@@ -24,7 +24,11 @@
   "importOrderTypeScriptVersion": "5.9.2",
   "importOrderCaseSensitive": false,
   "plugins": [
-    "prettier-plugin-tailwindcss",
-    "@ianvs/prettier-plugin-sort-imports"
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindStylesheet": ".src/styles/globals.css",
+  "tailwindFunctions": [
+    "clsx"
   ]
 }
