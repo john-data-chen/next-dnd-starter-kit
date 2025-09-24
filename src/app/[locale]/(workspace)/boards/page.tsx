@@ -7,7 +7,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = params
+  const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'kanban' })
 
   return {
