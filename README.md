@@ -257,7 +257,7 @@ src/
 
 ### Prettier oxc plugin
 
-- status: disabled (it is conflict with Windsurf, since this is a small project, the speed difference is not significant)
+- status: disabled (it is conflict with Vs-code formatting, since this is a small project, the speed difference is not significant)
 - benefit: Increase Prettier formatting speed
 - [introduction](https://www.npmjs.com/package/@prettier/plugin-oxc)
 

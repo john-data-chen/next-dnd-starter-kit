@@ -81,7 +81,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
       )}
       data-testid="project-container"
     >
-      <CardHeader className="flex flex-row items-center justify-between border-b-2 p-4 space-y-0">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b-2 p-4">
         <div className="flex items-center gap-2">
           <Button variant="ghost" {...attributes} {...listeners} className="text-primary/50 h-8 w-16 cursor-grab p-0">
             <span className="sr-only">drag project: {project.title}</span>
@@ -92,16 +92,16 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
         <ProjectActions id={project._id} title={project.title} description={project.description} />
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-4 p-0 overflow-hidden">
+      <CardContent className="flex flex-col gap-4 overflow-hidden p-0">
         <ScrollArea className="h-full px-2 pt-2">
           <div className="flex flex-col gap-1">
             <Badge variant="outline" className="text-xs">
               {t('description')}: {project.description || t('noDescription')}
             </Badge>
-            <Badge variant="outline" className="text-xs truncate">
+            <Badge variant="outline" className="truncate text-xs">
               {t('owner')}: {project.owner.name}
             </Badge>
-            <Badge variant="outline" className="text-xs truncate">
+            <Badge variant="outline" className="truncate text-xs">
               {t('members')}: {project.members.map((member) => member.name).join(', ')}
             </Badge>
           </div>
@@ -126,7 +126,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 export function BoardContainer({ children }: { children: React.ReactNode }) {
   return (
     <ScrollArea className="w-full">
-      <div className="flex flex-col md:flex-row gap-4">{children}</div>
+      <div className="flex flex-col gap-4 md:flex-row">{children}</div>
       <ScrollBar orientation="horizontal" className="hidden md:flex" />
     </ScrollArea>
   )
