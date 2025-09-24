@@ -314,7 +314,7 @@ export function Board() {
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
+        <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
           <div className="w-full sm:w-[200px]">
             <NewProjectDialog />
           </div>
@@ -324,7 +324,7 @@ export function Board() {
         </div>
         <BoardContainer>
           {isLoadingProjects ? (
-            <Skeleton className="h-[75vh] max-h-[75vh] w-full md:w-[380px] bg-secondary flex flex-col shrink-0 snap-center" />
+            <Skeleton className="bg-secondary flex h-[75vh] max-h-[75vh] w-full shrink-0 snap-center flex-col md:w-[380px]" />
           ) : (
             <SortableContext items={projectsId}>
               {projects?.map((project: Project) => (
