@@ -11,7 +11,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "oxlint src --type-aware --fix",
-    "format": "prettier --write . --no-error-on-unmatched-pattern --config",
+    "format": "prettier --write . --no-error-on-unmatched-pattern --config ./.prettierrc",
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
     "test": "vitest run --coverage",
     "test:watch": "vitest watch",
@@ -25,8 +25,8 @@
   },
   "packageManager": "pnpm@10.17.1",
   "lint-staged": {
-    "./src/**/*.{js,jsx,tsx,ts,css,less,scss,sass}": [
-      "prettier --write --no-error-on-unmatched-pattern --config"
+    "./src/**/*.{js,jsx,tsx,ts}": [
+      "prettier --write --no-error-on-unmatched-pattern --config ./.prettierrc"
     ],
     "./src/**/*.{js,jsx,ts,tsx}": [
       "oxlint --fix"
