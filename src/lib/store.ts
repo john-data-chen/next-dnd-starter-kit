@@ -15,7 +15,7 @@ interface State {
   fetchProjects: (boardId: string) => Promise<void>
   setProjects: (projects: Project[]) => void
   addProject: (title: string, description: string) => Promise<string>
-  updateProject: (id: string, newTitle: string, newDescription?: string) => void
+  updateProject: (id: string, newTitle: string, newDescription?: string) => Promise<void>
   removeProject: (id: string) => Promise<void>
   addTask: (
     projectId: string,
@@ -137,12 +137,12 @@ export const useTaskStore = create<State>()(
           throw error
         }
       },
-      updateProject: (id: string, newTitle: string, newDescription?: string) => {
+      updateProject: async (id: string, newTitle: string, newDescription?: string) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
           throw new Error('User email not found')
         }
-        updateProjectInDb({
+        await updateProjectInDb({
           projectId: id,
           userEmail: userEmail,
           newTitle: newTitle,

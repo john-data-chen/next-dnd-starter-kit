@@ -36,12 +36,8 @@ const taskSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 })
 
-let TaskModel: Model<TaskType>
-if (mongoose.models.Task) {
-  TaskModel = mongoose.models.Task as Model<TaskType>
-} else {
-  TaskModel = mongoose.model<TaskType>('Task', taskSchema)
-}
+// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+const TaskModel = (mongoose.models.Task as Model<TaskType>) || mongoose.model<TaskType>('Task', taskSchema)
 
 export { TaskModel }
 export type { TaskType }

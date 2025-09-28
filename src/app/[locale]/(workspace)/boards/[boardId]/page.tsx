@@ -28,7 +28,7 @@ export default function BoardPage() {
       } catch (error) {
         console.error(error)
       }
-    })()
+    })().catch(console.error)
   }, [normalizedBoardId, setCurrentBoardId, fetchProjects])
 
   return (

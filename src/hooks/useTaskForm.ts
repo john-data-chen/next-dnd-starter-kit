@@ -62,7 +62,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
       }
     }
 
-    fetchUsers()
+    fetchUsers().catch(console.error)
   }, [debouncedSearchQuery, assignOpen])
 
   useEffect(() => {
@@ -71,7 +71,9 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
         .then((initialUsers) => {
           setUsers(initialUsers)
         })
-        .catch((error) => console.error(error))
+        .catch((error) => {
+          console.error(error)
+        })
     }
   }, [assignOpen])
 
