@@ -60,16 +60,17 @@ async function getUserMap(userIds: string[]): Promise<Map<string, string>> {
   return userMap
 }
 
-function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
-  const getObjectIdString = (id: any): string => {
-    if (id instanceof Types.ObjectId) {
-      return id.toHexString()
-    }
-    if (id && typeof id === 'object' && id._id) {
-      return getObjectIdString(id._id)
-    }
-    return String(id)
+const getObjectIdString = (id: any): string => {
+  if (id instanceof Types.ObjectId) {
+    return id.toHexString()
   }
+  if (id && typeof id === 'object' && id._id) {
+    return getObjectIdString(id._id)
+  }
+  return String(id)
+}
+
+function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
   const ownerId = getObjectIdString(boardDoc.owner)
   return {
     _id: boardDoc._id.toString(),
@@ -180,7 +181,7 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
       throw new Error('Board not found')
     }
 
-    const existingOwnerId = typeof existingBoard.owner === 'string' ? existingBoard.owner : existingBoard.owner.id
+    const existingOwnerId = getObjectIdString(existingBoard.owner)
     if (existingOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can update the board')
     }
@@ -192,12 +193,12 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
     }
 
     const allUserIds = new Set<string>()
-    const ownerId = typeof board.owner === 'string' ? board.owner : board.owner.id
+    const ownerId = getObjectIdString(board.owner)
     allUserIds.add(ownerId)
 
     // Handle member IDs
     ;(board.members || []).forEach((member) => {
-      const memberId = typeof member === 'string' ? member : member.id
+      const memberId = getObjectIdString(member)
       allUserIds.add(memberId)
     })
     const userMap = await getUserMap(Array.from(allUserIds))
@@ -223,7 +224,7 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
       throw new Error('Board not found')
     }
 
-    const boardOwnerId = typeof board.owner === 'string' ? board.owner : board.owner.id
+    const boardOwnerId = getObjectIdString(board.owner)
     if (boardOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can delete the board')
     }

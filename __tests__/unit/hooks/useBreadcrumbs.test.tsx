@@ -16,7 +16,7 @@ vi.mock('next-intl', () => ({
 }))
 
 vi.mock('@/lib/db/board', () => ({
-  fetchBoardsFromDb: vi.fn()
+  fetchBoardsFromDb: vi.fn().mockResolvedValue([])
 }))
 
 vi.mock('@/lib/store', () => ({
@@ -39,6 +39,7 @@ describe('useBreadcrumbs Hook', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.mocked(fetchBoardsFromDb).mockResolvedValue([])
     vi.mocked(useParams).mockReturnValue({ boardId: mockBoardId })
     vi.mocked(useTaskStore).mockReturnValue(mockUserEmail)
   })
