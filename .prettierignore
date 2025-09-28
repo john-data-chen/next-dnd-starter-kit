@@ -53,5 +53,5 @@ src/components/ui/**/*
 src/hooks/use-mobile.ts
 
 # database
-database
-database/**/*
+database/mongodb
+database/docker-compose.yml
