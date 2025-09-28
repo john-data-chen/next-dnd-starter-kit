@@ -72,7 +72,7 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
         }
       }
     }
-    fetchAssigneeInfo()
+    fetchAssigneeInfo().catch(console.error)
   }, [assignee])
 
   const [permissions, setPermissions] = React.useState<{
@@ -91,7 +91,9 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     const assigneeId = values.assignee?._id
-    updateTask(id, values.title, values.status ?? 'TODO', values.description, values.dueDate, assigneeId)
+    updateTask(id, values.title, values.status ?? 'TODO', values.description, values.dueDate, assigneeId).catch(
+      console.error
+    )
     toast.success(t('updateSuccess', { title: values.title }))
     setEditEnable(false)
   }
@@ -99,7 +101,7 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
   const handleDelete = () => {
     setTimeout(() => (document.body.style.pointerEvents = ''), 100)
     setShowDeleteDialog(false)
-    removeTask(id)
+    removeTask(id).catch(console.error)
     onDelete?.(id)
     toast.success(t('deleteSuccess'))
   }
@@ -139,7 +141,9 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
           <TaskForm
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
-            onCancel={() => setEditEnable(false)}
+            onCancel={() => {
+              setEditEnable(false)
+            }}
             submitLabel={t('updateTask')}
           />
         </DialogContent>
@@ -153,7 +157,9 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40" hidden={isLoadingPermissions}>
           <DropdownMenuItem
-            onSelect={() => setEditEnable(true)}
+            onSelect={() => {
+              setEditEnable(true)
+            }}
             disabled={!permissions?.canEdit}
             className={!permissions?.canEdit ? 'text-muted-foreground cursor-not-allowed line-through' : ''}
           >
@@ -162,7 +168,9 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
 
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onSelect={() => setShowDeleteDialog(true)}
+            onSelect={() => {
+              setShowDeleteDialog(true)
+            }}
             disabled={!permissions?.canDelete}
             className={`w-full text-left ${
               !permissions?.canDelete

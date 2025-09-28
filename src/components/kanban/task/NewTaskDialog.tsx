@@ -56,7 +56,13 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
           <DialogTitle>{t('addNewTaskTitle')}</DialogTitle>
           <DialogDescription>{t('addNewTaskDescription')}</DialogDescription>
         </DialogHeader>
-        <TaskForm onSubmit={handleSubmit} submitLabel={t('createTask')} onCancel={() => setAddTaskOpen(false)} />
+        <TaskForm
+          onSubmit={handleSubmit}
+          submitLabel={t('createTask')}
+          onCancel={() => {
+            setAddTaskOpen(false)
+          }}
+        />
       </DialogContent>
     </Dialog>
   )

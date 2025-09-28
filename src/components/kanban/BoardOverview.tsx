@@ -35,14 +35,16 @@ export function BoardOverview() {
         params.delete('login_success')
         router.replace(`${pathname}?${params.toString()}`, { scroll: false })
       }, 500)
-      return () => clearTimeout(timer)
+      return () => {
+        clearTimeout(timer)
+      }
     }
   }, [searchParams, router, pathname, tLogin])
 
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        fetchBoards()
+        fetchBoards().catch(console.error)
       }
     }
 

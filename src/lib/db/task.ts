@@ -29,12 +29,14 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
   if (!taskDoc) {
     throw new Error('Task document is undefined')
   }
-
-  const getObjectIdString = (id: any): string => {
+  const getObjectIdString = (id: Types.ObjectId | string | { id: string } | null | undefined): string => {
+    if (!id) {
+      return ''
+    }
     if (id instanceof Types.ObjectId) {
       return id.toHexString()
     }
-    if (id && typeof id === 'object' && 'id' in id) {
+    if (typeof id === 'object' && 'id' in id) {
       return id.id
     }
     return String(id)
@@ -111,11 +113,8 @@ export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
   try {
     await connectToDatabase()
     const tasks = await TaskModel.find({ project: projectId }).lean()
-    return Promise.all(
-      tasks.map(async (task) => {
-        return convertTaskToPlainObject(task as TaskBase)
-      })
-    )
+    const taskPromises = tasks.map(async (task) => convertTaskToPlainObject(task as TaskBase))
+    return Promise.all(taskPromises)
   } catch (error) {
     console.error('Error fetching tasks:', error)
     throw error
@@ -134,12 +133,9 @@ async function ensureUserIsMember(projectId: string, userId: string): Promise<vo
     throw new Error('Board not found')
   }
 
-  const getObjectIdString = (id: any): string => {
+  const getObjectIdString = (id: Types.ObjectId): string => {
     if (id instanceof Types.ObjectId) {
       return id.toHexString()
-    }
-    if (id && typeof id === 'object' && 'id' in id) {
-      return id.id
     }
     return String(id)
   }
@@ -276,12 +272,12 @@ export async function updateTaskProjectInDb(userEmail: string, taskId: string, n
       throw new Error('Task not found')
     }
 
-    const getObjectIdString = (id: any): string => {
+    const getObjectIdString = (id: Types.ObjectId | undefined): string => {
+      if (!id) {
+        return ''
+      }
       if (id instanceof Types.ObjectId) {
         return id.toHexString()
-      }
-      if (id && typeof id === 'object' && 'id' in id) {
-        return id.id
       }
       return String(id)
     }

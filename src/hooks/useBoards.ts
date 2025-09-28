@@ -52,7 +52,7 @@ export function useBoards() {
   }, [userEmail, userId, setMyBoards, setTeamBoards])
 
   useEffect(() => {
-    fetchBoards()
+    fetchBoards().catch(console.error)
   }, [fetchBoards])
 
   return { myBoards, teamBoards, loading, fetchBoards }
