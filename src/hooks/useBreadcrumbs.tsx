@@ -38,7 +38,7 @@ export function useBreadcrumbs() {
     }
 
     if (boardId) {
-      fetchBoard()
+      fetchBoard().catch(console.error)
     }
   }, [boardId, userEmail])
 

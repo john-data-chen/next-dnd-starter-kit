@@ -36,12 +36,18 @@ const taskSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 })
 
-let TaskModel: Model<TaskType>
-if (mongoose.models.Task) {
-  TaskModel = mongoose.models.Task as Model<TaskType>
-} else {
-  TaskModel = mongoose.model<TaskType>('Task', taskSchema)
+function isTaskModel(model: any): model is Model<TaskType> {
+  return model && model.modelName === 'Task'
 }
+
+function getTaskModel(): Model<TaskType> {
+  if (isTaskModel(mongoose.models.Task)) {
+    return mongoose.models.Task
+  }
+  return mongoose.model<TaskType>('Task', taskSchema)
+}
+
+const TaskModel = getTaskModel()
 
 export { TaskModel }
 export type { TaskType }

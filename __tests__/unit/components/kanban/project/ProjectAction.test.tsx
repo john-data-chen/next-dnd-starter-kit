@@ -4,9 +4,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
 
 // Mock zustand store
-const updateProjectMock = vi.fn()
-const removeProjectMock = vi.fn()
-const fetchProjectsMock = vi.fn()
+const updateProjectMock = vi.fn().mockResolvedValue(undefined)
+const removeProjectMock = vi.fn().mockResolvedValue(undefined)
+const fetchProjectsMock = vi.fn().mockResolvedValue(undefined)
 vi.mock('@/lib/store', () => ({
   useTaskStore: (selector: any) =>
     selector({

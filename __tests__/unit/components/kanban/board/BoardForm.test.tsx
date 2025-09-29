@@ -70,8 +70,7 @@ describe('BoardForm', () => {
         expect.objectContaining({
           title: 'Valid Title',
           description: 'Valid Desc'
-        }),
-        expect.anything()
+        })
       )
     })
   })

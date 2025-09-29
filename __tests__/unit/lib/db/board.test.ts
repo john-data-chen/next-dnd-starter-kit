@@ -83,11 +83,12 @@ describe('Board DB functions', () => {
   describe('updateBoardInDb', () => {
     it('should update a board', async () => {
       ;(BoardModel.findById as jest.Mock).mockReturnValue({
-        lean: vi.fn().mockResolvedValue(mockBoard)
+        lean: vi.fn().mockReturnValue(mockBoard)
       })
-      ;(BoardModel.findByIdAndUpdate as jest.Mock).mockReturnValue({
-        lean: vi.fn().mockResolvedValue({ ...mockBoard, title: 'Updated Board' })
-      })
+      const mockUpdatedDoc = {
+        lean: vi.fn().mockReturnValue({ ...mockBoard, title: 'Updated Board' })
+      }
+      ;(BoardModel.findByIdAndUpdate as jest.Mock).mockReturnValue(mockUpdatedDoc)
 
       const updatedBoard = await updateBoardInDb(mockBoardId, { title: 'Updated Board' }, mockUser.email)
       expect(updatedBoard?.title).toBe('Updated Board')
@@ -104,7 +105,7 @@ describe('Board DB functions', () => {
   describe('deleteBoardInDb', () => {
     it('should delete a board and its contents', async () => {
       ;(BoardModel.findById as jest.Mock).mockReturnValue({
-        lean: vi.fn().mockResolvedValue(mockBoard)
+        lean: vi.fn().mockReturnValue(mockBoard)
       })
       ;(ProjectModel.deleteMany as jest.Mock).mockResolvedValue({
         acknowledged: true,

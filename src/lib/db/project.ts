@@ -34,9 +34,8 @@ export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] 
       return []
     }
 
-    const plainProjects = await Promise.all(
-      projects.map(async (project) => await convertProjectToPlainObject(project as ProjectBase))
-    )
+    const projectPromises = projects.map(async (project) => convertProjectToPlainObject(project as ProjectBase))
+    const plainProjects = await Promise.all(projectPromises)
 
     return plainProjects
   } catch (error) {

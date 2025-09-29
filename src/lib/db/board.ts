@@ -30,20 +30,12 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
 
     const allUserIds = new Set<string>()
     boardsFromDb.forEach((board) => {
-      // Handle owner ID (could be ObjectId or string)
-      const ownerId =
-        board.owner instanceof Types.ObjectId
-          ? board.owner.toHexString()
-          : (board.owner as { _id?: Types.ObjectId })?._id?.toHexString() ||
-            String(board.owner as BoardDocument['owner'])
+      const ownerId = typeof board.owner === 'string' ? board.owner : board.owner.id
       allUserIds.add(ownerId)
 
       // Handle member IDs
       ;(board.members || []).forEach((member) => {
-        const memberId =
-          member instanceof Types.ObjectId
-            ? member.toHexString()
-            : (member as { _id?: Types.ObjectId })?._id?.toHexString() || String(member as BoardDocument['members'][0])
+        const memberId = typeof member === 'string' ? member : member.id
         allUserIds.add(memberId)
       })
     })
@@ -68,16 +60,17 @@ async function getUserMap(userIds: string[]): Promise<Map<string, string>> {
   return userMap
 }
 
-function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
-  const getObjectIdString = (id: any): string => {
-    if (id instanceof Types.ObjectId) {
-      return id.toHexString()
-    }
-    if (id?._id) {
-      return getObjectIdString(id._id)
-    }
-    return String(id)
+const getObjectIdString = (id: any): string => {
+  if (id instanceof Types.ObjectId) {
+    return id.toHexString()
   }
+  if (id && typeof id === 'object' && id._id) {
+    return getObjectIdString(id._id)
+  }
+  return String(id)
+}
+
+function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
   const ownerId = getObjectIdString(boardDoc.owner)
   return {
     _id: boardDoc._id.toString(),
@@ -188,11 +181,7 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
       throw new Error('Board not found')
     }
 
-    const existingOwnerId =
-      existingBoard.owner instanceof Types.ObjectId
-        ? existingBoard.owner.toHexString()
-        : (existingBoard.owner as { _id?: Types.ObjectId | string })._id?.toString() ||
-          String(existingBoard.owner as BoardDocument['owner'])
+    const existingOwnerId = getObjectIdString(existingBoard.owner)
     if (existingOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can update the board')
     }
@@ -204,21 +193,12 @@ export async function updateBoardInDb(boardId: string, data: Partial<Board>, use
     }
 
     const allUserIds = new Set<string>()
-    // Handle owner ID
-    const ownerId =
-      board.owner instanceof Types.ObjectId
-        ? board.owner.toHexString()
-        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() ||
-          String(board.owner as BoardDocument['owner'])
+    const ownerId = getObjectIdString(board.owner)
     allUserIds.add(ownerId)
 
     // Handle member IDs
     ;(board.members || []).forEach((member) => {
-      const memberId =
-        member instanceof Types.ObjectId
-          ? member.toHexString()
-          : (member as { _id?: Types.ObjectId | string })._id?.toString() ||
-            String(member as BoardDocument['members'][0])
+      const memberId = getObjectIdString(member)
       allUserIds.add(memberId)
     })
     const userMap = await getUserMap(Array.from(allUserIds))
@@ -244,11 +224,7 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
       throw new Error('Board not found')
     }
 
-    const boardOwnerId =
-      board.owner instanceof Types.ObjectId
-        ? board.owner.toHexString()
-        : (board.owner as { _id?: Types.ObjectId | string })._id?.toString() ||
-          String(board.owner as BoardDocument['owner'])
+    const boardOwnerId = getObjectIdString(board.owner)
     if (boardOwnerId !== user.id) {
       throw new Error('Unauthorized: Only board owner can delete the board')
     }
