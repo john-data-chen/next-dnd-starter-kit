@@ -93,10 +93,10 @@ vi.mock('@dnd-kit/sortable', async (importOriginal) => {
 
 // Mock Child Components
 vi.mock('@/components/kanban/project/ProjectAction', () => ({
-  ProjectActions: (props: any) => <div data-testid="project-actions" {...props} />
+  ProjectActions: (props: any) => <div data-testid="project-actions" />
 }))
 vi.mock('@/components/kanban/task/NewTaskDialog', () => ({
-  default: (props: any) => <div data-testid="new-task-dialog" {...props} />
+  default: (props: any) => <div data-testid="new-task-dialog" />
 }))
 vi.mock('@/components/kanban/task/TaskCard', () => ({
   TaskCard: ({ task }: { task: Task }) => <div data-testid={`task-card-${task._id}`}>{task.title}</div>

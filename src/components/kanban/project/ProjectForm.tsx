@@ -33,7 +33,12 @@ export function ProjectForm({ children, onSubmit, defaultValues }: ProjectFormPr
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={(event) => {
+          /* eslint-disable-next-line no-void */ void form.handleSubmit(onSubmit)(event)
+        }}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="title"

@@ -28,9 +28,9 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     await addTask(
-      projectId!,
-      values.title!,
-      values.status!,
+      projectId,
+      values.title,
+      values.status,
       values.description ?? '',
       values.dueDate ?? undefined,
       values.assignee?._id ?? undefined
@@ -56,7 +56,13 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
           <DialogTitle>{t('addNewTaskTitle')}</DialogTitle>
           <DialogDescription>{t('addNewTaskDescription')}</DialogDescription>
         </DialogHeader>
-        <TaskForm onSubmit={handleSubmit} submitLabel={t('createTask')} onCancel={() => setAddTaskOpen(false)} />
+        <TaskForm
+          onSubmit={handleSubmit}
+          submitLabel={t('createTask')}
+          onCancel={() => {
+            setAddTaskOpen(false)
+          }}
+        />
       </DialogContent>
     </Dialog>
   )

@@ -21,6 +21,11 @@ vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key
 }))
 
+// Mock Badge to avoid invalid HTML in option
+vi.mock('@/components/ui/badge', () => ({
+  Badge: ({ children }: any) => `${children}`
+}))
+
 // Mock Select component from shadcn/ui
 let capturedOnValueChange: (value: string) => void
 vi.mock('@/components/ui/select', async (importOriginal) => {

@@ -15,7 +15,7 @@ interface State {
   fetchProjects: (boardId: string) => Promise<void>
   setProjects: (projects: Project[]) => void
   addProject: (title: string, description: string) => Promise<string>
-  updateProject: (id: string, newTitle: string, newDescription?: string) => void
+  updateProject: (id: string, newTitle: string, newDescription?: string) => Promise<void>
   removeProject: (id: string) => Promise<void>
   addTask: (
     projectId: string,
@@ -137,12 +137,12 @@ export const useTaskStore = create<State>()(
           throw error
         }
       },
-      updateProject: (id: string, newTitle: string, newDescription?: string) => {
+      updateProject: async (id: string, newTitle: string, newDescription?: string) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
           throw new Error('User email not found')
         }
-        updateProjectInDb({
+        await updateProjectInDb({
           projectId: id,
           userEmail: userEmail,
           newTitle: newTitle,
@@ -192,7 +192,7 @@ export const useTaskStore = create<State>()(
           throw error
         }
       },
-      updateTask: (
+      updateTask: async (
         taskId: string,
         title: string,
         status: 'TODO' | 'IN_PROGRESS' | 'DONE',
@@ -205,42 +205,38 @@ export const useTaskStore = create<State>()(
           throw new Error('User email not found')
         }
 
-        return (async () => {
-          try {
-            const updatedTask = await updateTaskInDb(taskId, title, userEmail, status, description, dueDate, assigneeId)
+        try {
+          const updatedTask = await updateTaskInDb(taskId, title, userEmail, status, description, dueDate, assigneeId)
 
-            if (!updatedTask) {
-              throw new Error('Failed to update task')
-            }
-
-            set((state) => ({
-              projects: state.projects.map((project) => ({
-                ...project,
-                tasks: project.tasks.map((task) => (task._id === taskId ? { ...task, ...updatedTask } : task))
-              }))
-            }))
-          } catch (error) {
-            console.error('Error updating task:', error)
-            throw error
+          if (!updatedTask) {
+            throw new Error('Failed to update task')
           }
-        })()
+
+          set((state) => ({
+            projects: state.projects.map((project) => ({
+              ...project,
+              tasks: project.tasks.map((task) => (task._id === taskId ? { ...task, ...updatedTask } : task))
+            }))
+          }))
+        } catch (error) {
+          console.error('Error updating task:', error)
+          throw error
+        }
       },
-      removeTask: (taskId: string) => {
-        return (async () => {
-          try {
-            await deleteTaskInDb(taskId)
+      removeTask: async (taskId: string) => {
+        try {
+          await deleteTaskInDb(taskId)
 
-            set((state) => ({
-              projects: state.projects.map((project) => ({
-                ...project,
-                tasks: project.tasks.filter((task) => task._id !== taskId)
-              }))
+          set((state) => ({
+            projects: state.projects.map((project) => ({
+              ...project,
+              tasks: project.tasks.filter((task) => task._id !== taskId)
             }))
-          } catch (error) {
-            console.error('Error in removeTask:', error)
-            throw error
-          }
-        })()
+          }))
+        } catch (error) {
+          console.error('Error in removeTask:', error)
+          throw error
+        }
       },
       dragTaskOnProject: async (taskId: string, overlayProjectId: string) => {
         const userEmail = useTaskStore.getState().userEmail

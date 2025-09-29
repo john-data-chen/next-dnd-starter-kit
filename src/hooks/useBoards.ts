@@ -25,8 +25,9 @@ export function useBoards() {
       return
     }
     setLoading(true)
+    let boardsFromDB: Board[] = []
     try {
-      const boardsFromDB = await fetchBoardsFromDb(userEmail) // Renamed to avoid conflict
+      boardsFromDB = await fetchBoardsFromDb(userEmail)
 
       const userMyBoards: Board[] = []
       const userTeamBoards: Board[] = []
@@ -52,7 +53,7 @@ export function useBoards() {
   }, [userEmail, userId, setMyBoards, setTeamBoards])
 
   useEffect(() => {
-    fetchBoards()
+    fetchBoards().catch(console.error)
   }, [fetchBoards])
 
   return { myBoards, teamBoards, loading, fetchBoards }

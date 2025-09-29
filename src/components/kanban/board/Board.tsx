@@ -132,7 +132,7 @@ export function Board() {
             toast.success(`Task: "${activeTask.title}" is moved into Project: "${overProject.title}"`)
           }
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
           console.error('Failed to move task:', error)
           toast.error(`Failed to move task: ${error.message || 'unknown error'}`)
         })
@@ -154,7 +154,7 @@ export function Board() {
             setProjects(updatedProjects)
             toast.success(`Task: "${activeTask.title}" is moved into Project: "${overProject!.title}"`)
           })
-          .catch((error) => {
+          .catch((error: unknown) => {
             console.error('Failed to move task:', error)
             toast.error(`Failed to move task: ${error.message || 'unknown error'}`)
           })

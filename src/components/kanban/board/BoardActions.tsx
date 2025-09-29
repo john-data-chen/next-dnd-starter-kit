@@ -85,7 +85,9 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
         >
           <button
             type="button"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
             className="w-full text-left"
             style={{ background: 'transparent', border: 'none', padding: 0 }}
           >
@@ -112,7 +114,13 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
                 onSubmit={onSubmit}
               >
                 <div className="flex justify-end gap-4">
-                  <Button type="button" variant="outline" onClick={() => setEditEnable(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setEditEnable(false)
+                    }}
+                  >
                     {t('cancel')}
                   </Button>
                   <Button type="submit" disabled={isSubmitting}>
@@ -141,13 +149,20 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
               e.stopPropagation()
             }}
           >
-            <DropdownMenuItem data-testid="edit-board-button" onSelect={() => setEditEnable(true)}>
+            <DropdownMenuItem
+              data-testid="edit-board-button"
+              onSelect={() => {
+                setEditEnable(true)
+              }}
+            >
               {t('edit')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               data-testid="delete-board-button"
-              onSelect={() => setShowDeleteDialog(true)}
+              onSelect={() => {
+                setShowDeleteDialog(true)
+              }}
               className="text-red-600"
             >
               {t('delete')}

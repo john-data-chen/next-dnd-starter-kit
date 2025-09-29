@@ -94,9 +94,20 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
           <DialogHeader>
             <DialogTitle>{t('editProjectTitle')}</DialogTitle>
           </DialogHeader>
-          <ProjectForm onSubmit={onSubmit} defaultValues={{ title, description }}>
+          <ProjectForm
+            onSubmit={(values) => {
+              /* eslint-disable-next-line no-void */ void onSubmit(values)
+            }}
+            defaultValues={{ title, description }}
+          >
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => setEditEnable(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setEditEnable(false)
+                }}
+              >
                 {t('cancel')}
               </Button>
               <Button type="submit">{t('save')}</Button>
@@ -112,7 +123,7 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
           setIsMenuOpen(open)
           if (open && !permissions) {
             // Fetch permissions only when menu is opened and permissions are not yet fetched
-            fetchProjectPermissions()
+            fetchProjectPermissions().catch(console.error)
           }
         }}
       >
@@ -179,7 +190,7 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
               variant="destructive"
               onClick={() => {
                 setShowDeleteDialog(false)
-                removeProject(id)
+                removeProject(id).catch(console.error)
                 toast.success(t('deleteSuccess', { title }))
               }}
             >
