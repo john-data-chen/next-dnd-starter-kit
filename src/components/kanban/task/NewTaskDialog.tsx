@@ -28,9 +28,9 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     await addTask(
-      projectId!,
-      values.title!,
-      values.status!,
+      projectId,
+      values.title,
+      values.status,
       values.description ?? '',
       values.dueDate ?? undefined,
       values.assignee?._id ?? undefined

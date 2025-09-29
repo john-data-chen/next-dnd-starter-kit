@@ -89,7 +89,7 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
     assignee: assigneeInfo ?? undefined
   }
 
-  const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
+  const handleSubmit = (values: z.infer<typeof TaskFormSchema>) => {
     const assigneeId = values.assignee?._id
     updateTask(id, values.title, values.status ?? 'TODO', values.description, values.dueDate, assigneeId).catch(
       console.error
@@ -148,7 +148,12 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
           />
         </DialogContent>
       </Dialog>
-      <DropdownMenu modal={false} onOpenChange={checkPermissions}>
+      <DropdownMenu
+        modal={false}
+        onOpenChange={(_open) => {
+          /* eslint-disable-next-line no-void */ void checkPermissions()
+        }}
+      >
         <DropdownMenuTrigger asChild>
           <Button variant="default" size="icon" className="h-8 w-12" data-testid="task-actions-trigger">
             <span className="sr-only">{t('actions')}</span>

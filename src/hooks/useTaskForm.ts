@@ -71,7 +71,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
         .then((initialUsers) => {
           setUsers(initialUsers)
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
           console.error(error)
         })
     }

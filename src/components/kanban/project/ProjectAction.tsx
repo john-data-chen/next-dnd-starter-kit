@@ -94,7 +94,12 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
           <DialogHeader>
             <DialogTitle>{t('editProjectTitle')}</DialogTitle>
           </DialogHeader>
-          <ProjectForm onSubmit={onSubmit} defaultValues={{ title, description }}>
+          <ProjectForm
+            onSubmit={(values) => {
+              /* eslint-disable-next-line no-void */ void onSubmit(values)
+            }}
+            defaultValues={{ title, description }}
+          >
             <div className="flex justify-end gap-2">
               <Button
                 type="button"
