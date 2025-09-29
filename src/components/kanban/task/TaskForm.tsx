@@ -41,7 +41,12 @@ export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Sub
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+      <form
+        onSubmit={(event) => {
+          /* eslint-disable-next-line no-void */ void form.handleSubmit(handleSubmit)(event)
+        }}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -136,7 +141,7 @@ export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Sub
                           {users.map((user) => (
                             <CommandItem
                               key={user._id}
-                              value={user.name!}
+                              value={user.name}
                               onSelect={() => {
                                 field.onChange(user)
                                 setAssignOpen(false)

@@ -114,7 +114,7 @@ export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
     await connectToDatabase()
     const tasks = await TaskModel.find({ project: projectId }).lean()
     const taskPromises = tasks.map(async (task) => convertTaskToPlainObject(task as TaskBase))
-    return Promise.all(taskPromises)
+    return await Promise.all(taskPromises)
   } catch (error) {
     console.error('Error fetching tasks:', error)
     throw error

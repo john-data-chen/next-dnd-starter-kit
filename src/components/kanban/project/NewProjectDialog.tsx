@@ -68,7 +68,12 @@ export default function NewProjectDialog({ onProjectAdd }: NewProjectDialogProps
           <DialogTitle>{t('addNewProjectTitle')}</DialogTitle>
           <DialogDescription>{t('addNewProjectDescription')}</DialogDescription>
         </DialogHeader>
-        <ProjectForm onSubmit={handleSubmit} data-testid="new-project-form">
+        <ProjectForm
+          onSubmit={(values) => {
+            /* eslint-disable-next-line no-void */ void handleSubmit(values)
+          }}
+          data-testid="new-project-form"
+        >
           <DialogFooter>
             <Button
               type="button"

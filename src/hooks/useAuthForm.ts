@@ -34,7 +34,7 @@ export default function useAuthForm() {
     }
   })
 
-  const onSubmit = async (data: SignInFormValue) => {
+  const onSubmit = (data: SignInFormValue) => {
     const signInProcessPromise = async () => {
       const result = await signIn('credentials', {
         email: data.email,

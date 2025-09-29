@@ -32,9 +32,18 @@ export function BoardForm({ defaultValues, onSubmit, children }: BoardFormProps)
     }
   })
 
+  const handleFormSubmit = async (values: BoardFormValues) => {
+    await onSubmit(values)
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={(event) => {
+          /* eslint-disable-next-line no-void */ void form.handleSubmit(handleFormSubmit)(event)
+        }}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="title"

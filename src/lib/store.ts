@@ -192,7 +192,7 @@ export const useTaskStore = create<State>()(
           throw error
         }
       },
-      updateTask: (
+      updateTask: async (
         taskId: string,
         title: string,
         status: 'TODO' | 'IN_PROGRESS' | 'DONE',
@@ -205,42 +205,38 @@ export const useTaskStore = create<State>()(
           throw new Error('User email not found')
         }
 
-        return (async () => {
-          try {
-            const updatedTask = await updateTaskInDb(taskId, title, userEmail, status, description, dueDate, assigneeId)
+        try {
+          const updatedTask = await updateTaskInDb(taskId, title, userEmail, status, description, dueDate, assigneeId)
 
-            if (!updatedTask) {
-              throw new Error('Failed to update task')
-            }
-
-            set((state) => ({
-              projects: state.projects.map((project) => ({
-                ...project,
-                tasks: project.tasks.map((task) => (task._id === taskId ? { ...task, ...updatedTask } : task))
-              }))
-            }))
-          } catch (error) {
-            console.error('Error updating task:', error)
-            throw error
+          if (!updatedTask) {
+            throw new Error('Failed to update task')
           }
-        })()
+
+          set((state) => ({
+            projects: state.projects.map((project) => ({
+              ...project,
+              tasks: project.tasks.map((task) => (task._id === taskId ? { ...task, ...updatedTask } : task))
+            }))
+          }))
+        } catch (error) {
+          console.error('Error updating task:', error)
+          throw error
+        }
       },
-      removeTask: (taskId: string) => {
-        return (async () => {
-          try {
-            await deleteTaskInDb(taskId)
+      removeTask: async (taskId: string) => {
+        try {
+          await deleteTaskInDb(taskId)
 
-            set((state) => ({
-              projects: state.projects.map((project) => ({
-                ...project,
-                tasks: project.tasks.filter((task) => task._id !== taskId)
-              }))
+          set((state) => ({
+            projects: state.projects.map((project) => ({
+              ...project,
+              tasks: project.tasks.filter((task) => task._id !== taskId)
             }))
-          } catch (error) {
-            console.error('Error in removeTask:', error)
-            throw error
-          }
-        })()
+          }))
+        } catch (error) {
+          console.error('Error in removeTask:', error)
+          throw error
+        }
       },
       dragTaskOnProject: async (taskId: string, overlayProjectId: string) => {
         const userEmail = useTaskStore.getState().userEmail
