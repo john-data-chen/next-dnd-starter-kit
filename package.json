@@ -52,7 +52,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.544.0",
-    "mongoose": "^8.18.3",
+    "mongoose": "^8.19.0",
     "next": "^15.5.4",
     "next-auth": "5.0.0-beta.29",
     "next-intl": "^4.3.9",
