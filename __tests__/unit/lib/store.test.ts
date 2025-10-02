@@ -140,31 +140,29 @@ describe('Zustand Store: useTaskStore', () => {
       expect(useTaskStore.getState().currentBoardId).toBe(newBoardId)
     })
 
-    it('addBoard should call createBoardInDb and update state', async () => {
-      const newBoard: Board = {
-        // Use Board type directly if possible
-        _id: 'new-board-id',
-        title: 'New Board',
-        owner: mockUser,
-        members: [],
-        projects: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
-        // Add description if it's part of the Board type and returned by createBoardInDb
-        // description: 'Desc'
+    it('addBoard should call fetch API and update state', async () => {
+      const mockResponse = {
+        success: true,
+        boardId: 'new-board-id'
       }
-      // Assuming createBoardInDb returns a Board object matching the type
-      vi.mocked(dbBoard.createBoardInDb).mockResolvedValue(newBoard)
-
+      global.fetch = vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockResponse)
+        } as Response)
+      )
+    
       let boardId = ''
       await act(async () => {
         boardId = await useTaskStore.getState().addBoard('New Board', 'Desc')
       })
-
-      expect(dbBoard.createBoardInDb).toHaveBeenCalledWith({
-        title: 'New Board',
-        userEmail: mockUserEmail,
-        description: 'Desc'
+    
+      expect(global.fetch).toHaveBeenCalledWith('/api/boards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: 'New Board', description: 'Desc' })
       })
       expect(boardId).toBe('new-board-id')
       expect(useTaskStore.getState().currentBoardId).toBe('new-board-id')
