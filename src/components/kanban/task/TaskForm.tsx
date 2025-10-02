@@ -97,8 +97,7 @@ export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Sub
                       field.onChange(date)
                       setCalendarOpen(false)
                     }}
-                    fromDate={new Date()}
-                    initialFocus
+                    disabled={{ before: new Date() }}
                     data-testid="task-date-picker-calendar"
                   />
                 </PopoverContent>
