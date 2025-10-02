@@ -282,7 +282,7 @@ This is a demo project, and I know little of German, so errors of translations m
 
 - **Slow response from server**:
   - Server Region: Hong Kong
-  - Issue: Sometimes Server response is slow, especially for users are not in Asia
+  - Issue: Sometimes Server response is slow, such as you can't search user when you add a task then find the assigner, especially for users are not in Asia (in local dev server, I tested it works fine)
   - Status: The resource of free tier is limited and no plan of CDN, it won't be fix in the near future
 
 ---
