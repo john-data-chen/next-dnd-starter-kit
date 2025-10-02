@@ -19,6 +19,8 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
     const boardsFromDb = await BoardModel.find({
       $or: [{ owner: user.id }, { members: user.id }]
     })
+      .populate('owner', 'name')
+      .populate('members', 'name')
       .populate({
         path: 'projects',
         populate: {
@@ -41,7 +43,6 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
     })
 
     const userMap = await getUserMap(Array.from(allUserIds))
-
     return boardsFromDb.map((board) => convertBoardToPlainObject(board as BoardDocument, userMap))
   } catch (error) {
     console.error('Error in getBoardsFromDb:', error)
@@ -71,20 +72,24 @@ const getObjectIdString = (id: any): string => {
 }
 
 function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
-  const ownerId = getObjectIdString(boardDoc.owner)
+  const owner = boardDoc.owner as any
+  const ownerId = owner._id ? owner._id.toString() : getObjectIdString(boardDoc.owner)
+  const ownerName = owner.name || userMap.get(ownerId) || 'Unknown User'
+
   return {
     _id: boardDoc._id.toString(),
     title: boardDoc.title,
     description: boardDoc.description || '',
     owner: {
       id: ownerId,
-      name: userMap.get(ownerId) || 'Unknown User'
+      name: ownerName
     },
-    members: boardDoc.members.filter(Boolean).map((member) => {
-      const id = getObjectIdString(member)
+    members: boardDoc.members.filter(Boolean).map((member: any) => {
+      const id = member._id ? member._id.toString() : getObjectIdString(member)
+      const name = member.name || userMap.get(id) || 'Unknown User'
       return {
         id,
-        name: userMap.get(id) || 'Unknown User'
+        name
       }
     }),
     projects: (boardDoc.projects || [])
