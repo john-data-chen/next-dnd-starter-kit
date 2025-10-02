@@ -336,7 +336,8 @@ export const useTaskStore = create<State>()(
           throw new Error('User email not found')
         }
         try {
-          const response = await fetch('/api/boards', {
+          const baseUrl = typeof window === 'undefined' ? 'http://localhost:3000' : ''
+          const response = await fetch(`${baseUrl}/api/boards`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
