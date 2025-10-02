@@ -12,8 +12,8 @@ interface AppLayoutProps {
 
 export default async function AppLayout(props: Readonly<AppLayoutProps>) {
   const { children, params } = props
-  const { locale } = params
-
+  const resolvedParams = await params
+  const { locale } = resolvedParams
   const session = await auth()
   const t = await getTranslations({ locale, namespace: 'sidebar' })
 

@@ -1,6 +1,7 @@
 import { Board, Project } from '@/types/dbInterface'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+// oxlint-disable-next-line no-unused-vars
 import { createBoardInDb, deleteBoardInDb, updateBoardInDb } from './db/board'
 import { createProjectInDb, deleteProjectInDb, getProjectsFromDb, updateProjectInDb } from './db/project'
 import { createTaskInDb, deleteTaskInDb, getTasksByProjectId, updateTaskInDb, updateTaskProjectInDb } from './db/task'
@@ -335,15 +336,21 @@ export const useTaskStore = create<State>()(
           throw new Error('User email not found')
         }
         try {
-          const newBoard = await createBoardInDb({
-            title,
-            userEmail,
-            description
+          const response = await fetch('/api/boards', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title, description })
           })
-          if (!newBoard) {
-            throw new Error('Failed to create board')
+
+          if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Failed to create board')
           }
-          const boardId = newBoard._id.toString()
+
+          const data = await response.json()
+          const boardId = data.boardId
           set({
             currentBoardId: boardId,
             projects: []
