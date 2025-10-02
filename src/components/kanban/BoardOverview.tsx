@@ -137,48 +137,50 @@ export function BoardOverview() {
                 <p className="text-muted-foreground px-4">{t('noBoardsFound')}</p>
               ) : (
                 <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredMyBoards?.map((board) => (
-                    <Card
-                      key={board._id}
-                      className="hover:border-primary cursor-pointer transition-colors"
-                      onClick={() => {
-                        handleBoardClick(board._id)
-                      }}
-                    >
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="whitespace-nowrap">{board.title}</CardTitle>
-                        <BoardActions board={board} asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="-mr-2 h-8 w-8"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault()
+                  {filteredMyBoards?.map((board) => {
+                    return (
+                      <Card
+                        key={board._id}
+                        className="hover:border-primary cursor-pointer transition-colors"
+                        onClick={() => {
+                          handleBoardClick(board._id)
+                        }}
+                      >
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="whitespace-nowrap">{board.title}</CardTitle>
+                          <BoardActions board={board} asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="-mr-2 h-8 w-8"
+                              onClick={(e) => {
                                 e.stopPropagation()
-                              }
-                            }}
-                            aria-label={board.title ? `${board.title} actions` : 'Board actions'}
-                          >
-                            <DotsHorizontalIcon className="h-4 w-4" />
-                          </Button>
-                        </BoardActions>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-muted-foreground text-sm">{board.description || t('noDescription')}</p>
-                        <p className="mt-2 text-sm">
-                          {t('projects')}:{' '}
-                          {board.projects.length > 0 ? board.projects.map((p) => p.title).join(' / ') : '0'}
-                        </p>
-                        <p className="mt-2 text-sm">
-                          {t('members')}: {board.members.map((m) => m.name).join(', ')}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ))}
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                }
+                              }}
+                              aria-label={board.title ? `${board.title} actions` : 'Board actions'}
+                            >
+                              <DotsHorizontalIcon className="h-4 w-4" />
+                            </Button>
+                          </BoardActions>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-muted-foreground text-sm">{board.description || t('noDescription')}</p>
+                          <p className="mt-2 text-sm">
+                            {t('projects')}:{' '}
+                            {board.projects.length > 0 ? board.projects.map((p) => p.title).join(' / ') : '0'}
+                          </p>
+                          <p className="mt-2 text-sm">
+                            {t('members')}: {board.members.map((m) => m.name).join(', ')}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
                 </div>
               )}
             </section>
@@ -198,34 +200,36 @@ export function BoardOverview() {
                 <p className="text-muted-foreground px-4">{t('noTeamBoardsFound')}</p>
               ) : (
                 <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredTeamBoards?.map((board) => (
-                    <Card
-                      key={board._id}
-                      className="hover:border-primary cursor-pointer transition-colors"
-                      onClick={() => {
-                        handleBoardClick(board._id)
-                      }}
-                    >
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="whitespace-nowrap">{board.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-muted-foreground text-sm">{board.description || t('noDescription')}</p>
-                        <div className="mt-2 space-y-1">
-                          <p className="text-sm">
-                            {t('owner')}: {board.owner.name}
-                          </p>
-                          <p className="text-sm">
-                            {t('projects')}:{' '}
-                            {board.projects.length > 0 ? board.projects.map((p) => p.title).join(' / ') : '0'}
-                          </p>
-                          <p className="text-sm">
-                            {t('members')}: {board.members.map((m) => m.name).join(', ')}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                  {filteredTeamBoards?.map((board) => {
+                    return (
+                      <Card
+                        key={board._id}
+                        className="hover:border-primary cursor-pointer transition-colors"
+                        onClick={() => {
+                          handleBoardClick(board._id)
+                        }}
+                      >
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="whitespace-nowrap">{board.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-muted-foreground text-sm">{board.description || t('noDescription')}</p>
+                          <div className="mt-2 space-y-1">
+                            <p className="text-sm">
+                              {t('owner')}: {board.owner.name}
+                            </p>
+                            <p className="text-sm">
+                              {t('projects')}:{' '}
+                              {board.projects.length > 0 ? board.projects.map((p) => p.title).join(' / ') : '0'}
+                            </p>
+                            <p className="text-sm">
+                              {t('members')}: {board.members.map((m) => m.name).join(', ')}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
                 </div>
               )}
             </section>
