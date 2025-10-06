@@ -51,7 +51,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
-    "lucide-react": "^0.544.0",
+    "lucide-react": "^0.545.0",
     "mongoose": "^8.19.1",
     "next": "^15.5.4",
     "next-auth": "5.0.0-beta.29",
