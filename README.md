@@ -231,6 +231,33 @@ src/
 └── env.example # Environment variables example
 ```
 
+## AI Tools
+
+I use AI tools to help me with the development of this project.
+
+### Editor with AI
+
+- [Windsurf](https://windsurf.com/)
+- [Zed](https://zed.dev/)
+
+### VS code extension
+
+- [Kilo Code](https://github.com/Kilo-Org/kilocode)
+
+### Command line interface
+
+- [gemini-cli](https://github.com/google-gemini/gemini-cli)
+- [claude-code](https://github.com/anthropics/claude-code)
+
+### MCP
+
+- [chrome-devtools](https://github.com/ChromeDevTools/chrome-devtools-mcp)
+- [context7](https://github.com/upstash/context7)
+
+### Documentation
+
+- [NotebookLM](https://notebooklm.google.com/)
+
 ## Experimental Tools
 
 ### Oxlint and Type-Aware plug-in
