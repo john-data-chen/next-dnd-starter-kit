@@ -24,7 +24,7 @@ The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop f
 ---
 
 **Love this template?**
-If you like my templates, don't forget to [give it a star](https://github.com/john-data-chen/next-dnd-starter-kit) today!
+If you like my templates, don't forget to **give it a star** today!
 
 And its next version: monorepo template is development in progress, you can check it out here: [turborepo-starter-kit](https://github.com/john-data-chen/turborepo-starter-kit)
 
@@ -233,7 +233,7 @@ src/
 
 ## AI Tools
 
-I am using AI tools to help our team to improve the quality of code and the efficiency of development, this project is one of playgrounds of AI tools.
+I am using AI tools to help our team improve the quality of code and the efficiency of development. This project is one of the playgrounds for AI tools.
 
 ### Editor with AI
 
@@ -254,7 +254,7 @@ I am using AI tools to help our team to improve the quality of code and the effi
 - [chrome-devtools](https://github.com/ChromeDevTools/chrome-devtools-mcp)
 - [context7](https://github.com/upstash/context7)
 
-### Github Action (code review, PR summary)
+### GitHub Action (code review, PR summary)
 
 - [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist)
 

@@ -151,16 +151,16 @@ describe('Zustand Store: useTaskStore', () => {
           json: () => Promise.resolve(mockResponse)
         } as Response)
       )
-    
+
       let boardId = ''
       await act(async () => {
         boardId = await useTaskStore.getState().addBoard('New Board', 'Desc')
       })
-    
+
       expect(global.fetch).toHaveBeenCalledWith('/api/boards', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ title: 'New Board', description: 'Desc' })
       })
