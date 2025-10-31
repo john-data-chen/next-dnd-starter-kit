@@ -15,6 +15,6 @@
   "importOrderTypeScriptVersion": "5.9.2",
   "importOrderCaseSensitive": false,
   "plugins": ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
-  "tailwindStylesheet": ".src/styles/globals.css",
+  "tailwindStylesheet": "./src/styles/globals.css",
   "tailwindFunctions": ["clsx"]
 }
