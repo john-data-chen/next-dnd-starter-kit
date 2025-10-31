@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
 
 interface AppLayoutProps {
   children: React.ReactNode
-  params: { locale: string }
+  params: Promise<{ locale: string }>
 }
 
 export default async function AppLayout(props: Readonly<AppLayoutProps>) {
