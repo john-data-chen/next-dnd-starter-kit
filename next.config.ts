@@ -14,7 +14,10 @@ const nextConfig: NextConfig = {
       language: 'typescript',
       eagerEsModules: false
     }
-  }
+  },
+  // enable react compiler will increase build time 30~40%
+  reactCompiler: false,
+  experimental: { turbopackFileSystemCacheForDev: true }
 }
 
 export default withNextIntl(nextConfig)
