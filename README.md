@@ -11,7 +11,7 @@
 
 <img src="./public/assets/Screen_Recording.gif" alt="Screen Recording" width="270" height="579">
 
-The **Enterprise-grade Next.js template** with 80%+ test coverage, drag & drop functionality, and WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
+The **Enterprise-grade Next.js template** with 70%+ test coverage, drag & drop functionality, and WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
 
 - 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
 - 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
@@ -35,7 +35,7 @@ Every star motivates me to deliver more high-quality templates. 🚀
 **Key Accomplishments**:
 
 - Responsive Design: Ensures optimal user experience across all devices, reflecting a product-centric development approach.
-- Exceptional Test Coverage (80%+): Achieved through comprehensive unit tests, significantly reducing potential bugs and enhancing long-term maintainability.
+- Exceptional Test Coverage (70%+): Achieved through comprehensive unit tests, significantly reducing potential bugs and enhancing long-term maintainability.
 - Reliable User Experience: Validated the critical login flow across all major browsers (Chrome, Safari, Edge) on both desktop and mobile using Playwright E2E tests.
 - Superior Code Quality (SonarQube All A Rating): Rigorous analysis confirms high standards in Security, Reliability, and Maintainability, minimizing technical debt and ensuring a healthy codebase.
 - Automated CI/CD Pipeline (GitHub Actions, SonarQube, Codecov, Vercel): Establishes a streamlined, production-ready deployment process, ensuring rapid, reliable, and high-quality releases.
@@ -188,7 +188,7 @@ pnpm build
 ### 📊 Testing Strategy
 
 - Unit Tests: Focused on critical store logic, complex form validations, and isolated component behaviors, ensuring granular code reliability.
-- Test Coverage: Maintained above 80%+ (verified via npx vitest run --coverage), reflecting a commitment to robust code coverage without sacrificing test quality.
+- Test Coverage: Maintained above 70%+ (verified via npx vitest run --coverage), reflecting a commitment to robust code coverage without sacrificing test quality.
 - E2E Tests: Critical user flows, such as the Login page, are validated end-to-end using Playwright, simulating real user interactions to guarantee system integrity.
 - Cross-browser Testing Strategy: Ensures consistent functionality and user experience across a carefully selected range of desktop and mobile browsers based on market share, mitigating compatibility issues.
 
@@ -269,10 +269,10 @@ I am using AI tools to help our team improve the quality of code and the efficie
 - status: enabled
 - benefit:
   - 50~100 times faster than ESLint (it can lint this small project in 1.5 seconds, it has more potential in big projects with thousands of files)
-  - easier to setup
+  - easier to setup (compared to ESLint 9+)
   - clearer instructions showing how to fix each issue
   - many ESLint packages can be removed (in my case 10 packages)
-- note: Oxlint is in a stable version, and I have used it in production for a long time.
+- note: Oxlint is in a stable version, and many companies have used it in production for a long time.
   But Type-Aware plug-in is still in a preview version. It is not recommended to use it in production, and it is a experimental in this project.
 
 #### Introductions
@@ -282,7 +282,7 @@ I am using AI tools to help our team improve the quality of code and the efficie
 
 ### Turbopack
 
-- status: enabled (dev and build mode)
+- status: enabled in default (Next.js 16)
 - benefit: the Rust-based successor of webpack by Vercel, offers near-instantaneous server startup and lightning-fast Hot Module Replacement (HMR). This is achieved through its incremental architecture, which caches function-level computations, ensuring we only build what's necessary.
 - [introduction](https://nextjs.org/docs/app/api-reference/turbopack)
 
@@ -299,6 +299,11 @@ I am using AI tools to help our team improve the quality of code and the efficie
 - [introduction](https://react.dev/learn/react-compiler)
 
 ## Known Issues & Limitations
+
+### Test coverage
+
+- After Vitest v4 changes its v8 coverage standard, test coverage has decreased slightly compared to v3.
+- In new coverage standard, I need to add more edge cases to let coverage over 80%, which is not urgent for now.
 
 ### The errors / code smells of Oxlint and Type-Aware plug-in
 
