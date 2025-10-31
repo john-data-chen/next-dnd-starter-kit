@@ -106,4 +106,29 @@ describe('UserNav Component', () => {
     expect(mockRouterPush).toHaveBeenCalledTimes(1)
     expect(mockRouterPush).toHaveBeenCalledWith(ROUTES.AUTH.LOGIN)
   })
+
+  it('should handle sign out errors gracefully', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const testError = new Error('Sign out failed')
+    vi.mocked(signOut).mockRejectedValueOnce(testError)
+    vi.mocked(useSession).mockReturnValue({
+      data: mockSession,
+      status: 'authenticated',
+      update: vi.fn()
+    })
+
+    const user = userEvent.setup()
+    render(<UserNav />)
+    const avatarButton = screen.getByRole('button')
+
+    await user.click(avatarButton)
+    const logoutMenuItem = screen.getByRole('menuitem', { name: 'logOut' })
+    await user.click(logoutMenuItem)
+
+    await vi.waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalledWith(testError)
+    })
+
+    consoleErrorSpy.mockRestore()
+  })
 })

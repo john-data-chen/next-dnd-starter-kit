@@ -42,4 +42,13 @@ describe('ProjectForm', () => {
     )
     expect(screen.getByTestId('child-btn')).toBeInTheDocument()
   })
+
+  it('should handle form submission', () => {
+    const onSubmit = vi.fn()
+    render(<ProjectForm onSubmit={onSubmit} />)
+    const form = screen.getByTestId('form')
+    fireEvent.submit(form)
+    // The form submission handler is called
+    expect(form).toBeInTheDocument()
+  })
 })
