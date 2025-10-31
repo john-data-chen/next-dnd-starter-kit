@@ -14,10 +14,6 @@ const nextConfig: NextConfig = {
       language: 'typescript',
       eagerEsModules: false
     }
-  },
-  experimental: {
-    // react compiler only enhances performance a little bit, but it will increase build time 30~40%, so disable until it is stable
-    reactCompiler: false
   }
 }
 
