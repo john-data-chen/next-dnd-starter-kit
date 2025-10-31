@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
 interface Props {
-  params: { locale: string }
+  params: Promise<{ locale: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -253,6 +253,7 @@ I am using AI tools to help our team improve the quality of code and the efficie
 
 - [chrome-devtools](https://github.com/ChromeDevTools/chrome-devtools-mcp)
 - [context7](https://github.com/upstash/context7)
+- [Next.js](https://nextjs.org/docs/app/guides/mcp)
 
 ### GitHub Action (code review, PR summary)
 
@@ -304,11 +305,6 @@ I am using AI tools to help our team improve the quality of code and the efficie
 
 - After Vitest v4 changes its v8 coverage standard, test coverage has decreased slightly compared to v3.
 - In new coverage standard, I need to add more edge cases to let coverage over 80%, which is not urgent for now.
-
-### The errors / code smells of Oxlint and Type-Aware plug-in
-
-- After I enabled new rules of Oxlint and Type-Aware plug-in, linter finds more code smells in the project, but warnings and errors of linter are not issues, no effect in functional.
-- Cleaning technical debt is a long term plan, it is impossible to finish at once. I will clean by small steps each time.
 
 ### German Translations
 
