@@ -3,8 +3,10 @@ import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock hooks
+const mockUseParams = vi.fn(() => ({ boardId: 'test-board-id' }))
+
 vi.mock('next/navigation', () => ({
-  useParams: () => ({ boardId: 'test-board-id' })
+  useParams: () => mockUseParams()
 }))
 
 vi.mock('next-intl', () => ({
@@ -33,10 +35,15 @@ vi.mock('@/components/layout/PageContainer', () => ({
   default: ({ children }: { children: React.ReactNode }) => <div data-testid="mock-page-container">{children}</div>
 }))
 
+// Mock console.error
+const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
 describe('BoardPage', () => {
   beforeEach(() => {
     setCurrentBoardIdMock.mockClear()
     fetchProjectsMock.mockClear()
+    consoleErrorSpy.mockClear()
+    mockUseParams.mockReturnValue({ boardId: 'test-board-id' })
   })
 
   it('should render the board and call store actions on mount', () => {
@@ -48,5 +55,32 @@ describe('BoardPage', () => {
     expect(screen.getByTestId('mock-board')).toBeInTheDocument()
     expect(setCurrentBoardIdMock).toHaveBeenCalledWith('test-board-id')
     expect(fetchProjectsMock).toHaveBeenCalledWith('test-board-id')
+  })
+
+  it('should not call store actions when boardId is undefined', () => {
+    // Mock useParams to return undefined boardId
+    mockUseParams.mockReturnValue({ boardId: undefined })
+
+    // Action
+    render(<BoardPage />)
+
+    // Assertions
+    expect(screen.getByTestId('mock-page-container')).toBeInTheDocument()
+    expect(setCurrentBoardIdMock).not.toHaveBeenCalled()
+    expect(fetchProjectsMock).not.toHaveBeenCalled()
+  })
+
+  it('should handle errors when fetching projects fails', async () => {
+    // Mock fetchProjects to reject
+    const testError = new Error('Failed to fetch projects')
+    fetchProjectsMock.mockRejectedValueOnce(testError)
+
+    // Action
+    render(<BoardPage />)
+
+    // Wait for the error to be logged
+    await vi.waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalled()
+    })
   })
 })

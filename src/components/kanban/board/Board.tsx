@@ -324,7 +324,7 @@ export function Board() {
         </div>
         <BoardContainer>
           {isLoadingProjects ? (
-            <Skeleton className="bg-secondary flex h-[75vh] max-h-[75vh] w-full shrink-0 snap-center flex-col md:w-[380px]" />
+            <Skeleton className="flex h-[75vh] max-h-[75vh] w-full shrink-0 snap-center flex-col bg-secondary md:w-[380px]" />
           ) : (
             <SortableContext items={projectsId}>
               {projects?.map((project: Project) => (

@@ -106,14 +106,14 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           variant="ghost"
           {...attributes}
           {...listeners}
-          className="text-secondary-foreground/50 -ml-2 h-8 w-16 cursor-grab p-1"
+          className="-ml-2 h-8 w-16 cursor-grab p-1 text-secondary-foreground/50"
           data-testid="task-card-drag-button"
           aria-label={t('moveTask')}
         >
           <PointerIcon />
         </Button>
         <div className="mx-2 flex flex-1 flex-col items-start gap-2">
-          {task.title && <h3 className="text-lg font-medium leading-none tracking-tight">{task.title}</h3>}
+          {task.title && <h3 className="text-lg leading-none font-medium tracking-tight">{task.title}</h3>}
           <Badge variant="secondary" className={cn('text-white', task.status && statusConfig[task.status]?.className)}>
             {task.status ? statusConfig[task.status]?.label : t('noStatus')}
           </Badge>
@@ -131,7 +131,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
         {task.creator && (
           <div className={getLastField(task) !== 'creator' ? 'border-b' : ''}>
             <CardContent className="px-3 py-2">
-              <div className="text-muted-foreground flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <UserIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
                 <span>{t('createdBy', { name: task.creator.name })}</span>
               </div>
@@ -141,7 +141,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
         {task.lastModifier && (
           <div className={getLastField(task) !== 'lastModifier' ? 'border-b' : ''}>
             <CardContent className="px-3 py-2">
-              <div className="text-muted-foreground flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <UserIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
                 <span>{t('lastModifiedBy', { name: task.lastModifier.name })}</span>
               </div>
@@ -151,7 +151,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
         {task.assignee && (
           <div className={getLastField(task) !== 'assignee' ? 'border-b' : ''}>
             <CardContent className="px-3 py-2">
-              <div className="text-muted-foreground flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <UserIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
                 <span>{t('assignee', { name: task.assignee.name })}</span>
               </div>
@@ -161,7 +161,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
         {task.dueDate && (
           <div className={getLastField(task) !== 'dueDate' ? 'border-b' : ''}>
             <CardContent className="px-3 py-2">
-              <div className="text-muted-foreground flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar1Icon className="mt-0.5 h-4 w-4 flex-shrink-0" />
                 <span>
                   {t('dueDate')}: {format(new Date(task.dueDate), 'yyyy/MM/dd')}
@@ -174,8 +174,8 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <div>
             <CardContent className="px-3 py-2">
               <div className="flex items-start gap-2">
-                <FileTextIcon className="text-muted-foreground mt-0.5 h-4 w-4 flex-shrink-0" />
-                <p className="text-muted-foreground text-sm leading-relaxed" data-testid="task-card-description">
+                <FileTextIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                <p className="text-sm leading-relaxed text-muted-foreground" data-testid="task-card-description">
                   {task.description}
                 </p>
               </div>

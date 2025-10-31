@@ -199,4 +199,36 @@ describe('BoardOverview Component', () => {
     render(<BoardOverview />)
     expect(screen.getByText('noDescription')).toBeInTheDocument()
   })
+
+  it('should navigate to board when clicking on a board card', async () => {
+    const user = userEvent.setup()
+    mockUseBoards.mockReturnValue({
+      myBoards: [mockMyBoard1],
+      teamBoards: [],
+      loading: false,
+      fetchBoards: vi.fn()
+    })
+    render(<BoardOverview />)
+
+    const boardCard = screen.getByText(mockMyBoard1.title).closest('.cursor-pointer')
+    await user.click(boardCard!)
+
+    expect(mockRouterPush).toHaveBeenCalledWith(`/boards/${mockMyBoard1._id}`)
+  })
+
+  it('should navigate to team board when clicking on a team board card', async () => {
+    const user = userEvent.setup()
+    mockUseBoards.mockReturnValue({
+      myBoards: [],
+      teamBoards: [mockTeamBoard1],
+      loading: false,
+      fetchBoards: vi.fn()
+    })
+    render(<BoardOverview />)
+
+    const boardCard = screen.getByText(mockTeamBoard1.title).closest('.cursor-pointer')
+    await user.click(boardCard!)
+
+    expect(mockRouterPush).toHaveBeenCalledWith(`/boards/${mockTeamBoard1._id}`)
+  })
 })

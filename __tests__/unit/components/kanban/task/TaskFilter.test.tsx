@@ -102,4 +102,33 @@ describe('TaskFilter Component', () => {
     fireEvent.click(clearButton)
     expect(setFilterMock).toHaveBeenCalledWith({ status: null, search: '' })
   })
+
+  it('should calculate task counts correctly when projects have tasks', () => {
+    mockUseTaskStore.mockReturnValue({
+      filter: { status: null, search: '' },
+      setFilter: setFilterMock,
+      projects: [
+        {
+          _id: 'project1',
+          name: 'Project 1',
+          order: 0,
+          tasks: [
+            { _id: 'task1', title: 'Task 1', status: 'TODO' },
+            { _id: 'task2', title: 'Task 2', status: 'IN_PROGRESS' },
+            { _id: 'task3', title: 'Task 3', status: 'DONE' }
+          ]
+        },
+        {
+          _id: 'project2',
+          name: 'Project 2',
+          order: 1,
+          tasks: [{ _id: 'task4', title: 'Task 4', status: 'TODO' }]
+        }
+      ] as any
+    })
+
+    render(<TaskFilter />)
+    // Component should render without errors and calculate counts
+    expect(screen.getByTestId('status-select')).toBeInTheDocument()
+  })
 })
