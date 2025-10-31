@@ -253,6 +253,7 @@ I am using AI tools to help our team improve the quality of code and the efficie
 
 - [chrome-devtools](https://github.com/ChromeDevTools/chrome-devtools-mcp)
 - [context7](https://github.com/upstash/context7)
+- [Next.js](https://nextjs.org/docs/app/guides/mcp)
 
 ### GitHub Action (code review, PR summary)
 
