@@ -316,6 +316,11 @@ I am using AI tools to help our team improve the quality of code and the efficie
 
 ## Known Issues & Limitations
 
+### Mongoose 9 Compatibility issue
+
+- After upgrade mongoose to 9.x, starting dev server will pop an error: Module not found: Can't resolve '#async_hooks'. then stop.
+- Rollback and wait for vercel to fix it. ([github issue](https://github.com/vercel/next.js/issues/58052))
+
 ### Test coverage
 
 - After Vitest v4 changes its v8 coverage standard, test coverage has decreased slightly compared to v3.
