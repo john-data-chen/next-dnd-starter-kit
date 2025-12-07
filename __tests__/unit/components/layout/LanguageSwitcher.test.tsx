@@ -13,13 +13,17 @@ vi.mock('@/components/ui/button', () => ({
 }))
 vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: (props: any) => <div data-testid="dropdown-menu">{props.children}</div>,
-  DropdownMenuContent: (props: any) => <div data-testid="dropdown-menu-content">{props.children}</div>,
+  DropdownMenuContent: (props: any) => (
+    <div data-testid="dropdown-menu-content">{props.children}</div>
+  ),
   DropdownMenuItem: (props: any) => (
     <div data-testid="dropdown-menu-item" onClick={props.onClick}>
       {props.children}
     </div>
   ),
-  DropdownMenuTrigger: (props: any) => <div data-testid="dropdown-menu-trigger">{props.children}</div>
+  DropdownMenuTrigger: (props: any) => (
+    <div data-testid="dropdown-menu-trigger">{props.children}</div>
+  )
 }))
 
 // Mock i18n/navigation hooks

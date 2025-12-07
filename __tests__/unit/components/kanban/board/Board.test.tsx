@@ -66,13 +66,17 @@ vi.mock('@dnd-kit/core', async (importOriginal: () => Promise<any>) => {
   const actual = (await importOriginal()) as typeof import('@dnd-kit/core') // FIXED
   return {
     ...actual,
-    DndContext: vi.fn(({ children, onDragStart, onDragOver, onDragEnd }: React.PropsWithChildren<any>) => {
-      capturedDragStart = onDragStart
-      capturedDragOver = onDragOver
-      capturedDragEnd = onDragEnd
-      return <div data-testid="dnd-context-wrapper">{children}</div>
-    }),
-    DragOverlay: ({ children }: { children: React.ReactNode }) => <div data-testid="drag-overlay">{children}</div>,
+    DndContext: vi.fn(
+      ({ children, onDragStart, onDragOver, onDragEnd }: React.PropsWithChildren<any>) => {
+        capturedDragStart = onDragStart
+        capturedDragOver = onDragOver
+        capturedDragEnd = onDragEnd
+        return <div data-testid="dnd-context-wrapper">{children}</div>
+      }
+    ),
+    DragOverlay: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="drag-overlay">{children}</div>
+    ),
     MouseSensor: actual.MouseSensor,
     TouchSensor: actual.TouchSensor,
     useSensor: actual.useSensor,
@@ -85,8 +89,18 @@ vi.mock('@/components/kanban/project/NewProjectDialog', () => ({
 }))
 
 vi.mock('@/components/kanban/project/Project', () => ({
-  BoardContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="board-container">{children}</div>,
-  BoardProject: ({ project, tasks, isOverlay }: { project: Project; tasks: Task[]; isOverlay?: boolean }) => (
+  BoardContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="board-container">{children}</div>
+  ),
+  BoardProject: ({
+    project,
+    tasks,
+    isOverlay
+  }: {
+    project: Project
+    tasks: Task[]
+    isOverlay?: boolean
+  }) => (
     <div data-testid={`board-project-${project._id}`} data-is-overlay={isOverlay || false}>
       {project.title}
       <div data-testid={`project-tasks-${project._id}`}>
@@ -213,22 +227,34 @@ describe('Board', () => {
     mockFilterData = { status: TaskStatus.TODO }
     render(<Board />)
     const project1Tasks = screen.getByTestId('project-tasks-project1')
-    expect(project1Tasks.querySelector('[data-testid="task-in-project-task1-p1"]')).toBeInTheDocument()
-    expect(project1Tasks.querySelector('[data-testid="task-in-project-task2-p1"]')).not.toBeInTheDocument()
+    expect(
+      project1Tasks.querySelector('[data-testid="task-in-project-task1-p1"]')
+    ).toBeInTheDocument()
+    expect(
+      project1Tasks.querySelector('[data-testid="task-in-project-task2-p1"]')
+    ).not.toBeInTheDocument()
 
     const project2Tasks = screen.getByTestId('project-tasks-project2')
-    expect(project2Tasks.querySelector('[data-testid="task-in-project-task1-p2"]')).toBeInTheDocument()
+    expect(
+      project2Tasks.querySelector('[data-testid="task-in-project-task1-p2"]')
+    ).toBeInTheDocument()
   })
 
   it('should filter tasks by search term', () => {
     mockFilterData = { search: 'Task 1' }
     render(<Board />)
     const project1Tasks = screen.getByTestId('project-tasks-project1')
-    expect(project1Tasks.querySelector('[data-testid="task-in-project-task1-p1"]')).toBeInTheDocument()
-    expect(project1Tasks.querySelector('[data-testid="task-in-project-task2-p1"]')).not.toBeInTheDocument()
+    expect(
+      project1Tasks.querySelector('[data-testid="task-in-project-task1-p1"]')
+    ).toBeInTheDocument()
+    expect(
+      project1Tasks.querySelector('[data-testid="task-in-project-task2-p1"]')
+    ).not.toBeInTheDocument()
 
     const project2Tasks = screen.getByTestId('project-tasks-project2')
-    expect(project2Tasks.querySelector('[data-testid="task-in-project-task1-p2"]')).toBeInTheDocument()
+    expect(
+      project2Tasks.querySelector('[data-testid="task-in-project-task1-p2"]')
+    ).toBeInTheDocument()
   })
 
   it('should call setProjects after drag over a task in another project', async () => {

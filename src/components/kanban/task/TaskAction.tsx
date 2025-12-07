@@ -12,7 +12,13 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +51,15 @@ export interface TaskActionsProps {
   onDelete?: (id: string) => void
 }
 
-export function TaskActions({ id, title, description, dueDate, assignee, status, onDelete }: TaskActionsProps) {
+export function TaskActions({
+  id,
+  title,
+  description,
+  dueDate,
+  assignee,
+  status,
+  onDelete
+}: TaskActionsProps) {
   const updateTask = useTaskStore((state) => state.updateTask)
   const removeTask = useTaskStore((state) => state.removeTask)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -91,9 +105,14 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
 
   const handleSubmit = (values: z.infer<typeof TaskFormSchema>) => {
     const assigneeId = values.assignee?._id
-    updateTask(id, values.title, values.status ?? 'TODO', values.description, values.dueDate, assigneeId).catch(
-      console.error
-    )
+    updateTask(
+      id,
+      values.title,
+      values.status ?? 'TODO',
+      values.description,
+      values.dueDate,
+      assigneeId
+    ).catch(console.error)
     toast.success(t('updateSuccess', { title: values.title }))
     setEditEnable(false)
   }
@@ -155,7 +174,12 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
         }}
       >
         <DropdownMenuTrigger asChild>
-          <Button variant="default" size="icon" className="h-8 w-12" data-testid="task-actions-trigger">
+          <Button
+            variant="default"
+            size="icon"
+            className="h-8 w-12"
+            data-testid="task-actions-trigger"
+          >
             <span className="sr-only">{t('actions')}</span>
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
@@ -166,7 +190,9 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
               setEditEnable(true)
             }}
             disabled={!permissions?.canEdit}
-            className={!permissions?.canEdit ? 'cursor-not-allowed text-muted-foreground line-through' : ''}
+            className={
+              !permissions?.canEdit ? 'cursor-not-allowed text-muted-foreground line-through' : ''
+            }
           >
             {t('edit')}
           </DropdownMenuItem>
@@ -187,15 +213,24 @@ export function TaskActions({ id, title, description, dueDate, assignee, status,
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <AlertDialog open={showDeleteDialog && !!permissions?.canDelete} onOpenChange={setShowDeleteDialog}>
+      <AlertDialog
+        open={showDeleteDialog && !!permissions?.canDelete}
+        onOpenChange={setShowDeleteDialog}
+      >
         <AlertDialogContent data-testid="delete-task-dialog">
           <AlertDialogHeader>
             <AlertDialogTitle>{t('confirmDeleteTitle', { title })}</AlertDialogTitle>
-            <AlertDialogDescription>{t('confirmDeleteDescription', { title })}</AlertDialogDescription>
+            <AlertDialogDescription>
+              {t('confirmDeleteDescription', { title })}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="cancel-delete-button">{t('cancel')}</AlertDialogCancel>
-            <Button variant="destructive" onClick={handleDelete} data-testid="confirm-delete-button">
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              data-testid="confirm-delete-button"
+            >
               {t('delete')}
             </Button>
           </AlertDialogFooter>

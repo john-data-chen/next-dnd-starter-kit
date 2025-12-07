@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { useBoards } from '@/hooks/useBoards'
 import { usePathname, useRouter } from '@/i18n/navigation'
 import { DotsHorizontalIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
@@ -59,9 +65,13 @@ export function BoardOverview() {
     return <div>{t('loading')}</div>
   }
 
-  const filteredMyBoards = myBoards?.filter((board) => board.title.toLowerCase().includes(search.toLowerCase()))
+  const filteredMyBoards = myBoards?.filter((board) =>
+    board.title.toLowerCase().includes(search.toLowerCase())
+  )
 
-  const filteredTeamBoards = teamBoards?.filter((board) => board.title.toLowerCase().includes(search.toLowerCase()))
+  const filteredTeamBoards = teamBoards?.filter((board) =>
+    board.title.toLowerCase().includes(search.toLowerCase())
+  )
 
   const shouldShowMyBoards = filter === 'all' || filter === 'my'
   const shouldShowTeamBoards = filter === 'all' || filter === 'team'
@@ -169,10 +179,14 @@ export function BoardOverview() {
                           </BoardActions>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-sm text-muted-foreground">{board.description || t('noDescription')}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {board.description || t('noDescription')}
+                          </p>
                           <p className="mt-2 text-sm">
                             {t('projects')}:{' '}
-                            {board.projects.length > 0 ? board.projects.map((p) => p.title).join(' / ') : '0'}
+                            {board.projects.length > 0
+                              ? board.projects.map((p) => p.title).join(' / ')
+                              : '0'}
                           </p>
                           <p className="mt-2 text-sm">
                             {t('members')}: {board.members.map((m) => m.name).join(', ')}
@@ -213,14 +227,18 @@ export function BoardOverview() {
                           <CardTitle className="whitespace-nowrap">{board.title}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-sm text-muted-foreground">{board.description || t('noDescription')}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {board.description || t('noDescription')}
+                          </p>
                           <div className="mt-2 space-y-1">
                             <p className="text-sm">
                               {t('owner')}: {board.owner.name}
                             </p>
                             <p className="text-sm">
                               {t('projects')}:{' '}
-                              {board.projects.length > 0 ? board.projects.map((p) => p.title).join(' / ') : '0'}
+                              {board.projects.length > 0
+                                ? board.projects.map((p) => p.title).join(' / ')
+                                : '0'}
                             </p>
                             <p className="text-sm">
                               {t('members')}: {board.members.map((m) => m.name).join(', ')}

@@ -46,14 +46,18 @@ vi.mock('@/components/ui/dialog', () => ({
 }))
 vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: (props: any) => <div data-testid="dropdown-menu">{props.children}</div>,
-  DropdownMenuContent: (props: any) => <div data-testid="dropdown-menu-content">{props.children}</div>,
+  DropdownMenuContent: (props: any) => (
+    <div data-testid="dropdown-menu-content">{props.children}</div>
+  ),
   DropdownMenuItem: (props: any) => (
     <div data-testid="dropdown-menu-item" onClick={props.onSelect}>
       {props.children}
     </div>
   ),
   DropdownMenuSeparator: (props: any) => <div data-testid="dropdown-menu-separator" />,
-  DropdownMenuTrigger: (props: any) => <div data-testid="dropdown-menu-trigger">{props.children}</div>
+  DropdownMenuTrigger: (props: any) => (
+    <div data-testid="dropdown-menu-trigger">{props.children}</div>
+  )
 }))
 vi.mock('@radix-ui/react-icons', () => ({
   DotsHorizontalIcon: () => <svg data-testid="dots-icon" />

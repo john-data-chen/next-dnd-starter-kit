@@ -1,6 +1,13 @@
 'use client'
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -64,7 +71,11 @@ export function BoardForm({ defaultValues, onSubmit, children }: BoardFormProps)
             <FormItem>
               <FormLabel>{t('descriptionLabel')}</FormLabel>
               <FormControl>
-                <Textarea placeholder={t('descriptionPlaceholder')} className="resize-none" {...field} />
+                <Textarea
+                  placeholder={t('descriptionPlaceholder')}
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -99,7 +99,9 @@ vi.mock('@/components/kanban/task/NewTaskDialog', () => ({
   default: (props: any) => <div data-testid="new-task-dialog" />
 }))
 vi.mock('@/components/kanban/task/TaskCard', () => ({
-  TaskCard: ({ task }: { task: Task }) => <div data-testid={`task-card-${task._id}`}>{task.title}</div>
+  TaskCard: ({ task }: { task: Task }) => (
+    <div data-testid={`task-card-${task._id}`}>{task.title}</div>
+  )
 }))
 
 // Mock UI Components (Simplified)
@@ -168,7 +170,9 @@ describe('BoardProject Component', () => {
 
     expect(screen.getByText(`description: ${mockProject.description}`)).toBeInTheDocument()
     expect(screen.getByText(`owner: ${mockProject.owner.name}`)).toBeInTheDocument()
-    expect(screen.getByText(`members: ${mockProject.members.map((m) => m.name).join(', ')}`)).toBeInTheDocument()
+    expect(
+      screen.getByText(`members: ${mockProject.members.map((m) => m.name).join(', ')}`)
+    ).toBeInTheDocument()
   })
 
   it('should render all tasks when no filter is active', () => {

@@ -26,7 +26,9 @@ if (!process.env.DATABASE_URL) {
 
 console.log('Environment:', {
   NODE_ENV: process.env.NODE_ENV || 'development',
-  DATABASE_URL: process.env.DATABASE_URL ? '***' + process.env.DATABASE_URL.split('@').pop() : 'Not set'
+  DATABASE_URL: process.env.DATABASE_URL
+    ? '***' + process.env.DATABASE_URL.split('@').pop()
+    : 'Not set'
 })
 
 console.log('Environment:', {

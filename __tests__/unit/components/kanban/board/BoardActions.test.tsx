@@ -32,7 +32,8 @@ vi.mock('next/navigation', () => ({
 
 // Mock next-intl
 vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string, values?: any) => (values ? `${key} ${JSON.stringify(values)}` : key)
+  useTranslations: () => (key: string, values?: any) =>
+    values ? `${key} ${JSON.stringify(values)}` : key
 }))
 
 // --- Mock sonner (toast) using vi.hoisted ---
@@ -135,7 +136,9 @@ describe('BoardActions', () => {
         title: 'Edited Title',
         description: 'Edited Desc'
       })
-      expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith('boardUpdated {"title":"Edited Title"}')
+      expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith(
+        'boardUpdated {"title":"Edited Title"}'
+      )
       expect(fetchBoardsMock).toHaveBeenCalled()
       expect(refreshMock).toHaveBeenCalled()
     })
@@ -176,7 +179,9 @@ describe('BoardActions', () => {
     fireEvent.click(saveButton)
 
     await waitFor(() => {
-      expect(toastMocks.toastErrorMock).toHaveBeenCalledWith(`boardUpdateFailed {"error":"${String(error)}"}`)
+      expect(toastMocks.toastErrorMock).toHaveBeenCalledWith(
+        `boardUpdateFailed {"error":"${String(error)}"}`
+      )
     })
   })
 
@@ -194,7 +199,9 @@ describe('BoardActions', () => {
     fireEvent.click(confirmDeleteButton)
 
     await waitFor(() => {
-      expect(toastMocks.toastErrorMock).toHaveBeenCalledWith(`boardDeleteFailed {"error":"${String(error)}"}`)
+      expect(toastMocks.toastErrorMock).toHaveBeenCalledWith(
+        `boardDeleteFailed {"error":"${String(error)}"}`
+      )
     })
   })
 })

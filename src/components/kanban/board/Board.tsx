@@ -66,7 +66,9 @@ export function Board() {
         project: null
       }
     }
-    const tasksInProject = project.tasks.filter((task: Task) => task.project.toString() === projectId)
+    const tasksInProject = project.tasks.filter(
+      (task: Task) => task.project.toString() === projectId
+    )
     const taskPosition = tasksInProject.findIndex((task: { _id: string }) => task._id === taskId)
     return {
       tasksInProject,
@@ -112,11 +114,17 @@ export function Board() {
     }
     // get active task
     const activeTask = active.data.current!.task
-    const activeProject = updatedProjects.find((project: Project) => project._id === active.data.current!.task.project)
-    const activeTaskIdx = activeProject!.tasks.findIndex((task: Task) => task._id === activeTask._id)
+    const activeProject = updatedProjects.find(
+      (project: Project) => project._id === active.data.current!.task.project
+    )
+    const activeTaskIdx = activeProject!.tasks.findIndex(
+      (task: Task) => task._id === activeTask._id
+    )
     // drag a task over a project
     if (over.data.current!.type === 'Project') {
-      const overProject = updatedProjects.find((project: Project) => project === over.data.current!.project)
+      const overProject = updatedProjects.find(
+        (project: Project) => project === over.data.current!.project
+      )
       if (!overProject) {
         console.error('Target project not found')
         return
@@ -129,7 +137,9 @@ export function Board() {
           setProjects(updatedProjects)
 
           if (activeTask.project !== overProject._id.toString()) {
-            toast.success(`Task: "${activeTask.title}" is moved into Project: "${overProject.title}"`)
+            toast.success(
+              `Task: "${activeTask.title}" is moved into Project: "${overProject.title}"`
+            )
           }
         })
         .catch((error: unknown) => {
@@ -152,7 +162,9 @@ export function Board() {
             overProject!.tasks.splice(overTaskIdx, 0, activeTask)
             activeProject!.tasks.splice(activeTaskIdx, 1)
             setProjects(updatedProjects)
-            toast.success(`Task: "${activeTask.title}" is moved into Project: "${overProject!.title}"`)
+            toast.success(
+              `Task: "${activeTask.title}" is moved into Project: "${overProject!.title}"`
+            )
           })
           .catch((error: unknown) => {
             console.error('Failed to move task:', error)
@@ -336,7 +348,13 @@ export function Board() {
           )}
         </BoardContainer>
         <DragOverlay>
-          {activeProject && <BoardProject isOverlay project={activeProject} tasks={filterTasks(activeProject.tasks)} />}
+          {activeProject && (
+            <BoardProject
+              isOverlay
+              project={activeProject}
+              tasks={filterTasks(activeProject.tasks)}
+            />
+          )}
           {activeTask && <TaskCard task={activeTask} isOverlay />}
         </DragOverlay>
       </DndContext>
