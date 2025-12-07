@@ -59,15 +59,18 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   }
 
   // Define card style variants based on drag state
-  const variants = cva('h-[75vh] max-h-[75vh] w-full md:w-[380px] bg-secondary flex flex-col shrink-0 snap-center', {
-    variants: {
-      dragging: {
-        default: 'border-2 border-transparent',
-        over: 'ring-2 opacity-30',
-        overlay: 'ring-2 ring-primary'
+  const variants = cva(
+    'h-[75vh] max-h-[75vh] w-full md:w-[380px] bg-secondary flex flex-col shrink-0 snap-center',
+    {
+      variants: {
+        dragging: {
+          default: 'border-2 border-transparent',
+          over: 'ring-2 opacity-30',
+          overlay: 'ring-2 ring-primary'
+        }
       }
     }
-  })
+  )
 
   const dragState = isOverlay ? 'overlay' : isDragging ? 'over' : undefined
 
@@ -83,7 +86,12 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b-2 p-4">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" {...attributes} {...listeners} className="h-8 w-16 cursor-grab p-0 text-primary/50">
+          <Button
+            variant="ghost"
+            {...attributes}
+            {...listeners}
+            className="h-8 w-16 cursor-grab p-0 text-primary/50"
+          >
             <span className="sr-only">drag project: {project.title}</span>
             <PointerIcon className="h-4 w-4" />
           </Button>

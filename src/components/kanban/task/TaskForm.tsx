@@ -3,8 +3,22 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -24,7 +38,12 @@ interface TaskFormProps {
   submitLabel?: string
 }
 
-export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Submit' }: TaskFormProps) {
+export function TaskForm({
+  defaultValues,
+  onSubmit,
+  onCancel,
+  submitLabel = 'Submit'
+}: TaskFormProps) {
   const {
     form,
     isSubmitting,
@@ -78,7 +97,10 @@ export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Sub
                   <Button
                     variant="outline"
                     aria-label="Select due date"
-                    className={cn('w-auto pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                    className={cn(
+                      'w-auto pl-3 text-left font-normal',
+                      !field.value && 'text-muted-foreground'
+                    )}
                     type="button"
                   >
                     {field.value ? (
@@ -133,9 +155,15 @@ export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Sub
                     align="start"
                   >
                     <Command shouldFilter={false}>
-                      <CommandInput placeholder={t('searchUsers')} value={searchQuery} onValueChange={setSearchQuery} />
+                      <CommandInput
+                        placeholder={t('searchUsers')}
+                        value={searchQuery}
+                        onValueChange={setSearchQuery}
+                      />
                       <CommandList>
-                        <CommandEmpty>{isSearching ? t('searching') : t('noUsersFound')}</CommandEmpty>
+                        <CommandEmpty>
+                          {isSearching ? t('searching') : t('noUsersFound')}
+                        </CommandEmpty>
                         <CommandGroup>
                           {users.map((user) => (
                             <CommandItem
@@ -148,7 +176,9 @@ export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Sub
                               className="flex flex-col items-start"
                             >
                               <span>{user.name || user.email}</span>
-                              {user.name && <span className="text-xs text-muted-foreground">{user.email}</span>}
+                              {user.name && (
+                                <span className="text-xs text-muted-foreground">{user.email}</span>
+                              )}
                             </CommandItem>
                           ))}
                         </CommandGroup>
@@ -215,7 +245,12 @@ export function TaskForm({ defaultValues, onSubmit, onCancel, submitLabel = 'Sub
         />
         <div className="flex justify-end space-x-4">
           {onCancel && (
-            <Button type="button" variant="outline" onClick={onCancel} data-testid="cancel-task-button">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              data-testid="cancel-task-button"
+            >
               {t('cancel')}
             </Button>
           )}

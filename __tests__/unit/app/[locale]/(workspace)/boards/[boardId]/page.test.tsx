@@ -32,7 +32,9 @@ vi.mock('@/components/kanban/board/Board', () => ({
 
 vi.mock('@/components/layout/PageContainer', () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => <div data-testid="mock-page-container">{children}</div>
+  default: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="mock-page-container">{children}</div>
+  )
 }))
 
 // Mock console.error

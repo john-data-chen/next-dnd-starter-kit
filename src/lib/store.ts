@@ -3,8 +3,19 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 // oxlint-disable-next-line no-unused-vars
 import { createBoardInDb, deleteBoardInDb, updateBoardInDb } from './db/board'
-import { createProjectInDb, deleteProjectInDb, getProjectsFromDb, updateProjectInDb } from './db/project'
-import { createTaskInDb, deleteTaskInDb, getTasksByProjectId, updateTaskInDb, updateTaskProjectInDb } from './db/task'
+import {
+  createProjectInDb,
+  deleteProjectInDb,
+  getProjectsFromDb,
+  updateProjectInDb
+} from './db/project'
+import {
+  createTaskInDb,
+  deleteTaskInDb,
+  getTasksByProjectId,
+  updateTaskInDb,
+  updateTaskProjectInDb
+} from './db/task'
 import { getUserByEmail } from './db/user'
 
 interface State {
@@ -150,7 +161,9 @@ export const useTaskStore = create<State>()(
           newDescription: newDescription || ''
         })
         set((state) => ({
-          projects: state.projects.map((project) => (project._id === id ? { ...project, title: newTitle } : project))
+          projects: state.projects.map((project) =>
+            project._id === id ? { ...project, title: newTitle } : project
+          )
         }))
       },
       removeProject: async (id: string) => {
@@ -181,11 +194,21 @@ export const useTaskStore = create<State>()(
           throw new Error('User email not found')
         }
         try {
-          const newTask = await createTaskInDb(projectId, title, userEmail, description, dueDate, assigneeId, status)
+          const newTask = await createTaskInDb(
+            projectId,
+            title,
+            userEmail,
+            description,
+            dueDate,
+            assigneeId,
+            status
+          )
 
           set((state) => ({
             projects: state.projects.map((project) =>
-              project._id === projectId ? { ...project, tasks: [...project.tasks, newTask] } : project
+              project._id === projectId
+                ? { ...project, tasks: [...project.tasks, newTask] }
+                : project
             )
           }))
         } catch (error) {
@@ -207,7 +230,15 @@ export const useTaskStore = create<State>()(
         }
 
         try {
-          const updatedTask = await updateTaskInDb(taskId, title, userEmail, status, description, dueDate, assigneeId)
+          const updatedTask = await updateTaskInDb(
+            taskId,
+            title,
+            userEmail,
+            status,
+            description,
+            dueDate,
+            assigneeId
+          )
 
           if (!updatedTask) {
             throw new Error('Failed to update task')
@@ -216,7 +247,9 @@ export const useTaskStore = create<State>()(
           set((state) => ({
             projects: state.projects.map((project) => ({
               ...project,
-              tasks: project.tasks.map((task) => (task._id === taskId ? { ...task, ...updatedTask } : task))
+              tasks: project.tasks.map((task) =>
+                task._id === taskId ? { ...task, ...updatedTask } : task
+              )
             }))
           }))
         } catch (error) {
@@ -276,7 +309,9 @@ export const useTaskStore = create<State>()(
             }
 
             set((state) => ({
-              projects: state.projects.map((project) => (project._id === oldProject._id ? updatedProject : project))
+              projects: state.projects.map((project) =>
+                project._id === oldProject._id ? updatedProject : project
+              )
             }))
             return
           }

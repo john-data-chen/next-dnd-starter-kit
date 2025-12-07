@@ -53,6 +53,9 @@ export const GET = auth(async (req) => {
   } catch (error) {
     console.error('Error checking project permissions:', error)
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
-    return NextResponse.json({ error: 'Internal server error', details: errorMessage }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal server error', details: errorMessage },
+      { status: 500 }
+    )
   }
 })

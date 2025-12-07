@@ -1,5 +1,13 @@
 {
-  "plugins": ["react", "react-perf", "nextjs", "typescript", "unicorn", "oxc", "jsx-a11y"],
+  "plugins": [
+    "react",
+    "react-perf",
+    "nextjs",
+    "typescript",
+    "unicorn",
+    "oxc",
+    "jsx-a11y"
+  ],
   "rules": {
     "react/jsx-no-undef": "warn",
     "react/self-closing-comp": "warn",

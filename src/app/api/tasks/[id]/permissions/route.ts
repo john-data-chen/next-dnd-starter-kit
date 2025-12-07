@@ -26,7 +26,10 @@ export const GET = auth(async (req) => {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 })
     }
 
-    const [board, project] = await Promise.all([BoardModel.findById(task.board), ProjectModel.findById(task.project)])
+    const [board, project] = await Promise.all([
+      BoardModel.findById(task.board),
+      ProjectModel.findById(task.project)
+    ])
 
     if (!board || !project) {
       return NextResponse.json({ error: 'Resource not found' }, { status: 404 })

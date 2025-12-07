@@ -33,7 +33,7 @@ A production-grade Kanban board application I built independently to demonstrate
 
 ### Quality Assurance
 
-| Layer             | Tool       | Rationale                                    |
+| Type              | Tool       | Rationale                                    |
 | ----------------- | ---------- | -------------------------------------------- |
 | Unit/Integration  | Vitest     | Faster than Jest, native ESM, simpler config |
 | E2E               | Playwright | Cross-browser support, lighter than Cypress  |
@@ -48,7 +48,7 @@ A production-grade Kanban board application I built independently to demonstrate
 
 ### Architecture
 
-| Concern   | Choice                | Rationale                                        |
+| Type      | Choice                | Rationale                                        |
 | --------- | --------------------- | ------------------------------------------------ |
 | Framework | Next.js (App Router)  | SSG for static pages, SSR for dynamic content    |
 | State     | Zustand               | 40% less boilerplate than Redux, simpler testing |
@@ -61,12 +61,13 @@ A production-grade Kanban board application I built independently to demonstrate
 
 ### Developer Experience
 
-| Tool             | Purpose                                           |
-| ---------------- | ------------------------------------------------- |
-| Turbopack        | Rust bundler with filesystem caching for fast HMR |
-| Oxlint           | 50-100x faster than ESLint, clearer diagnostics   |
-| Prettier + Husky | Pre-commit quality enforcement                    |
-| Commitizen       | Conventional commits for clean history            |
+| Tool       | Purpose                                           |
+| ---------- | ------------------------------------------------- |
+| Turbopack  | Rust bundler with filesystem caching for fast HMR |
+| Oxlint     | 50-100x faster than ESLint, clearer diagnostics   |
+| Oxfmt      | 50-100x faster formatter than Prettier            |
+| Husky.     | Pre-commit quality enforcement                    |
+| Commitizen | Conventional commits for clean history            |
 
 ---
 
@@ -94,20 +95,21 @@ A production-grade Kanban board application I built independently to demonstrate
 
 ---
 
-## AI-Assisted Development Workflow
+## 🤖 AI-Augmented Engineering Workflow
 
-This project integrates AI tools into a structured development workflow, focusing on measurable productivity gains while maintaining code quality. Each tool was evaluated based on context awareness, workflow integration, and production stability.
+This project demonstrates a "Human-in-the-Loop" architecture where AI tools are orchestrated to amplify engineering impact. The focus is not just on code generation, but on **architectural leverage, rigorous quality assurance, and accelerated velocity**.
 
-### Integrated Toolchain
+### 🚀 Orchestration & Agency
 
-**Development Environments**
+I utilize a suite of specialized AI tools, each assigned specific roles to mimic a high-performing engineering team structure.
 
-| Tool                                                     | Purpose                          | Integration Benefit                                   |
-| -------------------------------------------------------- | -------------------------------- | ----------------------------------------------------- |
-| [Claude Code](https://github.com/anthropics/claude-code) | AI-assisted coding and debugging | Deep codebase understanding with autonomous workflows |
-| [Windsurf](https://windsurf.com/)                        | AI-native IDE                    | Inline suggestions with full context awareness        |
-| [Zed](https://zed.dev/)                                  | High-performance editor          | Fast iteration with integrated AI assistance          |
-| [Kilo Code](https://github.com/Kilo-Org/kilocode)        | VS Code extension                | AI capabilities in familiar environment               |
+| Role              | Tool                                                                    | Responsibility                      | Impact                                                                                               |
+| :---------------- | :---------------------------------------------------------------------- | :---------------------------------- | :--------------------------------------------------------------------------------------------------- |
+| **Architect**     | [Claude Code](https://github.com/anthropics/claude-code)                | System design & complex refactoring | Handles multi-file architectural changes with deep context awareness.                                |
+| **Plan Executor** | [Kilo Code](https://github.com/Kilo-Org/kilocode)                       | Code writing                        | Follow the plan by Architect, implement functionality and refactor using a faster and cheaper model. |
+| **IDE Copilot**   | [Windsurf](https://windsurf.com/) / [Zed](https://zed.dev/)             | Inline implementation               | Provides instant, context-aware code completion for rapid iteration.                                 |
+| **QA**            | [Gemini CLI](https://github.com/google-gemini/gemini-cli)               | Writing test cases                  | Write automated tests at low or no cost                                                              |
+| **PR Reviewer**   | [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | Automated PR Review                 | Enforces code standards and catches potential bugs in CI/CD.                                         |
 
 **MCP (Model Context Protocol) Servers**
 

@@ -24,7 +24,8 @@ vi.mock('@/lib/store', () => ({
 
 // Mock next-intl
 vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string, values?: any) => (values ? `${key} ${JSON.stringify(values)}` : key)
+  useTranslations: () => (key: string, values?: any) =>
+    values ? `${key} ${JSON.stringify(values)}` : key
 }))
 
 // Mock TaskForm
