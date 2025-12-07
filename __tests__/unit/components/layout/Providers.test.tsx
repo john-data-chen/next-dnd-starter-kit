@@ -8,7 +8,9 @@ import { describe, expect, it } from 'vitest'
 // Mock next-themes ThemeProvider as it might interfere with testing environment
 // or require specific setup if not mocked.
 vi.mock('next-themes', () => ({
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => <div data-testid="theme-provider">{children}</div>
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="theme-provider">{children}</div>
+  )
 }))
 
 // SessionProvider from next-auth/react usually works fine in tests

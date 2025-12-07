@@ -63,7 +63,9 @@ describe('Environment Configuration', () => {
 
     const mockError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    await expect(import('@/lib/config/env')).rejects.toThrow('Local development DATABASE_URL is not defined')
+    await expect(import('@/lib/config/env')).rejects.toThrow(
+      'Local development DATABASE_URL is not defined'
+    )
 
     expect(mockError).toHaveBeenCalled()
     mockError.mockRestore()

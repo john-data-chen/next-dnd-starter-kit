@@ -108,7 +108,9 @@ describe('useAuthForm', () => {
     })
 
     await waitFor(() => {
-      expect(mockRouterPush).toHaveBeenCalledWith(`${ROUTES.BOARDS.ROOT}?login_success=true`, { locale: 'en' })
+      expect(mockRouterPush).toHaveBeenCalledWith(`${ROUTES.BOARDS.ROOT}?login_success=true`, {
+        locale: 'en'
+      })
     })
   })
 

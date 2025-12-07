@@ -21,7 +21,9 @@ vi.mock('next/navigation', async (importOriginal) => {
 })
 vi.mock('@/components/layout/RootWrapper', () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => <div data-testid="root-wrapper">{children}</div>
+  default: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="root-wrapper">{children}</div>
+  )
 }))
 
 describe('AppLayout', () => {

@@ -42,7 +42,9 @@ describe('Task DB functions', () => {
     vi.clearAllMocks()
     ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
     ;(getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
-    ;(getUserById as jest.Mock).mockImplementation((id) => Promise.resolve(id === mockUser.id ? mockUser : null))
+    ;(getUserById as jest.Mock).mockImplementation((id) =>
+      Promise.resolve(id === mockUser.id ? mockUser : null)
+    )
     ;(ProjectModel.findById as jest.Mock).mockResolvedValue({
       board: mockBoardId,
       members: [mockUser.id],
@@ -90,12 +92,16 @@ describe('Task DB functions', () => {
 
     it('should throw an error if creator is not found', async () => {
       ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
-      await expect(createTaskInDb(mockProjectId, 'Test Task', mockUser.email)).rejects.toThrow('Creator not found')
+      await expect(createTaskInDb(mockProjectId, 'Test Task', mockUser.email)).rejects.toThrow(
+        'Creator not found'
+      )
     })
 
     it('should throw an error if board is not found', async () => {
       ;(ProjectModel.findById as jest.Mock).mockResolvedValue(null)
-      await expect(createTaskInDb(mockProjectId, 'Test Task', mockUser.email)).rejects.toThrow('Board not found')
+      await expect(createTaskInDb(mockProjectId, 'Test Task', mockUser.email)).rejects.toThrow(
+        'Board not found'
+      )
     })
   })
 
@@ -114,23 +120,28 @@ describe('Task DB functions', () => {
           lastModifier: new Types.ObjectId(mockTask.lastModifier)
         })
       })
-      const updatedTask = await updateTaskInDb(mockTaskId, 'Updated Task', mockUser.email, 'IN_PROGRESS')
+      const updatedTask = await updateTaskInDb(
+        mockTaskId,
+        'Updated Task',
+        mockUser.email,
+        'IN_PROGRESS'
+      )
       expect(updatedTask.title).toBe('Updated Task')
       expect(updatedTask.status).toBe('IN_PROGRESS')
     })
 
     it('should throw an error if modifier is not found', async () => {
       ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
-      await expect(updateTaskInDb(mockTaskId, 'Updated Task', mockUser.email, 'IN_PROGRESS')).rejects.toThrow(
-        'Modifier not found'
-      )
+      await expect(
+        updateTaskInDb(mockTaskId, 'Updated Task', mockUser.email, 'IN_PROGRESS')
+      ).rejects.toThrow('Modifier not found')
     })
 
     it('should throw an error if task is not found', async () => {
       ;(TaskModel.findById as jest.Mock).mockResolvedValue(null)
-      await expect(updateTaskInDb(mockTaskId, 'Updated Task', mockUser.email, 'IN_PROGRESS')).rejects.toThrow(
-        'Task not found'
-      )
+      await expect(
+        updateTaskInDb(mockTaskId, 'Updated Task', mockUser.email, 'IN_PROGRESS')
+      ).rejects.toThrow('Task not found')
     })
   })
 
@@ -159,7 +170,9 @@ describe('Task DB functions', () => {
 
     it('should throw an error if user is not found', async () => {
       ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
-      await expect(updateTaskProjectInDb(mockUser.email, mockTaskId, newProjectId)).rejects.toThrow('User not found')
+      await expect(updateTaskProjectInDb(mockUser.email, mockTaskId, newProjectId)).rejects.toThrow(
+        'User not found'
+      )
     })
 
     it('should throw an error if target project is not found', async () => {
@@ -171,7 +184,9 @@ describe('Task DB functions', () => {
 
     it('should throw an error if task is not found', async () => {
       ;(TaskModel.findById as jest.Mock).mockResolvedValue(null)
-      await expect(updateTaskProjectInDb(mockUser.email, mockTaskId, newProjectId)).rejects.toThrow('Task not found')
+      await expect(updateTaskProjectInDb(mockUser.email, mockTaskId, newProjectId)).rejects.toThrow(
+        'Task not found'
+      )
     })
 
     it('should throw a permission error', async () => {
@@ -197,7 +212,9 @@ describe('Task DB functions', () => {
 
     it('should throw an error if task is not found', async () => {
       ;(TaskModel.findById as jest.Mock).mockResolvedValue(null)
-      await expect(deleteTaskInDb(mockTaskId)).rejects.toThrow(`Task with id ${mockTaskId} not found`)
+      await expect(deleteTaskInDb(mockTaskId)).rejects.toThrow(
+        `Task with id ${mockTaskId} not found`
+      )
     })
   })
 })

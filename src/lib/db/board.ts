@@ -109,7 +109,10 @@ function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string,
         // Safely handle the board reference
         let boardId = ''
         if (projectDoc.board) {
-          boardId = typeof projectDoc.board === 'object' ? projectDoc.board.toString() : String(projectDoc.board)
+          boardId =
+            typeof projectDoc.board === 'object'
+              ? projectDoc.board.toString()
+              : String(projectDoc.board)
         }
 
         return {
@@ -130,8 +133,12 @@ function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string,
               name: m.name || 'Unknown'
             })),
           tasks: [],
-          createdAt: projectDoc.createdAt ? new Date(projectDoc.createdAt).toISOString() : new Date().toISOString(),
-          updatedAt: projectDoc.updatedAt ? new Date(projectDoc.updatedAt).toISOString() : new Date().toISOString()
+          createdAt: projectDoc.createdAt
+            ? new Date(projectDoc.createdAt).toISOString()
+            : new Date().toISOString(),
+          updatedAt: projectDoc.updatedAt
+            ? new Date(projectDoc.updatedAt).toISOString()
+            : new Date().toISOString()
         }
       })
       .filter(Boolean),
@@ -172,7 +179,11 @@ export async function createBoardInDb({
   }
 }
 
-export async function updateBoardInDb(boardId: string, data: Partial<Board>, userEmail: string): Promise<Board | null> {
+export async function updateBoardInDb(
+  boardId: string,
+  data: Partial<Board>,
+  userEmail: string
+): Promise<Board | null> {
   try {
     await connectToDatabase()
 

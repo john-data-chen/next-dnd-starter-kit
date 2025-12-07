@@ -83,7 +83,9 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
       // Transform the data before submission
       const submitData = {
         ...values,
-        assignee: values.assignee ? { _id: values.assignee._id, name: values.assignee.name } : undefined
+        assignee: values.assignee
+          ? { _id: values.assignee._id, name: values.assignee.name }
+          : undefined
       }
       await onSubmit(submitData)
     } catch (error) {
