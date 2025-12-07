@@ -1,81 +1,141 @@
-# Production-Ready Next.js Project Management Tool Template | Drag & Drop Support <br>
+# Next.js Project Management Tool | Full-Stack Portfolio Project
 
 [![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![CI](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## ✨ Why Choose This Template:
+## About This Project
 
-<img src="./public/assets/Screen_Recording.gif" alt="Screen Recording" width="270" height="579">
+A production-grade Kanban board application I built independently to demonstrate full-stack ownership. This project reflects my engineering approach: **quality-first development with comprehensive testing, automated CI/CD, and maintainable architecture**.
 
-The **Enterprise-grade Next.js template** with 70%+ test coverage, drag & drop functionality, and WAI-ARIA accessibility. It is designed for saving time while adhering to best practices and including:
+**[Live Demo](https://next-dnd-starter-kit.vercel.app)** | **[Monorepo Evolution](https://github.com/john-data-chen/turborepo-starter-kit)**
 
-- 🚀 Production-Ready: Enterprise-level architecture with full TypeScript support
-- 💪 Professional Setup: CI/CD, Testing, Code Quality tools pre-configured and pass the SonarQube Quality Check
-- 🎯 Developer-Friendly: Clear documentation and best practices built-in
-- 📝 Full Functional: Drag & Drop, Search and Filter, User Permission Management, Multi Kanban and Project Support
-- 🌐 Internationalization (i18n): English and German
-- 🎨 Modern UX: Theme Switcher, Responsive Design for mobile, tablet, and desktop
-- 💾 Persistent data: via MongoDB
+<img src="./public/assets/Screen_Recording.gif" alt="Demo" width="270" height="579">
 
 ---
 
-**Love this template?**
-If you like my templates, don't forget to **give it a star** today!
+## Engineering Metrics
 
-And its next version: monorepo template is development in progress, you can check it out here: [turborepo-starter-kit](https://github.com/john-data-chen/turborepo-starter-kit)
-
-Every star motivates me to deliver more high-quality templates. 🚀
-
----
-
-**Key Accomplishments**:
-
-- Responsive Design: Ensures optimal user experience across all devices, reflecting a product-centric development approach.
-- Exceptional Test Coverage (70%+): Achieved through comprehensive unit tests, significantly reducing potential bugs and enhancing long-term maintainability.
-- Reliable User Experience: Validated the critical login flow across all major browsers (Chrome, Safari, Edge) on both desktop and mobile using Playwright E2E tests.
-- Superior Code Quality (SonarQube All A Rating): Rigorous analysis confirms high standards in Security, Reliability, and Maintainability, minimizing technical debt and ensuring a healthy codebase.
-- Automated CI/CD Pipeline (GitHub Actions, SonarQube, Codecov, Vercel): Establishes a streamlined, production-ready deployment process, ensuring rapid, reliable, and high-quality releases.
-- Live Demo Deployment (Vercel): Provides immediate access to a functional application, showcasing practical deployment skills.
-- Elite Web Performance & Quality (Lighthouse 90+): Achieved scores of 90+ across Performance, Accessibility, Best Practices, and SEO in Google Lighthouse, ensuring a top-tier user experience and technical excellence.
+| Metric         | Result                                                        |
+| -------------- | ------------------------------------------------------------- |
+| Test Coverage  | **70%+** via Vitest (unit + integration)                      |
+| Code Quality   | **SonarQube A** across Security, Reliability, Maintainability |
+| Performance    | **Lighthouse 90+** on all categories                          |
+| E2E Validation | Cross-browser (Chrome, Safari, Edge) via Playwright           |
+| CI/CD Pipeline | GitHub Actions → SonarQube + Codecov → Vercel                 |
 
 <img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
 ---
 
-## 🛠️ Technical Decision
+## Technical Decisions
 
-- **Frontend**: [Next](https://nextjs.org/docs/app/getting-started), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/) - modern UI with strong type safety and server-side rendering (using SSG in login page for better performance, SSR in workspace pages for dynamic content)
-- **Build**: [Oxlint](https://oxc.rs/docs/guide/usage/linter), [Prettier](https://prettier.io/), [Commitizen](https://commitizen.github.io/cz-cli/), [Lint Staged](https://github.com/okonet/lint-staged), [Husky](https://github.com/typicode/husky) - they are the 1st quality gate: automated code quality checks and style formatting during commit, preventing problems into codebase and make consistent code style in team work
-- **UI**: [Tailwind CSS](https://tailwindcss.com/), [Shadcn/UI](https://ui.shadcn.com/) - consistent, responsive, and scalable styling, enabling rapid and maintainable UI development
-- **Testing**: [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) - they are the 2nd quality gate: easier to setup and faster execution than Jest and Cypress, chosen for their efficiency and comprehensive testing capabilities
-- **Internationalization(i18n)**: [Next-intl](https://next-intl.dev/) - internationalization (i18n) support for Next.js applications
-- **Authentication**: [Auth.js](https://authjs.dev/) - authentication and authorization for Next.js applications
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) - minimal and testable global state management, 40% code reduction compared to Redux
-- **Forms**: [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/) - composable form logic and schema validation.
-- **Database**: [MongoDB](https://www.mongodb.com/), [Docker compose](https://docs.docker.com/compose/), [Mongoose](https://github.com/Automattic/mongoose) - NoSQL database for storing data in a document-oriented format.
-- **Drag and Drop**: [dnd-kit](https://dndkit.com/) - A lightweight, performant, accessible and extensible drag & drop toolkit
-- **CI/CD**: [GitHub Actions](https://github.com/features/actions), [Vercel](https://vercel.com/home), [Codecov](https://codecov.io/), [SonarQube](https://sonarcloud.io/) - they are the 3rd quality gate: every pull request triggers a comprehensive pipeline, enforcing code quality gates and ensuring production-readiness through automated testing and deployment
+### Quality Assurance
+
+| Layer             | Tool       | Rationale                                    |
+| ----------------- | ---------- | -------------------------------------------- |
+| Unit/Integration  | Vitest     | Faster than Jest, native ESM, simpler config |
+| E2E               | Playwright | Cross-browser support, lighter than Cypress  |
+| Static Analysis   | SonarQube  | Enterprise-grade quality gates in CI         |
+| Coverage Tracking | Codecov    | Automated PR integration                     |
+
+**Testing Strategy:**
+
+- Unit tests target store logic, validations, and isolated components
+- E2E tests validate critical flows (auth)
+- Every PR triggers the full pipeline before merge
+
+### Architecture
+
+| Concern   | Choice                | Rationale                                        |
+| --------- | --------------------- | ------------------------------------------------ |
+| Framework | Next.js (App Router)  | SSG for static pages, SSR for dynamic content    |
+| State     | Zustand               | 40% less boilerplate than Redux, simpler testing |
+| Forms     | React Hook Form + Zod | Type-safe validation, composable schemas         |
+| Database  | MongoDB + Mongoose    | Document model fits board/project/task hierarchy |
+| Auth      | Auth.js               | Native Next.js integration, OAuth support        |
+| DnD       | dnd-kit               | Lightweight, accessible, extensible              |
+| i18n      | next-intl             | App Router native support                        |
+| UI        | Tailwind + shadcn/ui  | Consistent design system, rapid iteration        |
+
+### Developer Experience
+
+| Tool             | Purpose                                           |
+| ---------------- | ------------------------------------------------- |
+| Turbopack        | Rust bundler with filesystem caching for fast HMR |
+| Oxlint           | 50-100x faster than ESLint, clearer diagnostics   |
+| Prettier + Husky | Pre-commit quality enforcement                    |
+| Commitizen       | Conventional commits for clean history            |
 
 ---
 
-## 🚀 Getting Started
+## Features
 
-- Press **Use this template** to create a new repository.
-- Clone the repository to your local machine.
+- Drag-and-drop Kanban with multi-project support
+- Role-based permissions (Owner / Member)
+- Task assignment with audit tracking
+- Search and filter
+- Theme switching (light/dark)
+- Responsive design (mobile → desktop)
+- i18n (English, German)
+
+---
+
+## Permission Model
+
+| Capability          | Owner | Member |
+| ------------------- | ----- | ------ |
+| Manage Board        | Yes   | No     |
+| Create Project/Task | Yes   | Yes    |
+| Edit All Content    | Yes   | No     |
+| Edit Own Content    | Yes   | Yes    |
+| View All Content    | Yes   | Yes    |
+
+---
+
+## AI-Assisted Development Workflow
+
+This project integrates AI tools into a structured development workflow, focusing on measurable productivity gains while maintaining code quality. Each tool was evaluated based on context awareness, workflow integration, and production stability.
+
+### Integrated Toolchain
+
+**Development Environments**
+
+| Tool                                                     | Purpose                          | Integration Benefit                                   |
+| -------------------------------------------------------- | -------------------------------- | ----------------------------------------------------- |
+| [Claude Code](https://github.com/anthropics/claude-code) | AI-assisted coding and debugging | Deep codebase understanding with autonomous workflows |
+| [Windsurf](https://windsurf.com/)                        | AI-native IDE                    | Inline suggestions with full context awareness        |
+| [Zed](https://zed.dev/)                                  | High-performance editor          | Fast iteration with integrated AI assistance          |
+| [Kilo Code](https://github.com/Kilo-Org/kilocode)        | VS Code extension                | AI capabilities in familiar environment               |
+
+**MCP (Model Context Protocol) Servers**
+
+MCP enables AI tools to interact directly with development infrastructure, eliminating context-switching overhead:
+
+| Server                                                                                                | Integration Point     | Workflow Enhancement                      |
+| ----------------------------------------------------------------------------------------------------- | --------------------- | ----------------------------------------- |
+| [chrome-devtools](https://github.com/anthropics/anthropic-quickstarts)                                | Browser state         | Debug without leaving the editor          |
+| [context7](https://github.com/upstash/context7)                                                       | Documentation         | Current library docs during development   |
+| [Next.js](https://nextjs.org/docs/app/guides/mcp)                                                     | Framework diagnostics | Direct access to build errors and routes  |
+| [sequential-thinking](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking) | Problem decomposition | Structured approach for complex decisions |
+| [playwright](https://github.com/microsoft/playwright-mcp)                                             | E2E test automation   | Browser-aware test authoring              |
+
+**CI/CD Integration**
+
+| Tool                                                                    | Stage     | Purpose                                |
+| ----------------------------------------------------------------------- | --------- | -------------------------------------- |
+| [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | PR Review | Automated code review and PR summaries |
+
+---
+
+## Quick Start
 
 ### Requirements
 
-- Node.JS version >= 22.11.0 (the newest version of 22.x LTS), please use [NVM](https://github.com/nvm-sh/nvm) or [FNM](https://github.com/Schniz/fnm) to install
-- [PNPM](https://pnpm.io/) 10.x
-
-### Database
-
-- In production and CI, I use [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database)
-- In local development, I use [Docker Compose](https://docs.docker.com/compose/) in folder **database**, you need to have [Docker](https://www.docker.com/) or [OrbStack](https://orbstack.dev/) installed.
+- Node.js >= 24.11.0 (LTS)
+- pnpm 10.x
+- Docker / OrbStack (for local MongoDB)
 
 ### Environment Configuration
 
@@ -106,93 +166,31 @@ NEXTAUTH_SECRET=[your_secret]
 # Example: DATABASE_URL="mongodb://root:123456@localhost:27017/next-project-manager?authSource=admin"
 ```
 
-Production and CI:
-
-Create environment variables in Vercel or GitHub project settings.
-
-### Useful Commands
+### Setup
 
 ```bash
-# rename env.example to .env
-mv env.example .env
+pnpm install
+
+# Environment
+cp env.example .env
 
 # Generate Secret and replace NEXTAUTH_SECRET in .env
 openssl rand -base64 32
 
-# start mongodb in docker
-cd database
-docker-compose up -d
-
-# initialize mongodb
+# Database
+cd database && docker-compose up -d && cd ..
 pnpm init-db
 
-# stop mongodb (in database folder)
-docker-compose down
-
-# Install dependencies
-pnpm install
-
-# Start development server
-pnpm dev
-
-# Run unit and integration tests by Vitest
-pnpm test
-
-# Run E2E tests by Playwright
-pnpm playwright
-
-# Lint fix
-pnpm lint
-
-# Format code
-pnpm format
-
-# Build
-pnpm build
+# Run
+pnpm dev           # Development
+pnpm test          # Unit tests
+pnpm playwright    # E2E tests
+pnpm build         # Production build
 ```
 
 ---
 
-## 🔐 Permission System
-
-### Core Concepts
-
-- Board can have multiple projects, it is the biggest container
-- Project can have multiple tasks, it is the smallest container
-- Each board has one owner and multiple members
-- Tasks can be assigned to any member
-- All modifications of a task are tracked with last modified user
-
-### User Roles & Permissions
-
-| Role         | Create Board | Delete Board | Edit All Projects | Delete Project (Cascade Tasks) | Create Project | Create Task | Edit All Tasks | Edit Own Task | Delete All Tasks | Delete Own Task | View All Projects & Tasks |
-| ------------ | ------------ | ------------ | ----------------- | ------------------------------ | -------------- | ----------- | -------------- | ------------- | ---------------- | --------------- | ------------------------- |
-| Board Owner  | ✔️           | ✔️           | ✔️                | ✔️                             | ✔️             | ✔️          | ✔️             | ✔️            | ✔️               | ✔️              | ✔️                        |
-| Board Member | ✖️           | ✖️           | ✖️                | ✖️                             | ✔️             | ✔️          | ✖️             | ✔️            | ✖️               | ✔️              | ✔️                        |
-
-> Note:
->
-> - Board Owner has all permissions, including creating, deleting, and editing all projects and tasks.
-> - Board Member can only create projects and tasks, and can only edit and delete their own projects and tasks, but can view all content.
-
-### Task Operations
-
-- Task creator and assignee can edit task
-- Only owner of board, owner of project and creator of task can delete tasks
-- Task status: To Do → In Progress → Done
-
----
-
-## 📖 Detailed Technical Documentation
-
-### 📊 Testing Strategy
-
-- Unit Tests: Focused on critical store logic, complex form validations, and isolated component behaviors, ensuring granular code reliability.
-- Test Coverage: Maintained above 70%+ (verified via npx vitest run --coverage), reflecting a commitment to robust code coverage without sacrificing test quality.
-- E2E Tests: Critical user flows, such as the Login page, are validated end-to-end using Playwright, simulating real user interactions to guarantee system integrity.
-- Cross-browser Testing Strategy: Ensures consistent functionality and user experience across a carefully selected range of desktop and mobile browsers based on market share, mitigating compatibility issues.
-
-### Project Structure
+## Project Structure
 
 ```text
 __tests__/
@@ -231,114 +229,58 @@ src/
 └── env.example # Environment variables example
 ```
 
-## AI Tools
+---
 
-I am using AI tools to help our team improve the quality of code and the efficiency of development. This project is one of the playgrounds for AI tools.
+## Modern Tooling Adoption
 
-### IDE
+Part of my engineering approach involves continuously evaluating emerging tools and making data-driven adoption decisions. This section documents tools I've integrated after hands-on evaluation, demonstrating measurable impact on developer productivity.
 
-- [Windsurf](https://windsurf.com/)
-- [Zed](https://zed.dev/)
+### Oxlint (Rust-based Linter)
 
-### VS code extension
+| Aspect           | Details                                               |
+| ---------------- | ----------------------------------------------------- |
+| Status           | **Production** - core linting enabled                 |
+| Performance      | 50-100x faster than ESLint (2s for full project lint) |
+| DX Improvement   | Clearer error messages, simpler config than ESLint 9+ |
+| Migration Impact | Removed 10 ESLint packages from dependency tree       |
 
-- [Kilo Code](https://github.com/Kilo-Org/kilocode)
+Type-aware rules are available but kept in evaluation for this project. [Oxlint Docs](https://oxc.rs/blog/2025-06-10-oxlint-stable.html)
 
-### Command line interface
+### Turbopack + Filesystem Caching
 
-- [gemini-cli](https://github.com/google-gemini/gemini-cli)
-- [claude-code](https://github.com/anthropics/claude-code)
+| Aspect      | Details                                               |
+| ----------- | ----------------------------------------------------- |
+| Status      | **Production** - default in Next.js 16                |
+| Performance | Near-instant HMR, incremental compilation             |
+| Caching     | Filesystem caching persists artifacts across restarts |
 
-### MCP
+[Turbopack Docs](https://nextjs.org/docs/app/api-reference/turbopack) | [FS Caching](https://nextjs.org/blog/next-16#turbopack-file-system-caching-beta)
 
-- [chrome-devtools](https://github.com/ChromeDevTools/chrome-devtools-mcp)
-- [context7](https://github.com/upstash/context7)
-- [Next.js](https://nextjs.org/docs/app/guides/mcp)
-- [sequential-thinking](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking)
-- [playwright](https://github.com/microsoft/playwright-mcp)
-- [tavily](https://github.com/tavily-ai/tavily-mcp)
+### Oxfmt (Rust-based Formatter)
 
-### GitHub Action (code review, PR summary)
+| Aspect      | Details                                           |
+| ----------- | ------------------------------------------------- |
+| Status      | **Evaluation** - enabled for local development    |
+| Performance | ~50x faster than Prettier with instant cold start |
 
-- [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist)
-
-### Documentation
-
-- [NotebookLM](https://notebooklm.google.com/)
-
-## Experimental Tools
-
-### Oxlint and Type-Aware plug-in
-
-- status: enabled
-- benefit:
-  - 50~100 times faster than ESLint (it can lint this small project in 2 seconds, it has more potential in big projects with thousands of files)
-  - easier to setup (compared to ESLint 9+)
-  - clearer instructions showing how to fix each issue
-  - many ESLint packages can be removed (in my case 10 packages)
-- note: Oxlint is in a stable version, and many companies have used it in production for a long time.
-  But Type-Aware plug-in is still in a preview version. It is not recommended to use it in production.
-
-#### Introductions
-
-- [Oxlint](https://oxc.rs/blog/2025-06-10-oxlint-stable.html)
-- [Oxlint Type-Aware Preview](https://oxc.rs/blog/2025-08-17-oxlint-type-aware.html)
-
-### Oxfmt
-
-- status: enabled
-- benefit: Significantly faster (about 50 times) than Prettier, with near-instant cold startup times.(it can format this small project in 1.5 second, it has more potential in big projects with thousands of files). It is not recommended to use it in production, still in preview version.
-- [introduction](https://oxc.rs/docs/guide/usage/formatter)
-
-### Turbopack
-
-- status: enabled in default (Next.js 16)
-- benefit: the Rust-based successor of webpack by Vercel, offers near-instantaneous server startup and lightning-fast Hot Module Replacement (HMR). This is achieved through its incremental architecture, which caches function-level computations, ensuring we only build what's necessary.
-- [introduction](https://nextjs.org/docs/app/api-reference/turbopack)
-
-#### Turbopack File System Caching (beta)
-
-- status: enabled
-- benefit: Turbopack now supports filesystem caching in development, storing compiler artifacts on disk between runs for significantly faster compile times across restarts, especially in large projects.
-- [introduction](https://nextjs.org/blog/next-16#turbopack-file-system-caching-beta)
-
-### Prettier oxc plugin
-
-- status: disabled (it is conflict with vs code auto formatting, since this is a small project, the speed difference is not significant)
-- benefit: Increase Prettier formatting speed
-- [introduction](https://www.npmjs.com/package/@prettier/plugin-oxc)
+[Oxfmt Docs](https://oxc.rs/docs/guide/usage/formatter)
 
 ### React Compiler
 
-- status: disabled (enable it will increase build time 30~40%, so I disable it)
-- benefit: It can increase the performance score in lighthouse test 5~10% (not significant)
-- [introduction](https://react.dev/learn/react-compiler)
+| Aspect    | Details                                                                    |
+| --------- | -------------------------------------------------------------------------- |
+| Status    | **Evaluated, deferred**                                                    |
+| Trade-off | +5-10% Lighthouse score vs +30-40% build time                              |
+| Decision  | Build time cost outweighs marginal performance gain for this project scope |
 
-## Known Issues & Limitations
+[React Compiler Docs](https://react.dev/learn/react-compiler)
 
-### Mongoose 9 Compatibility issue
+### Live Demo Constraints
 
-- After upgrade mongoose to 9.x, starting dev server will pop an error: Module not found: Can't resolve '#async_hooks'. then stop.
-- Rollback and wait for vercel to fix it. ([github issue](https://github.com/vercel/next.js/issues/58052))
+| Aspect             | Current State                       | Production Recommendation           |
+| ------------------ | ----------------------------------- | ----------------------------------- |
+| **Hosting Region** | Hong Kong (free tier)               | Multi-region CDN deployment         |
+| **Response Time**  | Variable latency for non-Asia users | Edge functions or regional backends |
+| **Translations**   | EN complete, DE partial             | Professional localization service   |
 
-### Test coverage
-
-- After Vitest v4 changes its v8 coverage standard, test coverage has decreased slightly compared to v3.
-- In new coverage standard, I need to add more edge cases to let coverage over 80%, which is not urgent for now.
-
-### German Translations
-
-This is a demo project, and I know little of German, so errors of translations might not be fixed in the near future.
-
-### Server
-
-- **Slow response from server**:
-  - Server Region: Hong Kong
-  - Issue: Sometimes Server response is slow, such as you can't search user when you add a task then find the assigner, especially for users are not in Asia (in local dev server, I tested it works fine)
-  - Status: The resource of free tier is limited and no plan of CDN, it won't be fix in the near future
-
----
-
-### 📃 License
-
-This project is licensed under the [MIT License](https://opensource.org/license/mit/).
+The demo deployment uses free-tier infrastructure to minimize costs. Production deployments should implement proper CDN and regional optimization.
