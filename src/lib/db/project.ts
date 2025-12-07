@@ -34,7 +34,9 @@ export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] 
       return []
     }
 
-    const projectPromises = projects.map(async (project) => convertProjectToPlainObject(project as ProjectBase))
+    const projectPromises = projects.map(async (project) =>
+      convertProjectToPlainObject(project as ProjectBase)
+    )
     const plainProjects = await Promise.all(projectPromises)
 
     return plainProjects
@@ -47,7 +49,11 @@ export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] 
 async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<ProjectType> {
   // Handle the case where owner is already an object
   let ownerUser
-  if (typeof projectDoc.owner === 'object' && 'id' in projectDoc.owner && 'name' in projectDoc.owner) {
+  if (
+    typeof projectDoc.owner === 'object' &&
+    'id' in projectDoc.owner &&
+    'name' in projectDoc.owner
+  ) {
     // Owner is already an object with id and name
     ownerUser = {
       id: projectDoc.owner.id,
@@ -55,7 +61,8 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
     }
   } else {
     // Owner is an ObjectId or string
-    const ownerId = typeof projectDoc.owner === 'string' ? projectDoc.owner : projectDoc.owner.toString()
+    const ownerId =
+      typeof projectDoc.owner === 'string' ? projectDoc.owner : projectDoc.owner.toString()
 
     ownerUser = await getUserById(ownerId)
     if (!ownerUser) {
@@ -103,8 +110,12 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
       id: member.id.toString(),
       name: member.name
     })),
-    createdAt: projectDoc.createdAt ? new Date(projectDoc.createdAt).toISOString() : new Date().toISOString(),
-    updatedAt: projectDoc.updatedAt ? new Date(projectDoc.updatedAt).toISOString() : new Date().toISOString(),
+    createdAt: projectDoc.createdAt
+      ? new Date(projectDoc.createdAt).toISOString()
+      : new Date().toISOString(),
+    updatedAt: projectDoc.updatedAt
+      ? new Date(projectDoc.updatedAt).toISOString()
+      : new Date().toISOString(),
     tasks: (projectDoc.tasks || []).map((task) => ({
       _id: task._id.toString(),
       title: task.title,
@@ -209,7 +220,9 @@ export async function updateProjectInDb(data: {
     }
 
     // Convert to plain object using toObject() and cast to ProjectBase type
-    const updatedProject = await convertProjectToPlainObject(updatedProjectDoc.toObject() as ProjectBase)
+    const updatedProject = await convertProjectToPlainObject(
+      updatedProjectDoc.toObject() as ProjectBase
+    )
 
     return updatedProject
   } catch (error) {

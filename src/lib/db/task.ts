@@ -29,7 +29,9 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
   if (!taskDoc) {
     throw new Error('Task document is undefined')
   }
-  const getObjectIdString = (id: Types.ObjectId | string | { id: string } | null | undefined): string => {
+  const getObjectIdString = (
+    id: Types.ObjectId | string | { id: string } | null | undefined
+  ): string => {
     if (!id) {
       return ''
     }
@@ -93,8 +95,10 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
       id: modifierId,
       name: modifierUser.name
     },
-    createdAt: typeof taskDoc.createdAt === 'string' ? new Date(taskDoc.createdAt) : taskDoc.createdAt,
-    updatedAt: typeof taskDoc.updatedAt === 'string' ? new Date(taskDoc.updatedAt) : taskDoc.updatedAt
+    createdAt:
+      typeof taskDoc.createdAt === 'string' ? new Date(taskDoc.createdAt) : taskDoc.createdAt,
+    updatedAt:
+      typeof taskDoc.updatedAt === 'string' ? new Date(taskDoc.updatedAt) : taskDoc.updatedAt
   }
 }
 
@@ -253,7 +257,11 @@ export async function updateTaskInDb(
   }
 }
 
-export async function updateTaskProjectInDb(userEmail: string, taskId: string, newProjectId: string): Promise<Task> {
+export async function updateTaskProjectInDb(
+  userEmail: string,
+  taskId: string,
+  newProjectId: string
+): Promise<Task> {
   try {
     await connectToDatabase()
 
@@ -287,7 +295,9 @@ export async function updateTaskProjectInDb(userEmail: string, taskId: string, n
       (member) => getObjectIdString(member) === user.id.toString()
     )
     const isTaskCreator = getObjectIdString(task.creator) === user.id.toString()
-    const isTaskAssignee = task.assignee ? getObjectIdString(task.assignee) === user.id.toString() : false
+    const isTaskAssignee = task.assignee
+      ? getObjectIdString(task.assignee) === user.id.toString()
+      : false
 
     if (!(isTargetProjectOwner || (isTargetProjectMember && (isTaskCreator || isTaskAssignee)))) {
       throw new Error('Permission denied: You do not have sufficient permissions to move this task')

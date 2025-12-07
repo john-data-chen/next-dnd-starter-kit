@@ -113,8 +113,13 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <PointerIcon />
         </Button>
         <div className="mx-2 flex flex-1 flex-col items-start gap-2">
-          {task.title && <h3 className="text-lg leading-none font-medium tracking-tight">{task.title}</h3>}
-          <Badge variant="secondary" className={cn('text-white', task.status && statusConfig[task.status]?.className)}>
+          {task.title && (
+            <h3 className="text-lg leading-none font-medium tracking-tight">{task.title}</h3>
+          )}
+          <Badge
+            variant="secondary"
+            className={cn('text-white', task.status && statusConfig[task.status]?.className)}
+          >
             {task.status ? statusConfig[task.status]?.label : t('noStatus')}
           </Badge>
         </div>
@@ -175,7 +180,10 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
             <CardContent className="px-3 py-2">
               <div className="flex items-start gap-2">
                 <FileTextIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                <p className="text-sm leading-relaxed text-muted-foreground" data-testid="task-card-description">
+                <p
+                  className="text-sm leading-relaxed text-muted-foreground"
+                  data-testid="task-card-description"
+                >
                   {task.description}
                 </p>
               </div>

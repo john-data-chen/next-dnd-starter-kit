@@ -1,4 +1,9 @@
-import { createBoardInDb, deleteBoardInDb, fetchBoardsFromDb, updateBoardInDb } from '@/lib/db/board'
+import {
+  createBoardInDb,
+  deleteBoardInDb,
+  fetchBoardsFromDb,
+  updateBoardInDb
+} from '@/lib/db/board'
 import { connectToDatabase } from '@/lib/db/connect'
 import { getUserByEmail, getUserById } from '@/lib/db/user'
 import { BoardModel } from '@/models/board.model'
@@ -34,7 +39,9 @@ describe('Board DB functions', () => {
     vi.clearAllMocks()
     ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
     ;(getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
-    ;(getUserById as jest.Mock).mockImplementation((id) => Promise.resolve(id === mockUser.id ? mockUser : null))
+    ;(getUserById as jest.Mock).mockImplementation((id) =>
+      Promise.resolve(id === mockUser.id ? mockUser : null)
+    )
   })
 
   describe('fetchBoardsFromDb', () => {
@@ -90,7 +97,11 @@ describe('Board DB functions', () => {
       }
       ;(BoardModel.findByIdAndUpdate as jest.Mock).mockReturnValue(mockUpdatedDoc)
 
-      const updatedBoard = await updateBoardInDb(mockBoardId, { title: 'Updated Board' }, mockUser.email)
+      const updatedBoard = await updateBoardInDb(
+        mockBoardId,
+        { title: 'Updated Board' },
+        mockUser.email
+      )
       expect(updatedBoard?.title).toBe('Updated Board')
     })
 
@@ -98,7 +109,9 @@ describe('Board DB functions', () => {
       ;(BoardModel.findById as jest.Mock).mockReturnValue({
         lean: vi.fn().mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       })
-      await expect(updateBoardInDb(mockBoardId, { title: 'Updated' }, mockUser.email)).resolves.toBeNull()
+      await expect(
+        updateBoardInDb(mockBoardId, { title: 'Updated' }, mockUser.email)
+      ).resolves.toBeNull()
     })
   })
 

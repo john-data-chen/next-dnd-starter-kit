@@ -173,7 +173,9 @@ describe('Zustand Store: useTaskStore', () => {
       act(() => {
         useTaskStore.setState({ userEmail: null })
       }) // Reset userEmail for this test
-      await expect(useTaskStore.getState().addBoard('New Board')).rejects.toThrow('User email not found')
+      await expect(useTaskStore.getState().addBoard('New Board')).rejects.toThrow(
+        'User email not found'
+      )
     })
 
     it('updateBoard should call updateBoardInDb', async () => {
@@ -238,7 +240,9 @@ describe('Zustand Store: useTaskStore', () => {
       const task2: Task = { ...mockTask, _id: 't2', project: 'p2' }
 
       vi.mocked(dbProject.getProjectsFromDb).mockResolvedValue([project1, project2])
-      vi.mocked(dbTask.getTasksByProjectId).mockResolvedValueOnce([task1]).mockResolvedValueOnce([task2])
+      vi.mocked(dbTask.getTasksByProjectId)
+        .mockResolvedValueOnce([task1])
+        .mockResolvedValueOnce([task2])
 
       // Check isLoadingProjects before fetch
       expect(useTaskStore.getState().isLoadingProjects).toBe(false)

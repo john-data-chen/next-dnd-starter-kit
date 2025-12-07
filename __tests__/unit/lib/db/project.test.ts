@@ -1,5 +1,10 @@
 import { connectToDatabase } from '@/lib/db/connect'
-import { createProjectInDb, deleteProjectInDb, getProjectsFromDb, updateProjectInDb } from '@/lib/db/project'
+import {
+  createProjectInDb,
+  deleteProjectInDb,
+  getProjectsFromDb,
+  updateProjectInDb
+} from '@/lib/db/project'
 import { getUserByEmail, getUserById } from '@/lib/db/user'
 import { BoardModel } from '@/models/board.model'
 import { ProjectModel } from '@/models/project.model'
@@ -36,13 +41,17 @@ describe('Project DB functions', () => {
     vi.clearAllMocks()
     ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
     ;(getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
-    ;(getUserById as jest.Mock).mockImplementation((id) => Promise.resolve(id === mockUser.id ? mockUser : null))
+    ;(getUserById as jest.Mock).mockImplementation((id) =>
+      Promise.resolve(id === mockUser.id ? mockUser : null)
+    )
   })
 
   describe('getProjectsFromDb', () => {
     it('should fetch projects for a board', async () => {
       ;(ProjectModel.find as jest.Mock).mockReturnValue({
-        lean: vi.fn().mockResolvedValue([{ ...mockProject, owner: new Types.ObjectId(mockProject.owner) }])
+        lean: vi
+          .fn()
+          .mockResolvedValue([{ ...mockProject, owner: new Types.ObjectId(mockProject.owner) }])
       })
       const projects = await getProjectsFromDb(mockBoardId)
       expect(projects).toHaveLength(1)

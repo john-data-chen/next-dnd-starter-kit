@@ -1,7 +1,14 @@
 'use client'
 
 import React from 'react'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { projectSchema } from '@/types/projectForm'
@@ -59,7 +66,11 @@ export function ProjectForm({ children, onSubmit, defaultValues }: ProjectFormPr
             <FormItem>
               <FormLabel>{t('descriptionLabel')}</FormLabel>
               <FormControl>
-                <Textarea placeholder={t('descriptionPlaceholder')} className="resize-none" {...field} />
+                <Textarea
+                  placeholder={t('descriptionPlaceholder')}
+                  className="resize-none"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

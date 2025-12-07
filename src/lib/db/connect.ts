@@ -1,6 +1,10 @@
 'use server'
 
-import { DB_CONNECT_TIMEOUT_MS, DB_SERVER_SELECTION_TIMEOUT_MS, DB_SOCKET_TIMEOUT_MS } from '@/constants/db'
+import {
+  DB_CONNECT_TIMEOUT_MS,
+  DB_SERVER_SELECTION_TIMEOUT_MS,
+  DB_SOCKET_TIMEOUT_MS
+} from '@/constants/db'
 import { connect, connection, ConnectOptions } from 'mongoose'
 
 // This file is used in both server and client components
@@ -79,7 +83,9 @@ export async function connectToDatabase() {
         )
       } else if (error.name === 'MongoNetworkError') {
         console.error('MongoDB network error: Unable to connect to the database')
-        throw new Error('Database network connection error. Please check network settings and database address.')
+        throw new Error(
+          'Database network connection error. Please check network settings and database address.'
+        )
       } else {
         console.error('MongoDB connection error:', error)
         throw error
