@@ -275,7 +275,9 @@ Type-aware rules are available but kept in evaluation for this project. [Oxlint 
 
 [React Compiler Docs](https://react.dev/learn/react-compiler)
 
-### Live Demo Constraints
+---
+
+## Live Demo Constraints
 
 | Aspect             | Current State                       | Production Recommendation           |
 | ------------------ | ----------------------------------- | ----------------------------------- |
