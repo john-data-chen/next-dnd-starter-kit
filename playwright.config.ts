@@ -86,7 +86,8 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "pnpm dev",
+    // Bind explicitly to loopback; some environments disallow 0.0.0.0
+    command: "pnpm dev --hostname 127.0.0.1 --port 3000",
     url: baseURL, // Use the resolved baseURL
     reuseExistingServer: !process.env.CI,
     // Pass the resolved environment variables to the web server process
