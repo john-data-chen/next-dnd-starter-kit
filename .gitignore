@@ -49,4 +49,5 @@ node_modules/
 # AI files
 .cursorrules
 GEMINI.md
-.windsurfrules
+CLAUDE.md
+AGENTS.md
