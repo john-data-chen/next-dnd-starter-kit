@@ -21,7 +21,6 @@ import {
   type DragStartEvent
 } from '@dnd-kit/core'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
-import mongoose from 'mongoose'
 import { toast } from 'sonner'
 import NewProjectDialog from '../project/NewProjectDialog'
 import { BoardContainer, BoardProject } from '../project/Project'
@@ -144,7 +143,8 @@ export function Board() {
         })
         .catch((error: unknown) => {
           console.error('Failed to move task:', error)
-          toast.error(`Failed to move task: ${error.message || 'unknown error'}`)
+          const message = error instanceof Error ? error.message : 'unknown error'
+          toast.error(`Failed to move task: ${message}`)
         })
     }
     // drag a task over a task
@@ -168,7 +168,8 @@ export function Board() {
           })
           .catch((error: unknown) => {
             console.error('Failed to move task:', error)
-            toast.error(`Failed to move task: ${error.message || 'unknown error'}`)
+            const message = error instanceof Error ? error.message : 'unknown error'
+            toast.error(`Failed to move task: ${message}`)
           })
       }
       // move task to the same project
@@ -215,7 +216,7 @@ export function Board() {
     setProjects(arrayMove(projects, activeProjectIndex, overProjectIndex))
   }
 
-  const pickedUpTaskProject = useRef<mongoose.Types.ObjectId | null>(null)
+  const pickedUpTaskProject = useRef<string | null>(null)
 
   const announcements: Announcements = {
     onDragStart({ active }) {
@@ -225,16 +226,18 @@ export function Board() {
       if (active.data.current?.type === 'Project') {
         const startProjectIdx = projectsId.findIndex((id: string) => id === active.id)
         const startProject = projects[startProjectIdx]
-        return `Picked up Project ${startProject?.title} at position: ${startProjectIdx + 1} of ${projectsId.length}`
+        return `Picked up Project ${startProject?.title} at position: ${
+          startProjectIdx + 1
+        } of ${projectsId.length}`
       } else if (active.data.current?.type === 'Task') {
-        pickedUpTaskProject.current = new mongoose.Types.ObjectId(active.data.current.task.project)
+        pickedUpTaskProject.current = active.data.current.task.project.toString()
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           active.data.current.task._id,
           active.data.current.task.project.toString()
         )
-        return `Picked up Task ${active.data.current.task.title} at position: ${taskPosition + 1} of ${
-          tasksInProject.length
-        } in project ${project?.title}`
+        return `Picked up Task ${active.data.current.task.title} at position: ${
+          taskPosition + 1
+        } of ${tasksInProject.length} in project ${project?.title}`
       }
     },
     onDragOver({ active, over }) {
@@ -251,8 +254,10 @@ export function Board() {
           over.data.current.task._id,
           over.data.current.task.project.toString()
         )
-        if (over.data.current.task.project !== pickedUpTaskProject.current?.toString()) {
-          return `Task ${active.data.current.task.title} was moved over project ${project?.title} in position ${
+        if (over.data.current.task.project !== pickedUpTaskProject.current) {
+          return `Task ${
+            active.data.current.task.title
+          } was moved over project ${project?.title} in position ${
             taskPosition + 1
           } of ${tasksInProject.length}`
         }
@@ -269,15 +274,15 @@ export function Board() {
       if (active.data.current?.type === 'Project' && over.data.current?.type === 'Project') {
         const overProjectPosition = projectsId.findIndex((id: string) => id === over.id)
 
-        return `Project ${active.data.current.project.title} was dropped into position ${overProjectPosition + 1} of ${
-          projectsId.length
-        }`
+        return `Project ${
+          active.data.current.project.title
+        } was dropped into position ${overProjectPosition + 1} of ${projectsId.length}`
       } else if (active.data.current?.type === 'Task' && over.data.current?.type === 'Task') {
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           over.data.current.task._id,
           over.data.current.task.project.toString()
         )
-        if (over.data.current.task.project !== pickedUpTaskProject.current?.toString()) {
+        if (over.data.current.task.project !== pickedUpTaskProject.current) {
           return `Task was dropped into project ${project?.title} in position ${
             taskPosition + 1
           } of ${tasksInProject.length}`
