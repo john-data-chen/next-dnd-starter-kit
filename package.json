@@ -28,7 +28,7 @@
       "oxfmt --no-error-on-unmatched-pattern --config ./.oxfmtrc.json"
     ],
     "./src/**/*.{js,jsx,ts,tsx}": [
-      "oxlint --fix"
+      "oxlint --type-aware --fix"
     ]
   },
   "config": {
