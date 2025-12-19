@@ -114,13 +114,13 @@ I utilize a suite of specialized AI tools, each assigned specific roles to mimic
 
 MCP enables AI tools to interact directly with development infrastructure, eliminating context-switching overhead:
 
-| Server                                                                                                | Integration Point     | Workflow Enhancement                                                |
-| ----------------------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------- |
-| [chrome-devtools](https://github.com/anthropics/anthropic-quickstarts)                                | Browser state         | Debug without leaving the editor                                    |
-| [context7](https://github.com/upstash/context7)                                                       | Documentation         | Current library docs during development                             |
-| [Next.js](https://nextjs.org/docs/app/guides/mcp)                                                     | Framework diagnostics | Direct access to build errors and routes                            |
-| [sequential-thinking](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking) | Problem decomposition | Structured approach for complex decisions                           |
-| [playwright-mcp](https://github.com/microsoft/playwright-mcp)                                         | E2E testing           | Add e2e tests by AI based on Behavior-Driven Development guidelines |
+| Server                                                                                                    | Integration Point     | Workflow Enhancement                                                |
+| --------------------------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------- |
+| [chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)                              | Browser state         | Debug without leaving the editor                                    |
+| [context7-mcp](https://github.com/upstash/context7)                                                       | Documentation         | Current library docs during development                             |
+| [nextjs-mcp](https://nextjs.org/docs/app/guides/mcp)                                                      | Framework diagnostics | Direct access to build errors and routes                            |
+| [sequential-thinking-mcp](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking) | Problem decomposition | Structured approach for complex decisions                           |
+| [playwright-mcp](https://github.com/microsoft/playwright-mcp)                                             | E2E testing           | Add e2e tests by AI based on Behavior-Driven Development guidelines |
 
 ## 📈 Measurable Impact
 
