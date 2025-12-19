@@ -48,16 +48,16 @@ A production-grade Kanban board application I built independently to demonstrate
 
 ### Architecture
 
-| Type      | Choice                | Rationale                                        |
-| --------- | --------------------- | ------------------------------------------------ |
-| Framework | Next.js (App Router)  | SSG for static pages, SSR for dynamic content    |
-| State     | Zustand               | 40% less boilerplate than Redux, simpler testing |
-| Forms     | React Hook Form + Zod | Type-safe validation, composable schemas         |
-| Database  | MongoDB + Mongoose    | Document model fits board/project/task hierarchy |
-| Auth      | Auth.js               | Native Next.js integration, OAuth support        |
-| DnD       | dnd-kit               | Lightweight, accessible, extensible              |
-| i18n      | next-intl             | App Router native support                        |
-| UI        | Tailwind + shadcn/ui  | Consistent design system, rapid iteration        |
+| Type      | Choice                   | Rationale                                        |
+| --------- | ------------------------ | ------------------------------------------------ |
+| Framework | Next.js (App Router)     | SSG for static pages, SSR for dynamic content    |
+| State     | Zustand                  | 40% less boilerplate than Redux, simpler testing |
+| Forms     | React Hook Form + Zod    | Type-safe validation, composable schemas         |
+| Database  | MongoDB + Mongoose       | Document model fits board/project/task hierarchy |
+| Auth      | Auth.js                  | Native Next.js integration, OAuth support        |
+| DnD       | dnd-kit                  | Lightweight, accessible, extensible              |
+| i18n      | next-intl                | App Router native support                        |
+| UI        | Tailwind CSS + Shadcn/ui | Consistent design system, rapid iteration        |
 
 ### Developer Experience
 
@@ -103,23 +103,33 @@ This project demonstrates a "Human-in-the-Loop" architecture where AI tools are 
 
 I utilize a suite of specialized AI tools, each assigned specific roles to mimic a high-performing engineering team structure.
 
-| Role              | Tool                                                                    | Responsibility                      | Impact                                                                                                                  |
-| :---------------- | :---------------------------------------------------------------------- | :---------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
-| **Architect**     | [Claude Code](https://github.com/anthropics/claude-code)                | System design & complex refactoring | Handles multi-file architectural changes with deep context awareness, perfect for making plans for other AI tools.      |
-| **Plan Executor** | [Kilo Code](https://github.com/Kilo-Org/kilocode)                       | Code writing                        | Follow the plan by Architect, implement functionality and refactor using a faster and cheaper model such as Minimax M2. |
-| **QA**            | [Gemini CLI](https://github.com/google-gemini/gemini-cli)               | Writing test cases                  | Gemini 3 Pro is the cheapest option in top models, perfect for writing test cases.                                      |
-| **PR Reviewer**   | [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | Automated PR Review                 | Enforces code standards and catches potential bugs before human reviewer.                                               |
+| Role              | Tool                                                                    | Responsibility                      | Impact                                                                                                                                                           |
+| :---------------- | :---------------------------------------------------------------------- | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Architect**     | [Claude Code](https://github.com/anthropics/claude-code)                | System design & complex refactoring | Handles multi-file architectural changes with deep context awareness, perfect for making plans for other AI tools.                                               |
+| **Plan Executor** | [Kilo Code](https://github.com/Kilo-Org/kilocode)                       | Code writing                        | Follow the plan by Architect, implement functionality and refactor using a faster and cheaper model such as Grok Code Fast 1, MiniMax M2 and Mistral Devstral 2. |
+| **QA**            | [Gemini CLI](https://github.com/google-gemini/gemini-cli)               | Writing test cases                  | Gemini 3 Pro is the cheapest option in top models, perfect for writing test cases.                                                                               |
+| **PR Reviewer**   | [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | Automated PR Review                 | Enforces code standards and catches potential bugs before human reviewer.                                                                                        |
 
 **MCP (Model Context Protocol) Servers**
 
 MCP enables AI tools to interact directly with development infrastructure, eliminating context-switching overhead:
 
-| Server                                                                                                | Integration Point     | Workflow Enhancement                      |
-| ----------------------------------------------------------------------------------------------------- | --------------------- | ----------------------------------------- |
-| [chrome-devtools](https://github.com/anthropics/anthropic-quickstarts)                                | Browser state         | Debug without leaving the editor          |
-| [context7](https://github.com/upstash/context7)                                                       | Documentation         | Current library docs during development   |
-| [Next.js](https://nextjs.org/docs/app/guides/mcp)                                                     | Framework diagnostics | Direct access to build errors and routes  |
-| [sequential-thinking](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking) | Problem decomposition | Structured approach for complex decisions |
+| Server                                                                                                | Integration Point     | Workflow Enhancement                                                |
+| ----------------------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------- |
+| [chrome-devtools](https://github.com/anthropics/anthropic-quickstarts)                                | Browser state         | Debug without leaving the editor                                    |
+| [context7](https://github.com/upstash/context7)                                                       | Documentation         | Current library docs during development                             |
+| [Next.js](https://nextjs.org/docs/app/guides/mcp)                                                     | Framework diagnostics | Direct access to build errors and routes                            |
+| [sequential-thinking](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking) | Problem decomposition | Structured approach for complex decisions                           |
+| [playwright-mcp](https://github.com/microsoft/playwright-mcp)                                         | E2E testing           | Add e2e tests by AI based on Behavior-Driven Development guidelines |
+
+## 📈 Measurable Impact
+
+By treating AI as an integrated part of the stack, this project achieves:
+
+- **Velocity**: 5-10x faster implementation of boilerplate and standard patterns.
+- **Quality**: Higher test coverage (80%+) through AI-generated test scaffolding.
+- **Learning**: Rapid mastery of new tools (Rspack, Playwright, Storybook...and more) via AI-guided implementation.
+- **Focus**: Shifted engineering time from syntax to system architecture and user experience.
 
 **CI/CD Integration**
 
@@ -134,7 +144,7 @@ MCP enables AI tools to interact directly with development infrastructure, elimi
 ### Requirements
 
 - Node.js >= 24.11.0 (LTS)
-- pnpm 10.x
+- PNPM 10.x
 - Docker / OrbStack (for local MongoDB)
 
 ### Environment Configuration
