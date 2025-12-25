@@ -1,9 +1,3 @@
-import { BoardModel } from '@/models/board.model'
-import { ProjectModel } from '@/models/project.model'
-import { TaskModel } from '@/models/task.model'
-import { UserModel } from '@/models/user.model'
-import mongoose from 'mongoose'
-
 export interface Project {
   _id: string
   title: string
@@ -61,7 +55,7 @@ export interface Task {
   updatedAt: Date
 }
 
-export type ProjectModel = mongoose.InferSchemaType<(typeof ProjectModel)['schema']> & {
+export interface ProjectModel {
   _id: string
   title: string
   description?: string
@@ -73,22 +67,27 @@ export type ProjectModel = mongoose.InferSchemaType<(typeof ProjectModel)['schem
   updatedAt: Date
 }
 
-export type UserModel = mongoose.InferSchemaType<(typeof UserModel)['schema']> & {
+export interface UserModel {
   _id: string
   email: string
   name: string
+  createdAt: Date
+  updatedAt: Date
 }
 
-export type TaskModel = mongoose.InferSchemaType<(typeof TaskModel)['schema']> & {
+export interface TaskModel {
   _id: string
   title: string
   description?: string
+  status: TaskStatus
   dueDate?: Date
   board: string
   project: string
   assignee?: string
   creator: string
   lastModifier: string
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface Board {
@@ -102,7 +101,7 @@ export interface Board {
   updatedAt: Date
 }
 
-export type BoardModel = mongoose.InferSchemaType<(typeof BoardModel)['schema']> & {
+export interface BoardModel {
   _id: string
   title: string
   description?: string
