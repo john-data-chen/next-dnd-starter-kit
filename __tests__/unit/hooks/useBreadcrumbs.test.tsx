@@ -1,36 +1,37 @@
-import { ROUTES } from '@/constants/routes'
-import { useBreadcrumbs } from '@/hooks/useBreadcrumbs'
-import { fetchBoardsFromDb } from '@/lib/db/board'
-import { useTaskStore } from '@/lib/store'
-import { act, renderHook } from '@testing-library/react'
-import { useParams } from 'next/navigation'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, renderHook } from "@testing-library/react"
+import { useParams } from "next/navigation"
+import { beforeEach, describe, expect, it, vi } from "vitest"
+
+import { ROUTES } from "@/constants/routes"
+import { useBreadcrumbs } from "@/hooks/useBreadcrumbs"
+import { fetchBoardsFromDb } from "@/lib/db/board"
+import { useTaskStore } from "@/lib/store"
 
 // Mock dependencies
-vi.mock('next/navigation', () => ({
+vi.mock("next/navigation", () => ({
   useParams: vi.fn()
 }))
 
-vi.mock('next-intl', () => ({
+vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key
 }))
 
-vi.mock('@/lib/db/board', () => ({
+vi.mock("@/lib/db/board", () => ({
   fetchBoardsFromDb: vi.fn().mockResolvedValue([])
 }))
 
-vi.mock('@/lib/store', () => ({
+vi.mock("@/lib/store", () => ({
   useTaskStore: vi.fn()
 }))
 
-describe('useBreadcrumbs Hook', () => {
-  const mockUserEmail = 'test@example.com'
-  const mockBoardId = 'board123'
+describe("useBreadcrumbs Hook", () => {
+  const mockUserEmail = "test@example.com"
+  const mockBoardId = "board123"
   const mockBoard = {
     _id: mockBoardId,
-    title: 'Test Board',
-    description: 'Test Description',
-    owner: { id: 'user123', name: 'Test User' },
+    title: "Test Board",
+    description: "Test Description",
+    owner: { id: "user123", name: "Test User" },
     members: [],
     projects: [],
     createdAt: new Date(),
@@ -44,12 +45,12 @@ describe('useBreadcrumbs Hook', () => {
     vi.mocked(useTaskStore).mockReturnValue(mockUserEmail)
   })
 
-  it('should initialize with root breadcrumb', () => {
+  it("should initialize with root breadcrumb", () => {
     const { result } = renderHook(() => useBreadcrumbs())
 
     expect(result.current.items).toEqual([
       {
-        title: 'overview',
+        title: "overview",
         link: ROUTES.BOARDS.ROOT,
         isRoot: true
       }
@@ -57,7 +58,7 @@ describe('useBreadcrumbs Hook', () => {
     expect(result.current.rootLink).toBe(ROUTES.BOARDS.ROOT)
   })
 
-  it('should fetch and add board breadcrumb when boardId exists', async () => {
+  it("should fetch and add board breadcrumb when boardId exists", async () => {
     vi.mocked(fetchBoardsFromDb).mockResolvedValueOnce([mockBoard])
 
     const { result } = renderHook(() => useBreadcrumbs())
@@ -68,7 +69,7 @@ describe('useBreadcrumbs Hook', () => {
 
     expect(result.current.items).toEqual([
       {
-        title: 'overview',
+        title: "overview",
         link: ROUTES.BOARDS.ROOT,
         isRoot: true
       },
@@ -79,10 +80,10 @@ describe('useBreadcrumbs Hook', () => {
     ])
   })
 
-  it('should handle fetch error gracefully', async () => {
-    const mockError = new Error('Fetch failed')
+  it("should handle fetch error gracefully", async () => {
+    const mockError = new Error("Fetch failed")
     vi.mocked(fetchBoardsFromDb).mockRejectedValueOnce(mockError)
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
 
     const { result } = renderHook(() => useBreadcrumbs())
 
@@ -90,13 +91,13 @@ describe('useBreadcrumbs Hook', () => {
       await new Promise((resolve) => setTimeout(resolve, 0))
     })
 
-    expect(consoleSpy).toHaveBeenCalledWith('Failed to fetch board:', mockError)
+    expect(consoleSpy).toHaveBeenCalledWith("Failed to fetch board:", mockError)
     expect(result.current.items).toHaveLength(1)
 
     consoleSpy.mockRestore()
   })
 
-  it('should not fetch board when boardId is missing', async () => {
+  it("should not fetch board when boardId is missing", async () => {
     vi.mocked(useParams).mockReturnValue({})
 
     renderHook(() => useBreadcrumbs())
@@ -104,8 +105,8 @@ describe('useBreadcrumbs Hook', () => {
     expect(fetchBoardsFromDb).not.toHaveBeenCalled()
   })
 
-  it('should not fetch board when userEmail is missing', async () => {
-    vi.mocked(useTaskStore).mockReturnValue('')
+  it("should not fetch board when userEmail is missing", async () => {
+    vi.mocked(useTaskStore).mockReturnValue("")
 
     renderHook(() => useBreadcrumbs())
 

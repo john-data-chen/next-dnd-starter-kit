@@ -1,8 +1,9 @@
-import { hasLocale } from 'next-intl'
-import { getRequestConfig } from 'next-intl/server'
-import { routing } from './routing'
+import { hasLocale } from "next-intl"
+import { getRequestConfig } from "next-intl/server"
 
-type Messages = typeof import('../../messages/en.json')
+import { routing } from "./routing"
+
+type Messages = typeof import("../../messages/en.json")
 
 async function importMessages(locale: string): Promise<Messages> {
   return (await import(`../../messages/${locale}.json`)).default as Messages

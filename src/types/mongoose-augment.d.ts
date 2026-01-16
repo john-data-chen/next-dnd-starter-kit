@@ -1,7 +1,8 @@
-import { Model } from 'mongoose'
-import { TaskType } from './dbInterface'
+import { Model } from "mongoose"
 
-declare module 'mongoose' {
+import { TaskType } from "./dbInterface"
+
+declare module "mongoose" {
   interface Models {
     Task: Model<TaskType>
     // Add other models here as needed

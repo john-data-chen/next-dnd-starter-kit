@@ -1,33 +1,34 @@
+import { Types } from "mongoose"
+
 import {
   createBoardInDb,
   deleteBoardInDb,
   fetchBoardsFromDb,
   updateBoardInDb
-} from '@/lib/db/board'
-import { connectToDatabase } from '@/lib/db/connect'
-import { getUserByEmail, getUserById } from '@/lib/db/user'
-import { BoardModel } from '@/models/board.model'
-import { ProjectModel } from '@/models/project.model'
-import { TaskModel } from '@/models/task.model'
-import { Types } from 'mongoose'
+} from "@/lib/db/board"
+import { connectToDatabase } from "@/lib/db/connect"
+import { getUserByEmail, getUserById } from "@/lib/db/user"
+import { BoardModel } from "@/models/board.model"
+import { ProjectModel } from "@/models/project.model"
+import { TaskModel } from "@/models/task.model"
 
-vi.mock('@/lib/db/connect')
-vi.mock('@/lib/db/user')
-vi.mock('@/models/board.model')
-vi.mock('@/models/project.model')
-vi.mock('@/models/task.model')
+vi.mock("@/lib/db/connect")
+vi.mock("@/lib/db/user")
+vi.mock("@/models/board.model")
+vi.mock("@/models/project.model")
+vi.mock("@/models/task.model")
 
-describe('Board DB functions', () => {
+describe("Board DB functions", () => {
   const mockUser = {
     id: new Types.ObjectId().toHexString(),
-    name: 'Test User',
-    email: 'test@example.com'
+    name: "Test User",
+    email: "test@example.com"
   }
   const mockBoardId = new Types.ObjectId().toHexString()
   const mockBoard = {
     _id: new Types.ObjectId(mockBoardId),
-    title: 'Test Board',
-    description: 'Test Description',
+    title: "Test Board",
+    description: "Test Description",
     owner: new Types.ObjectId(mockUser.id),
     members: [new Types.ObjectId(mockUser.id)],
     projects: [],
@@ -44,8 +45,8 @@ describe('Board DB functions', () => {
     )
   })
 
-  describe('fetchBoardsFromDb', () => {
-    it('should fetch boards for a user', async () => {
+  describe("fetchBoardsFromDb", () => {
+    it("should fetch boards for a user", async () => {
       ;(BoardModel.find as jest.Mock).mockReturnValue({
         populate: vi.fn().mockReturnThis(),
         lean: vi.fn().mockResolvedValue([mockBoard])
@@ -53,70 +54,70 @@ describe('Board DB functions', () => {
 
       const boards = await fetchBoardsFromDb(mockUser.email)
       expect(boards).toHaveLength(1)
-      expect(boards[0].title).toBe('Test Board')
+      expect(boards[0].title).toBe("Test Board")
     })
 
-    it('should return empty array if user not found', async () => {
+    it("should return empty array if user not found", async () => {
       ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
-      const boards = await fetchBoardsFromDb('unknown@example.com')
+      const boards = await fetchBoardsFromDb("unknown@example.com")
       expect(boards).toEqual([])
     })
   })
 
-  describe('createBoardInDb', () => {
-    it('should create a new board', async () => {
+  describe("createBoardInDb", () => {
+    it("should create a new board", async () => {
       ;(BoardModel.create as jest.Mock).mockResolvedValue({
         ...mockBoard,
         toObject: () => mockBoard
       })
       const newBoard = await createBoardInDb({
-        title: 'Test Board',
+        title: "Test Board",
         userEmail: mockUser.email
       })
-      expect(newBoard?.title).toBe('Test Board')
+      expect(newBoard?.title).toBe("Test Board")
       expect(BoardModel.create).toHaveBeenCalled()
     })
 
-    it('should return null if user not found', async () => {
+    it("should return null if user not found", async () => {
       ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
       const newBoard = await createBoardInDb({
-        title: 'Test Board',
-        userEmail: 'unknown@example.com'
+        title: "Test Board",
+        userEmail: "unknown@example.com"
       })
       expect(newBoard).toBeNull()
     })
   })
 
-  describe('updateBoardInDb', () => {
-    it('should update a board', async () => {
+  describe("updateBoardInDb", () => {
+    it("should update a board", async () => {
       ;(BoardModel.findById as jest.Mock).mockReturnValue({
         lean: vi.fn().mockReturnValue(mockBoard)
       })
       const mockUpdatedDoc = {
-        lean: vi.fn().mockReturnValue({ ...mockBoard, title: 'Updated Board' })
+        lean: vi.fn().mockReturnValue({ ...mockBoard, title: "Updated Board" })
       }
       ;(BoardModel.findByIdAndUpdate as jest.Mock).mockReturnValue(mockUpdatedDoc)
 
       const updatedBoard = await updateBoardInDb(
         mockBoardId,
-        { title: 'Updated Board' },
+        { title: "Updated Board" },
         mockUser.email
       )
-      expect(updatedBoard?.title).toBe('Updated Board')
+      expect(updatedBoard?.title).toBe("Updated Board")
     })
 
-    it('should throw error if user is not owner', async () => {
+    it("should throw error if user is not owner", async () => {
       ;(BoardModel.findById as jest.Mock).mockReturnValue({
         lean: vi.fn().mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       })
       await expect(
-        updateBoardInDb(mockBoardId, { title: 'Updated' }, mockUser.email)
+        updateBoardInDb(mockBoardId, { title: "Updated" }, mockUser.email)
       ).resolves.toBeNull()
     })
   })
 
-  describe('deleteBoardInDb', () => {
-    it('should delete a board and its contents', async () => {
+  describe("deleteBoardInDb", () => {
+    it("should delete a board and its contents", async () => {
       ;(BoardModel.findById as jest.Mock).mockReturnValue({
         lean: vi.fn().mockReturnValue(mockBoard)
       })
@@ -137,7 +138,7 @@ describe('Board DB functions', () => {
       expect(BoardModel.findByIdAndDelete).toHaveBeenCalledWith(mockBoardId)
     })
 
-    it('should throw error if user is not owner', async () => {
+    it("should throw error if user is not owner", async () => {
       ;(BoardModel.findById as jest.Mock).mockReturnValue({
         lean: vi.fn().mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       })

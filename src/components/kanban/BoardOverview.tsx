@@ -1,44 +1,46 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { DotsHorizontalIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons"
+import { useTranslations } from "next-intl"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/select'
-import { useBoards } from '@/hooks/useBoards'
-import { usePathname, useRouter } from '@/i18n/navigation'
-import { DotsHorizontalIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
-import { useTranslations } from 'next-intl'
-import { useSearchParams } from 'next/navigation'
-import { toast } from 'sonner'
-import { BoardActions } from './board/BoardActions'
-import NewBoardDialog from './board/NewBoardDialog'
+} from "@/components/ui/select"
+import { useBoards } from "@/hooks/useBoards"
+import { usePathname, useRouter } from "@/i18n/navigation"
 
-type FilterType = 'all' | 'my' | 'team'
+import { BoardActions } from "./board/BoardActions"
+import NewBoardDialog from "./board/NewBoardDialog"
+
+type FilterType = "all" | "my" | "team"
 
 export function BoardOverview() {
   const { myBoards, teamBoards, loading, fetchBoards } = useBoards()
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<FilterType>('all')
+  const [search, setSearch] = useState("")
+  const [filter, setFilter] = useState<FilterType>("all")
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const t = useTranslations('kanban')
-  const tLogin = useTranslations('login')
+  const t = useTranslations("kanban")
+  const tLogin = useTranslations("login")
 
   useEffect(() => {
-    const loginSuccess = searchParams.get('login_success')
-    if (loginSuccess === 'true') {
+    const loginSuccess = searchParams.get("login_success")
+    if (loginSuccess === "true") {
       const timer = setTimeout(() => {
-        toast.success(tLogin('success'))
+        toast.success(tLogin("success"))
         const params = new URLSearchParams(searchParams.toString())
-        params.delete('login_success')
+        params.delete("login_success")
         router.replace(`${pathname}?${params.toString()}`, { scroll: false })
       }, 500)
       return () => {
@@ -49,20 +51,20 @@ export function BoardOverview() {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === "visible") {
         fetchBoards().catch(console.error)
       }
     }
 
-    document.addEventListener('visibilitychange', handleVisibilityChange)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
 
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
   }, [fetchBoards])
 
   if (loading) {
-    return <div>{t('loading')}</div>
+    return <div>{t("loading")}</div>
   }
 
   const filteredMyBoards = myBoards?.filter((board) =>
@@ -73,8 +75,8 @@ export function BoardOverview() {
     board.title.toLowerCase().includes(search.toLowerCase())
   )
 
-  const shouldShowMyBoards = filter === 'all' || filter === 'my'
-  const shouldShowTeamBoards = filter === 'all' || filter === 'team'
+  const shouldShowMyBoards = filter === "all" || filter === "my"
+  const shouldShowTeamBoards = filter === "all" || filter === "team"
 
   const handleBoardClick = (boardId: string) => {
     router.push(`/boards/${boardId}`)
@@ -89,7 +91,7 @@ export function BoardOverview() {
               className="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium whitespace-nowrap text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
               data-testid="new-board-trigger"
             >
-              {t('newBoard')}
+              {t("newBoard")}
             </Button>
           </NewBoardDialog>
         </div>
@@ -97,7 +99,7 @@ export function BoardOverview() {
           <div className="relative w-full sm:w-[200px]">
             <MagnifyingGlassIcon className="absolute top-2.5 left-2.5 h-5 w-5 text-muted-foreground" />
             <Input
-              placeholder={t('searchBoards')}
+              placeholder={t("searchBoards")}
               className="pl-8"
               value={search}
               onChange={(e) => {
@@ -112,19 +114,19 @@ export function BoardOverview() {
             }}
           >
             <SelectTrigger className="w-[140px]" data-testid="select-filter-trigger">
-              {' '}
+              {" "}
               {/* Add data-testid here */}
-              <SelectValue placeholder={t('filterBoards')} />
+              <SelectValue placeholder={t("filterBoards")} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all" data-testid="selectAllBoards">
-                {t('allBoards')}
+                {t("allBoards")}
               </SelectItem>
               <SelectItem value="my" data-testid="selectMyBoards">
-                {t('myBoards')}
+                {t("myBoards")}
               </SelectItem>
               <SelectItem value="team" data-testid="selectTeamBoards">
-                {t('teamBoards')}
+                {t("teamBoards")}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -137,14 +139,14 @@ export function BoardOverview() {
             <section>
               <div className="mb-2 flex items-center gap-2 px-4">
                 <h2 className="text-2xl font-bold" data-testid="myBoardsTitle">
-                  {t('myBoards')}
+                  {t("myBoards")}
                 </h2>
               </div>
               <div className="mb-2 flex items-center gap-2 px-4">
-                <span className="text-sm text-muted-foreground">{t('myBoardsDescription')}</span>
+                <span className="text-sm text-muted-foreground">{t("myBoardsDescription")}</span>
               </div>
               {filteredMyBoards?.length === 0 ? (
-                <p className="px-4 text-muted-foreground">{t('noBoardsFound')}</p>
+                <p className="px-4 text-muted-foreground">{t("noBoardsFound")}</p>
               ) : (
                 <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
                   {filteredMyBoards?.map((board) => {
@@ -167,12 +169,12 @@ export function BoardOverview() {
                                 e.stopPropagation()
                               }}
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
+                                if (e.key === "Enter" || e.key === " ") {
                                   e.preventDefault()
                                   e.stopPropagation()
                                 }
                               }}
-                              aria-label={board.title ? `${board.title} actions` : 'Board actions'}
+                              aria-label={board.title ? `${board.title} actions` : "Board actions"}
                             >
                               <DotsHorizontalIcon className="h-4 w-4" />
                             </Button>
@@ -180,16 +182,16 @@ export function BoardOverview() {
                         </CardHeader>
                         <CardContent>
                           <p className="text-sm text-muted-foreground">
-                            {board.description || t('noDescription')}
+                            {board.description || t("noDescription")}
                           </p>
                           <p className="mt-2 text-sm">
-                            {t('projects')}:{' '}
+                            {t("projects")}:{" "}
                             {board.projects.length > 0
-                              ? board.projects.map((p) => p.title).join(' / ')
-                              : '0'}
+                              ? board.projects.map((p) => p.title).join(" / ")
+                              : "0"}
                           </p>
                           <p className="mt-2 text-sm">
-                            {t('members')}: {board.members.map((m) => m.name).join(', ')}
+                            {t("members")}: {board.members.map((m) => m.name).join(", ")}
                           </p>
                         </CardContent>
                       </Card>
@@ -204,14 +206,14 @@ export function BoardOverview() {
             <section>
               <div className="mb-2 flex items-center gap-2 px-4">
                 <h2 className="text-2xl font-bold" data-testid="teamBoardsTitle">
-                  {t('teamBoards')}
+                  {t("teamBoards")}
                 </h2>
               </div>
               <div className="mb-2 flex items-center gap-2 px-4">
-                <span className="text-sm text-muted-foreground">{t('teamBoardsDescription')}</span>
+                <span className="text-sm text-muted-foreground">{t("teamBoardsDescription")}</span>
               </div>
               {filteredTeamBoards?.length === 0 ? (
-                <p className="px-4 text-muted-foreground">{t('noTeamBoardsFound')}</p>
+                <p className="px-4 text-muted-foreground">{t("noTeamBoardsFound")}</p>
               ) : (
                 <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
                   {filteredTeamBoards?.map((board) => {
@@ -228,20 +230,20 @@ export function BoardOverview() {
                         </CardHeader>
                         <CardContent>
                           <p className="text-sm text-muted-foreground">
-                            {board.description || t('noDescription')}
+                            {board.description || t("noDescription")}
                           </p>
                           <div className="mt-2 space-y-1">
                             <p className="text-sm">
-                              {t('owner')}: {board.owner.name}
+                              {t("owner")}: {board.owner.name}
                             </p>
                             <p className="text-sm">
-                              {t('projects')}:{' '}
+                              {t("projects")}:{" "}
                               {board.projects.length > 0
-                                ? board.projects.map((p) => p.title).join(' / ')
-                                : '0'}
+                                ? board.projects.map((p) => p.title).join(" / ")
+                                : "0"}
                             </p>
                             <p className="text-sm">
-                              {t('members')}: {board.members.map((m) => m.name).join(', ')}
+                              {t("members")}: {board.members.map((m) => m.name).join(", ")}
                             </p>
                           </div>
                         </CardContent>

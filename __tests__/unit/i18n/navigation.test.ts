@@ -1,22 +1,23 @@
-import { getPathname, Link, redirect, usePathname, useRouter } from '@/i18n/navigation'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from "vitest"
+
+import { getPathname, Link, redirect, usePathname, useRouter } from "@/i18n/navigation"
 
 // Mock next-intl/navigation and routing
-vi.mock('next-intl/navigation', () => ({
+vi.mock("next-intl/navigation", () => ({
   createNavigation: vi.fn(() => ({
-    Link: 'MockLink',
+    Link: "MockLink",
     redirect: vi.fn(),
     usePathname: vi.fn(),
     useRouter: vi.fn(),
     getPathname: vi.fn()
   }))
 }))
-vi.mock('@/i18n/routing', () => ({
+vi.mock("@/i18n/routing", () => ({
   routing: {}
 }))
 
-describe('navigation exports', () => {
-  it('should export Link, redirect, usePathname, useRouter, getPathname', () => {
+describe("navigation exports", () => {
+  it("should export Link, redirect, usePathname, useRouter, getPathname", () => {
     expect(Link).toBeDefined()
     expect(redirect).toBeInstanceOf(Function)
     expect(usePathname).toBeInstanceOf(Function)

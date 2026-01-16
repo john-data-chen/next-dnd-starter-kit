@@ -1,9 +1,10 @@
-import { Breadcrumbs } from '@/components/layout/Breadcrumbs'
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
-import LanguageSwitcher from './LanguageSwitcher'
-import ThemeToggle from './ThemeToggle'
-import { UserNav } from './UserNav'
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
+import { Separator } from "@/components/ui/separator"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+
+import LanguageSwitcher from "./LanguageSwitcher"
+import ThemeToggle from "./ThemeToggle"
+import { UserNav } from "./UserNav"
 
 export default function Header() {
   return (

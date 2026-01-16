@@ -1,35 +1,36 @@
-import { Task as TaskType } from '@/types/dbInterface'
-import mongoose, { Model } from 'mongoose'
+import mongoose, { Model } from "mongoose"
+
+import { Task as TaskType } from "@/types/dbInterface"
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   status: {
     type: String,
-    enum: ['TODO', 'IN_PROGRESS', 'DONE'],
-    default: 'TODO',
+    enum: ["TODO", "IN_PROGRESS", "DONE"],
+    default: "TODO",
     required: true
   },
   dueDate: { type: Date },
   board: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Board',
+    ref: "Board",
     required: true
   },
   project: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project',
+    ref: "Project",
     required: true
   },
-  assignee: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  assignee: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   creator: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true
   },
   lastModifier: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true
   },
   createdAt: { type: Date, default: Date.now },
@@ -37,14 +38,14 @@ const taskSchema = new mongoose.Schema({
 })
 
 function isTaskModel(model: any): model is Model<TaskType> {
-  return model && model.modelName === 'Task'
+  return model && model.modelName === "Task"
 }
 
 function getTaskModel(): Model<TaskType> {
   if (isTaskModel(mongoose.models.Task)) {
     return mongoose.models.Task
   }
-  return mongoose.model<TaskType>('Task', taskSchema)
+  return mongoose.model<TaskType>("Task", taskSchema)
 }
 
 const TaskModel = getTaskModel()

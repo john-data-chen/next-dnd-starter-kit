@@ -1,22 +1,25 @@
-import { useMemo } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import { useTaskStore } from '@/lib/store'
-import { cn } from '@/lib/utils'
-import { Project, Task } from '@/types/dbInterface'
-import { SortableContext, useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { cva } from 'class-variance-authority'
-import { PointerIcon } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import NewTaskDialog from '../task/NewTaskDialog'
-import { TaskCard } from '../task/TaskCard'
-import { ProjectActions } from './ProjectAction'
+import { SortableContext, useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { cva } from "class-variance-authority"
+import { PointerIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useMemo } from "react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { useTaskStore } from "@/lib/store"
+import { cn } from "@/lib/utils"
+import { Project, Task } from "@/types/dbInterface"
+
+import NewTaskDialog from "../task/NewTaskDialog"
+import { TaskCard } from "../task/TaskCard"
+
+import { ProjectActions } from "./ProjectAction"
 
 export interface ProjectDragData {
-  type: 'Project'
+  type: "Project"
   project: Project
 }
 
@@ -28,7 +31,7 @@ interface BoardProjectProps {
 
 export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   const { filter } = useTaskStore()
-  const t = useTranslations('kanban.project')
+  const t = useTranslations("kanban.project")
 
   const filteredTasks = useMemo(() => {
     if (!filter.status || !tasks.length) {
@@ -44,7 +47,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: project._id,
     data: {
-      type: 'Project',
+      type: "Project",
       project
     } satisfies ProjectDragData,
     attributes: {
@@ -60,19 +63,19 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
 
   // Define card style variants based on drag state
   const variants = cva(
-    'h-[75vh] max-h-[75vh] w-full md:w-[380px] bg-secondary flex flex-col shrink-0 snap-center',
+    "h-[75vh] max-h-[75vh] w-full md:w-[380px] bg-secondary flex flex-col shrink-0 snap-center",
     {
       variants: {
         dragging: {
-          default: 'border-2 border-transparent',
-          over: 'ring-2 opacity-30',
-          overlay: 'ring-2 ring-primary'
+          default: "border-2 border-transparent",
+          over: "ring-2 opacity-30",
+          overlay: "ring-2 ring-primary"
         }
       }
     }
   )
 
-  const dragState = isOverlay ? 'overlay' : isDragging ? 'over' : undefined
+  const dragState = isOverlay ? "overlay" : isDragging ? "over" : undefined
 
   return (
     <Card
@@ -80,7 +83,7 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
       style={style}
       className={cn(
         variants({ dragging: dragState }),
-        'overflow-hidden' // Prevent content from overflowing
+        "overflow-hidden" // Prevent content from overflowing
       )}
       data-testid="project-container"
     >
@@ -104,13 +107,13 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
         <ScrollArea className="h-full px-2 pt-2">
           <div className="flex flex-col gap-1">
             <Badge variant="outline" className="text-xs">
-              {t('description')}: {project.description || t('noDescription')}
+              {t("description")}: {project.description || t("noDescription")}
             </Badge>
             <Badge variant="outline" className="truncate text-xs">
-              {t('owner')}: {project.owner.name}
+              {t("owner")}: {project.owner.name}
             </Badge>
             <Badge variant="outline" className="truncate text-xs">
-              {t('members')}: {project.members.map((member) => member.name).join(', ')}
+              {t("members")}: {project.members.map((member) => member.name).join(", ")}
             </Badge>
           </div>
           <div className="px-2">

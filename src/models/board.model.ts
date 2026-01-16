@@ -1,5 +1,6 @@
-import { Board as BoardType } from '@/types/dbInterface'
-import mongoose, { Model } from 'mongoose'
+import mongoose, { Model } from "mongoose"
+
+import { Board as BoardType } from "@/types/dbInterface"
 
 const boardSchema = new mongoose.Schema(
   {
@@ -7,11 +8,11 @@ const boardSchema = new mongoose.Schema(
     description: { type: String },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true
     },
-    members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }]
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }]
   },
   {
     timestamps: true
@@ -23,9 +24,9 @@ boardSchema.index({ members: 1 })
 
 let BoardModel: Model<BoardType>
 try {
-  BoardModel = mongoose.model<BoardType>('Board')
+  BoardModel = mongoose.model<BoardType>("Board")
 } catch {
-  BoardModel = mongoose.model<BoardType>('Board', boardSchema)
+  BoardModel = mongoose.model<BoardType>("Board", boardSchema)
 }
 
 export { BoardModel }

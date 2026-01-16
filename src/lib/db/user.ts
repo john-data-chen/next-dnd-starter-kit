@@ -1,14 +1,15 @@
-'use server'
+"use server"
 
-import { UserModel } from '@/models/user.model'
-import { connectToDatabase } from './connect'
+import { UserModel } from "@/models/user.model"
+
+import { connectToDatabase } from "./connect"
 
 export async function getUserByEmail(email: string) {
   try {
     await connectToDatabase()
     const user = await UserModel.findOne({ email: email }).lean()
     if (!user) {
-      console.error('User not found')
+      console.error("User not found")
       return null
     }
     return {
@@ -17,7 +18,7 @@ export async function getUserByEmail(email: string) {
       name: user.name
     }
   } catch (error) {
-    console.error('Error fetching user:', error)
+    console.error("Error fetching user:", error)
     return null
   }
 }
@@ -27,7 +28,7 @@ export async function getUserById(id: string) {
     await connectToDatabase()
     const user = await UserModel.findOne({ _id: id }).lean()
     if (!user) {
-      console.error('User not found')
+      console.error("User not found")
       return null
     }
     return {
@@ -36,7 +37,7 @@ export async function getUserById(id: string) {
       name: user.name
     }
   } catch (error) {
-    console.error('Error fetching user:', error)
+    console.error("Error fetching user:", error)
     return null
   }
 }

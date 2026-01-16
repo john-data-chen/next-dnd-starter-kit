@@ -1,12 +1,14 @@
-'use server'
+"use server"
 
-import { BoardModel } from '@/models/board.model'
-import { ProjectModel } from '@/models/project.model'
-import { TaskModel, TaskType } from '@/models/task.model'
-import { Task, TaskStatus } from '@/types/dbInterface'
-import { Types } from 'mongoose'
-import { connectToDatabase } from './connect'
-import { getUserByEmail, getUserById } from './user'
+import { Types } from "mongoose"
+
+import { BoardModel } from "@/models/board.model"
+import { ProjectModel } from "@/models/project.model"
+import { TaskModel, TaskType } from "@/models/task.model"
+import { Task, TaskStatus } from "@/types/dbInterface"
+
+import { connectToDatabase } from "./connect"
+import { getUserByEmail, getUserById } from "./user"
 
 // Define a base interface for both Mongoose documents and plain objects
 interface TaskBase {
@@ -27,18 +29,18 @@ interface TaskBase {
 
 async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
   if (!taskDoc) {
-    throw new Error('Task document is undefined')
+    throw new Error("Task document is undefined")
   }
   const getObjectIdString = (
     id: Types.ObjectId | string | { id: string } | null | undefined
   ): string => {
     if (!id) {
-      return ''
+      return ""
     }
     if (id instanceof Types.ObjectId) {
       return id.toHexString()
     }
-    if (typeof id === 'object' && 'id' in id) {
+    if (typeof id === "object" && "id" in id) {
       return id.id
     }
     return String(id)
@@ -63,7 +65,7 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
   ])
 
   if (!creatorUser || !modifierUser) {
-    throw new Error('Unable to find creator or modifier user data')
+    throw new Error("Unable to find creator or modifier user data")
   }
 
   const boardId = getObjectIdString(taskDoc.board)
@@ -75,7 +77,7 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
   return {
     _id: docId,
     title: taskDoc.title,
-    description: taskDoc.description || '',
+    description: taskDoc.description || "",
     status: taskDoc.status || TaskStatus.TODO,
     dueDate: taskDoc.dueDate,
     board: boardId,
@@ -96,9 +98,9 @@ async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
       name: modifierUser.name
     },
     createdAt:
-      typeof taskDoc.createdAt === 'string' ? new Date(taskDoc.createdAt) : taskDoc.createdAt,
+      typeof taskDoc.createdAt === "string" ? new Date(taskDoc.createdAt) : taskDoc.createdAt,
     updatedAt:
-      typeof taskDoc.updatedAt === 'string' ? new Date(taskDoc.updatedAt) : taskDoc.updatedAt
+      typeof taskDoc.updatedAt === "string" ? new Date(taskDoc.updatedAt) : taskDoc.updatedAt
   }
 }
 
@@ -108,7 +110,7 @@ async function getBoardByProjectId(projectId: string): Promise<string | undefine
     const project = await ProjectModel.findById(projectId)
     return project?.board?.toString()
   } catch (error) {
-    console.error('Error fetching board:', error)
+    console.error("Error fetching board:", error)
     throw error
   }
 }
@@ -120,7 +122,7 @@ export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
     const taskPromises = tasks.map(async (task) => convertTaskToPlainObject(task as TaskBase))
     return await Promise.all(taskPromises)
   } catch (error) {
-    console.error('Error fetching tasks:', error)
+    console.error("Error fetching tasks:", error)
     throw error
   }
 }
@@ -128,13 +130,13 @@ export async function getTasksByProjectId(projectId: string): Promise<Task[]> {
 async function ensureUserIsMember(projectId: string, userId: string): Promise<void> {
   const project = await ProjectModel.findById(projectId)
   if (!project) {
-    throw new Error('Project not found')
+    throw new Error("Project not found")
   }
 
   const boardId = project.board
   const board = await BoardModel.findById(boardId)
   if (!board) {
-    throw new Error('Board not found')
+    throw new Error("Board not found")
   }
 
   const getObjectIdString = (id: Types.ObjectId): string => {
@@ -168,18 +170,18 @@ export async function createTaskInDb(
   description?: string,
   dueDate?: Date,
   assigneeId?: string,
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' = 'TODO'
+  status: "TODO" | "IN_PROGRESS" | "DONE" = "TODO"
 ): Promise<Task> {
   try {
     await connectToDatabase()
     const creator = await getUserByEmail(userEmail)
     if (!creator) {
-      throw new Error('Creator not found')
+      throw new Error("Creator not found")
     }
 
     const boardId = await getBoardByProjectId(projectId)
     if (!boardId) {
-      throw new Error('Board not found')
+      throw new Error("Board not found")
     }
 
     if (assigneeId) {
@@ -203,7 +205,7 @@ export async function createTaskInDb(
     const newTask = await TaskModel.create(taskData)
     return await convertTaskToPlainObject(newTask.toObject() as TaskBase)
   } catch (error) {
-    console.error('Error creating task:', error)
+    console.error("Error creating task:", error)
     throw error
   }
 }
@@ -212,7 +214,7 @@ export async function updateTaskInDb(
   taskId: string,
   title: string,
   userEmail: string,
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE' = 'TODO',
+  status: "TODO" | "IN_PROGRESS" | "DONE" = "TODO",
   description?: string,
   dueDate?: Date,
   assigneeId?: string
@@ -221,11 +223,11 @@ export async function updateTaskInDb(
     await connectToDatabase()
     const modifier = await getUserByEmail(userEmail)
     if (!modifier) {
-      throw new Error('Modifier not found')
+      throw new Error("Modifier not found")
     }
     const task = await TaskModel.findById(taskId)
     if (!task) {
-      throw new Error('Task not found')
+      throw new Error("Task not found")
     }
 
     if (assigneeId) {
@@ -247,12 +249,12 @@ export async function updateTaskInDb(
     )
 
     if (!updatedTask) {
-      throw new Error('Task not found')
+      throw new Error("Task not found")
     }
 
     return await convertTaskToPlainObject(updatedTask.toObject() as TaskBase)
   } catch (error) {
-    console.error('Error updating task:', error)
+    console.error("Error updating task:", error)
     throw error
   }
 }
@@ -267,22 +269,22 @@ export async function updateTaskProjectInDb(
 
     const user = await getUserByEmail(userEmail)
     if (!user) {
-      throw new Error('User not found')
+      throw new Error("User not found")
     }
 
     const targetProject = await ProjectModel.findById(newProjectId)
     if (!targetProject) {
-      throw new Error('Target project not found')
+      throw new Error("Target project not found")
     }
 
     const task = await TaskModel.findById(taskId)
     if (!task) {
-      throw new Error('Task not found')
+      throw new Error("Task not found")
     }
 
     const getObjectIdString = (id: Types.ObjectId | undefined): string => {
       if (!id) {
-        return ''
+        return ""
       }
       if (id instanceof Types.ObjectId) {
         return id.toHexString()
@@ -300,7 +302,7 @@ export async function updateTaskProjectInDb(
       : false
 
     if (!(isTargetProjectOwner || (isTargetProjectMember && (isTaskCreator || isTaskAssignee)))) {
-      throw new Error('Permission denied: You do not have sufficient permissions to move this task')
+      throw new Error("Permission denied: You do not have sufficient permissions to move this task")
     }
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
@@ -314,12 +316,12 @@ export async function updateTaskProjectInDb(
     )
 
     if (!updatedTask) {
-      throw new Error('Failed to update task')
+      throw new Error("Failed to update task")
     }
 
     return await convertTaskToPlainObject(updatedTask.toObject() as TaskBase)
   } catch (error) {
-    console.error('Error updating task project:', error)
+    console.error("Error updating task project:", error)
     throw error
   }
 }
@@ -333,7 +335,7 @@ export async function deleteTaskInDb(taskId: string): Promise<void> {
     }
     await TaskModel.findByIdAndDelete(taskId)
   } catch (error) {
-    console.error('Error deleting task:', error)
+    console.error("Error deleting task:", error)
     throw error
   }
 }

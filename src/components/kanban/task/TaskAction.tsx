@@ -1,7 +1,12 @@
-'use client'
+"use client"
 
-import React, { useCallback, useEffect, useState } from 'react'
-import { TaskForm } from '@/components/kanban/task/TaskForm'
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { useTranslations } from "next-intl"
+import React, { useCallback, useEffect, useState } from "react"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { TaskForm } from "@/components/kanban/task/TaskForm"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -10,40 +15,36 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { useTaskStore } from '@/lib/store'
-import { TaskFormSchema } from '@/types/taskForm'
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { useTranslations } from 'next-intl'
-import { toast } from 'sonner'
-import { z } from 'zod'
+} from "@/components/ui/dropdown-menu"
+import { useTaskStore } from "@/lib/store"
+import { TaskFormSchema } from "@/types/taskForm"
 
 export interface TaskActionsProps {
   id: string
   title: string
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE'
+  status: "TODO" | "IN_PROGRESS" | "DONE"
   description?: string
   dueDate?: Date | null
   assignee?: string
   onUpdate?: (
     id: string,
     newTitle: string,
-    status: 'TODO' | 'IN_PROGRESS' | 'DONE',
+    status: "TODO" | "IN_PROGRESS" | "DONE",
     newDescription?: string,
     newDueDate?: Date | null,
     assignee?: string
@@ -64,7 +65,7 @@ export function TaskActions({
   const removeTask = useTaskStore((state) => state.removeTask)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [editEnable, setEditEnable] = useState(false)
-  const t = useTranslations('kanban.task')
+  const t = useTranslations("kanban.task")
   const [assigneeInfo, setAssigneeInfo] = useState<{
     _id: string
     name: string | null
@@ -82,7 +83,7 @@ export function TaskActions({
             setAssigneeInfo({ _id: data[0]._id, name: data[0].name })
           }
         } catch (error) {
-          console.error('Failed to fetch assignee details', error)
+          console.error("Failed to fetch assignee details", error)
         }
       }
     }
@@ -108,21 +109,21 @@ export function TaskActions({
     updateTask(
       id,
       values.title,
-      values.status ?? 'TODO',
+      values.status ?? "TODO",
       values.description,
       values.dueDate,
       assigneeId
     ).catch(console.error)
-    toast.success(t('updateSuccess', { title: values.title }))
+    toast.success(t("updateSuccess", { title: values.title }))
     setEditEnable(false)
   }
 
   const handleDelete = () => {
-    setTimeout(() => (document.body.style.pointerEvents = ''), 100)
+    setTimeout(() => (document.body.style.pointerEvents = ""), 100)
     setShowDeleteDialog(false)
     removeTask(id).catch(console.error)
     onDelete?.(id)
-    toast.success(t('deleteSuccess'))
+    toast.success(t("deleteSuccess"))
   }
 
   const checkPermissions = useCallback(async () => {
@@ -135,15 +136,15 @@ export function TaskActions({
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || t('checkPermissionsFailed'))
+        throw new Error(errorData.error || t("checkPermissionsFailed"))
       }
 
       const data = await response.json()
       setPermissions(data)
     } catch (error) {
-      console.error('Error checking task permissions:', error)
+      console.error("Error checking task permissions:", error)
       setPermissions({ canEdit: false, canDelete: false }) // Fallback on error
-      toast.error(t('loadPermissionsFailed', { error: (error as Error).message }))
+      toast.error(t("loadPermissionsFailed", { error: (error as Error).message }))
     } finally {
       setIsLoadingPermissions(false)
     }
@@ -154,8 +155,8 @@ export function TaskActions({
       <Dialog open={editEnable && !!permissions?.canEdit} onOpenChange={setEditEnable}>
         <DialogContent className="sm:max-w-md" data-testid="edit-task-dialog">
           <DialogHeader>
-            <DialogTitle>{t('editTaskTitle')}</DialogTitle>
-            <DialogDescription>{t('editTaskDescription')}</DialogDescription>
+            <DialogTitle>{t("editTaskTitle")}</DialogTitle>
+            <DialogDescription>{t("editTaskDescription")}</DialogDescription>
           </DialogHeader>
           <TaskForm
             defaultValues={defaultValues}
@@ -163,7 +164,7 @@ export function TaskActions({
             onCancel={() => {
               setEditEnable(false)
             }}
-            submitLabel={t('updateTask')}
+            submitLabel={t("updateTask")}
           />
         </DialogContent>
       </Dialog>
@@ -180,7 +181,7 @@ export function TaskActions({
             className="h-8 w-12"
             data-testid="task-actions-trigger"
           >
-            <span className="sr-only">{t('actions')}</span>
+            <span className="sr-only">{t("actions")}</span>
             <DotsHorizontalIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -191,10 +192,10 @@ export function TaskActions({
             }}
             disabled={!permissions?.canEdit}
             className={
-              !permissions?.canEdit ? 'cursor-not-allowed text-muted-foreground line-through' : ''
+              !permissions?.canEdit ? "cursor-not-allowed text-muted-foreground line-through" : ""
             }
           >
-            {t('edit')}
+            {t("edit")}
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -205,11 +206,11 @@ export function TaskActions({
             disabled={!permissions?.canDelete}
             className={`w-full text-left ${
               !permissions?.canDelete
-                ? 'cursor-not-allowed text-muted-foreground line-through'
-                : 'text-red-600 hover:!bg-destructive/10 hover:!text-red-600'
+                ? "cursor-not-allowed text-muted-foreground line-through"
+                : "text-red-600 hover:!bg-destructive/10 hover:!text-red-600"
             } `}
           >
-            {t('delete')}
+            {t("delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -219,19 +220,19 @@ export function TaskActions({
       >
         <AlertDialogContent data-testid="delete-task-dialog">
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDeleteTitle', { title })}</AlertDialogTitle>
+            <AlertDialogTitle>{t("confirmDeleteTitle", { title })}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDeleteDescription', { title })}
+              {t("confirmDeleteDescription", { title })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel data-testid="cancel-delete-button">{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel data-testid="cancel-delete-button">{t("cancel")}</AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDelete}
               data-testid="confirm-delete-button"
             >
-              {t('delete')}
+              {t("delete")}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

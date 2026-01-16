@@ -1,13 +1,15 @@
-import AppSidebar from '@/components/layout/AppSidebar'
-import { SidebarProvider } from '@/components/ui/sidebar'
-import { useBoards } from '@/hooks/useBoards'
-import { usePathname } from '@/i18n/navigation'
-import { Board } from '@/types/dbInterface'
-import { describe, expect, it, vi } from 'vitest'
-import { render as customRender, screen } from '../../test-utils'
+import { describe, expect, it, vi } from "vitest"
+
+import AppSidebar from "@/components/layout/AppSidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { useBoards } from "@/hooks/useBoards"
+import { usePathname } from "@/i18n/navigation"
+import { Board } from "@/types/dbInterface"
+
+import { render as customRender, screen } from "../../test-utils"
 
 // Mock i18n navigation
-vi.mock('@/i18n/navigation', () => ({
+vi.mock("@/i18n/navigation", () => ({
   usePathname: vi.fn(),
   Link: vi.fn(({ href, children, ...props }) => (
     <a href={href as string} {...props}>
@@ -17,38 +19,38 @@ vi.mock('@/i18n/navigation', () => ({
 }))
 
 // Mock useBoards hook
-vi.mock('@/hooks/useBoards')
+vi.mock("@/hooks/useBoards")
 
 // Mock next-intl
-vi.mock('next-intl', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('next-intl')>()
+vi.mock("next-intl", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("next-intl")>()
   return {
     ...actual,
     useTranslations: () => (key: string) => key
   }
 })
 
-describe('AppSidebar Component', () => {
+describe("AppSidebar Component", () => {
   const renderWithProvider = (ui: React.ReactElement) => {
     return customRender(<SidebarProvider>{ui}</SidebarProvider>)
   }
 
   const myTestBoards: Board[] = [
     {
-      _id: '1',
-      title: 'Board 1',
-      description: '',
-      owner: { id: 'user1', name: 'Test User' },
+      _id: "1",
+      title: "Board 1",
+      description: "",
+      owner: { id: "user1", name: "Test User" },
       members: [],
       projects: [],
       createdAt: new Date(),
       updatedAt: new Date()
     },
     {
-      _id: '2',
-      title: 'Board 2',
-      description: '',
-      owner: { id: 'user1', name: 'Test User' },
+      _id: "2",
+      title: "Board 2",
+      description: "",
+      owner: { id: "user1", name: "Test User" },
       members: [],
       projects: [],
       createdAt: new Date(),
@@ -57,10 +59,10 @@ describe('AppSidebar Component', () => {
   ]
   const teamTestBoards: Board[] = [
     {
-      _id: '3',
-      title: 'Team Board 1',
-      description: '',
-      owner: { id: 'user1', name: 'Test User' },
+      _id: "3",
+      title: "Team Board 1",
+      description: "",
+      owner: { id: "user1", name: "Test User" },
       members: [],
       projects: [],
       createdAt: new Date(),
@@ -68,8 +70,8 @@ describe('AppSidebar Component', () => {
     }
   ]
 
-  it('should render project name correctly', () => {
-    vi.mocked(usePathname).mockReturnValue('/boards')
+  it("should render project name correctly", () => {
+    vi.mocked(usePathname).mockReturnValue("/boards")
     vi.mocked(useBoards).mockReturnValue({
       myBoards: [],
       teamBoards: [],
@@ -79,11 +81,11 @@ describe('AppSidebar Component', () => {
 
     renderWithProvider(<AppSidebar />)
 
-    expect(screen.getByText('title')).toBeInTheDocument()
+    expect(screen.getByText("title")).toBeInTheDocument()
   })
 
-  it('should highlight overview link when on boards page', () => {
-    vi.mocked(usePathname).mockReturnValue('/boards')
+  it("should highlight overview link when on boards page", () => {
+    vi.mocked(usePathname).mockReturnValue("/boards")
     vi.mocked(useBoards).mockReturnValue({
       myBoards: [],
       teamBoards: [],
@@ -93,12 +95,12 @@ describe('AppSidebar Component', () => {
 
     renderWithProvider(<AppSidebar />)
 
-    const overviewLink = screen.getByRole('link', { name: 'overview' })
-    expect(overviewLink).toHaveAttribute('data-active', 'true')
+    const overviewLink = screen.getByRole("link", { name: "overview" })
+    expect(overviewLink).toHaveAttribute("data-active", "true")
   })
 
-  it('should render loading state correctly', () => {
-    vi.mocked(usePathname).mockReturnValue('/boards')
+  it("should render loading state correctly", () => {
+    vi.mocked(usePathname).mockReturnValue("/boards")
     vi.mocked(useBoards).mockReturnValue({
       myBoards: [],
       teamBoards: [],
@@ -108,12 +110,12 @@ describe('AppSidebar Component', () => {
 
     renderWithProvider(<AppSidebar />)
 
-    const loadingElements = screen.getAllByText('loading')
+    const loadingElements = screen.getAllByText("loading")
     expect(loadingElements).toHaveLength(2)
   })
 
-  it('should render my boards correctly', () => {
-    vi.mocked(usePathname).mockReturnValue('/boards')
+  it("should render my boards correctly", () => {
+    vi.mocked(usePathname).mockReturnValue("/boards")
     vi.mocked(useBoards).mockReturnValue({
       myBoards: myTestBoards,
       teamBoards: [],
@@ -123,12 +125,12 @@ describe('AppSidebar Component', () => {
 
     renderWithProvider(<AppSidebar />)
 
-    expect(screen.getByText('Board 1')).toBeInTheDocument()
-    expect(screen.getByText('Board 2')).toBeInTheDocument()
+    expect(screen.getByText("Board 1")).toBeInTheDocument()
+    expect(screen.getByText("Board 2")).toBeInTheDocument()
   })
 
-  it('should render team boards correctly', () => {
-    vi.mocked(usePathname).mockReturnValue('/boards')
+  it("should render team boards correctly", () => {
+    vi.mocked(usePathname).mockReturnValue("/boards")
     vi.mocked(useBoards).mockReturnValue({
       myBoards: [],
       teamBoards: teamTestBoards,
@@ -138,11 +140,11 @@ describe('AppSidebar Component', () => {
 
     renderWithProvider(<AppSidebar />)
 
-    expect(screen.getByText('Team Board 1')).toBeInTheDocument()
+    expect(screen.getByText("Team Board 1")).toBeInTheDocument()
   })
 
-  it('should highlight active board link', () => {
-    vi.mocked(usePathname).mockReturnValue('/boards/1')
+  it("should highlight active board link", () => {
+    vi.mocked(usePathname).mockReturnValue("/boards/1")
     vi.mocked(useBoards).mockReturnValue({
       myBoards: myTestBoards,
       teamBoards: [],
@@ -152,7 +154,7 @@ describe('AppSidebar Component', () => {
 
     renderWithProvider(<AppSidebar />)
 
-    const boardLink = screen.getByRole('link', { name: 'Board 1' })
-    expect(boardLink).toHaveAttribute('data-active', 'true')
+    const boardLink = screen.getByRole("link", { name: "Board 1" })
+    expect(boardLink).toHaveAttribute("data-active", "true")
   })
 })

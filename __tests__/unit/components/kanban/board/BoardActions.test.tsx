@@ -1,13 +1,14 @@
-import React from 'react'
-import { BoardActions } from '@/components/kanban/board/BoardActions'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import React from "react"
+import { vi } from "vitest"
+
+import { BoardActions } from "@/components/kanban/board/BoardActions"
 
 // --- Mocks for hooks and store ---
 // Mock useTaskStore
 const updateBoardMock = vi.fn().mockResolvedValue(undefined)
 const removeBoardMock = vi.fn().mockResolvedValue(undefined)
-vi.mock('@/lib/store', () => ({
+vi.mock("@/lib/store", () => ({
   useTaskStore: () => ({
     updateBoard: updateBoardMock,
     removeBoard: removeBoardMock
@@ -16,7 +17,7 @@ vi.mock('@/lib/store', () => ({
 
 // Mock useBoards
 const fetchBoardsMock = vi.fn()
-vi.mock('@/hooks/useBoards', () => ({
+vi.mock("@/hooks/useBoards", () => ({
   useBoards: () => ({
     fetchBoards: fetchBoardsMock
   })
@@ -24,14 +25,14 @@ vi.mock('@/hooks/useBoards', () => ({
 
 // Mock useRouter
 const refreshMock = vi.fn()
-vi.mock('next/navigation', () => ({
+vi.mock("next/navigation", () => ({
   useRouter: () => ({
     refresh: refreshMock
   })
 }))
 
 // Mock next-intl
-vi.mock('next-intl', () => ({
+vi.mock("next-intl", () => ({
   useTranslations: () => (key: string, values?: any) =>
     values ? `${key} ${JSON.stringify(values)}` : key
 }))
@@ -42,7 +43,7 @@ const toastMocks = vi.hoisted(() => ({
   toastErrorMock: vi.fn()
 }))
 
-vi.mock('sonner', () => ({
+vi.mock("sonner", () => ({
   toast: {
     success: toastMocks.toastSuccessMock, // Reference hoisted mock
     error: toastMocks.toastErrorMock // Reference hoisted mock
@@ -50,7 +51,7 @@ vi.mock('sonner', () => ({
 }))
 
 // Mock BoardForm
-vi.mock('@/components/kanban/board/BoardForm', () => ({
+vi.mock("@/components/kanban/board/BoardForm", () => ({
   BoardForm: ({
     onSubmit,
     children,
@@ -64,7 +65,7 @@ vi.mock('@/components/kanban/board/BoardForm', () => ({
       data-testid="board-form"
       onSubmit={(e) => {
         e.preventDefault()
-        onSubmit({ title: 'Edited Title', description: 'Edited Desc' })
+        onSubmit({ title: "Edited Title", description: "Edited Desc" })
       }}
     >
       <input defaultValue={defaultValues.title} data-testid="board-title-input" />
@@ -76,9 +77,9 @@ vi.mock('@/components/kanban/board/BoardForm', () => ({
 }))
 
 // --- Mock DropdownMenu Components ---
-vi.mock('@/components/ui/dropdown-menu', async (importOriginal) => {
+vi.mock("@/components/ui/dropdown-menu", async (importOriginal) => {
   // Dynamically import the original module to get its type and potentially other exports
-  const original = await importOriginal<typeof import('@/components/ui/dropdown-menu')>()
+  const original = await importOriginal<typeof import("@/components/ui/dropdown-menu")>()
   return {
     ...original,
     DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -101,12 +102,12 @@ vi.mock('@/components/ui/dropdown-menu', async (importOriginal) => {
   }
 })
 
-describe('BoardActions', () => {
+describe("BoardActions", () => {
   const board = {
-    _id: 'b1',
-    title: 'Test Board',
-    description: 'desc',
-    owner: { id: 'u1', name: 'User1' },
+    _id: "b1",
+    title: "Test Board",
+    description: "desc",
+    owner: { id: "u1", name: "User1" },
     members: [],
     projects: [],
     createdAt: new Date(),
@@ -118,23 +119,23 @@ describe('BoardActions', () => {
   })
 
   // Test for opening edit dialog
-  it('should open edit dialog when edit item is clicked', async () => {
+  it("should open edit dialog when edit item is clicked", async () => {
     render(<BoardActions board={board} />)
-    const editButton = screen.getByTestId('edit-board-button')
+    const editButton = screen.getByTestId("edit-board-button")
     fireEvent.click(editButton)
 
-    await screen.findByText('editBoardTitle')
-    expect(screen.getByText('editBoardDescription')).toBeInTheDocument()
+    await screen.findByText("editBoardTitle")
+    expect(screen.getByText("editBoardDescription")).toBeInTheDocument()
 
     // Assuming BoardForm mock doesn't render the button,
     // we need to find the button rendered by the actual DialogFooter inside BoardActions
-    const saveButton = screen.getByRole('button', { name: 'saveChanges' })
+    const saveButton = screen.getByRole("button", { name: "saveChanges" })
     fireEvent.click(saveButton)
 
     await waitFor(() => {
-      expect(updateBoardMock).toHaveBeenCalledWith('b1', {
-        title: 'Edited Title',
-        description: 'Edited Desc'
+      expect(updateBoardMock).toHaveBeenCalledWith("b1", {
+        title: "Edited Title",
+        description: "Edited Desc"
       })
       expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith(
         'boardUpdated {"title":"Edited Title"}'
@@ -145,37 +146,37 @@ describe('BoardActions', () => {
   })
 
   // Test for opening delete dialog
-  it('should open delete dialog when delete item is clicked', async () => {
+  it("should open delete dialog when delete item is clicked", async () => {
     render(<BoardActions board={board} />)
-    const deleteButtonDropdown = screen.getByTestId('delete-board-button')
+    const deleteButtonDropdown = screen.getByTestId("delete-board-button")
     fireEvent.click(deleteButtonDropdown)
 
     await screen.findByText('confirmDeleteTitle {"title":"Test Board"}')
-    expect(screen.getByText('confirmDeleteDescription')).toBeInTheDocument()
+    expect(screen.getByText("confirmDeleteDescription")).toBeInTheDocument()
 
     // Find the delete button within the AlertDialog
-    const confirmDeleteButton = screen.getByRole('button', { name: 'delete' })
+    const confirmDeleteButton = screen.getByRole("button", { name: "delete" })
     fireEvent.click(confirmDeleteButton)
 
     await waitFor(() => {
-      expect(removeBoardMock).toHaveBeenCalledWith('b1')
-      expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith('boardDeleted')
+      expect(removeBoardMock).toHaveBeenCalledWith("b1")
+      expect(toastMocks.toastSuccessMock).toHaveBeenCalledWith("boardDeleted")
       expect(fetchBoardsMock).toHaveBeenCalled()
       expect(refreshMock).toHaveBeenCalled()
     })
   })
 
   // Test for update failure
-  it('should show error toast if updateBoard fails', async () => {
-    const error = new Error('Update failed')
+  it("should show error toast if updateBoard fails", async () => {
+    const error = new Error("Update failed")
     updateBoardMock.mockRejectedValueOnce(error)
     render(<BoardActions board={board} />)
 
-    const editButton = screen.getByTestId('edit-board-button')
+    const editButton = screen.getByTestId("edit-board-button")
     fireEvent.click(editButton)
 
-    await screen.findByText('editBoardTitle')
-    const saveButton = screen.getByRole('button', { name: 'saveChanges' })
+    await screen.findByText("editBoardTitle")
+    const saveButton = screen.getByRole("button", { name: "saveChanges" })
     fireEvent.click(saveButton)
 
     await waitFor(() => {
@@ -186,16 +187,16 @@ describe('BoardActions', () => {
   })
 
   // Test for delete failure
-  it('should show error toast if removeBoard fails', async () => {
-    const error = new Error('Delete failed')
+  it("should show error toast if removeBoard fails", async () => {
+    const error = new Error("Delete failed")
     removeBoardMock.mockRejectedValueOnce(error)
     render(<BoardActions board={board} />)
 
-    const deleteButtonDropdown = screen.getByTestId('delete-board-button')
+    const deleteButtonDropdown = screen.getByTestId("delete-board-button")
     fireEvent.click(deleteButtonDropdown)
 
     await screen.findByText('confirmDeleteTitle {"title":"Test Board"}')
-    const confirmDeleteButton = screen.getByRole('button', { name: 'delete' })
+    const confirmDeleteButton = screen.getByRole("button", { name: "delete" })
     fireEvent.click(confirmDeleteButton)
 
     await waitFor(() => {
