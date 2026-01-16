@@ -1,12 +1,14 @@
-'use server'
+"use server"
 
-import { BoardModel } from '@/models/board.model'
-import { ProjectModel, ProjectType } from '@/models/project.model'
-import { TaskModel } from '@/models/task.model'
-import { Task } from '@/types/dbInterface'
-import { Types } from 'mongoose'
-import { connectToDatabase } from './connect'
-import { getUserByEmail, getUserById } from './user'
+import { Types } from "mongoose"
+
+import { BoardModel } from "@/models/board.model"
+import { ProjectModel, ProjectType } from "@/models/project.model"
+import { TaskModel } from "@/models/task.model"
+import { Task } from "@/types/dbInterface"
+
+import { connectToDatabase } from "./connect"
+import { getUserByEmail, getUserById } from "./user"
 
 interface ProjectBase {
   _id: Types.ObjectId | string
@@ -30,7 +32,7 @@ export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] 
     }).lean()
 
     if (!projects || projects.length === 0) {
-      console.log('No projects found for board:', boardId)
+      console.log("No projects found for board:", boardId)
       return []
     }
 
@@ -41,7 +43,7 @@ export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] 
 
     return plainProjects
   } catch (error) {
-    console.error('Error fetching projects:', error)
+    console.error("Error fetching projects:", error)
     return []
   }
 }
@@ -50,9 +52,9 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
   // Handle the case where owner is already an object
   let ownerUser
   if (
-    typeof projectDoc.owner === 'object' &&
-    'id' in projectDoc.owner &&
-    'name' in projectDoc.owner
+    typeof projectDoc.owner === "object" &&
+    "id" in projectDoc.owner &&
+    "name" in projectDoc.owner
   ) {
     // Owner is already an object with id and name
     ownerUser = {
@@ -62,17 +64,17 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
   } else {
     // Owner is an ObjectId or string
     const ownerId =
-      typeof projectDoc.owner === 'string' ? projectDoc.owner : projectDoc.owner.toString()
+      typeof projectDoc.owner === "string" ? projectDoc.owner : projectDoc.owner.toString()
 
     ownerUser = await getUserById(ownerId)
     if (!ownerUser) {
-      throw new Error('Owner user not found')
+      throw new Error("Owner user not found")
     }
   }
 
   // Handle the case where members might be an array of objects
   const memberPromises = projectDoc.members.map(async (member) => {
-    if (typeof member === 'object' && 'id' in member && 'name' in member) {
+    if (typeof member === "object" && "id" in member && "name" in member) {
       // Member is already an object with id and name
       return {
         id: member.id,
@@ -80,7 +82,7 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
       }
     }
     // Member is an ObjectId or string
-    const memberIdStr = typeof member === 'string' ? member : member.toString()
+    const memberIdStr = typeof member === "string" ? member : member.toString()
 
     const memberUser = await getUserById(memberIdStr)
     if (!memberUser) {
@@ -96,12 +98,12 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
     (member): member is { id: string; name: string } => member !== null
   )
 
-  const docId = typeof projectDoc._id === 'string' ? projectDoc._id : projectDoc._id.toString()
+  const docId = typeof projectDoc._id === "string" ? projectDoc._id : projectDoc._id.toString()
 
   return {
     _id: docId,
     title: projectDoc.title,
-    description: projectDoc.description || '',
+    description: projectDoc.description || "",
     owner: {
       id: ownerUser.id.toString(),
       name: ownerUser.name
@@ -119,7 +121,7 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
     tasks: (projectDoc.tasks || []).map((task) => ({
       _id: task._id.toString(),
       title: task.title,
-      description: task.description || '',
+      description: task.description || "",
       status: task.status,
       project: task.project.toString(),
       board: task.board,
@@ -148,7 +150,7 @@ export async function createProjectInDb(data: {
     await connectToDatabase()
     const owner = await getUserByEmail(data.userEmail)
     if (!owner) {
-      console.error('User not found')
+      console.error("User not found")
       return null
     }
     const projectDoc = await ProjectModel.create({
@@ -168,7 +170,7 @@ export async function createProjectInDb(data: {
     )
 
     if (!updatedBoard) {
-      console.error('Failed to update board')
+      console.error("Failed to update board")
       return null
     }
 
@@ -176,7 +178,7 @@ export async function createProjectInDb(data: {
     const project = await convertProjectToPlainObject(projectDoc.toObject() as ProjectBase)
     return project
   } catch (error) {
-    console.error('Error creating project:', error)
+    console.error("Error creating project:", error)
     return null
   }
 }
@@ -191,16 +193,16 @@ export async function updateProjectInDb(data: {
     await connectToDatabase()
     const project = await ProjectModel.findById(data.projectId)
     if (!project) {
-      console.error('Project not found')
+      console.error("Project not found")
       return null
     }
     const owner = await getUserByEmail(data.userEmail)
     if (!owner) {
-      console.error('Owner not found')
+      console.error("Owner not found")
       return null
     }
     if ((project.owner as any).toString() !== owner.id.toString()) {
-      console.error('Permission denied: User is not the project owner')
+      console.error("Permission denied: User is not the project owner")
       return null
     }
 
@@ -226,7 +228,7 @@ export async function updateProjectInDb(data: {
 
     return updatedProject
   } catch (error) {
-    console.error('Error updating project:', error)
+    console.error("Error updating project:", error)
     return null
   }
 }
@@ -236,16 +238,16 @@ export async function deleteProjectInDb(id: string, userEmail: string): Promise<
     await connectToDatabase()
     const project = await ProjectModel.findById(id)
     if (!project) {
-      console.error('Project not found')
+      console.error("Project not found")
       return false
     }
     const owner = await getUserByEmail(userEmail)
     if (!owner) {
-      console.error('User not found')
+      console.error("User not found")
       return false
     }
     if ((project.owner as any).toString() !== owner.id.toString()) {
-      console.error('Permission denied: User is not the project owner')
+      console.error("Permission denied: User is not the project owner")
       return false
     }
 
@@ -257,7 +259,7 @@ export async function deleteProjectInDb(id: string, userEmail: string): Promise<
     const deletedProject = await ProjectModel.findByIdAndDelete(id)
     return deletedProject !== null
   } catch (error) {
-    console.error('Error deleting project:', error)
+    console.error("Error deleting project:", error)
     return false
   }
 }

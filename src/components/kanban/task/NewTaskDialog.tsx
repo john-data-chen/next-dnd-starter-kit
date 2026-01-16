@@ -1,8 +1,12 @@
-'use client'
+"use client"
 
-import React from 'react'
-import { TaskForm } from '@/components/kanban/task/TaskForm'
-import { Button } from '@/components/ui/button'
+import { useTranslations } from "next-intl"
+import React from "react"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { TaskForm } from "@/components/kanban/task/TaskForm"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -10,12 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog'
-import { useTaskStore } from '@/lib/store'
-import { TaskFormSchema } from '@/types/taskForm'
-import { useTranslations } from 'next-intl'
-import { toast } from 'sonner'
-import { z } from 'zod'
+} from "@/components/ui/dialog"
+import { useTaskStore } from "@/lib/store"
+import { TaskFormSchema } from "@/types/taskForm"
 
 export interface NewTaskDialogProps {
   projectId: string
@@ -24,18 +25,18 @@ export interface NewTaskDialogProps {
 export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
   const addTask = useTaskStore((state) => state.addTask)
   const [addTaskOpen, setAddTaskOpen] = React.useState(false)
-  const t = useTranslations('kanban.task')
+  const t = useTranslations("kanban.task")
 
   const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     await addTask(
       projectId,
       values.title,
       values.status,
-      values.description ?? '',
+      values.description ?? "",
       values.dueDate ?? undefined,
       values.assignee?._id ?? undefined
     )
-    toast.success(t('createSuccess', { title: values.title }))
+    toast.success(t("createSuccess", { title: values.title }))
     setAddTaskOpen(false)
   }
 
@@ -48,17 +49,17 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
           data-testid="new-task-trigger"
           className="my-4 w-full bg-foreground text-background hover:bg-foreground/90"
         >
-          {t('addNewTask')}
+          {t("addNewTask")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md" data-testid="new-task-dialog">
         <DialogHeader>
-          <DialogTitle>{t('addNewTaskTitle')}</DialogTitle>
-          <DialogDescription>{t('addNewTaskDescription')}</DialogDescription>
+          <DialogTitle>{t("addNewTaskTitle")}</DialogTitle>
+          <DialogDescription>{t("addNewTaskDescription")}</DialogDescription>
         </DialogHeader>
         <TaskForm
           onSubmit={handleSubmit}
-          submitLabel={t('createTask')}
+          submitLabel={t("createTask")}
           onCancel={() => {
             setAddTaskOpen(false)
           }}

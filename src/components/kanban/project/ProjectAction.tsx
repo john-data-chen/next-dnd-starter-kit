@@ -1,6 +1,11 @@
-'use client'
+"use client"
 
-import * as React from 'react'
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { useTranslations } from "next-intl"
+import * as React from "react"
+import { toast } from "sonner"
+import { z } from "zod"
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,23 +14,20 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { useTaskStore } from '@/lib/store'
-import { projectSchema } from '@/types/projectForm'
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { useTranslations } from 'next-intl'
-import { toast } from 'sonner'
-import { z } from 'zod'
-import { ProjectForm } from './ProjectForm'
+} from "@/components/ui/dropdown-menu"
+import { useTaskStore } from "@/lib/store"
+import { projectSchema } from "@/types/projectForm"
+
+import { ProjectForm } from "./ProjectForm"
 
 interface ProjectActionsProps {
   id: string
@@ -40,7 +42,7 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
   const removeProject = useTaskStore((state) => state.removeProject)
   const currentBoardId = useTaskStore((state) => state.currentBoardId)
   const fetchProjects = useTaskStore((state) => state.fetchProjects)
-  const t = useTranslations('kanban.project')
+  const t = useTranslations("kanban.project")
 
   // State for permissions
   const [permissions, setPermissions] = React.useState<{
@@ -63,14 +65,14 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
       const response = await fetch(`/api/projects/${id}/permissions`)
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || t('fetchPermissionsFailed'))
+        throw new Error(errorData.error || t("fetchPermissionsFailed"))
       }
       const data = await response.json()
       setPermissions(data)
     } catch (error) {
-      console.error('Error fetching project permissions:', error)
+      console.error("Error fetching project permissions:", error)
       setPermissions({ canEditProject: false, canDeleteProject: false }) // Fallback on error
-      toast.error(t('loadPermissionsFailed', { error: (error as Error).message }))
+      toast.error(t("loadPermissionsFailed", { error: (error as Error).message }))
     } finally {
       setIsLoadingPermissions(false)
     }
@@ -80,10 +82,10 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
     try {
       await updateProject(id, values.title, values.description)
       await fetchProjects(currentBoardId!)
-      toast.success(t('updateSuccess'))
+      toast.success(t("updateSuccess"))
       setEditEnable(false)
     } catch (error) {
-      toast.error(t('updateFailed', { error: (error as Error).message }))
+      toast.error(t("updateFailed", { error: (error as Error).message }))
     }
   }
 
@@ -92,7 +94,7 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
       <Dialog open={editEnable} onOpenChange={setEditEnable}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('editProjectTitle')}</DialogTitle>
+            <DialogTitle>{t("editProjectTitle")}</DialogTitle>
           </DialogHeader>
           <ProjectForm
             onSubmit={(values) => {
@@ -108,9 +110,9 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
                   setEditEnable(false)
                 }}
               >
-                {t('cancel')}
+                {t("cancel")}
               </Button>
-              <Button type="submit">{t('save')}</Button>
+              <Button type="submit">{t("save")}</Button>
             </div>
           </ProjectForm>
         </DialogContent>
@@ -151,12 +153,12 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
             disabled={isLoadingPermissions || !permissions?.canEditProject}
             className={
               !isLoadingPermissions && !permissions?.canEditProject
-                ? 'cursor-not-allowed text-muted-foreground line-through'
-                : ''
+                ? "cursor-not-allowed text-muted-foreground line-through"
+                : ""
             }
             data-testid="edit-project-button"
           >
-            {t('edit')}
+            {t("edit")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -168,12 +170,12 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
             disabled={isLoadingPermissions || !permissions?.canDeleteProject}
             className={` ${
               isLoadingPermissions || !permissions?.canDeleteProject
-                ? 'cursor-not-allowed text-muted-foreground line-through'
-                : 'text-red-600 hover:!bg-destructive/10 hover:!text-red-600'
+                ? "cursor-not-allowed text-muted-foreground line-through"
+                : "text-red-600 hover:!bg-destructive/10 hover:!text-red-600"
             } `}
             data-testid="delete-project-button"
           >
-            {t('delete')}
+            {t("delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -181,20 +183,20 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDeleteTitle', { title })}</AlertDialogTitle>
-            <AlertDialogDescription>{t('confirmDeleteDescription')}</AlertDialogDescription>
+            <AlertDialogTitle>{t("confirmDeleteTitle", { title })}</AlertDialogTitle>
+            <AlertDialogDescription>{t("confirmDeleteDescription")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={() => {
                 setShowDeleteDialog(false)
                 removeProject(id).catch(console.error)
-                toast.success(t('deleteSuccess', { title }))
+                toast.success(t("deleteSuccess", { title }))
               }}
             >
-              {t('delete')}
+              {t("delete")}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

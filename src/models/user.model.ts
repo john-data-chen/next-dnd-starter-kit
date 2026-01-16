@@ -1,5 +1,6 @@
-import { User as UserType } from '@/types/dbInterface'
-import mongoose, { Model } from 'mongoose'
+import mongoose, { Model } from "mongoose"
+
+import { User as UserType } from "@/types/dbInterface"
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -10,9 +11,9 @@ const userSchema = new mongoose.Schema({
 
 let UserModel: Model<UserType>
 try {
-  UserModel = mongoose.model<UserType>('User')
+  UserModel = mongoose.model<UserType>("User")
 } catch {
-  UserModel = mongoose.model<UserType>('User', userSchema)
+  UserModel = mongoose.model<UserType>("User", userSchema)
 }
 
 export { UserModel }

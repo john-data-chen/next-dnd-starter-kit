@@ -1,21 +1,23 @@
-import React from 'react'
-import { BoardOverview } from '@/components/kanban/BoardOverview'
-import { useBoards } from '@/hooks/useBoards'
-import { usePathname, useRouter } from '@/i18n/navigation'
-import { Board, Project } from '@/types/dbInterface'
-import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
-import { render, screen } from '../../../test-utils'
+import userEvent from "@testing-library/user-event"
+import React from "react"
+import { beforeEach, describe, expect, it, vi, type Mock } from "vitest"
+
+import { BoardOverview } from "@/components/kanban/BoardOverview"
+import { useBoards } from "@/hooks/useBoards"
+import { usePathname, useRouter } from "@/i18n/navigation"
+import { Board, Project } from "@/types/dbInterface"
+
+import { render, screen } from "../../../test-utils"
 
 // --- Mocking Dependencies ---
 
 // Mock useBoards hook
-vi.mock('@/hooks/useBoards')
+vi.mock("@/hooks/useBoards")
 const mockUseBoards = useBoards as Mock
 
 // Mock next-intl
-vi.mock('next-intl', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('next-intl')>()
+vi.mock("next-intl", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("next-intl")>()
   return {
     ...actual,
     useTranslations: () => (key: string) => key
@@ -23,28 +25,28 @@ vi.mock('next-intl', async (importOriginal) => {
 })
 
 // Mock i18n navigation
-vi.mock('@/i18n/navigation', () => ({
+vi.mock("@/i18n/navigation", () => ({
   useRouter: vi.fn(),
   usePathname: vi.fn(),
   useSearchParams: vi.fn(() => ({
     get: vi.fn(() => null),
-    toString: vi.fn(() => '')
+    toString: vi.fn(() => "")
   }))
 }))
 const mockUseRouter = useRouter as Mock
 const mockUsePathname = usePathname as Mock
 
 // Mock child components
-vi.mock('@/components/kanban/board/BoardActions', () => ({
+vi.mock("@/components/kanban/board/BoardActions", () => ({
   BoardActions: vi.fn(({ board }) => <div data-testid={`board-actions-${board._id}`}>Actions</div>)
 }))
-vi.mock('@/components/kanban/board/NewBoardDialog', () => ({
+vi.mock("@/components/kanban/board/NewBoardDialog", () => ({
   default: vi.fn(({ children }) => <div data-testid="new-board-dialog">{children}</div>)
 }))
 
 // Mock Shadcn Select components
-vi.mock('@/components/ui/select', async (importOriginal) => {
-  const original = await importOriginal<typeof import('@/components/ui/select')>()
+vi.mock("@/components/ui/select", async (importOriginal) => {
+  const original = await importOriginal<typeof import("@/components/ui/select")>()
   return {
     ...original,
     Select: vi.fn(({ children, onValueChange, value }) => (
@@ -74,42 +76,42 @@ vi.mock('@/components/ui/select', async (importOriginal) => {
 
 // --- Test Data ---
 const mockMyBoard1: Board = {
-  _id: 'my1',
-  title: 'My Personal Board',
-  description: 'My description',
-  owner: { id: 'user1', name: 'Me' },
-  members: [{ id: 'user1', name: 'Me' }],
-  projects: [{ _id: 'p1', title: 'Project Alpha' } as Project],
+  _id: "my1",
+  title: "My Personal Board",
+  description: "My description",
+  owner: { id: "user1", name: "Me" },
+  members: [{ id: "user1", name: "Me" }],
+  projects: [{ _id: "p1", title: "Project Alpha" } as Project],
   createdAt: new Date(),
   updatedAt: new Date()
 }
 const mockMyBoard2: Board = {
-  _id: 'my2',
-  title: 'My Secret Project',
-  description: '',
-  owner: { id: 'user1', name: 'Me' },
-  members: [{ id: 'user1', name: 'Me' }],
+  _id: "my2",
+  title: "My Secret Project",
+  description: "",
+  owner: { id: "user1", name: "Me" },
+  members: [{ id: "user1", name: "Me" }],
   projects: [],
   createdAt: new Date(),
   updatedAt: new Date()
 }
 const mockTeamBoard1: Board = {
-  _id: 'team1',
-  title: 'Team Shared Board',
-  description: 'Team description',
-  owner: { id: 'user2', name: 'Alice' },
+  _id: "team1",
+  title: "Team Shared Board",
+  description: "Team description",
+  owner: { id: "user2", name: "Alice" },
   members: [
-    { id: 'user1', name: 'Me' },
-    { id: 'user2', name: 'Alice' }
+    { id: "user1", name: "Me" },
+    { id: "user2", name: "Alice" }
   ],
-  projects: [{ _id: 'p2', title: 'Project Beta' } as Project],
+  projects: [{ _id: "p2", title: "Project Beta" } as Project],
   createdAt: new Date(),
   updatedAt: new Date()
 }
 
 // --- Test Suite ---
 
-describe('BoardOverview Component', () => {
+describe("BoardOverview Component", () => {
   let mockRouterPush: Mock
 
   beforeEach(() => {
@@ -118,7 +120,7 @@ describe('BoardOverview Component', () => {
     ;(useRouter as Mock).mockReturnValue({
       push: mockRouterPush
     })
-    ;(usePathname as Mock).mockReturnValue('/boards')
+    ;(usePathname as Mock).mockReturnValue("/boards")
     ;(useBoards as Mock).mockReturnValue({
       myBoards: [],
       teamBoards: [],
@@ -127,7 +129,7 @@ describe('BoardOverview Component', () => {
     })
   })
 
-  it('should display loading state', () => {
+  it("should display loading state", () => {
     mockUseBoards.mockReturnValue({
       myBoards: [],
       teamBoards: [],
@@ -135,16 +137,16 @@ describe('BoardOverview Component', () => {
       fetchBoards: vi.fn()
     })
     render(<BoardOverview />)
-    expect(screen.getByText('loading')).toBeInTheDocument()
+    expect(screen.getByText("loading")).toBeInTheDocument()
   })
 
   it('should display "No boards found" messages when there are no boards', () => {
     render(<BoardOverview />)
-    expect(screen.getByText('noBoardsFound')).toBeInTheDocument()
-    expect(screen.getByText('noTeamBoardsFound')).toBeInTheDocument()
+    expect(screen.getByText("noBoardsFound")).toBeInTheDocument()
+    expect(screen.getByText("noTeamBoardsFound")).toBeInTheDocument()
   })
 
-  it('should render My Boards and Team Boards correctly', () => {
+  it("should render My Boards and Team Boards correctly", () => {
     mockUseBoards.mockReturnValue({
       myBoards: [mockMyBoard1],
       teamBoards: [mockTeamBoard1],
@@ -154,18 +156,18 @@ describe('BoardOverview Component', () => {
     render(<BoardOverview />)
 
     // My Boards
-    expect(screen.getByTestId('myBoardsTitle')).toHaveTextContent('myBoards')
+    expect(screen.getByTestId("myBoardsTitle")).toHaveTextContent("myBoards")
     expect(screen.getByText(mockMyBoard1.title)).toBeInTheDocument()
     expect(screen.getByText(mockMyBoard1.description!)).toBeInTheDocument()
     expect(screen.getByTestId(`board-actions-${mockMyBoard1._id}`)).toBeInTheDocument()
 
     // Team Boards
-    expect(screen.getByTestId('teamBoardsTitle')).toHaveTextContent('teamBoards')
+    expect(screen.getByTestId("teamBoardsTitle")).toHaveTextContent("teamBoards")
     expect(screen.getByText(mockTeamBoard1.title)).toBeInTheDocument()
-    expect(screen.getByText(`${'owner'}: ${mockTeamBoard1.owner.name}`)).toBeInTheDocument()
+    expect(screen.getByText(`${"owner"}: ${mockTeamBoard1.owner.name}`)).toBeInTheDocument()
   })
 
-  it('should filter boards based on search input', async () => {
+  it("should filter boards based on search input", async () => {
     const user = userEvent.setup()
     mockUseBoards.mockReturnValue({
       myBoards: [mockMyBoard1, mockMyBoard2],
@@ -175,18 +177,18 @@ describe('BoardOverview Component', () => {
     })
     render(<BoardOverview />)
 
-    const searchInput = screen.getByPlaceholderText('searchBoards')
-    await user.type(searchInput, 'Personal')
+    const searchInput = screen.getByPlaceholderText("searchBoards")
+    await user.type(searchInput, "Personal")
 
     expect(screen.getByText(mockMyBoard1.title)).toBeInTheDocument()
     expect(screen.queryByText(mockMyBoard2.title)).not.toBeInTheDocument()
     expect(screen.queryByText(mockTeamBoard1.title)).not.toBeInTheDocument()
   })
 
-  it('should render the New Board button with translated text', () => {
+  it("should render the New Board button with translated text", () => {
     render(<BoardOverview />)
-    expect(screen.getByTestId('new-board-dialog')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'newBoard' })).toBeInTheDocument()
+    expect(screen.getByTestId("new-board-dialog")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "newBoard" })).toBeInTheDocument()
   })
 
   it('should display "noDescription" when board description is empty', () => {
@@ -197,10 +199,10 @@ describe('BoardOverview Component', () => {
       fetchBoards: vi.fn()
     })
     render(<BoardOverview />)
-    expect(screen.getByText('noDescription')).toBeInTheDocument()
+    expect(screen.getByText("noDescription")).toBeInTheDocument()
   })
 
-  it('should navigate to board when clicking on a board card', async () => {
+  it("should navigate to board when clicking on a board card", async () => {
     const user = userEvent.setup()
     mockUseBoards.mockReturnValue({
       myBoards: [mockMyBoard1],
@@ -210,13 +212,13 @@ describe('BoardOverview Component', () => {
     })
     render(<BoardOverview />)
 
-    const boardCard = screen.getByText(mockMyBoard1.title).closest('.cursor-pointer')
+    const boardCard = screen.getByText(mockMyBoard1.title).closest(".cursor-pointer")
     await user.click(boardCard!)
 
     expect(mockRouterPush).toHaveBeenCalledWith(`/boards/${mockMyBoard1._id}`)
   })
 
-  it('should navigate to team board when clicking on a team board card', async () => {
+  it("should navigate to team board when clicking on a team board card", async () => {
     const user = userEvent.setup()
     mockUseBoards.mockReturnValue({
       myBoards: [],
@@ -226,7 +228,7 @@ describe('BoardOverview Component', () => {
     })
     render(<BoardOverview />)
 
-    const boardCard = screen.getByText(mockTeamBoard1.title).closest('.cursor-pointer')
+    const boardCard = screen.getByText(mockTeamBoard1.title).closest(".cursor-pointer")
     await user.click(boardCard!)
 
     expect(mockRouterPush).toHaveBeenCalledWith(`/boards/${mockTeamBoard1._id}`)

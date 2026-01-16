@@ -1,8 +1,9 @@
-import React from 'react'
-import { TaskForm } from '@/components/kanban/task/TaskForm'
-import { useTaskForm } from '@/hooks/useTaskForm'
-import { act, fireEvent, render, screen } from '@testing-library/react'
-import { vi } from 'vitest'
+import { act, fireEvent, render, screen } from "@testing-library/react"
+import React from "react"
+import { vi } from "vitest"
+
+import { TaskForm } from "@/components/kanban/task/TaskForm"
+import { useTaskForm } from "@/hooks/useTaskForm"
 
 // --- Global Mocks ---
 global.ResizeObserver = class {
@@ -12,22 +13,22 @@ global.ResizeObserver = class {
 }
 
 // --- Vitest Mocks ---
-vi.mock('@/hooks/useTaskForm')
-vi.mock('next-intl', () => ({
+vi.mock("@/hooks/useTaskForm")
+vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key
 }))
 
 // Mock react-hook-form's Controller to avoid issues with its internal state
 // in a testing environment. It simply renders the child component with basic field props.
-vi.mock('react-hook-form', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('react-hook-form')>()
+vi.mock("react-hook-form", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-hook-form")>()
   return {
     ...actual,
     Controller: ({ render }: any) =>
       render({
         field: {
-          name: 'mocked-controller-field',
-          value: '',
+          name: "mocked-controller-field",
+          value: "",
           onChange: vi.fn(),
           onBlur: vi.fn(),
           ref: React.createRef()
@@ -45,7 +46,7 @@ const mockSetSearchQuery = vi.fn()
 const mockSubmitLogic = vi.fn((values) => Promise.resolve())
 
 // --- Test Suite ---
-describe('TaskForm Component', () => {
+describe("TaskForm Component", () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
@@ -77,7 +78,7 @@ describe('TaskForm Component', () => {
       handleSubmit: mockSubmitLogic,
       isSubmitting: false,
       users: [],
-      searchQuery: '',
+      searchQuery: "",
       setSearchQuery: mockSetSearchQuery,
       isSearching: false,
       assignOpen: false,
@@ -85,24 +86,24 @@ describe('TaskForm Component', () => {
     })
   })
 
-  it('renders all form fields with translated labels and placeholders', () => {
+  it("renders all form fields with translated labels and placeholders", () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
 
     // Use placeholder text for query, which is more robust
-    expect(screen.getByPlaceholderText('titlePlaceholder')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('descriptionPlaceholder')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("titlePlaceholder")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("descriptionPlaceholder")).toBeInTheDocument()
   })
 
-  it('calls onCancel when the cancel button is clicked', () => {
+  it("calls onCancel when the cancel button is clicked", () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
-    fireEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    fireEvent.click(screen.getByRole("button", { name: "cancel" }))
     expect(mockOnCancel).toHaveBeenCalled()
   })
 
-  it('calls the submit logic from the hook when the form is submitted', () => {
+  it("calls the submit logic from the hook when the form is submitted", () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />)
 
-    const submitButton = screen.getByTestId('submit-task-button')
+    const submitButton = screen.getByTestId("submit-task-button")
     act(() => {
       fireEvent.click(submitButton)
     })
@@ -112,8 +113,8 @@ describe('TaskForm Component', () => {
     expect(mockSubmitLogic).toHaveBeenCalled()
   })
 
-  it('uses the provided submitLabel for the submit button', () => {
+  it("uses the provided submitLabel for the submit button", () => {
     render(<TaskForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} submitLabel="update" />)
-    expect(screen.getByRole('button', { name: 'update' })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "update" })).toBeInTheDocument()
   })
 })

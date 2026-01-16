@@ -1,6 +1,7 @@
-'use client'
+"use client"
 
-import React from 'react'
+import React from "react"
+
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -8,8 +9,8 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
-import { useBreadcrumbs } from '@/hooks/useBreadcrumbs'
+} from "@/components/ui/breadcrumb"
+import { useBreadcrumbs } from "@/hooks/useBreadcrumbs"
 
 export function Breadcrumbs() {
   const { items, rootLink } = useBreadcrumbs()

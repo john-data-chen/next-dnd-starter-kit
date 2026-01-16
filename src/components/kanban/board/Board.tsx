@@ -1,10 +1,5 @@
-'use client'
+"use client"
 
-import { Fragment, useMemo, useRef, useState } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useTaskStore } from '@/lib/store'
-import { Project, Task, TaskStatus } from '@/types/dbInterface'
-import DraggableData from '@/types/drag&drop'
 import {
   Active,
   Announcements,
@@ -19,13 +14,20 @@ import {
   type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent
-} from '@dnd-kit/core'
-import { arrayMove, SortableContext } from '@dnd-kit/sortable'
-import { toast } from 'sonner'
-import NewProjectDialog from '../project/NewProjectDialog'
-import { BoardContainer, BoardProject } from '../project/Project'
-import { TaskCard } from '../task/TaskCard'
-import { TaskFilter } from '../task/TaskFilter'
+} from "@dnd-kit/core"
+import { arrayMove, SortableContext } from "@dnd-kit/sortable"
+import { Fragment, useMemo, useRef, useState } from "react"
+import { toast } from "sonner"
+
+import { Skeleton } from "@/components/ui/skeleton"
+import { useTaskStore } from "@/lib/store"
+import { Project, Task, TaskStatus } from "@/types/dbInterface"
+import DraggableData from "@/types/drag&drop"
+
+import NewProjectDialog from "../project/NewProjectDialog"
+import { BoardContainer, BoardProject } from "../project/Project"
+import { TaskCard } from "../task/TaskCard"
+import { TaskFilter } from "../task/TaskFilter"
 
 export function Board() {
   const projects = useTaskStore((state) => state.projects)
@@ -49,7 +51,7 @@ export function Board() {
       return false
     }
     const data = entry.data.current
-    if (data?.type === 'Project' || data?.type === 'Task') {
+    if (data?.type === "Project" || data?.type === "Task") {
       return true
     }
     return false
@@ -81,11 +83,11 @@ export function Board() {
       return
     }
     const data = event.active.data.current
-    if (data?.type === 'Project') {
+    if (data?.type === "Project") {
       setActiveProject(data?.project)
       return
     }
-    if (data?.type === 'Task') {
+    if (data?.type === "Task") {
       setActiveTask(data?.task)
     }
   }
@@ -108,7 +110,7 @@ export function Board() {
       return
     }
     // stop if active is a project
-    if (active.data.current!.type === 'Project') {
+    if (active.data.current!.type === "Project") {
       return
     }
     // get active task
@@ -120,12 +122,12 @@ export function Board() {
       (task: Task) => task._id === activeTask._id
     )
     // drag a task over a project
-    if (over.data.current!.type === 'Project') {
+    if (over.data.current!.type === "Project") {
       const overProject = updatedProjects.find(
         (project: Project) => project === over.data.current!.project
       )
       if (!overProject) {
-        console.error('Target project not found')
+        console.error("Target project not found")
         return
       }
       dragTaskOnProject(activeTask._id, overProject._id)
@@ -142,13 +144,13 @@ export function Board() {
           }
         })
         .catch((error: unknown) => {
-          console.error('Failed to move task:', error)
-          const message = error instanceof Error ? error.message : 'unknown error'
+          console.error("Failed to move task:", error)
+          const message = error instanceof Error ? error.message : "unknown error"
           toast.error(`Failed to move task: ${message}`)
         })
     }
     // drag a task over a task
-    if (over.data.current!.type === 'Task') {
+    if (over.data.current!.type === "Task") {
       const overTask = over.data.current!.task
       const overProject = updatedProjects.find(
         (project: Project) => project._id.toString() === overTask.project.toString()
@@ -167,8 +169,8 @@ export function Board() {
             )
           })
           .catch((error: unknown) => {
-            console.error('Failed to move task:', error)
-            const message = error instanceof Error ? error.message : 'unknown error'
+            console.error("Failed to move task:", error)
+            const message = error instanceof Error ? error.message : "unknown error"
             toast.error(`Failed to move task: ${message}`)
           })
       }
@@ -205,7 +207,7 @@ export function Board() {
       return
     }
 
-    const isActiveAProject = activeData?.type === 'Project'
+    const isActiveAProject = activeData?.type === "Project"
     if (!isActiveAProject) {
       return
     }
@@ -223,13 +225,13 @@ export function Board() {
       if (!hasDraggableData(active)) {
         return
       }
-      if (active.data.current?.type === 'Project') {
+      if (active.data.current?.type === "Project") {
         const startProjectIdx = projectsId.findIndex((id: string) => id === active.id)
         const startProject = projects[startProjectIdx]
         return `Picked up Project ${startProject?.title} at position: ${
           startProjectIdx + 1
         } of ${projectsId.length}`
-      } else if (active.data.current?.type === 'Task') {
+      } else if (active.data.current?.type === "Task") {
         pickedUpTaskProject.current = active.data.current.task.project.toString()
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           active.data.current.task._id,
@@ -244,12 +246,12 @@ export function Board() {
       if (!hasDraggableData(active) || !hasDraggableData(over)) {
         return
       }
-      if (active.data.current?.type === 'Project' && over.data.current?.type === 'Project') {
+      if (active.data.current?.type === "Project" && over.data.current?.type === "Project") {
         const overProjectIdx = projectsId.findIndex((id: string) => id === over.id)
         return `Project ${active.data.current.project.title} was moved over ${
           over.data.current.project.title
         } at position ${overProjectIdx + 1} of ${projectsId.length}`
-      } else if (active.data.current?.type === 'Task' && over.data.current?.type === 'Task') {
+      } else if (active.data.current?.type === "Task" && over.data.current?.type === "Task") {
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           over.data.current.task._id,
           over.data.current.task.project.toString()
@@ -271,13 +273,13 @@ export function Board() {
         pickedUpTaskProject.current = null
         return
       }
-      if (active.data.current?.type === 'Project' && over.data.current?.type === 'Project') {
+      if (active.data.current?.type === "Project" && over.data.current?.type === "Project") {
         const overProjectPosition = projectsId.findIndex((id: string) => id === over.id)
 
         return `Project ${
           active.data.current.project.title
         } was dropped into position ${overProjectPosition + 1} of ${projectsId.length}`
-      } else if (active.data.current?.type === 'Task' && over.data.current?.type === 'Task') {
+      } else if (active.data.current?.type === "Task" && over.data.current?.type === "Task") {
         const { tasksInProject, taskPosition, project } = getDraggingTaskData(
           over.data.current.task._id,
           over.data.current.task.project.toString()

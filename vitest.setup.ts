@@ -1,33 +1,35 @@
-import '@testing-library/jest-dom'
-import dotenv from 'dotenv'
-import 'dotenv/config'
-import path from 'path'
-import { beforeAll, vi } from 'vitest'
+import "@testing-library/jest-dom"
+import "dotenv/config"
+
+import path from "path"
+
+import dotenv from "dotenv"
+import { beforeAll, vi } from "vitest"
 
 // Import vi for mocking if needed
 
 // Determine the correct path to the .env.test file relative to the project root
-const envPath = path.resolve(process.cwd(), '.env.test')
+const envPath = path.resolve(process.cwd(), ".env.test")
 console.log(`Attempting to load environment variables from: ${envPath}`) // Debugging line
 
 // Load environment variables from .env.test specifically for tests
 const result = dotenv.config({ path: envPath })
 
 if (result.error) {
-  console.error('Error loading .env.test file:', result.error) // Debugging line
+  console.error("Error loading .env.test file:", result.error) // Debugging line
 } else {
-  console.log('.env.test file loaded successfully.') // Debugging line
+  console.log(".env.test file loaded successfully.") // Debugging line
   // console.log('DATABASE_URL loaded:', process.env.DATABASE_URL); // Optional: Check if variable is loaded
 }
 
-console.log('Current NODE_ENV:', process.env.NODE_ENV)
-console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL)
+console.log("Current NODE_ENV:", process.env.NODE_ENV)
+console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL)
 
 // --- Add other global test setups below ---
 
 // Example: Mocking matchMedia for testing hooks like useIsMobile or other browser APIs
 beforeAll(() => {
-  Object.defineProperty(window, 'matchMedia', {
+  Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: vi.fn().mockImplementation((query) => ({
       matches: false,
@@ -46,15 +48,15 @@ beforeAll(() => {
 
 // You can add other global mocks or configurations here
 
-vi.mock('next/navigation', () => {
-  const actual = vi.importActual('next/navigation')
+vi.mock("next/navigation", () => {
+  const actual = vi.importActual("next/navigation")
   return {
     ...actual,
     useRouter: vi.fn(() => ({
       push: vi.fn(),
       replace: vi.fn()
     })),
-    usePathname: vi.fn(() => '/'),
+    usePathname: vi.fn(() => "/"),
     useSearchParams: vi.fn(() => new URLSearchParams()),
     redirect: vi.fn((path) => {
       console.log(`Mock redirect to: ${path}`)

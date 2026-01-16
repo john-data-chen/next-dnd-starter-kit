@@ -1,8 +1,9 @@
-import { ROUTES } from '@/constants/routes'
-import { getUserByEmail } from '@/lib/db/user'
-import { SignInValidation } from '@/types/authUserForm'
-import NextAuth, { NextAuthConfig } from 'next-auth'
-import Credential from 'next-auth/providers/credentials'
+import NextAuth, { NextAuthConfig } from "next-auth"
+import Credential from "next-auth/providers/credentials"
+
+import { ROUTES } from "@/constants/routes"
+import { getUserByEmail } from "@/lib/db/user"
+import { SignInValidation } from "@/types/authUserForm"
 
 const authConfig = {
   providers: [
@@ -17,7 +18,7 @@ const authConfig = {
           }
           return null
         } catch (error) {
-          console.error('Authorization error:', error)
+          console.error("Authorization error:", error)
           return null
         }
       }

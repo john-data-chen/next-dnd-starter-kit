@@ -1,11 +1,12 @@
-import { useTaskForm } from '@/hooks/useTaskForm'
-import { TaskFormSchema } from '@/types/taskForm'
-import { act, renderHook, waitFor } from '@testing-library/react'
-import { UseFormReturn } from 'react-hook-form'
-import { vi } from 'vitest'
-import { z } from 'zod'
+import { act, renderHook, waitFor } from "@testing-library/react"
+import { UseFormReturn } from "react-hook-form"
+import { vi } from "vitest"
+import { z } from "zod"
 
-vi.mock('@/hooks/useDebounce', () => ({
+import { useTaskForm } from "@/hooks/useTaskForm"
+import { TaskFormSchema } from "@/types/taskForm"
+
+vi.mock("@/hooks/useDebounce", () => ({
   useDebounce: (value: any) => value
 }))
 
@@ -14,19 +15,19 @@ const mockFetch = vi.fn()
 global.fetch = mockFetch
 
 // Mock toast
-vi.mock('sonner', () => ({
+vi.mock("sonner", () => ({
   toast: {
     error: vi.fn()
   }
 }))
 
-describe('useTaskForm Hook', () => {
+describe("useTaskForm Hook", () => {
   const mockOnSubmit = vi.fn().mockResolvedValue(undefined)
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>
 
   beforeEach(() => {
     vi.clearAllMocks()
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
   })
 
   afterEach(() => {
@@ -36,19 +37,19 @@ describe('useTaskForm Hook', () => {
   const setup = (defaultValues?: Partial<z.infer<typeof TaskFormSchema>>) =>
     renderHook(() => useTaskForm({ defaultValues, onSubmit: mockOnSubmit }))
 
-  it('should initialize with default values', () => {
-    const defaultValues = { title: 'Initial Title' }
+  it("should initialize with default values", () => {
+    const defaultValues = { title: "Initial Title" }
     const { result } = setup(defaultValues)
-    expect(result.current.form.getValues().title).toBe('Initial Title')
+    expect(result.current.form.getValues().title).toBe("Initial Title")
   })
 
-  it('should initialize with custom values', () => {
+  it("should initialize with custom values", () => {
     const defaultValues = {
-      title: 'Test Task',
-      description: 'Test Description',
-      status: 'IN_PROGRESS' as const,
-      dueDate: new Date('2024-01-01'),
-      assignee: { _id: 'user1', name: 'User One' }
+      title: "Test Task",
+      description: "Test Description",
+      status: "IN_PROGRESS" as const,
+      dueDate: new Date("2024-01-01"),
+      assignee: { _id: "user1", name: "User One" }
     }
 
     const { result } = setup(defaultValues)
@@ -56,8 +57,8 @@ describe('useTaskForm Hook', () => {
     expect(result.current.form.getValues()).toEqual(defaultValues)
   })
 
-  it('should handle user search', async () => {
-    const users = [{ _id: '1', name: 'User One' }]
+  it("should handle user search", async () => {
+    const users = [{ _id: "1", name: "User One" }]
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ users })
@@ -70,18 +71,18 @@ describe('useTaskForm Hook', () => {
     })
 
     act(() => {
-      result.current.setSearchQuery('test')
+      result.current.setSearchQuery("test")
     })
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('/api/users/search?username=test')
+      expect(mockFetch).toHaveBeenCalledWith("/api/users/search?username=test")
       expect(result.current.users).toEqual(users)
       expect(result.current.isSearching).toBe(false)
     })
   })
 
-  it('should handle search error', async () => {
-    mockFetch.mockRejectedValueOnce(new Error('Search failed'))
+  it("should handle search error", async () => {
+    mockFetch.mockRejectedValueOnce(new Error("Search failed"))
     const { result } = setup()
 
     act(() => {
@@ -89,24 +90,24 @@ describe('useTaskForm Hook', () => {
     })
 
     act(() => {
-      result.current.setSearchQuery('error')
+      result.current.setSearchQuery("error")
     })
 
     await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error searching users:', expect.any(Error))
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Error searching users:", expect.any(Error))
       expect(result.current.isSearching).toBe(false)
     })
   })
 
-  it('should handle form submission successfully', async () => {
-    const { result } = setup({ title: 'New Task' })
+  it("should handle form submission successfully", async () => {
+    const { result } = setup({ title: "New Task" })
     const { form, handleSubmit } = result.current
 
-    const submitData = { title: 'New Task', description: 'Task Description' }
+    const submitData = { title: "New Task", description: "Task Description" }
 
     await act(async () => {
       // Manually set values and then submit
-      form.setValue('description', 'Task Description')
+      form.setValue("description", "Task Description")
       await form.handleSubmit(handleSubmit)()
     })
 
@@ -114,16 +115,16 @@ describe('useTaskForm Hook', () => {
     expect(result.current.isSubmitting).toBe(false)
   })
 
-  it('should handle form submission error', async () => {
-    const error = new Error('Submit Error')
+  it("should handle form submission error", async () => {
+    const error = new Error("Submit Error")
     mockOnSubmit.mockRejectedValueOnce(error)
 
     const { result } = setup()
 
     const submitData = {
-      title: 'New Task',
-      description: 'Task Description',
-      status: 'TODO' as const
+      title: "New Task",
+      description: "Task Description",
+      status: "TODO" as const
     }
 
     await act(async () => {
@@ -133,7 +134,7 @@ describe('useTaskForm Hook', () => {
     expect(result.current.isSubmitting).toBe(false)
   })
 
-  it('should debounce search queries', async () => {
+  it("should debounce search queries", async () => {
     vi.useFakeTimers()
     const { result } = setup()
 
@@ -162,9 +163,9 @@ describe('useTaskForm Hook', () => {
 
     // Multiple search queries in quick succession
     act(() => {
-      result.current.setSearchQuery('test1')
-      result.current.setSearchQuery('test2')
-      result.current.setSearchQuery('test3')
+      result.current.setSearchQuery("test1")
+      result.current.setSearchQuery("test2")
+      result.current.setSearchQuery("test3")
     })
 
     // Fast-forward to complete the debounce timeout
@@ -175,28 +176,28 @@ describe('useTaskForm Hook', () => {
 
     // Should only make one API call with the last search value
     expect(global.fetch).toHaveBeenCalledTimes(1)
-    expect(global.fetch).toHaveBeenCalledWith('/api/users/search?username=test3')
+    expect(global.fetch).toHaveBeenCalledWith("/api/users/search?username=test3")
 
     vi.useRealTimers()
   })
 
-  it('should handle form submission without default values', async () => {
+  it("should handle form submission without default values", async () => {
     const { result } = setup()
     act(() => {
       result.current.handleSubmit({
-        title: 'Test Task',
-        description: 'A task without defaults',
-        status: 'TODO',
-        assignee: { _id: 'user3', name: 'John Smith' }
+        title: "Test Task",
+        description: "A task without defaults",
+        status: "TODO",
+        assignee: { _id: "user3", name: "John Smith" }
       })
     })
 
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: 'Test Task',
-          status: 'TODO',
-          assignee: { _id: 'user3', name: 'John Smith' }
+          title: "Test Task",
+          status: "TODO",
+          assignee: { _id: "user3", name: "John Smith" }
         })
       )
     })
