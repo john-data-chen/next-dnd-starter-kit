@@ -7,18 +7,18 @@
     "url": "https://github.com/john-data-chen/next-dnd-starter-kit"
   },
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "oxlint src --type-aware --fix",
-    "format": "oxfmt --no-error-on-unmatched-pattern --config ./.oxfmtrc.json",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
-    "test": "vitest run --coverage",
-    "test:watch": "vitest watch",
-    "playwright": "npx playwright test",
     "commit": "git-cz",
+    "dev": "next dev",
+    "format": "oxfmt --no-error-on-unmatched-pattern --config ./.oxfmtrc.json",
     "init-db": "tsx database/init-db-data.ts",
-    "init-db:force": "tsx database/init-db-data.ts --force"
+    "init-db:force": "tsx database/init-db-data.ts --force",
+    "lint": "oxlint src --type-aware --fix",
+    "playwright": "npx playwright test",
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
+    "start": "next start",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

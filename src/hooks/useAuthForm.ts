@@ -1,22 +1,23 @@
-'use client'
+"use client"
 
-import { useState, useTransition } from 'react'
-import { defaultEmail } from '@/constants/demoData'
-import { ROUTES } from '@/constants/routes'
-import { NAVIGATION_DELAY_MS } from '@/constants/ui'
-import { useRouter } from '@/i18n/navigation'
-import { useTaskStore } from '@/lib/store'
-import { SignInFormValue, SignInValidation } from '@/types/authUserForm'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { signIn } from 'next-auth/react'
-import { useTranslations } from 'next-intl'
-import { useParams } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { signIn } from "next-auth/react"
+import { useTranslations } from "next-intl"
+import { useParams } from "next/navigation"
+import { useState, useTransition } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+
+import { defaultEmail } from "@/constants/demoData"
+import { ROUTES } from "@/constants/routes"
+import { NAVIGATION_DELAY_MS } from "@/constants/ui"
+import { useRouter } from "@/i18n/navigation"
+import { useTaskStore } from "@/lib/store"
+import { SignInFormValue, SignInValidation } from "@/types/authUserForm"
 
 interface AuthFormState {
   message?: string
-  status: 'error' | 'success' | 'idle' | 'loading'
+  status: "error" | "success" | "idle" | "loading"
 }
 
 export default function useAuthForm() {
@@ -24,8 +25,8 @@ export default function useAuthForm() {
   const { setUserInfo } = useTaskStore()
   const router = useRouter()
   const params = useParams()
-  const [status, setStatus] = useState<AuthFormState>({ status: 'idle' })
-  const t = useTranslations('login')
+  const [status, setStatus] = useState<AuthFormState>({ status: "idle" })
+  const t = useTranslations("login")
 
   const form = useForm<SignInFormValue>({
     resolver: zodResolver(SignInValidation),
@@ -36,25 +37,25 @@ export default function useAuthForm() {
 
   const onSubmit = (data: SignInFormValue) => {
     const signInProcessPromise = async () => {
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         email: data.email,
         redirect: false
       })
 
       if (result?.error) {
-        if (result.error === 'CredentialsSignin') {
-          throw new Error('Invalid email, retry again.')
+        if (result.error === "CredentialsSignin") {
+          throw new Error("Invalid email, retry again.")
         }
-        throw new Error(result.error || 'Authentication failed.')
+        throw new Error(result.error || "Authentication failed.")
       }
       setUserInfo(data.email)
     }
 
     toast.promise(signInProcessPromise(), {
-      loading: 'Authenticating...',
+      loading: "Authenticating...",
       success: () => {
         const navigationDelay = NAVIGATION_DELAY_MS
-        const locale = (params.locale as string) || 'en'
+        const locale = (params.locale as string) || "en"
         const targetPath = `${ROUTES.BOARDS.ROOT}?login_success=true`
 
         setTimeout(() => {
@@ -65,12 +66,12 @@ export default function useAuthForm() {
           })
         }, navigationDelay)
 
-        return t('authSuccessRedirect')
+        return t("authSuccessRedirect")
       },
       error: (err: Error) => {
-        console.error('Sign-in promise error:', err)
-        setStatus({ status: 'error', message: err.message })
-        return err.message || 'An unknown authentication error occurred.'
+        console.error("Sign-in promise error:", err)
+        setStatus({ status: "error", message: err.message })
+        return err.message || "An unknown authentication error occurred."
       }
     })
   }

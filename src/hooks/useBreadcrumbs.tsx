@@ -1,12 +1,13 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { ROUTES } from '@/constants/routes'
-import { fetchBoardsFromDb } from '@/lib/db/board'
-import { useTaskStore } from '@/lib/store'
-import { Board } from '@/types/dbInterface'
-import { useTranslations } from 'next-intl'
-import { useParams } from 'next/navigation'
+import { useTranslations } from "next-intl"
+import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
+
+import { ROUTES } from "@/constants/routes"
+import { fetchBoardsFromDb } from "@/lib/db/board"
+import { useTaskStore } from "@/lib/store"
+import { Board } from "@/types/dbInterface"
 
 interface BreadcrumbItem {
   title: string
@@ -16,7 +17,7 @@ interface BreadcrumbItem {
 
 export function useBreadcrumbs() {
   const params = useParams()
-  const t = useTranslations('sidebar')
+  const t = useTranslations("sidebar")
   const boardId = params.boardId as string
   const [board, setBoard] = useState<Board | null>(null)
   const userEmail = useTaskStore((state) => state.userEmail)
@@ -33,7 +34,7 @@ export function useBreadcrumbs() {
           setBoard(currentBoard)
         }
       } catch (error) {
-        console.error('Failed to fetch board:', error)
+        console.error("Failed to fetch board:", error)
       }
     }
 
@@ -44,7 +45,7 @@ export function useBreadcrumbs() {
 
   const items: BreadcrumbItem[] = [
     {
-      title: t('overview'),
+      title: t("overview"),
       link: ROUTES.BOARDS.ROOT,
       isRoot: true
     }

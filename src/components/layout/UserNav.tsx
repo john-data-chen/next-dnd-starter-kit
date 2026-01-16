@@ -1,7 +1,10 @@
-'use client'
+"use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { signOut, useSession } from "next-auth/react"
+import { useTranslations } from "next-intl"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,16 +12,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { ROUTES } from '@/constants/routes'
-import { useRouter } from '@/i18n/navigation'
-import { signOut, useSession } from 'next-auth/react'
-import { useTranslations } from 'next-intl'
+} from "@/components/ui/dropdown-menu"
+import { ROUTES } from "@/constants/routes"
+import { useRouter } from "@/i18n/navigation"
 
 export function UserNav() {
   const { data: session } = useSession()
   const router = useRouter()
-  const t = useTranslations('user')
+  const t = useTranslations("user")
 
   const handleSignOut = async () => {
     await signOut({ redirect: false })
@@ -33,7 +34,7 @@ export function UserNav() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={session.user?.image ?? ''} alt={session.user?.name ?? ''} />
+              <AvatarImage src={session.user?.image ?? ""} alt={session.user?.name ?? ""} />
               <AvatarFallback>{session.user?.name?.[0]}</AvatarFallback>
             </Avatar>
           </Button>
@@ -53,7 +54,7 @@ export function UserNav() {
               })
             }}
           >
-            {t('logOut')}
+            {t("logOut")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

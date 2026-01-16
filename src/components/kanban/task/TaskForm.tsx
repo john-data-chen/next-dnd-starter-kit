@@ -1,8 +1,13 @@
-'use client'
+"use client"
 
-import React from 'react'
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
+import React from "react"
+import { z } from "zod"
+
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Command,
   CommandEmpty,
@@ -10,7 +15,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList
-} from '@/components/ui/command'
+} from "@/components/ui/command"
 import {
   Form,
   FormControl,
@@ -18,18 +23,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Textarea } from '@/components/ui/textarea'
-import { useTaskForm } from '@/hooks/useTaskForm'
-import { cn } from '@/lib/utils'
-import { TaskFormSchema } from '@/types/taskForm'
-import { format } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import { z } from 'zod'
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Textarea } from "@/components/ui/textarea"
+import { useTaskForm } from "@/hooks/useTaskForm"
+import { cn } from "@/lib/utils"
+import { TaskFormSchema } from "@/types/taskForm"
 
 interface TaskFormProps {
   defaultValues?: z.infer<typeof TaskFormSchema>
@@ -42,7 +43,7 @@ export function TaskForm({
   defaultValues,
   onSubmit,
   onCancel,
-  submitLabel = 'Submit'
+  submitLabel = "Submit"
 }: TaskFormProps) {
   const {
     form,
@@ -56,7 +57,7 @@ export function TaskForm({
     handleSubmit
   } = useTaskForm({ defaultValues, onSubmit })
   const [calendarOpen, setCalendarOpen] = React.useState(false)
-  const t = useTranslations('kanban.task')
+  const t = useTranslations("kanban.task")
 
   return (
     <Form {...form}>
@@ -71,11 +72,11 @@ export function TaskForm({
           name="title"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>{t('titleLabel')}</FormLabel>
+              <FormLabel>{t("titleLabel")}</FormLabel>
               <FormControl>
                 <Input
                   id="title"
-                  placeholder={t('titlePlaceholder')}
+                  placeholder={t("titlePlaceholder")}
                   className="col-span-4"
                   data-testid="task-title-input"
                   aria-label="Task title"
@@ -91,22 +92,22 @@ export function TaskForm({
           name="dueDate"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>{t('dueDateLabel')}</FormLabel>
+              <FormLabel>{t("dueDateLabel")}</FormLabel>
               <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     aria-label="Select due date"
                     className={cn(
-                      'w-auto pl-3 text-left font-normal',
-                      !field.value && 'text-muted-foreground'
+                      "w-auto pl-3 text-left font-normal",
+                      !field.value && "text-muted-foreground"
                     )}
                     type="button"
                   >
                     {field.value ? (
-                      format(field.value, 'yyyy-MM-dd')
+                      format(field.value, "yyyy-MM-dd")
                     ) : (
-                      <span data-testid="task-date-picker-trigger">{t('pickDate')}</span>
+                      <span data-testid="task-date-picker-trigger">{t("pickDate")}</span>
                     )}
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" aria-hidden="true" />
                   </Button>
@@ -133,7 +134,7 @@ export function TaskForm({
           name="assignee"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>{t('assignToLabel')}</FormLabel>
+              <FormLabel>{t("assignToLabel")}</FormLabel>
               <FormControl>
                 <Popover open={assignOpen} onOpenChange={setAssignOpen}>
                   <PopoverTrigger asChild>
@@ -144,7 +145,7 @@ export function TaskForm({
                       aria-controls="assignee-options"
                       className="w-full justify-between"
                     >
-                      {field.value ? field.value.name || field.value._id : t('selectUser')}
+                      {field.value ? field.value.name || field.value._id : t("selectUser")}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent
@@ -156,13 +157,13 @@ export function TaskForm({
                   >
                     <Command shouldFilter={false}>
                       <CommandInput
-                        placeholder={t('searchUsers')}
+                        placeholder={t("searchUsers")}
                         value={searchQuery}
                         onValueChange={setSearchQuery}
                       />
                       <CommandList>
                         <CommandEmpty>
-                          {isSearching ? t('searching') : t('noUsersFound')}
+                          {isSearching ? t("searching") : t("noUsersFound")}
                         </CommandEmpty>
                         <CommandGroup>
                           {users.map((user) => (
@@ -195,7 +196,7 @@ export function TaskForm({
           name="status"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>{t('statusLabel')}</FormLabel>
+              <FormLabel>{t("statusLabel")}</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -206,19 +207,19 @@ export function TaskForm({
                     <FormControl>
                       <RadioGroupItem value="TODO" />
                     </FormControl>
-                    <FormLabel className="font-normal">{t('statusTodo')}</FormLabel>
+                    <FormLabel className="font-normal">{t("statusTodo")}</FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-y-0 space-x-3">
                     <FormControl>
                       <RadioGroupItem value="IN_PROGRESS" />
                     </FormControl>
-                    <FormLabel className="font-normal">{t('statusInProgress')}</FormLabel>
+                    <FormLabel className="font-normal">{t("statusInProgress")}</FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-y-0 space-x-3">
                     <FormControl>
                       <RadioGroupItem value="DONE" />
                     </FormControl>
-                    <FormLabel className="font-normal">{t('statusDone')}</FormLabel>
+                    <FormLabel className="font-normal">{t("statusDone")}</FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -231,10 +232,10 @@ export function TaskForm({
           name="description"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>{t('descriptionLabel')}</FormLabel>
+              <FormLabel>{t("descriptionLabel")}</FormLabel>
               <Textarea
                 id="description"
-                placeholder={t('descriptionPlaceholder')}
+                placeholder={t("descriptionPlaceholder")}
                 className="col-span-4"
                 data-testid="task-description-input"
                 aria-label="Task description"
@@ -251,11 +252,11 @@ export function TaskForm({
               onClick={onCancel}
               data-testid="cancel-task-button"
             >
-              {t('cancel')}
+              {t("cancel")}
             </Button>
           )}
           <Button type="submit" disabled={isSubmitting} data-testid="submit-task-button">
-            {isSubmitting ? t('submitting') : submitLabel}
+            {isSubmitting ? t("submitting") : submitLabel}
           </Button>
         </div>
       </form>

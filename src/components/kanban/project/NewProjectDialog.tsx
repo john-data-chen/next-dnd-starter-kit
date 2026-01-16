@@ -1,7 +1,13 @@
-'use client'
+"use client"
 
-import React from 'react'
-import { Button } from '@/components/ui/button'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslations } from "next-intl"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -10,15 +16,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog'
-import { useTaskStore } from '@/lib/store'
-import { projectSchema } from '@/types/projectForm'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { z } from 'zod'
-import { ProjectForm } from './ProjectForm'
+} from "@/components/ui/dialog"
+import { useTaskStore } from "@/lib/store"
+import { projectSchema } from "@/types/projectForm"
+
+import { ProjectForm } from "./ProjectForm"
 
 export interface NewProjectDialogProps {
   onProjectAdd?: (title: string, description?: string) => void
@@ -29,30 +31,30 @@ type ProjectFormData = z.infer<typeof projectSchema>
 export default function NewProjectDialog({ onProjectAdd }: NewProjectDialogProps) {
   const addProject = useTaskStore((state) => state.addProject)
   const [isOpen, setIsOpen] = React.useState(false)
-  const t = useTranslations('kanban.project')
+  const t = useTranslations("kanban.project")
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      title: '',
-      description: ''
+      title: "",
+      description: ""
     }
   })
 
   const handleSubmit = async (data: ProjectFormData) => {
     try {
-      const projectId = await addProject(data.title, data.description || '')
+      const projectId = await addProject(data.title, data.description || "")
       if (!projectId) {
-        toast.error(t('createFailed'))
+        toast.error(t("createFailed"))
         return
       }
       onProjectAdd?.(data.title, data.description)
-      toast.success(t('createSuccess'))
+      toast.success(t("createSuccess"))
       setIsOpen(false)
       form.reset()
     } catch (error) {
       console.error(error)
-      toast.error(t('createFailed'))
+      toast.error(t("createFailed"))
     }
   }
 
@@ -65,13 +67,13 @@ export default function NewProjectDialog({ onProjectAdd }: NewProjectDialogProps
           className="w-full md:w-[200px]"
           data-testid="new-project-trigger"
         >
-          {t('addNewProject')}
+          {t("addNewProject")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]" data-testid="new-project-dialog">
         <DialogHeader>
-          <DialogTitle>{t('addNewProjectTitle')}</DialogTitle>
-          <DialogDescription>{t('addNewProjectDescription')}</DialogDescription>
+          <DialogTitle>{t("addNewProjectTitle")}</DialogTitle>
+          <DialogDescription>{t("addNewProjectDescription")}</DialogDescription>
         </DialogHeader>
         <ProjectForm
           onSubmit={(values) => {
@@ -87,10 +89,10 @@ export default function NewProjectDialog({ onProjectAdd }: NewProjectDialogProps
                 setIsOpen(false)
               }}
             >
-              {t('cancel')}
+              {t("cancel")}
             </Button>
             <Button type="submit" data-testid="submit-project-button">
-              {t('addProject')}
+              {t("addProject")}
             </Button>
           </DialogFooter>
         </ProjectForm>

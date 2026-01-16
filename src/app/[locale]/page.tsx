@@ -1,6 +1,7 @@
-import { ROUTES } from '@/constants/routes'
-import { auth } from '@/lib/auth'
-import { redirect } from 'next/navigation'
+import { redirect } from "next/navigation"
+
+import { ROUTES } from "@/constants/routes"
+import { auth } from "@/lib/auth"
 
 export default async function RootPage() {
   const session = await auth()

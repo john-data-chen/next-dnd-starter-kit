@@ -1,11 +1,13 @@
-'use server'
+"use server"
 
-import { BoardModel } from '@/models/board.model'
-import { ProjectModel } from '@/models/project.model'
-import { Board, BoardDocument, Project } from '@/types/dbInterface'
-import { Types } from 'mongoose'
-import { connectToDatabase } from './connect'
-import { getUserByEmail, getUserById } from './user'
+import { Types } from "mongoose"
+
+import { BoardModel } from "@/models/board.model"
+import { ProjectModel } from "@/models/project.model"
+import { Board, BoardDocument, Project } from "@/types/dbInterface"
+
+import { connectToDatabase } from "./connect"
+import { getUserByEmail, getUserById } from "./user"
 
 export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
   try {
@@ -19,25 +21,25 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
     const boardsFromDb = await BoardModel.find({
       $or: [{ owner: user.id }, { members: user.id }]
     })
-      .populate('owner', 'name')
-      .populate('members', 'name')
+      .populate("owner", "name")
+      .populate("members", "name")
       .populate({
-        path: 'projects',
+        path: "projects",
         populate: {
-          path: 'owner members',
-          select: 'name' // Only select name for nested owner/members
+          path: "owner members",
+          select: "name" // Only select name for nested owner/members
         }
       })
       .lean()
 
     const allUserIds = new Set<string>()
     boardsFromDb.forEach((board) => {
-      const ownerId = typeof board.owner === 'string' ? board.owner : board.owner.id
+      const ownerId = typeof board.owner === "string" ? board.owner : board.owner.id
       allUserIds.add(ownerId)
 
       // Handle member IDs
       ;(board.members || []).forEach((member) => {
-        const memberId = typeof member === 'string' ? member : member.id
+        const memberId = typeof member === "string" ? member : member.id
         allUserIds.add(memberId)
       })
     })
@@ -45,7 +47,7 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
     const userMap = await getUserMap(Array.from(allUserIds))
     return boardsFromDb.map((board) => convertBoardToPlainObject(board as BoardDocument, userMap))
   } catch (error) {
-    console.error('Error in getBoardsFromDb:', error)
+    console.error("Error in getBoardsFromDb:", error)
     return []
   }
 }
@@ -65,7 +67,7 @@ const getObjectIdString = (id: any): string => {
   if (id instanceof Types.ObjectId) {
     return id.toHexString()
   }
-  if (id && typeof id === 'object' && id._id) {
+  if (id && typeof id === "object" && id._id) {
     return getObjectIdString(id._id)
   }
   return String(id)
@@ -74,19 +76,19 @@ const getObjectIdString = (id: any): string => {
 function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
   const owner = boardDoc.owner as any
   const ownerId = owner._id ? owner._id.toString() : getObjectIdString(boardDoc.owner)
-  const ownerName = owner.name || userMap.get(ownerId) || 'Unknown User'
+  const ownerName = owner.name || userMap.get(ownerId) || "Unknown User"
 
   return {
     _id: boardDoc._id.toString(),
     title: boardDoc.title,
-    description: boardDoc.description || '',
+    description: boardDoc.description || "",
     owner: {
       id: ownerId,
       name: ownerName
     },
     members: boardDoc.members.filter(Boolean).map((member: any) => {
       const id = member._id ? member._id.toString() : getObjectIdString(member)
-      const name = member.name || userMap.get(id) || 'Unknown User'
+      const name = member.name || userMap.get(id) || "Unknown User"
       return {
         id,
         name
@@ -107,30 +109,30 @@ function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string,
         }
 
         // Safely handle the board reference
-        let boardId = ''
+        let boardId = ""
         if (projectDoc.board) {
           boardId =
-            typeof projectDoc.board === 'object'
+            typeof projectDoc.board === "object"
               ? projectDoc.board.toString()
               : String(projectDoc.board)
         }
 
         return {
-          _id: projectDoc._id?.toString() || '',
-          title: projectDoc.title || 'Untitled Project',
-          description: projectDoc.description || '',
+          _id: projectDoc._id?.toString() || "",
+          title: projectDoc.title || "Untitled Project",
+          description: projectDoc.description || "",
           board: boardId,
           owner: projectDoc.owner
             ? {
-                id: projectDoc.owner?._id?.toString() || '',
-                name: projectDoc.owner?.name || 'Unknown'
+                id: projectDoc.owner?._id?.toString() || "",
+                name: projectDoc.owner?.name || "Unknown"
               }
-            : { id: '', name: 'Unknown' },
+            : { id: "", name: "Unknown" },
           members: (projectDoc.members || [])
             .filter(Boolean)
             .map((m: { _id: Types.ObjectId | string; name: string }) => ({
-              id: typeof m._id === 'object' ? m._id.toString() : String(m._id || ''),
-              name: m.name || 'Unknown'
+              id: typeof m._id === "object" ? m._id.toString() : String(m._id || ""),
+              name: m.name || "Unknown"
             })),
           tasks: [],
           createdAt: projectDoc.createdAt
@@ -160,7 +162,7 @@ export async function createBoardInDb({
     await connectToDatabase()
     const user = await getUserByEmail(userEmail)
     if (!user) {
-      throw new Error('User not found')
+      throw new Error("User not found")
     }
 
     const newBoard = await BoardModel.create({
@@ -174,7 +176,7 @@ export async function createBoardInDb({
     const userMap = new Map([[user.id, user.name]])
     return convertBoardToPlainObject(newBoard.toObject(), userMap)
   } catch (error) {
-    console.error('Error in createBoardInDb:', error)
+    console.error("Error in createBoardInDb:", error)
     return null
   }
 }
@@ -189,17 +191,17 @@ export async function updateBoardInDb(
 
     const user = await getUserByEmail(userEmail)
     if (!user) {
-      throw new Error('User not found')
+      throw new Error("User not found")
     }
 
     const existingBoard = await BoardModel.findById(boardId).lean()
     if (!existingBoard) {
-      throw new Error('Board not found')
+      throw new Error("Board not found")
     }
 
     const existingOwnerId = getObjectIdString(existingBoard.owner)
     if (existingOwnerId !== user.id) {
-      throw new Error('Unauthorized: Only board owner can update the board')
+      throw new Error("Unauthorized: Only board owner can update the board")
     }
 
     const board = await BoardModel.findByIdAndUpdate(boardId, { ...data }, { new: true }).lean()
@@ -221,7 +223,7 @@ export async function updateBoardInDb(
 
     return convertBoardToPlainObject(board as BoardDocument, userMap)
   } catch (error) {
-    console.error('Error in updateBoardInDb:', error)
+    console.error("Error in updateBoardInDb:", error)
     return null
   }
 }
@@ -232,20 +234,20 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
 
     const user = await getUserByEmail(userEmail)
     if (!user) {
-      throw new Error('User not found')
+      throw new Error("User not found")
     }
 
     const board = await BoardModel.findById(boardId).lean()
     if (!board) {
-      throw new Error('Board not found')
+      throw new Error("Board not found")
     }
 
     const boardOwnerId = getObjectIdString(board.owner)
     if (boardOwnerId !== user.id) {
-      throw new Error('Unauthorized: Only board owner can delete the board')
+      throw new Error("Unauthorized: Only board owner can delete the board")
     }
 
-    const { TaskModel } = await import('@/models/task.model')
+    const { TaskModel } = await import("@/models/task.model")
     await TaskModel.deleteMany({
       project: { $in: board.projects }
     })
@@ -255,7 +257,7 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
 
     return true
   } catch (error) {
-    console.error('Error in deleteBoardInDb:', error)
+    console.error("Error in deleteBoardInDb:", error)
     return false
   }
 }

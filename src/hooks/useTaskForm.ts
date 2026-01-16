@@ -1,14 +1,15 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { SEARCH_DEBOUNCE_DELAY_MS } from '@/constants/common'
-import { useDebounce } from '@/hooks/useDebounce'
-import { User } from '@/types/dbInterface'
-import { TaskFormSchema } from '@/types/taskForm'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { SEARCH_DEBOUNCE_DELAY_MS } from "@/constants/common"
+import { useDebounce } from "@/hooks/useDebounce"
+import { User } from "@/types/dbInterface"
+import { TaskFormSchema } from "@/types/taskForm"
 
 interface UseTaskFormProps {
   defaultValues?: Partial<z.infer<typeof TaskFormSchema>>
@@ -18,7 +19,7 @@ interface UseTaskFormProps {
 export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [users, setUsers] = useState<User[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
   const [assignOpen, setAssignOpen] = useState(false)
   const debouncedSearchQuery = useDebounce(searchQuery, SEARCH_DEBOUNCE_DELAY_MS)
@@ -26,21 +27,21 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
   const form = useForm<z.infer<typeof TaskFormSchema>>({
     resolver: zodResolver(TaskFormSchema),
     defaultValues: defaultValues || {
-      title: '',
-      description: '',
-      status: 'TODO',
+      title: "",
+      description: "",
+      status: "TODO",
       dueDate: undefined,
       assignee: undefined
     }
   })
 
-  const searchUsers = async (search = '') => {
+  const searchUsers = async (search = "") => {
     try {
       const response = await fetch(`/api/users/search?username=${search}`)
       const data: Record<string, any> = await response.json()
       return data.users || []
     } catch (error) {
-      console.error('Error searching users:', error)
+      console.error("Error searching users:", error)
       return []
     }
   }
@@ -56,7 +57,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
         const results = await searchUsers(debouncedSearchQuery)
         setUsers(results)
       } catch (error) {
-        console.error('Error searching users:', error)
+        console.error("Error searching users:", error)
       } finally {
         setIsSearching(false)
       }
