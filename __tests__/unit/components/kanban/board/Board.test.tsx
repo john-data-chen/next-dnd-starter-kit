@@ -1,11 +1,12 @@
+import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core"
+import { arrayMove } from "@dnd-kit/sortable"
+import { act, render, screen } from "@testing-library/react"
 // Added act
-import React from 'react'
-import { Board } from '@/components/kanban/board/Board'
-import { Project, Task, TaskStatus, UserInfo } from '@/types/dbInterface'
-import { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
-import { arrayMove } from '@dnd-kit/sortable'
-import { act, render, screen } from '@testing-library/react'
-import { vi } from 'vitest'
+import React from "react"
+import { vi } from "vitest"
+
+import { Board } from "@/components/kanban/board/Board"
+import { Project, Task, TaskStatus, UserInfo } from "@/types/dbInterface"
 
 // --- Hoisted Mocks & Variables ---
 const mockSetProjects = vi.fn()
@@ -14,7 +15,7 @@ let mockProjectsData: Project[] = []
 let mockIsLoadingProjectsData = false
 let mockFilterData: { status?: TaskStatus | null; search?: string } = {}
 
-vi.mock('@/lib/store', () => ({
+vi.mock("@/lib/store", () => ({
   useTaskStore: (selector: (state: any) => any) => {
     const state = {
       projects: mockProjectsData,
@@ -34,16 +35,16 @@ const hoistedToastMocks = vi.hoisted(() => {
   }
 })
 
-vi.mock('sonner', () => ({
+vi.mock("sonner", () => ({
   toast: {
     success: hoistedToastMocks.mockToastSuccess,
     error: hoistedToastMocks.mockToastError
   }
 }))
 
-vi.mock('@dnd-kit/sortable', async (importOriginal: () => Promise<any>) => {
+vi.mock("@dnd-kit/sortable", async (importOriginal: () => Promise<any>) => {
   // Optional: Improved type for importOriginal
-  const actual = (await importOriginal()) as typeof import('@dnd-kit/sortable') // FIXED
+  const actual = (await importOriginal()) as typeof import("@dnd-kit/sortable") // FIXED
   return {
     ...actual,
     arrayMove: vi.fn((array, from, to) => {
@@ -61,9 +62,9 @@ let capturedDragStart: ((event: DragStartEvent) => void) | undefined
 let capturedDragOver: ((event: DragOverEvent) => void) | undefined
 let capturedDragEnd: ((event: DragEndEvent) => void) | undefined
 
-vi.mock('@dnd-kit/core', async (importOriginal: () => Promise<any>) => {
+vi.mock("@dnd-kit/core", async (importOriginal: () => Promise<any>) => {
   // Optional: Improved type for importOriginal
-  const actual = (await importOriginal()) as typeof import('@dnd-kit/core') // FIXED
+  const actual = (await importOriginal()) as typeof import("@dnd-kit/core") // FIXED
   return {
     ...actual,
     DndContext: vi.fn(
@@ -84,11 +85,11 @@ vi.mock('@dnd-kit/core', async (importOriginal: () => Promise<any>) => {
   }
 })
 
-vi.mock('@/components/kanban/project/NewProjectDialog', () => ({
+vi.mock("@/components/kanban/project/NewProjectDialog", () => ({
   default: () => <div data-testid="new-project-dialog" />
 }))
 
-vi.mock('@/components/kanban/project/Project', () => ({
+vi.mock("@/components/kanban/project/Project", () => ({
   BoardContainer: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="board-container">{children}</div>
   ),
@@ -114,7 +115,7 @@ vi.mock('@/components/kanban/project/Project', () => ({
   )
 }))
 
-vi.mock('@/components/kanban/task/TaskCard', () => ({
+vi.mock("@/components/kanban/task/TaskCard", () => ({
   TaskCard: ({ task, isOverlay }: { task: Task; isOverlay?: boolean }) => (
     <div data-testid={`task-card-${task._id}`} data-is-overlay={isOverlay || false}>
       {task.title}
@@ -122,44 +123,44 @@ vi.mock('@/components/kanban/task/TaskCard', () => ({
   )
 }))
 
-vi.mock('@/components/kanban/task/TaskFilter', () => ({
+vi.mock("@/components/kanban/task/TaskFilter", () => ({
   TaskFilter: () => <div data-testid="task-filter" />
 }))
 
-vi.mock('@/components/ui/skeleton', () => ({
+vi.mock("@/components/ui/skeleton", () => ({
   Skeleton: (props: any) => <div data-testid="skeleton" {...props} />
 }))
 
 // --- Test Data ---
-const user1: UserInfo = { id: 'u1', name: 'User1' }
+const user1: UserInfo = { id: "u1", name: "User1" }
 const task1P1: Task = {
-  _id: 'task1-p1',
-  title: 'Task 1 P1',
+  _id: "task1-p1",
+  title: "Task 1 P1",
   status: TaskStatus.TODO,
-  project: 'project1',
-  board: 'b1',
+  project: "project1",
+  board: "b1",
   creator: user1,
   lastModifier: user1,
   createdAt: new Date(),
   updatedAt: new Date()
 }
 const task2P1: Task = {
-  _id: 'task2-p1',
-  title: 'Task 2 P1',
+  _id: "task2-p1",
+  title: "Task 2 P1",
   status: TaskStatus.IN_PROGRESS,
-  project: 'project1',
-  board: 'b1',
+  project: "project1",
+  board: "b1",
   creator: user1,
   lastModifier: user1,
   createdAt: new Date(),
   updatedAt: new Date()
 }
 const task1P2: Task = {
-  _id: 'task1-p2',
-  title: 'Task 1 P2',
+  _id: "task1-p2",
+  title: "Task 1 P2",
   status: TaskStatus.TODO,
-  project: 'project2',
-  board: 'b1',
+  project: "project2",
+  board: "b1",
   creator: user1,
   lastModifier: user1,
   createdAt: new Date(),
@@ -167,27 +168,27 @@ const task1P2: Task = {
 }
 
 const project1Initial: Project = {
-  _id: 'project1',
-  title: 'Project One',
+  _id: "project1",
+  title: "Project One",
   tasks: [task1P1, task2P1],
   owner: user1,
   members: [user1],
-  board: 'b1',
+  board: "b1",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString()
 }
 const project2Initial: Project = {
-  _id: 'project2',
-  title: 'Project Two',
+  _id: "project2",
+  title: "Project Two",
   tasks: [task1P2],
   owner: user1,
   members: [user1],
-  board: 'b1',
+  board: "b1",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString()
 }
 
-describe('Board', () => {
+describe("Board", () => {
   beforeEach(() => {
     mockProjectsData = [
       { ...project1Initial, tasks: [...project1Initial.tasks] },
@@ -206,27 +207,27 @@ describe('Board', () => {
     capturedDragEnd = undefined
   })
 
-  it('should render Board component and projects correctly when not loading', () => {
+  it("should render Board component and projects correctly when not loading", () => {
     render(<Board />)
-    expect(screen.getByTestId('board')).toBeInTheDocument()
-    expect(screen.getByTestId('board-project-project1')).toHaveTextContent('Project One')
-    expect(screen.getByTestId('board-project-project2')).toHaveTextContent('Project Two')
-    expect(screen.getByTestId('task-filter')).toBeInTheDocument()
-    expect(screen.getByTestId('new-project-dialog')).toBeInTheDocument()
-    expect(screen.queryByTestId('skeleton')).not.toBeInTheDocument()
+    expect(screen.getByTestId("board")).toBeInTheDocument()
+    expect(screen.getByTestId("board-project-project1")).toHaveTextContent("Project One")
+    expect(screen.getByTestId("board-project-project2")).toHaveTextContent("Project Two")
+    expect(screen.getByTestId("task-filter")).toBeInTheDocument()
+    expect(screen.getByTestId("new-project-dialog")).toBeInTheDocument()
+    expect(screen.queryByTestId("skeleton")).not.toBeInTheDocument()
   })
 
-  it('should render Skeleton when isLoadingProjects is true', () => {
+  it("should render Skeleton when isLoadingProjects is true", () => {
     mockIsLoadingProjectsData = true
     render(<Board />)
-    expect(screen.getByTestId('skeleton')).toBeInTheDocument()
-    expect(screen.queryByTestId('board-project-project1')).not.toBeInTheDocument()
+    expect(screen.getByTestId("skeleton")).toBeInTheDocument()
+    expect(screen.queryByTestId("board-project-project1")).not.toBeInTheDocument()
   })
 
-  it('should filter tasks by status (TODO)', () => {
+  it("should filter tasks by status (TODO)", () => {
     mockFilterData = { status: TaskStatus.TODO }
     render(<Board />)
-    const project1Tasks = screen.getByTestId('project-tasks-project1')
+    const project1Tasks = screen.getByTestId("project-tasks-project1")
     expect(
       project1Tasks.querySelector('[data-testid="task-in-project-task1-p1"]')
     ).toBeInTheDocument()
@@ -234,16 +235,16 @@ describe('Board', () => {
       project1Tasks.querySelector('[data-testid="task-in-project-task2-p1"]')
     ).not.toBeInTheDocument()
 
-    const project2Tasks = screen.getByTestId('project-tasks-project2')
+    const project2Tasks = screen.getByTestId("project-tasks-project2")
     expect(
       project2Tasks.querySelector('[data-testid="task-in-project-task1-p2"]')
     ).toBeInTheDocument()
   })
 
-  it('should filter tasks by search term', () => {
-    mockFilterData = { search: 'Task 1' }
+  it("should filter tasks by search term", () => {
+    mockFilterData = { search: "Task 1" }
     render(<Board />)
-    const project1Tasks = screen.getByTestId('project-tasks-project1')
+    const project1Tasks = screen.getByTestId("project-tasks-project1")
     expect(
       project1Tasks.querySelector('[data-testid="task-in-project-task1-p1"]')
     ).toBeInTheDocument()
@@ -251,26 +252,26 @@ describe('Board', () => {
       project1Tasks.querySelector('[data-testid="task-in-project-task2-p1"]')
     ).not.toBeInTheDocument()
 
-    const project2Tasks = screen.getByTestId('project-tasks-project2')
+    const project2Tasks = screen.getByTestId("project-tasks-project2")
     expect(
       project2Tasks.querySelector('[data-testid="task-in-project-task1-p2"]')
     ).toBeInTheDocument()
   })
 
-  it('should call setProjects after drag over a task in another project', async () => {
+  it("should call setProjects after drag over a task in another project", async () => {
     render(<Board />)
-    const activeTask = { ...task1P1, project: 'project1' }
-    const overTask = { ...task1P2, project: 'project2' }
+    const activeTask = { ...task1P1, project: "project1" }
+    const overTask = { ...task1P2, project: "project2" }
     const event: DragOverEvent = {
       active: {
         id: activeTask._id,
-        data: { current: { type: 'Task', task: activeTask } }
+        data: { current: { type: "Task", task: activeTask } }
       } as any,
       over: {
         id: overTask._id,
-        data: { current: { type: 'Task', task: overTask } }
+        data: { current: { type: "Task", task: overTask } }
       } as any,
-      activatorEvent: new MouseEvent('click') as Event,
+      activatorEvent: new MouseEvent("click") as Event,
       collisions: null,
       delta: {
         x: 0,
@@ -283,20 +284,20 @@ describe('Board', () => {
     expect(mockDragTaskOnProject).toHaveBeenCalledWith(activeTask._id, overTask.project)
   })
 
-  it('should call setProjects after drag over a task in the same project', async () => {
+  it("should call setProjects after drag over a task in the same project", async () => {
     render(<Board />)
-    const activeTask = { ...task2P1, project: 'project1' }
-    const overTask = { ...task1P1, project: 'project1' }
+    const activeTask = { ...task2P1, project: "project1" }
+    const overTask = { ...task1P1, project: "project1" }
     const event: DragOverEvent = {
       active: {
         id: activeTask._id,
-        data: { current: { type: 'Task', task: activeTask } }
+        data: { current: { type: "Task", task: activeTask } }
       } as any,
       over: {
         id: overTask._id,
-        data: { current: { type: 'Task', task: overTask } }
+        data: { current: { type: "Task", task: overTask } }
       } as any,
-      activatorEvent: new MouseEvent('click') as Event,
+      activatorEvent: new MouseEvent("click") as Event,
       collisions: null,
       delta: {
         x: 0,

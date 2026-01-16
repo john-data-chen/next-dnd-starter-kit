@@ -1,6 +1,12 @@
-'use client'
+"use client"
 
-import React from 'react'
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
+import React from "react"
+import { toast } from "sonner"
+import { z } from "zod"
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,32 +15,28 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { useBoards } from '@/hooks/useBoards'
-import { useTaskStore } from '@/lib/store'
-import { boardSchema } from '@/types/boardForm'
-import { Board } from '@/types/dbInterface'
-import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import { z } from 'zod'
-import { BoardForm } from './BoardForm'
+} from "@/components/ui/dropdown-menu"
+import { useBoards } from "@/hooks/useBoards"
+import { useTaskStore } from "@/lib/store"
+import { boardSchema } from "@/types/boardForm"
+import { Board } from "@/types/dbInterface"
+
+import { BoardForm } from "./BoardForm"
 
 interface BoardActionsProps {
   board: Board
@@ -51,18 +53,18 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
     const { updateBoard, removeBoard } = useTaskStore()
     const router = useRouter()
     const { fetchBoards } = useBoards()
-    const t = useTranslations('kanban.actions')
+    const t = useTranslations("kanban.actions")
 
     async function onSubmit(values: z.infer<typeof boardSchema>) {
       try {
         setIsSubmitting(true)
         await updateBoard(board._id, values)
-        toast.success(t('boardUpdated', { title: values.title }))
+        toast.success(t("boardUpdated", { title: values.title }))
         await fetchBoards()
         setEditEnable(false)
         router.refresh()
       } catch (error) {
-        toast.error(t('boardUpdateFailed', { error: String(error) }))
+        toast.error(t("boardUpdateFailed", { error: String(error) }))
       } finally {
         setIsSubmitting(false)
       }
@@ -72,12 +74,12 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
       try {
         await removeBoard(board._id)
         setShowDeleteDialog(false)
-        toast.success(t('boardDeleted'))
+        toast.success(t("boardDeleted"))
         onDelete?.()
         await fetchBoards()
         router.refresh()
       } catch (error) {
-        toast.error(t('boardDeleteFailed', { error: String(error) }))
+        toast.error(t("boardDeleteFailed", { error: String(error) }))
       }
     }
 
@@ -95,7 +97,7 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
               e.stopPropagation()
             }}
             className="w-full text-left"
-            style={{ background: 'transparent', border: 'none', padding: 0 }}
+            style={{ background: "transparent", border: "none", padding: 0 }}
           >
             <DialogContent
               className="sm:max-w-md"
@@ -109,8 +111,8 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
               }}
             >
               <DialogHeader>
-                <DialogTitle>{t('editBoardTitle')}</DialogTitle>
-                <DialogDescription>{t('editBoardDescription')}</DialogDescription>
+                <DialogTitle>{t("editBoardTitle")}</DialogTitle>
+                <DialogDescription>{t("editBoardDescription")}</DialogDescription>
               </DialogHeader>
               <BoardForm
                 defaultValues={{
@@ -127,10 +129,10 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
                       setEditEnable(false)
                     }}
                   >
-                    {t('cancel')}
+                    {t("cancel")}
                   </Button>
                   <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? t('saving') : t('saveChanges')}
+                    {isSubmitting ? t("saving") : t("saveChanges")}
                   </Button>
                 </div>
               </BoardForm>
@@ -167,7 +169,7 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
                 setEditEnable(true)
               }}
             >
-              {t('edit')}
+              {t("edit")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -177,7 +179,7 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
               }}
               className="text-red-600"
             >
-              {t('delete')}
+              {t("delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -185,11 +187,11 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
         <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>{t('confirmDeleteTitle', { title: board.title })}</AlertDialogTitle>
-              <AlertDialogDescription>{t('confirmDeleteDescription')}</AlertDialogDescription>
+              <AlertDialogTitle>{t("confirmDeleteTitle", { title: board.title })}</AlertDialogTitle>
+              <AlertDialogDescription>{t("confirmDeleteDescription")}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+              <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
               <Button
                 variant="destructive"
                 onClick={() => {
@@ -198,7 +200,7 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
                   })
                 }}
               >
-                {t('delete')}
+                {t("delete")}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -208,4 +210,4 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
   }
 )
 
-BoardActions.displayName = 'BoardActions'
+BoardActions.displayName = "BoardActions"

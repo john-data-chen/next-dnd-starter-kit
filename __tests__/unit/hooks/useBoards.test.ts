@@ -1,23 +1,24 @@
-import { useBoards } from '@/hooks/useBoards'
-import { fetchBoardsFromDb } from '@/lib/db/board'
-import { useTaskStore } from '@/lib/store'
-import { act, renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, renderHook } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
+
+import { useBoards } from "@/hooks/useBoards"
+import { fetchBoardsFromDb } from "@/lib/db/board"
+import { useTaskStore } from "@/lib/store"
 
 // Mock dependencies
-vi.mock('@/lib/db/board', () => ({
+vi.mock("@/lib/db/board", () => ({
   fetchBoardsFromDb: vi.fn()
 }))
 
-vi.mock('@/lib/store', () => ({
+vi.mock("@/lib/store", () => ({
   useTaskStore: vi.fn()
 }))
 
-describe('useBoards Hook', () => {
+describe("useBoards Hook", () => {
   const mockSetMyBoards = vi.fn()
   const mockSetTeamBoards = vi.fn()
-  const mockUserEmail = 'test@example.com'
-  const mockUserId = 'user123'
+  const mockUserEmail = "test@example.com"
+  const mockUserId = "user123"
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -31,20 +32,20 @@ describe('useBoards Hook', () => {
     })
   })
 
-  it('should initialize with loading state', () => {
+  it("should initialize with loading state", () => {
     const { result } = renderHook(() => useBoards())
     expect(result.current.loading).toBe(true)
   })
 
-  it('should fetch and categorize boards correctly', async () => {
+  it("should fetch and categorize boards correctly", async () => {
     const mockBoards = [
       {
-        _id: 'board1',
-        title: 'My Board',
-        description: 'Test board 1',
+        _id: "board1",
+        title: "My Board",
+        description: "Test board 1",
         owner: {
           id: mockUserId,
-          name: 'Test User'
+          name: "Test User"
         },
         members: [],
         projects: [],
@@ -52,17 +53,17 @@ describe('useBoards Hook', () => {
         updatedAt: new Date()
       },
       {
-        _id: 'board2',
-        title: 'Team Board',
-        description: 'Test board 2',
+        _id: "board2",
+        title: "Team Board",
+        description: "Test board 2",
         owner: {
-          id: 'other123',
-          name: 'Other User'
+          id: "other123",
+          name: "Other User"
         },
         members: [
           {
             id: mockUserId,
-            name: 'Test User'
+            name: "Test User"
           }
         ],
         projects: [],
@@ -84,11 +85,11 @@ describe('useBoards Hook', () => {
     expect(result.current.loading).toBe(false)
   })
 
-  it('should handle fetch error correctly', async () => {
-    const mockError = new Error('Fetch failed')
+  it("should handle fetch error correctly", async () => {
+    const mockError = new Error("Fetch failed")
     vi.mocked(fetchBoardsFromDb).mockRejectedValueOnce(mockError)
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
 
     const { result } = renderHook(() => useBoards())
 
@@ -96,7 +97,7 @@ describe('useBoards Hook', () => {
       await new Promise((resolve) => setTimeout(resolve, 0))
     })
 
-    expect(consoleSpy).toHaveBeenCalledWith('Failed to fetch boards:', mockError)
+    expect(consoleSpy).toHaveBeenCalledWith("Failed to fetch boards:", mockError)
     expect(mockSetMyBoards).toHaveBeenCalledWith([])
     expect(mockSetTeamBoards).toHaveBeenCalledWith([])
     expect(result.current.loading).toBe(false)
@@ -104,9 +105,9 @@ describe('useBoards Hook', () => {
     consoleSpy.mockRestore()
   })
 
-  it('should not fetch if userEmail is not available', async () => {
+  it("should not fetch if userEmail is not available", async () => {
     vi.mocked(useTaskStore).mockReturnValue({
-      userEmail: '',
+      userEmail: "",
       userId: mockUserId,
       myBoards: [],
       teamBoards: [],
@@ -119,15 +120,15 @@ describe('useBoards Hook', () => {
     expect(fetchBoardsFromDb).not.toHaveBeenCalled()
   })
 
-  it('should expose fetchBoards function for manual refresh', async () => {
+  it("should expose fetchBoards function for manual refresh", async () => {
     const mockBoards = [
       {
-        _id: 'board1',
-        title: 'My Board',
-        description: 'Test board 1',
+        _id: "board1",
+        title: "My Board",
+        description: "Test board 1",
         owner: {
           id: mockUserId,
-          name: 'Test User'
+          name: "Test User"
         },
         members: [],
         projects: [],

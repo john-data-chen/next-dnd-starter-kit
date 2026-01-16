@@ -1,11 +1,12 @@
-import React from 'react'
-import NewProjectDialog from '@/components/kanban/project/NewProjectDialog'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import React from "react"
+import { vi } from "vitest"
+
+import NewProjectDialog from "@/components/kanban/project/NewProjectDialog"
 
 // Mock useTaskStore
-const addProjectMock = vi.fn().mockResolvedValue('mock-project-id')
-vi.mock('@/lib/store', () => ({
+const addProjectMock = vi.fn().mockResolvedValue("mock-project-id")
+vi.mock("@/lib/store", () => ({
   useTaskStore: (selector: any) =>
     selector({
       addProject: addProjectMock
@@ -13,7 +14,7 @@ vi.mock('@/lib/store', () => ({
 }))
 
 // Mock next-intl
-vi.mock('next-intl', () => ({
+vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key
 }))
 
@@ -21,7 +22,7 @@ vi.mock('next-intl', () => ({
 const { toastSuccessMock } = vi.hoisted(() => {
   return { toastSuccessMock: vi.fn() }
 })
-vi.mock('sonner', () => ({
+vi.mock("sonner", () => ({
   toast: {
     success: toastSuccessMock,
     error: vi.fn()
@@ -29,13 +30,13 @@ vi.mock('sonner', () => ({
 }))
 
 // Mock ProjectForm to allow submission
-vi.mock('@/components/kanban/project/ProjectForm', () => ({
+vi.mock("@/components/kanban/project/ProjectForm", () => ({
   ProjectForm: ({ onSubmit, children }: any) => (
     <form
       data-testid="mock-project-form"
       onSubmit={(e) => {
         e.preventDefault()
-        onSubmit({ title: 'Test Project', description: 'Test Description' })
+        onSubmit({ title: "Test Project", description: "Test Description" })
       }}
     >
       {children}
@@ -43,27 +44,27 @@ vi.mock('@/components/kanban/project/ProjectForm', () => ({
   )
 }))
 
-describe('NewProjectDialog', () => {
-  it('should open dialog and submit new project', async () => {
+describe("NewProjectDialog", () => {
+  it("should open dialog and submit new project", async () => {
     render(<NewProjectDialog />)
     // Open dialog
-    fireEvent.click(screen.getByTestId('new-project-trigger'))
-    await screen.findByTestId('new-project-dialog')
+    fireEvent.click(screen.getByTestId("new-project-trigger"))
+    await screen.findByTestId("new-project-dialog")
 
     // Check translated titles
-    expect(screen.getByText('addNewProjectTitle')).toBeInTheDocument()
-    expect(screen.getByText('addNewProjectDescription')).toBeInTheDocument()
+    expect(screen.getByText("addNewProjectTitle")).toBeInTheDocument()
+    expect(screen.getByText("addNewProjectDescription")).toBeInTheDocument()
 
     // Submit form (via the mocked ProjectForm)
-    fireEvent.submit(screen.getByTestId('mock-project-form'))
+    fireEvent.submit(screen.getByTestId("mock-project-form"))
 
     // Check mock calls and toast message
     await waitFor(() => {
-      expect(addProjectMock).toHaveBeenCalledWith('Test Project', 'Test Description')
+      expect(addProjectMock).toHaveBeenCalledWith("Test Project", "Test Description")
     })
 
     await waitFor(() => {
-      expect(toastSuccessMock).toHaveBeenCalledWith('createSuccess')
+      expect(toastSuccessMock).toHaveBeenCalledWith("createSuccess")
     })
   })
 })

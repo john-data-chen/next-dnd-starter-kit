@@ -1,6 +1,8 @@
-'use client'
+"use client"
 
-import { Button } from '@/components/ui/button'
+import { useTranslations } from "next-intl"
+
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -8,14 +10,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import useAuthForm from '@/hooks/useAuthForm'
-import { useTranslations } from 'next-intl'
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import useAuthForm from "@/hooks/useAuthForm"
 
 export default function UserAuthForm() {
   const { form, loading, onSubmit } = useAuthForm()
-  const t = useTranslations('login')
+  const t = useTranslations("login")
 
   return (
     <Form {...form}>
@@ -36,11 +37,11 @@ export default function UserAuthForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('emailLabel')}</FormLabel>
+              <FormLabel>{t("emailLabel")}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
-                  placeholder={t('emailPlaceholder')}
+                  placeholder={t("emailPlaceholder")}
                   disabled={loading}
                   data-testid="email-input"
                   {...field}
@@ -57,7 +58,7 @@ export default function UserAuthForm() {
           type="submit"
           data-testid="submit-button"
         >
-          {t('continueButton')}
+          {t("continueButton")}
         </Button>
       </form>
     </Form>

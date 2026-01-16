@@ -1,8 +1,9 @@
-import { ROUTES } from '@/constants/routes'
-import { routing } from '@/i18n/routing'
-import { auth } from '@/lib/auth'
-import createMiddleware from 'next-intl/middleware'
-import { NextResponse } from 'next/server'
+import createMiddleware from "next-intl/middleware"
+import { NextResponse } from "next/server"
+
+import { ROUTES } from "@/constants/routes"
+import { routing } from "@/i18n/routing"
+import { auth } from "@/lib/auth"
 
 // Assuming you'll export these
 
@@ -12,15 +13,15 @@ const intlMiddleware = createMiddleware(routing)
 export default auth((req) => {
   const { pathname } = req.nextUrl
 
-  if (pathname.startsWith('/api/auth')) {
+  if (pathname.startsWith("/api/auth")) {
     return
   }
 
   const isAuthenticated = !!req.auth
 
-  if (pathname.startsWith('/api')) {
+  if (pathname.startsWith("/api")) {
     if (!isAuthenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
     return
   }
@@ -49,5 +50,5 @@ export default auth((req) => {
 })
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"]
 }

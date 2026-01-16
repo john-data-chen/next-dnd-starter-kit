@@ -1,4 +1,9 @@
-'use client'
+"use client"
+
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslations } from "next-intl"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 import {
   Form,
@@ -7,16 +12,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslations } from 'next-intl'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
 const BoardFormSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
+  title: z.string().min(1, "Title is required"),
   description: z.string().optional()
 })
 
@@ -29,12 +30,12 @@ interface BoardFormProps {
 }
 
 export function BoardForm({ defaultValues, onSubmit, children }: BoardFormProps) {
-  const t = useTranslations('kanban.actions')
+  const t = useTranslations("kanban.actions")
   const form = useForm<BoardFormValues>({
     resolver: zodResolver(BoardFormSchema),
     defaultValues: {
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       ...defaultValues
     }
   })
@@ -56,9 +57,9 @@ export function BoardForm({ defaultValues, onSubmit, children }: BoardFormProps)
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('boardTitleLabel')}</FormLabel>
+              <FormLabel>{t("boardTitleLabel")}</FormLabel>
               <FormControl>
-                <Input placeholder={t('boardTitlePlaceholder')} {...field} />
+                <Input placeholder={t("boardTitlePlaceholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,10 +70,10 @@ export function BoardForm({ defaultValues, onSubmit, children }: BoardFormProps)
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('descriptionLabel')}</FormLabel>
+              <FormLabel>{t("descriptionLabel")}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder={t('descriptionPlaceholder')}
+                  placeholder={t("descriptionPlaceholder")}
                   className="resize-none"
                   {...field}
                 />

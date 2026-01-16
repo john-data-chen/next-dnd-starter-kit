@@ -1,19 +1,20 @@
-import { defaultEmail } from '@/constants/demoData'
-import * as dbBoard from '@/lib/db/board'
-import * as dbProject from '@/lib/db/project'
-import * as dbTask from '@/lib/db/task'
-import * as dbUser from '@/lib/db/user'
-import { useTaskStore } from '@/lib/store'
-import { Board, Project, Task, TaskStatus, UserInfo } from '@/types/dbInterface'
 // Import TaskStatus
-import { act } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act } from "@testing-library/react"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
+import { defaultEmail } from "@/constants/demoData"
+import * as dbBoard from "@/lib/db/board"
+import * as dbProject from "@/lib/db/project"
+import * as dbTask from "@/lib/db/task"
+import * as dbUser from "@/lib/db/user"
+import { useTaskStore } from "@/lib/store"
+import { Board, Project, Task, TaskStatus, UserInfo } from "@/types/dbInterface"
 
 // Mock the database modules
-vi.mock('@/lib/db/user')
-vi.mock('@/lib/db/board')
-vi.mock('@/lib/db/project')
-vi.mock('@/lib/db/task')
+vi.mock("@/lib/db/user")
+vi.mock("@/lib/db/board")
+vi.mock("@/lib/db/project")
+vi.mock("@/lib/db/task")
 
 // Helper to reset store state before each test
 const resetStore = () => {
@@ -22,23 +23,23 @@ const resetStore = () => {
   })
 }
 
-describe('Zustand Store: useTaskStore', () => {
-  const mockUser: UserInfo = { id: 'user-1', name: 'Test User' }
+describe("Zustand Store: useTaskStore", () => {
+  const mockUser: UserInfo = { id: "user-1", name: "Test User" }
   // Define a mock user object that includes email, matching the expected return type of getUserByEmail
   const mockFullUser = {
     // This could be typed as User if User type matches exactly
-    id: 'user-1',
-    name: 'Test User',
+    id: "user-1",
+    name: "Test User",
     email: defaultEmail // Use the imported defaultEmail
   }
   const mockUserEmail = defaultEmail
-  const mockBoardId = 'board-1'
-  const mockProjectId = 'project-1'
-  const mockTaskId = 'task-1'
+  const mockBoardId = "board-1"
+  const mockProjectId = "project-1"
+  const mockTaskId = "task-1"
 
   const mockProject: Project = {
     _id: mockProjectId,
-    title: 'Test Project',
+    title: "Test Project",
     owner: mockUser,
     members: [mockUser],
     createdAt: new Date().toISOString(),
@@ -49,7 +50,7 @@ describe('Zustand Store: useTaskStore', () => {
 
   const mockTask: Task = {
     _id: mockTaskId,
-    title: 'Test Task',
+    title: "Test Task",
     status: TaskStatus.TODO, // Use Enum member
     board: mockBoardId,
     project: mockProjectId,
@@ -79,22 +80,22 @@ describe('Zustand Store: useTaskStore', () => {
     vi.restoreAllMocks()
   })
 
-  it('should have correct initial state', () => {
+  it("should have correct initial state", () => {
     resetStore() // Ensure we test the actual initial state
     const state = useTaskStore.getState()
     expect(state.userEmail).toBeNull()
     expect(state.userId).toBeNull()
     expect(state.projects).toEqual([])
     expect(state.isLoadingProjects).toBe(false) // Add this line
-    expect(state.filter).toEqual({ status: null, search: '' })
+    expect(state.filter).toEqual({ status: null, search: "" })
     expect(state.currentBoardId).toBeNull()
     expect(state.myBoards).toEqual([])
     expect(state.teamBoards).toEqual([])
   })
 
   // --- User Actions ---
-  describe('setUserInfo', () => {
-    it('should set user email and id on successful fetch', async () => {
+  describe("setUserInfo", () => {
+    it("should set user email and id on successful fetch", async () => {
       // Use mockFullUser which includes the email property
       vi.mocked(dbUser.getUserByEmail).mockResolvedValue(mockFullUser)
       await act(async () => {
@@ -107,18 +108,18 @@ describe('Zustand Store: useTaskStore', () => {
       expect(state.userId).toBe(mockFullUser.id)
     })
 
-    it('should log error if user not found', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    it("should log error if user not found", async () => {
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
       vi.mocked(dbUser.getUserByEmail).mockResolvedValue(null)
 
       // Call the function and wait for any async operations to complete
-      useTaskStore.getState().setUserInfo('notfound@example.com')
+      useTaskStore.getState().setUserInfo("notfound@example.com")
 
       // Wait for the next tick to allow any pending promises to resolve
       await new Promise((resolve) => setTimeout(resolve, 0))
 
       // Verify error was logged
-      expect(consoleErrorSpy).toHaveBeenCalledWith('User not found')
+      expect(consoleErrorSpy).toHaveBeenCalledWith("User not found")
 
       // Verify state remains unchanged
       const state = useTaskStore.getState()
@@ -131,19 +132,19 @@ describe('Zustand Store: useTaskStore', () => {
   })
 
   // --- Board Actions ---
-  describe('Board Actions', () => {
-    it('setCurrentBoardId should update currentBoardId', () => {
-      const newBoardId = 'board-new'
+  describe("Board Actions", () => {
+    it("setCurrentBoardId should update currentBoardId", () => {
+      const newBoardId = "board-new"
       act(() => {
         useTaskStore.getState().setCurrentBoardId(newBoardId)
       })
       expect(useTaskStore.getState().currentBoardId).toBe(newBoardId)
     })
 
-    it('addBoard should call fetch API and update state', async () => {
+    it("addBoard should call fetch API and update state", async () => {
       const mockResponse = {
         success: true,
-        boardId: 'new-board-id'
+        boardId: "new-board-id"
       }
       global.fetch = vi.fn(() =>
         Promise.resolve({
@@ -152,42 +153,42 @@ describe('Zustand Store: useTaskStore', () => {
         } as Response)
       )
 
-      let boardId = ''
+      let boardId = ""
       await act(async () => {
-        boardId = await useTaskStore.getState().addBoard('New Board', 'Desc')
+        boardId = await useTaskStore.getState().addBoard("New Board", "Desc")
       })
 
-      expect(global.fetch).toHaveBeenCalledWith('/api/boards', {
-        method: 'POST',
+      expect(global.fetch).toHaveBeenCalledWith("/api/boards", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ title: 'New Board', description: 'Desc' })
+        body: JSON.stringify({ title: "New Board", description: "Desc" })
       })
-      expect(boardId).toBe('new-board-id')
-      expect(useTaskStore.getState().currentBoardId).toBe('new-board-id')
+      expect(boardId).toBe("new-board-id")
+      expect(useTaskStore.getState().currentBoardId).toBe("new-board-id")
       expect(useTaskStore.getState().projects).toEqual([]) // Should reset projects
     })
 
-    it('addBoard should throw error if userEmail is null', async () => {
+    it("addBoard should throw error if userEmail is null", async () => {
       act(() => {
         useTaskStore.setState({ userEmail: null })
       }) // Reset userEmail for this test
-      await expect(useTaskStore.getState().addBoard('New Board')).rejects.toThrow(
-        'User email not found'
+      await expect(useTaskStore.getState().addBoard("New Board")).rejects.toThrow(
+        "User email not found"
       )
     })
 
-    it('updateBoard should call updateBoardInDb', async () => {
+    it("updateBoard should call updateBoardInDb", async () => {
       vi.mocked(dbBoard.updateBoardInDb).mockResolvedValue({} as any) // Mock successful update
-      const updateData = { title: 'Updated Board Title' }
+      const updateData = { title: "Updated Board Title" }
       await act(async () => {
         await useTaskStore.getState().updateBoard(mockBoardId, updateData)
       })
       expect(dbBoard.updateBoardInDb).toHaveBeenCalledWith(mockBoardId, updateData, mockUserEmail)
     })
 
-    it('removeBoard should call deleteBoardInDb', async () => {
+    it("removeBoard should call deleteBoardInDb", async () => {
       vi.mocked(dbBoard.deleteBoardInDb).mockResolvedValue(true) // Mock successful delete
       await act(async () => {
         await useTaskStore.getState().removeBoard(mockBoardId)
@@ -195,28 +196,28 @@ describe('Zustand Store: useTaskStore', () => {
       expect(dbBoard.deleteBoardInDb).toHaveBeenCalledWith(mockBoardId, mockUserEmail)
     })
 
-    it('setMyBoards should update myBoards state', () => {
-      const boards: Board[] = [{ _id: 'b1', title: 'My Board 1' } as Board]
+    it("setMyBoards should update myBoards state", () => {
+      const boards: Board[] = [{ _id: "b1", title: "My Board 1" } as Board]
       act(() => {
         useTaskStore.getState().setMyBoards(boards)
       })
       expect(useTaskStore.getState().myBoards).toEqual(boards)
     })
 
-    it('setTeamBoards should update teamBoards state', () => {
-      const boards: Board[] = [{ _id: 'b2', title: 'Team Board 1' } as Board]
+    it("setTeamBoards should update teamBoards state", () => {
+      const boards: Board[] = [{ _id: "b2", title: "Team Board 1" } as Board]
       act(() => {
         useTaskStore.getState().setTeamBoards(boards)
       })
       expect(useTaskStore.getState().teamBoards).toEqual(boards)
     })
 
-    it('resetInBoards should reset relevant state', () => {
+    it("resetInBoards should reset relevant state", () => {
       act(() => {
         useTaskStore.setState({
-          myBoards: [{ _id: 'b1' } as Board],
-          teamBoards: [{ _id: 'b2' } as Board],
-          currentBoardId: 'some-board',
+          myBoards: [{ _id: "b1" } as Board],
+          teamBoards: [{ _id: "b2" } as Board],
+          currentBoardId: "some-board",
           projects: [mockProject]
         })
       })
@@ -232,12 +233,12 @@ describe('Zustand Store: useTaskStore', () => {
   })
 
   // --- Project Actions ---
-  describe('Project Actions', () => {
-    it('fetchProjects should fetch projects and their tasks and manage isLoadingProjects state', async () => {
-      const project1: Project = { ...mockProject, _id: 'p1', tasks: [] }
-      const project2: Project = { ...mockProject, _id: 'p2', tasks: [] }
-      const task1: Task = { ...mockTask, _id: 't1', project: 'p1' }
-      const task2: Task = { ...mockTask, _id: 't2', project: 'p2' }
+  describe("Project Actions", () => {
+    it("fetchProjects should fetch projects and their tasks and manage isLoadingProjects state", async () => {
+      const project1: Project = { ...mockProject, _id: "p1", tasks: [] }
+      const project2: Project = { ...mockProject, _id: "p2", tasks: [] }
+      const task1: Task = { ...mockTask, _id: "t1", project: "p1" }
+      const task2: Task = { ...mockTask, _id: "t2", project: "p2" }
 
       vi.mocked(dbProject.getProjectsFromDb).mockResolvedValue([project1, project2])
       vi.mocked(dbTask.getTasksByProjectId)
@@ -257,8 +258,8 @@ describe('Zustand Store: useTaskStore', () => {
       await fetchPromise // Wait for the fetch to complete
 
       expect(dbProject.getProjectsFromDb).toHaveBeenCalledWith(mockBoardId)
-      expect(dbTask.getTasksByProjectId).toHaveBeenCalledWith('p1')
-      expect(dbTask.getTasksByProjectId).toHaveBeenCalledWith('p2')
+      expect(dbTask.getTasksByProjectId).toHaveBeenCalledWith("p1")
+      expect(dbTask.getTasksByProjectId).toHaveBeenCalledWith("p2")
       expect(useTaskStore.getState().projects).toEqual([
         { ...project1, tasks: [task1] },
         { ...project2, tasks: [task2] }
@@ -267,7 +268,7 @@ describe('Zustand Store: useTaskStore', () => {
       expect(useTaskStore.getState().isLoadingProjects).toBe(false)
     })
 
-    it('fetchProjects should set empty array and isLoadingProjects to false if no projects found', async () => {
+    it("fetchProjects should set empty array and isLoadingProjects to false if no projects found", async () => {
       vi.mocked(dbProject.getProjectsFromDb).mockResolvedValue([])
 
       expect(useTaskStore.getState().isLoadingProjects).toBe(false)
@@ -282,8 +283,8 @@ describe('Zustand Store: useTaskStore', () => {
       expect(useTaskStore.getState().isLoadingProjects).toBe(false)
     })
 
-    it('fetchProjects should set isLoadingProjects to false on error', async () => {
-      vi.mocked(dbProject.getProjectsFromDb).mockRejectedValue(new Error('DB Error'))
+    it("fetchProjects should set isLoadingProjects to false on error", async () => {
+      vi.mocked(dbProject.getProjectsFromDb).mockRejectedValue(new Error("DB Error"))
 
       expect(useTaskStore.getState().isLoadingProjects).toBe(false)
       const fetchPromise = act(async () => {
@@ -302,48 +303,48 @@ describe('Zustand Store: useTaskStore', () => {
       expect(useTaskStore.getState().isLoadingProjects).toBe(false)
     })
 
-    it('addProject should add a project to the state', async () => {
+    it("addProject should add a project to the state", async () => {
       const newProject = {
         ...mockProject,
-        _id: 'new-project-id',
-        title: 'New Project',
-        description: 'New Desc'
+        _id: "new-project-id",
+        title: "New Project",
+        description: "New Desc"
       }
       vi.mocked(dbProject.createProjectInDb).mockResolvedValue(newProject)
 
-      let projectId = ''
+      let projectId = ""
       await act(async () => {
-        projectId = await useTaskStore.getState().addProject('New Project', 'New Desc')
+        projectId = await useTaskStore.getState().addProject("New Project", "New Desc")
       })
 
       expect(dbProject.createProjectInDb).toHaveBeenCalledWith({
-        title: 'New Project',
-        description: 'New Desc',
+        title: "New Project",
+        description: "New Desc",
         userEmail: mockUserEmail,
         board: mockBoardId
       })
-      expect(projectId).toBe('new-project-id')
+      expect(projectId).toBe("new-project-id")
       expect(useTaskStore.getState().projects).toContainEqual(newProject)
     })
 
-    it('updateProject should update a project in the state', async () => {
+    it("updateProject should update a project in the state", async () => {
       act(() => {
         useTaskStore.setState({ projects: [mockProject] })
       })
       // Change mockResolvedValue to null to satisfy 'Project | null'
       vi.mocked(dbProject.updateProjectInDb).mockResolvedValue(null)
 
-      const updatedTitle = 'Updated Project Title'
+      const updatedTitle = "Updated Project Title"
       // Use await act for async operations within act
       await act(async () => {
-        await useTaskStore.getState().updateProject(mockProjectId, updatedTitle, 'Updated Desc')
+        await useTaskStore.getState().updateProject(mockProjectId, updatedTitle, "Updated Desc")
       })
 
       expect(dbProject.updateProjectInDb).toHaveBeenCalledWith({
         projectId: mockProjectId,
         userEmail: mockUserEmail,
         newTitle: updatedTitle,
-        newDescription: 'Updated Desc'
+        newDescription: "Updated Desc"
       })
       // Check the state update after the async operation completes
       const updatedProject = useTaskStore.getState().projects.find((p) => p._id === mockProjectId)
@@ -353,7 +354,7 @@ describe('Zustand Store: useTaskStore', () => {
       // expect(updatedProject?.description).toBe('Updated Desc');
     })
 
-    it('removeProject should remove a project from the state', async () => {
+    it("removeProject should remove a project from the state", async () => {
       act(() => {
         useTaskStore.setState({ projects: [mockProject] })
       })
@@ -370,7 +371,7 @@ describe('Zustand Store: useTaskStore', () => {
   })
 
   // --- Task Actions ---
-  describe('Task Actions', () => {
+  describe("Task Actions", () => {
     beforeEach(() => {
       // Ensure there's a project in state for task actions
       act(() => {
@@ -378,24 +379,24 @@ describe('Zustand Store: useTaskStore', () => {
       })
     })
 
-    it('addTask should add a task to the correct project', async () => {
+    it("addTask should add a task to the correct project", async () => {
       const newTaskData = {
-        title: 'New Task',
+        title: "New Task",
         status: TaskStatus.TODO, // Use Enum member
-        description: 'Task Desc',
+        description: "Task Desc",
         dueDate: new Date(),
-        assigneeId: 'assignee-1'
+        assigneeId: "assignee-1"
       }
       const createdTask: Task = {
         // Ensure createdTask matches Task type
         ...mockTask, // Use updated mockTask with correct status type
-        _id: 'new-task-id',
+        _id: "new-task-id",
         title: newTaskData.title,
         status: newTaskData.status,
         description: newTaskData.description,
         dueDate: newTaskData.dueDate,
         assignee: newTaskData.assigneeId
-          ? { id: newTaskData.assigneeId, name: 'Assignee Name' } // Mock assignee name if needed
+          ? { id: newTaskData.assigneeId, name: "Assignee Name" } // Mock assignee name if needed
           : undefined,
         project: mockProjectId
       }
@@ -423,19 +424,19 @@ describe('Zustand Store: useTaskStore', () => {
       )
       const project = useTaskStore.getState().projects.find((p) => p._id === mockProjectId)
       // Ensure the task added to the state matches the Task interface
-      const addedTask = project?.tasks.find((t) => t._id === 'new-task-id')
+      const addedTask = project?.tasks.find((t) => t._id === "new-task-id")
       expect(addedTask).toBeDefined()
       expect(addedTask?.status).toBe(TaskStatus.TODO)
       // Add more specific checks if needed, comparing against createdTask
       expect(project?.tasks).toContainEqual(
         expect.objectContaining({
-          _id: 'new-task-id',
+          _id: "new-task-id",
           status: TaskStatus.TODO
         })
       )
     })
 
-    it('updateTask should update a task within its project', async () => {
+    it("updateTask should update a task within its project", async () => {
       const initialTask: Task = { ...mockTask, project: mockProjectId } // Use updated mockTask
       act(() => {
         useTaskStore.setState({
@@ -444,11 +445,11 @@ describe('Zustand Store: useTaskStore', () => {
       })
 
       const updateData = {
-        title: 'Updated Task',
+        title: "Updated Task",
         status: TaskStatus.IN_PROGRESS, // Use Enum member
-        description: 'Updated Desc',
+        description: "Updated Desc",
         dueDate: new Date(),
-        assigneeId: 'assignee-2'
+        assigneeId: "assignee-2"
       }
       // Ensure updatedTaskResult matches Task type
       const updatedTaskResult: Task = {
@@ -458,7 +459,7 @@ describe('Zustand Store: useTaskStore', () => {
         description: updateData.description,
         dueDate: updateData.dueDate,
         assignee: updateData.assigneeId
-          ? { id: updateData.assigneeId, name: 'Assignee 2 Name' } // Mock assignee name
+          ? { id: updateData.assigneeId, name: "Assignee 2 Name" } // Mock assignee name
           : undefined,
         // lastModifier should likely be updated here based on mockUser
         lastModifier: mockUser
@@ -494,13 +495,13 @@ describe('Zustand Store: useTaskStore', () => {
         expect.objectContaining({
           _id: mockTaskId,
           status: TaskStatus.IN_PROGRESS,
-          title: 'Updated Task'
+          title: "Updated Task"
           // Add other fields as needed for comparison
         })
       )
     })
 
-    it('removeTask should remove a task from its project', async () => {
+    it("removeTask should remove a task from its project", async () => {
       const taskToRemove = { ...mockTask, project: mockProjectId }
       act(() => {
         useTaskStore.setState({
@@ -518,13 +519,13 @@ describe('Zustand Store: useTaskStore', () => {
       expect(project?.tasks).toHaveLength(0)
     })
 
-    it('dragTaskOnProject should move task between projects', async () => {
+    it("dragTaskOnProject should move task between projects", async () => {
       // Fix: Ensure taskInProject1's project property is 'p1'
-      const taskInProject1 = { ...mockTask, _id: mockTaskId, project: 'p1' }
-      const project1 = { ...mockProject, _id: 'p1', tasks: [taskInProject1] } // Task starts in p1
-      const project2 = { ...mockProject, _id: 'p2', tasks: [] }
+      const taskInProject1 = { ...mockTask, _id: mockTaskId, project: "p1" }
+      const project1 = { ...mockProject, _id: "p1", tasks: [taskInProject1] } // Task starts in p1
+      const project2 = { ...mockProject, _id: "p2", tasks: [] }
       // Fix: Ensure updatedTask is based on taskInProject1 and update project to 'p2'
-      const updatedTask = { ...taskInProject1, project: 'p2' } // Task moved to p2
+      const updatedTask = { ...taskInProject1, project: "p2" } // Task moved to p2
 
       act(() => {
         useTaskStore.setState({ projects: [project1, project2] })
@@ -533,31 +534,31 @@ describe('Zustand Store: useTaskStore', () => {
 
       await act(async () => {
         // Use taskInProject1's _id (i.e., mockTaskId) and target project 'p2'
-        await useTaskStore.getState().dragTaskOnProject(mockTaskId, 'p2')
+        await useTaskStore.getState().dragTaskOnProject(mockTaskId, "p2")
       })
 
       // Expect dbTask.updateTaskProjectInDb to have been called with correct arguments
       expect(dbTask.updateTaskProjectInDb).toHaveBeenCalledWith(
         mockUserEmail,
         mockTaskId, // Ensure ID is correct
-        'p2' // Ensure target Project ID is correct
+        "p2" // Ensure target Project ID is correct
       )
       const state = useTaskStore.getState()
-      expect(state.projects.find((p) => p._id === 'p1')?.tasks).toHaveLength(0)
+      expect(state.projects.find((p) => p._id === "p1")?.tasks).toHaveLength(0)
       // Check if project2 contains the updated task (compare the whole object or key properties)
-      expect(state.projects.find((p) => p._id === 'p2')?.tasks).toContainEqual(
+      expect(state.projects.find((p) => p._id === "p2")?.tasks).toContainEqual(
         expect.objectContaining({
           _id: mockTaskId,
-          project: 'p2' // Verify project property has been updated
+          project: "p2" // Verify project property has been updated
         })
       )
       // Optionally verify the complete updatedTask object
       // expect(state.projects.find((p) => p._id === 'p2')?.tasks).toContainEqual(updatedTask);
     })
 
-    it('dragTaskOnProject should reorder task within the same project', async () => {
-      const task1 = { ...mockTask, _id: 't1', project: mockProjectId }
-      const task2 = { ...mockTask, _id: 't2', project: mockProjectId }
+    it("dragTaskOnProject should reorder task within the same project", async () => {
+      const task1 = { ...mockTask, _id: "t1", project: mockProjectId }
+      const task2 = { ...mockTask, _id: "t2", project: mockProjectId }
       const project = { ...mockProject, tasks: [task1, task2] }
 
       act(() => {
@@ -566,7 +567,7 @@ describe('Zustand Store: useTaskStore', () => {
 
       // Simulate dragging t1 onto the same project (should just reorder visually, state updates to move it to end)
       await act(async () => {
-        await useTaskStore.getState().dragTaskOnProject('t1', mockProjectId)
+        await useTaskStore.getState().dragTaskOnProject("t1", mockProjectId)
       })
 
       // updateTaskProjectInDb should NOT be called for same project move
@@ -579,22 +580,22 @@ describe('Zustand Store: useTaskStore', () => {
   })
 
   // --- Filter Actions ---
-  describe('Filter Actions', () => {
-    it('setFilter should update the filter state', () => {
+  describe("Filter Actions", () => {
+    it("setFilter should update the filter state", () => {
       act(() => {
-        useTaskStore.getState().setFilter({ status: 'DONE', search: 'keyword' })
+        useTaskStore.getState().setFilter({ status: "DONE", search: "keyword" })
       })
       expect(useTaskStore.getState().filter).toEqual({
-        status: 'DONE',
-        search: 'keyword'
+        status: "DONE",
+        search: "keyword"
       })
 
       act(() => {
-        useTaskStore.getState().setFilter({ search: 'new keyword' }) // Partial update
+        useTaskStore.getState().setFilter({ search: "new keyword" }) // Partial update
       })
       expect(useTaskStore.getState().filter).toEqual({
-        status: 'DONE',
-        search: 'new keyword'
+        status: "DONE",
+        search: "new keyword"
       })
     })
   })

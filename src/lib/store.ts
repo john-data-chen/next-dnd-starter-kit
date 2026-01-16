@@ -1,22 +1,24 @@
-import { Board, Project } from '@/types/dbInterface'
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+
+import { Board, Project } from "@/types/dbInterface"
+
 // oxlint-disable-next-line no-unused-vars
-import { createBoardInDb, deleteBoardInDb, updateBoardInDb } from './db/board'
+import { createBoardInDb, deleteBoardInDb, updateBoardInDb } from "./db/board"
 import {
   createProjectInDb,
   deleteProjectInDb,
   getProjectsFromDb,
   updateProjectInDb
-} from './db/project'
+} from "./db/project"
 import {
   createTaskInDb,
   deleteTaskInDb,
   getTasksByProjectId,
   updateTaskInDb,
   updateTaskProjectInDb
-} from './db/task'
-import { getUserByEmail } from './db/user'
+} from "./db/task"
+import { getUserByEmail } from "./db/user"
 
 interface State {
   userEmail: string | null
@@ -32,7 +34,7 @@ interface State {
   addTask: (
     projectId: string,
     title: string,
-    status: 'TODO' | 'IN_PROGRESS' | 'DONE',
+    status: "TODO" | "IN_PROGRESS" | "DONE",
     description?: string,
     dueDate?: Date,
     assigneeId?: string
@@ -40,7 +42,7 @@ interface State {
   updateTask: (
     taskId: string,
     title: string,
-    status: 'TODO' | 'IN_PROGRESS' | 'DONE',
+    status: "TODO" | "IN_PROGRESS" | "DONE",
     description?: string,
     dueDate?: Date,
     assigneeId?: string
@@ -51,7 +53,7 @@ interface State {
     status: string | null
     search: string
   }
-  setFilter: (filter: Partial<State['filter']>) => void
+  setFilter: (filter: Partial<State["filter"]>) => void
   currentBoardId: string | null
   setCurrentBoardId: (boardId: string) => void
   addBoard: (title: string, description?: string) => Promise<string>
@@ -77,12 +79,12 @@ export const useTaskStore = create<State>()(
           try {
             const user = await getUserByEmail(email)
             if (!user) {
-              console.error('User not found')
+              console.error("User not found")
               return
             }
             set({ userEmail: email, userId: user.id })
           } catch (error) {
-            console.error('Error in setUserInfo:', error)
+            console.error("Error in setUserInfo:", error)
           }
         }
         updateUserInfo().catch(console.error)
@@ -116,7 +118,7 @@ export const useTaskStore = create<State>()(
 
           set({ projects: projectsWithTasks })
         } catch (error) {
-          console.error('Error fetching projects:', error)
+          console.error("Error fetching projects:", error)
           set({ projects: [] })
         } finally {
           set({ isLoadingProjects: false }) // Set loading to false when done
@@ -127,7 +129,7 @@ export const useTaskStore = create<State>()(
         try {
           const state = useTaskStore.getState()
           if (!state.userEmail || !state.currentBoardId) {
-            throw new Error('User email or board id not found')
+            throw new Error("User email or board id not found")
           }
 
           const newProject = await createProjectInDb({
@@ -143,22 +145,22 @@ export const useTaskStore = create<State>()(
             }))
             return newProject._id
           }
-          throw new Error('Failed to create project')
+          throw new Error("Failed to create project")
         } catch (error) {
-          console.error('Error in addProject:', error)
+          console.error("Error in addProject:", error)
           throw error
         }
       },
       updateProject: async (id: string, newTitle: string, newDescription?: string) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
         await updateProjectInDb({
           projectId: id,
           userEmail: userEmail,
           newTitle: newTitle,
-          newDescription: newDescription || ''
+          newDescription: newDescription || ""
         })
         set((state) => ({
           projects: state.projects.map((project) =>
@@ -169,7 +171,7 @@ export const useTaskStore = create<State>()(
       removeProject: async (id: string) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
         try {
           await deleteProjectInDb(id, userEmail)
@@ -177,21 +179,21 @@ export const useTaskStore = create<State>()(
             projects: state.projects.filter((project) => project._id !== id)
           }))
         } catch (error) {
-          console.error('Error removing project:', error)
+          console.error("Error removing project:", error)
           throw error
         }
       },
       addTask: async (
         projectId: string,
         title: string,
-        status: 'TODO' | 'IN_PROGRESS' | 'DONE',
+        status: "TODO" | "IN_PROGRESS" | "DONE",
         description?: string,
         dueDate?: Date,
         assigneeId?: string
       ) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
         try {
           const newTask = await createTaskInDb(
@@ -212,21 +214,21 @@ export const useTaskStore = create<State>()(
             )
           }))
         } catch (error) {
-          console.error('Error in addTask:', error)
+          console.error("Error in addTask:", error)
           throw error
         }
       },
       updateTask: async (
         taskId: string,
         title: string,
-        status: 'TODO' | 'IN_PROGRESS' | 'DONE',
+        status: "TODO" | "IN_PROGRESS" | "DONE",
         description?: string,
         dueDate?: Date,
         assigneeId?: string
       ) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
 
         try {
@@ -241,7 +243,7 @@ export const useTaskStore = create<State>()(
           )
 
           if (!updatedTask) {
-            throw new Error('Failed to update task')
+            throw new Error("Failed to update task")
           }
 
           set((state) => ({
@@ -253,7 +255,7 @@ export const useTaskStore = create<State>()(
             }))
           }))
         } catch (error) {
-          console.error('Error updating task:', error)
+          console.error("Error updating task:", error)
           throw error
         }
       },
@@ -268,21 +270,21 @@ export const useTaskStore = create<State>()(
             }))
           }))
         } catch (error) {
-          console.error('Error in removeTask:', error)
+          console.error("Error in removeTask:", error)
           throw error
         }
       },
       dragTaskOnProject: async (taskId: string, overlayProjectId: string) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
         try {
           const state = useTaskStore.getState()
           const task = state.projects.flatMap((p) => p.tasks).find((t) => t._id === taskId)
 
           if (!task) {
-            console.error('Task not found')
+            console.error("Task not found")
             return
           }
 
@@ -290,7 +292,7 @@ export const useTaskStore = create<State>()(
           const targetProject = state.projects.find((p) => p._id === overlayProjectId)
 
           if (!oldProject || !targetProject) {
-            console.error('Project not found', {
+            console.error("Project not found", {
               oldProjectId: task.project,
               overlayProjectId
             })
@@ -319,7 +321,7 @@ export const useTaskStore = create<State>()(
           const updatedTask = await updateTaskProjectInDb(userEmail, taskId, overlayProjectId)
 
           if (!updatedTask) {
-            console.error('Failed to update task project')
+            console.error("Failed to update task project")
             return
           }
 
@@ -345,13 +347,13 @@ export const useTaskStore = create<State>()(
             })
           }))
         } catch (error) {
-          console.error('Error in dragTaskIntoNewProject:', error)
+          console.error("Error in dragTaskIntoNewProject:", error)
           throw error
         }
       },
       filter: {
         status: null,
-        search: ''
+        search: ""
       },
       setFilter: (filter) => {
         set((state) => ({
@@ -368,21 +370,21 @@ export const useTaskStore = create<State>()(
       addBoard: async (title: string, description?: string) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
         try {
-          const baseUrl = typeof window === 'undefined' ? 'http://localhost:3000' : ''
+          const baseUrl = typeof window === "undefined" ? "http://localhost:3000" : ""
           const response = await fetch(`${baseUrl}/api/boards`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json'
+              "Content-Type": "application/json"
             },
             body: JSON.stringify({ title, description })
           })
 
           if (!response.ok) {
             const errorData = await response.json()
-            throw new Error(errorData.error || 'Failed to create board')
+            throw new Error(errorData.error || "Failed to create board")
           }
 
           const data = await response.json()
@@ -393,39 +395,39 @@ export const useTaskStore = create<State>()(
           })
           return boardId
         } catch (error) {
-          console.error('Error in addBoard:', error)
+          console.error("Error in addBoard:", error)
           throw error
         }
       },
       updateBoard: async (id: string, data: Partial<Board>) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
         try {
           const updatedBoard = await updateBoardInDb(id, data, userEmail)
           if (!updatedBoard) {
-            throw new Error('Failed to update board: No board was returned from the database')
+            throw new Error("Failed to update board: No board was returned from the database")
           }
           // Don't return anything to match the State interface
         } catch (error) {
-          console.error('Error in updateBoard:', error)
-          const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+          console.error("Error in updateBoard:", error)
+          const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
           throw new Error(`Failed to update board: ${errorMessage}`)
         }
       },
       removeBoard: async (id: string) => {
         const userEmail = useTaskStore.getState().userEmail
         if (!userEmail) {
-          throw new Error('User email not found')
+          throw new Error("User email not found")
         }
         try {
           const success = await deleteBoardInDb(id, userEmail)
           if (!success) {
-            throw new Error('Failed to delete board')
+            throw new Error("Failed to delete board")
           }
         } catch (error) {
-          console.error('Error in removeBoard:', error)
+          console.error("Error in removeBoard:", error)
           throw error
         }
       },
@@ -446,7 +448,7 @@ export const useTaskStore = create<State>()(
       }
     }),
     {
-      name: 'task-store'
+      name: "task-store"
     }
   )
 )

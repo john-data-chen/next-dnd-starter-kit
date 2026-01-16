@@ -1,7 +1,11 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { useTranslations } from "next-intl"
+import { useState } from "react"
+import { toast } from "sonner"
+import { z } from "zod"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -10,15 +14,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog'
-import { useBoards } from '@/hooks/useBoards'
-import { useRouter } from '@/i18n/navigation'
-import { useTaskStore } from '@/lib/store'
-import { boardSchema } from '@/types/boardForm'
-import { useTranslations } from 'next-intl'
-import { toast } from 'sonner'
-import { z } from 'zod'
-import { BoardForm } from './BoardForm'
+} from "@/components/ui/dialog"
+import { useBoards } from "@/hooks/useBoards"
+import { useRouter } from "@/i18n/navigation"
+import { useTaskStore } from "@/lib/store"
+import { boardSchema } from "@/types/boardForm"
+
+import { BoardForm } from "./BoardForm"
 
 interface NewBoardDialogProps {
   children: React.ReactNode
@@ -31,18 +33,18 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const { addBoard } = useTaskStore()
   const { fetchBoards } = useBoards()
   const router = useRouter()
-  const t = useTranslations('kanban.actions')
+  const t = useTranslations("kanban.actions")
 
   const handleSubmit = async (data: BoardFormData) => {
     try {
       const boardId = await addBoard(data.title, data.description)
-      toast.success(t('boardCreatedSuccess'))
+      toast.success(t("boardCreatedSuccess"))
       setOpen(false)
       await fetchBoards()
       router.push(`/boards/${boardId}`)
     } catch (error) {
       console.error(error)
-      toast.error(t('boardCreateFailed'))
+      toast.error(t("boardCreateFailed"))
     }
   }
 
@@ -51,8 +53,8 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle data-testid="new-board-dialog-title">{t('newBoardTitle')}</DialogTitle>
-          <DialogDescription>{t('newBoardDescription')}</DialogDescription>
+          <DialogTitle data-testid="new-board-dialog-title">{t("newBoardTitle")}</DialogTitle>
+          <DialogDescription>{t("newBoardDescription")}</DialogDescription>
         </DialogHeader>
         <BoardForm onSubmit={handleSubmit}>
           <DialogFooter>
@@ -64,10 +66,10 @@ export default function NewBoardDialog({ children }: NewBoardDialogProps) {
                 setOpen(false)
               }}
             >
-              {t('cancel')}
+              {t("cancel")}
             </Button>
             <Button type="submit" data-testid="create-button">
-              {t('create')}
+              {t("create")}
             </Button>
           </DialogFooter>
         </BoardForm>
