@@ -23,7 +23,6 @@
     ]
   },
   "experimentalTailwindcss": {
-    "config": "./tailwind.config.js",
     "stylesheet": "./src/styles/globals.css",
     "attributes": ["class", "className", "/data-.*/"],
     "functions": ["clsx", "cn"],
