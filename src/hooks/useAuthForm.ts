@@ -48,7 +48,7 @@ export default function useAuthForm() {
         }
         throw new Error(result.error.message || "Authentication failed.")
       }
-      setUserInfo(data.email)
+      await setUserInfo(data.email)
     }
 
     toast.promise(signInProcessPromise(), {

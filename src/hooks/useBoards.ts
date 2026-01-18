@@ -19,8 +19,8 @@ export function useBoards() {
   } = useTaskStore()
 
   const fetchBoards = useCallback(async () => {
-    if (!userEmail) {
-      setMyBoards([]) // If no userEmail, clear boards
+    if (!userEmail || !userId) {
+      setMyBoards([]) // If no userEmail or userId, clear boards
       setTeamBoards([])
       setLoading(false) // And set loading to false
       return

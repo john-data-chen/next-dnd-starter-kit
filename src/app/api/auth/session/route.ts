@@ -2,6 +2,8 @@ import * as jose from "jose"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
+import { getUserByEmail } from "@/lib/db/user"
+
 // JWT secret - must match sign-in route
 const JWT_SECRET = new TextEncoder().encode(
   process.env.AUTH_SECRET || "demo-secret-key-change-in-production"
@@ -36,11 +38,18 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json({ user: null })
   }
 
+  // Fetch fresh user from DB to ensure we have the correct ID (in case DB was reset)
+  const dbUser = await getUserByEmail(payload.email)
+  if (!dbUser) {
+    // User in token no longer exists in DB
+    return NextResponse.json({ user: null })
+  }
+
   return NextResponse.json({
     user: {
-      id: payload.id,
-      email: payload.email,
-      name: payload.name
+      id: dbUser.id,
+      email: dbUser.email,
+      name: dbUser.name
     }
   })
 }
