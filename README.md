@@ -54,7 +54,7 @@ A production-grade Kanban board application I built independently to demonstrate
 | State     | Zustand                  | 40% less boilerplate than Redux, simpler testing |
 | Forms     | React Hook Form + Zod    | Type-safe validation, composable schemas         |
 | Database  | MongoDB + Mongoose       | Document model fits board/project/task hierarchy |
-| Auth      | Better Auth              | OAuth support        |
+| Auth      | Better Auth              | OAuth support                                    |
 | DnD       | dnd-kit                  | Lightweight, accessible, extensible              |
 | i18n      | next-intl                | App Router native support                        |
 | UI        | Tailwind CSS + Shadcn/ui | Consistent design system, rapid iteration        |
@@ -232,7 +232,7 @@ src/
 │   ├── auth/ # Authentication functions
 │   ├── store.ts # State management functions
 │   └── utils.ts # tailwindcss utils
-├── middleware.ts
+├── proxy.ts # the middleware for handling API requests
 ├── models/ # Database models
 ├── styles/ # Global styles
 ├── types/ # Type definitions
