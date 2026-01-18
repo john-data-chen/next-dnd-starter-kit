@@ -1,4 +1,4 @@
-// Auth configuration and server-side session getter for password less demo mode
+// Auth configuration and server-side session getter for passwordless demo mode
 import * as jose from "jose"
 import { cookies } from "next/headers"
 
