@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
 import { auth } from "@/lib/auth"
 import { connectToDatabase } from "@/lib/db/connect"
@@ -6,8 +6,9 @@ import { BoardModel } from "@/models/board.model"
 import { ProjectModel } from "@/models/project.model"
 import { UserModel } from "@/models/user.model"
 
-export const GET = auth(async (req) => {
-  if (!req.auth?.user?.email) {
+export async function GET(req: NextRequest) {
+  const session = await auth()
+  if (!session?.user?.email) {
     return NextResponse.json({ error: "Unauthorized - No session or email" }, { status: 401 })
   }
 
@@ -20,7 +21,7 @@ export const GET = auth(async (req) => {
     }
 
     const currentUser = await UserModel.findOne({
-      email: req.auth.user.email
+      email: session.user.email
     }).lean()
     if (!currentUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
@@ -59,4 +60,4 @@ export const GET = auth(async (req) => {
       { status: 500 }
     )
   }
-})
+}

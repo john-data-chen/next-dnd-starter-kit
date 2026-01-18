@@ -1,6 +1,5 @@
 "use client"
 
-import { signOut, useSession } from "next-auth/react"
 import { useTranslations } from "next-intl"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -15,14 +14,15 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ROUTES } from "@/constants/routes"
 import { useRouter } from "@/i18n/navigation"
+import { authClient } from "@/lib/auth/client"
 
 export function UserNav() {
-  const { data: session } = useSession()
+  const { data: session } = authClient.useSession()
   const router = useRouter()
   const t = useTranslations("user")
 
   const handleSignOut = async () => {
-    await signOut({ redirect: false })
+    await authClient.signOut()
     // After the session is destroyed, perform a client-side redirect
     // to the login page. The i18n router will handle the locale.
     router.push(ROUTES.AUTH.LOGIN)

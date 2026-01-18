@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
 import { auth } from "@/lib/auth"
 import { connectToDatabase } from "@/lib/db/connect"
@@ -7,15 +7,16 @@ import { ProjectModel } from "@/models/project.model"
 import { TaskModel } from "@/models/task.model"
 import { UserModel } from "@/models/user.model"
 
-export const GET = auth(async (req) => {
-  if (!req.auth) {
+export async function GET(req: NextRequest) {
+  const session = await auth()
+  if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   try {
     await connectToDatabase()
     const taskId = req.nextUrl.pathname.split("/tasks/")[1].split("/")[0]
-    const user = await UserModel.findOne({ email: req.auth.user?.email })
+    const user = await UserModel.findOne({ email: session.user.email })
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
@@ -48,4 +49,4 @@ export const GET = auth(async (req) => {
     console.error("Error checking permissions:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
-})
+}
