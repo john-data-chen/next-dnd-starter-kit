@@ -1,11 +1,10 @@
-import type { Session } from "next-auth"
-import { useSession } from "next-auth/react"
 import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import Header from "@/components/layout/Header"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { usePathname } from "@/i18n/navigation"
+import { authClient } from "@/lib/auth/client"
 
 import { render, screen } from "../../test-utils"
 
@@ -36,8 +35,11 @@ vi.mock("next/navigation", async () => {
   }
 })
 
-vi.mock("next-auth/react", () => ({
-  useSession: vi.fn()
+vi.mock("@/lib/auth/client", () => ({
+  authClient: {
+    useSession: vi.fn(),
+    signOut: vi.fn()
+  }
 }))
 
 vi.mock("@/components/layout/UserNav", () => ({
@@ -56,19 +58,20 @@ vi.mock("@/components/layout/LanguageSwitcher", () => ({
 }))
 
 describe("Header Component", () => {
-  const mockSession: Session = {
+  const mockSession = {
     user: {
+      id: "test-user-id",
       name: "Test User",
       email: "test@example.com",
       image: null
-    },
-    expires: "1"
+    }
   }
 
   beforeEach(() => {
-    vi.mocked(useSession).mockReturnValue({
+    vi.mocked(authClient.useSession).mockReturnValue({
       data: mockSession,
-      status: "authenticated"
+      isPending: false,
+      error: null
     } as any)
   })
 

@@ -1,5 +1,4 @@
 import { act, renderHook, waitFor } from "@testing-library/react"
-import { signIn } from "next-auth/react"
 import { useTranslations } from "next-intl"
 import { useParams } from "next/navigation"
 import { toast } from "sonner"
@@ -9,13 +8,22 @@ import { defaultEmail } from "@/constants/demoData"
 import { ROUTES } from "@/constants/routes"
 import useAuthForm from "@/hooks/useAuthForm"
 import { useRouter } from "@/i18n/navigation"
+import { authClient } from "@/lib/auth/client"
 import { useTaskStore } from "@/lib/store"
 
 import { AllTheProviders } from "../test-utils"
 
 // --- Mock Area ---
 vi.mock("@/lib/store")
-vi.mock("next-auth/react")
+vi.mock("@/lib/auth/client", () => ({
+  authClient: {
+    signIn: {
+      email: vi.fn()
+    },
+    signOut: vi.fn(),
+    useSession: vi.fn(() => ({ data: null, isPending: false, error: null }))
+  }
+}))
 vi.mock("sonner")
 vi.mock("@/i18n/navigation", () => ({
   useRouter: vi.fn()
@@ -82,7 +90,10 @@ describe("useAuthForm", () => {
   })
 
   it("successful login flow: calls signIn, setUserInfo, and navigates after delay", async () => {
-    vi.mocked(signIn).mockResolvedValue({ ok: true, error: null } as any)
+    vi.mocked(authClient.signIn.email).mockResolvedValue({
+      data: { user: { id: "1" } },
+      error: null
+    } as any)
 
     mockToastPromise.mockImplementation((promise, options) => {
       promise.then(options.success).catch(options.error)
@@ -97,9 +108,9 @@ describe("useAuthForm", () => {
       await result.current.onSubmit({ email: defaultEmail })
     })
 
-    expect(signIn).toHaveBeenCalledWith("credentials", {
+    expect(authClient.signIn.email).toHaveBeenCalledWith({
       email: defaultEmail,
-      redirect: false
+      password: ""
     })
     expect(mockSetUserInfo).toHaveBeenCalledWith(defaultEmail)
 
@@ -116,9 +127,9 @@ describe("useAuthForm", () => {
     })
   })
 
-  it("should handle CredentialsSignin error", async () => {
-    const error = { error: "CredentialsSignin" }
-    vi.mocked(signIn).mockResolvedValue(error as any)
+  it("should handle INVALID_EMAIL_OR_PASSWORD error", async () => {
+    const error = { error: { code: "INVALID_EMAIL_OR_PASSWORD", message: "Invalid credentials" } }
+    vi.mocked(authClient.signIn.email).mockResolvedValue(error as any)
 
     let capturedError: Error | undefined
     mockToastPromise.mockImplementation((promise, options) => {
@@ -148,8 +159,8 @@ describe("useAuthForm", () => {
 
   it("should handle other signIn errors", async () => {
     const errorMessage = "Some other error"
-    const error = { error: errorMessage }
-    vi.mocked(signIn).mockResolvedValue(error as any)
+    const error = { error: { code: "UNKNOWN_ERROR", message: errorMessage } }
+    vi.mocked(authClient.signIn.email).mockResolvedValue(error as any)
 
     let capturedError: Error | undefined
     mockToastPromise.mockImplementation((promise, options) => {

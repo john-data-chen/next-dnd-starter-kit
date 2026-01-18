@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     const board = await createBoardInDb({
       title,
-      userEmail: session.user.email!,
+      userEmail: session.user.email,
       description
     })
 
