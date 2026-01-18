@@ -10,7 +10,6 @@ import NextTopLoader from "nextjs-toploader"
 
 import Providers from "@/components/layout/Providers"
 import { routing } from "@/i18n/routing"
-import { auth } from "@/lib/auth"
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -35,7 +34,7 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
 }
 
 export default async function LocaleLayout({ children, params }: Readonly<Props>) {
-  const [session, { locale }] = await Promise.all([auth(), Promise.resolve(params)])
+  const { locale } = await Promise.resolve(params)
   if (!hasLocale(routing.locales, locale)) {
     notFound()
   }
@@ -46,7 +45,7 @@ export default async function LocaleLayout({ children, params }: Readonly<Props>
       <body className={roboto.className}>
         <NextTopLoader showSpinner={false} />
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers session={session}>{children}</Providers>
+          <Providers>{children}</Providers>
         </NextIntlClientProvider>
         <Analytics />
       </body>

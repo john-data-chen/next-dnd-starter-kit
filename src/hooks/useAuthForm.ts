@@ -1,7 +1,6 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
 import { useTranslations } from "next-intl"
 import { useParams } from "next/navigation"
 import { useState, useTransition } from "react"
@@ -12,6 +11,7 @@ import { defaultEmail } from "@/constants/demoData"
 import { ROUTES } from "@/constants/routes"
 import { NAVIGATION_DELAY_MS } from "@/constants/ui"
 import { useRouter } from "@/i18n/navigation"
+import { authClient } from "@/lib/auth/client"
 import { useTaskStore } from "@/lib/store"
 import { SignInFormValue, SignInValidation } from "@/types/authUserForm"
 
@@ -37,16 +37,16 @@ export default function useAuthForm() {
 
   const onSubmit = (data: SignInFormValue) => {
     const signInProcessPromise = async () => {
-      const result = await signIn("credentials", {
+      const result = await authClient.signIn.email({
         email: data.email,
-        redirect: false
+        password: "" // Required by better-auth but not used in our password less flow
       })
 
-      if (result?.error) {
-        if (result.error === "CredentialsSignin") {
+      if (result.error) {
+        if (result.error.code === "INVALID_EMAIL_OR_PASSWORD") {
           throw new Error("Invalid email, retry again.")
         }
-        throw new Error(result.error || "Authentication failed.")
+        throw new Error(result.error.message || "Authentication failed.")
       }
       setUserInfo(data.email)
     }
