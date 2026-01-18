@@ -65,7 +65,7 @@ A production-grade Kanban board application I built independently to demonstrate
 | ---------- | ------------------------------------------------- |
 | Turbopack  | Rust bundler with filesystem caching for fast HMR |
 | Oxlint     | 50-100x faster than ESLint, clearer diagnostics   |
-| Oxfmt      | 50-100x faster formatter than Prettier            |
+| Oxfmt      | 30x faster formatter than Prettier            |
 | Husky      | Pre-commit quality enforcement                    |
 | Commitizen | Conventional commits for clean history            |
 
@@ -256,6 +256,15 @@ Part of my engineering approach involves continuously evaluating emerging tools 
 
 Type-aware rules are available but kept in evaluation for this project. [Oxlint Docs](https://oxc.rs/blog/2025-06-10-oxlint-stable.html)
 
+### Oxfmt (Rust-based Formatter)
+
+| Aspect      | Details                                           |
+| ----------- | ------------------------------------------------- |
+| Status      | **Evaluation** - enabled for local development    |
+| Performance | 30x faster than Prettier with instant cold start |
+
+[Oxfmt Docs](https://oxc.rs/docs/guide/usage/formatter)
+
 ### Turbopack + Filesystem Caching
 
 | Aspect      | Details                                               |
@@ -265,15 +274,6 @@ Type-aware rules are available but kept in evaluation for this project. [Oxlint 
 | Caching     | Filesystem caching persists artifacts across restarts |
 
 [Turbopack Docs](https://nextjs.org/docs/app/api-reference/turbopack) | [FS Caching](https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache)
-
-### Oxfmt (Rust-based Formatter)
-
-| Aspect      | Details                                           |
-| ----------- | ------------------------------------------------- |
-| Status      | **Evaluation** - enabled for local development    |
-| Performance | ~50x faster than Prettier with instant cold start |
-
-[Oxfmt Docs](https://oxc.rs/docs/guide/usage/formatter)
 
 ### React Compiler
 
