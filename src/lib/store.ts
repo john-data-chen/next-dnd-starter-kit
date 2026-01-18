@@ -23,7 +23,7 @@ import { getUserByEmail } from "./db/user"
 interface State {
   userEmail: string | null
   userId: string | null
-  setUserInfo: (email: string) => void
+  setUserInfo: (email: string) => Promise<void>
   projects: Project[]
   isLoadingProjects: boolean
   fetchProjects: (boardId: string) => Promise<void>
@@ -73,21 +73,17 @@ export const useTaskStore = create<State>()(
       userId: null,
       projects: [] as Project[],
       isLoadingProjects: false,
-      setUserInfo: (email: string) => {
-        // Start the async operation but don't wait for it
-        const updateUserInfo = async () => {
-          try {
-            const user = await getUserByEmail(email)
-            if (!user) {
-              console.error("User not found")
-              return
-            }
-            set({ userEmail: email, userId: user.id })
-          } catch (error) {
-            console.error("Error in setUserInfo:", error)
+      setUserInfo: async (email: string) => {
+        try {
+          const user = await getUserByEmail(email)
+          if (!user) {
+            console.error("User not found")
+            return
           }
+          set({ userEmail: email, userId: user.id })
+        } catch (error) {
+          console.error("Error in setUserInfo:", error)
         }
-        updateUserInfo().catch(console.error)
       },
       fetchProjects: async (boardId: string) => {
         set({ isLoadingProjects: true })
