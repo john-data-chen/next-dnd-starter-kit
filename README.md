@@ -65,7 +65,7 @@ A production-grade Kanban board application I built independently to demonstrate
 | ---------- | ------------------------------------------------- |
 | Turbopack  | Rust bundler with filesystem caching for fast HMR |
 | Oxlint     | 50-100x faster than ESLint, clearer diagnostics   |
-| Oxfmt      | 30x faster formatter than Prettier            |
+| Oxfmt      | 30x faster formatter than Prettier                |
 | Husky      | Pre-commit quality enforcement                    |
 | Commitizen | Conventional commits for clean history            |
 
@@ -258,9 +258,9 @@ Type-aware rules are available but kept in evaluation for this project. [Oxlint 
 
 ### Oxfmt (Rust-based Formatter)
 
-| Aspect      | Details                                           |
-| ----------- | ------------------------------------------------- |
-| Status      | **Evaluation** - enabled for local development    |
+| Aspect      | Details                                          |
+| ----------- | ------------------------------------------------ |
+| Status      | **Evaluation** - enabled for local development   |
 | Performance | 30x faster than Prettier with instant cold start |
 
 [Oxfmt Docs](https://oxc.rs/docs/guide/usage/formatter)
