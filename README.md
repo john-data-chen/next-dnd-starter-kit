@@ -155,6 +155,7 @@ By treating AI as an integrated part of the stack, this project achieves:
 - **Velocity**: 5-10x faster implementation of boilerplate and standard patterns.
 - **Quality**: Higher test coverage (80%+) through AI-generated test scaffolding.
 - **Learning**: Rapid mastery of new tools (Vitest, Playwright...and more) via AI-guided implementation.
+- **Cost**: Lower costs by using AI agents skills to reduce tokens and match the best practice in frontend.
 - **Focus**: Shifted engineering time from syntax to system architecture and user experience.
 
 **CI/CD Integration**
