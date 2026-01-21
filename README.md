@@ -155,6 +155,7 @@ By treating AI as an integrated part of the stack, this project achieves:
 - **Velocity**: 5-10x faster implementation of boilerplate and standard patterns.
 - **Quality**: Higher test coverage (80%+) through AI-generated test scaffolding.
 - **Learning**: Rapid mastery of new tools (Vitest, Playwright...and more) via AI-guided implementation.
+- **Cost**: Lower costs by using AI agents skills to reduce tokens and match the best practice in frontend.
 - **Focus**: Shifted engineering time from syntax to system architecture and user experience.
 
 **CI/CD Integration**
@@ -169,8 +170,8 @@ By treating AI as an integrated part of the stack, this project achieves:
 
 ### Requirements
 
-- Node.js >= 24.11.0 (LTS)
-- PNPM 10.x
+- Node.js latest LTS version
+- PNPM latest version
 - Docker / OrbStack (for local MongoDB)
 
 ### Environment Configuration
@@ -234,6 +235,7 @@ __tests__/
 │   └── unit/ # Unit tests (by Vitest)
 .github/ # GitHub Actions workflows
 .husky/ # Husky configuration
+ai-docs/ # AI documentations including skills and prompts
 database/ # MongoDB docker-compose and initialization
 messages/ # i18n translations
 public/ # Static files such as images
