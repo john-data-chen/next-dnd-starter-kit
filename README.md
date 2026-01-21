@@ -170,8 +170,8 @@ By treating AI as an integrated part of the stack, this project achieves:
 
 ### Requirements
 
-- Node.js >= 24.11.0 (LTS)
-- PNPM 10.x
+- Node.js latest LTS version
+- PNPM latest version
 - Docker / OrbStack (for local MongoDB)
 
 ### Environment Configuration
@@ -235,6 +235,7 @@ __tests__/
 │   └── unit/ # Unit tests (by Vitest)
 .github/ # GitHub Actions workflows
 .husky/ # Husky configuration
+ai-docs/ # AI documentations including skills and prompts
 database/ # MongoDB docker-compose and initialization
 messages/ # i18n translations
 public/ # Static files such as images
