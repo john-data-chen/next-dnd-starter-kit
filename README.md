@@ -126,10 +126,10 @@ MCP enables AI tools to interact directly with development infrastructure, elimi
 
 Skills extend AI capabilities for specialized tasks. Each skill contains instructions and resources that AI assistants can use.
 
-| Skill | Purpose | When to Use |
-| :---- | :------ | :---------- |
-| `vercel-react-best-practices` | 45+ React/Next.js performance rules | Writing, reviewing, or refactoring React code |
-| `web-design-guidelines` | UI/UX accessibility audits | "Review my UI", "Check accessibility", "Audit design" |
+| Skill                         | Purpose                             | When to Use                                           |
+| :---------------------------- | :---------------------------------- | :---------------------------------------------------- |
+| `vercel-react-best-practices` | 45+ React/Next.js performance rules | Writing, reviewing, or refactoring React code         |
+| `web-design-guidelines`       | UI/UX accessibility audits          | "Review my UI", "Check accessibility", "Audit design" |
 
 [vercel agent-skills](https://github.com/vercel-labs/agent-skills)
 
@@ -146,7 +146,6 @@ This is an example of how to use prompts and skills in Claude Code, you should c
 - Copy `ai_docs/PROMPTS.md` to root directory, then rename it to `CLAUDE.md`
 - restart the Claude Code
 - AI assistants will use the skills when they are needed
-
 
 ## 📈 Measurable Impact
 
