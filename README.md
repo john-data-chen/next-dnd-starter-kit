@@ -126,12 +126,13 @@ MCP enables AI tools to interact directly with development infrastructure, elimi
 
 Skills extend AI capabilities for specialized tasks. Each skill contains instructions and resources that AI assistants can use.
 
-| Skill                         | Purpose                             | When to Use                                           |
-| :---------------------------- | :---------------------------------- | :---------------------------------------------------- |
-| `vercel-react-best-practices` | 45+ React/Next.js performance rules | Writing, reviewing, or refactoring React code         |
-| `web-design-guidelines`       | UI/UX accessibility audits          | "Review my UI", "Check accessibility", "Audit design" |
+| Skill                         | Purpose                             | When to Use                                                                |
+| :---------------------------- | :---------------------------------- | :------------------------------------------------------------------------- |
+| `vercel-react-best-practices` | 45+ React/Next.js performance rules | Writing, reviewing, or refactoring React code                              |
+| `web-design-guidelines`       | UI/UX accessibility audits          | "Review my UI", "Check accessibility", "Audit design"                      |
+| `composition-patterns`        | React composition patterns          | "Refactoring components", "Build reusable components", "Review components" |
 
-[vercel agent-skills](https://github.com/vercel-labs/agent-skills)
+Based on [vercel agent-skills](https://github.com/vercel-labs/agent-skills)
 
 **AI Guidelines** (`ai_docs/PROMPTS.md`)
 
@@ -277,7 +278,7 @@ Part of my engineering approach involves continuously evaluating emerging tools 
 | Aspect           | Details                                               |
 | ---------------- | ----------------------------------------------------- |
 | Status           | **Production** - core linting enabled                 |
-| Performance      | 50-100x faster than ESLint (2s for full project lint) |
+| Performance      | 50-100x faster than ESLint                            |
 | DX Improvement   | Clearer error messages, simpler config than ESLint 9+ |
 | Migration Impact | Removed 10 ESLint packages from dependency tree       |
 
@@ -287,18 +288,18 @@ Type-aware rules are available but kept in evaluation for this project. [Oxlint 
 
 | Aspect      | Details                                          |
 | ----------- | ------------------------------------------------ |
-| Status      | **Evaluation** - enabled for local development   |
+| Status      | **Evaluation** - enabled for evaluation          |
 | Performance | 30x faster than Prettier with instant cold start |
 
 [Oxfmt Docs](https://oxc.rs/docs/guide/usage/formatter)
 
 ### Turbopack + Filesystem Caching
 
-| Aspect      | Details                                               |
-| ----------- | ----------------------------------------------------- |
-| Status      | **Production** - default in Next.js 16                |
-| Performance | Near-instant HMR, incremental compilation             |
-| Caching     | Filesystem caching persists artifacts across restarts |
+| Aspect      | Details                                    |
+| ----------- | ------------------------------------------ |
+| Status      | **Production** - default in Next.js latest |
+| Performance | Near-instant HMR, incremental compilation  |
+| Caching     | Filesystem caching persists artifacts      |
 
 [Turbopack Docs](https://nextjs.org/docs/app/api-reference/turbopack) | [FS Caching](https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache)
 

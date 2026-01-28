@@ -2,15 +2,17 @@
 
 ## AI Assistant Behavioral Framework
 
-- **Check MCP servers and skills list before task execution**: Always check the MCP servers and skills list before starting a task to ensure you have the necessary tools and knowledge to complete the task. If you know a MCP server or skill that is not listed but they might be useful for the task, ask for next steps.
+- **Check MCP/skills before execution**: Verify available tools; suggest missing ones if useful.
 - **Convention First**: Always analyze existing patterns, libraries, and code style before making changes
 - **Verify, Then Act**: Never assume dependencies or commands exist - always verify through package.json or config files
 - **Test-Driven Changes**: Look for existing tests, run them to understand behavior, write tests before implementing features
 - **Incremental Verification**: Run lint, type-check, test, and build commands after every significant change
 
-## Project Overview
+> [!TIP]
+> Use skills: `vercel-react-best-practices` (performance), `web-design-guidelines` (UI/UX), `composition-patterns` (React patterns).
+> Use MCPs: `next-devtools-mcp`, `context7-mcp` if installed.
 
-**Project Type**: Turborepo-based monorepo
+## Project Overview
 
 ### Repository Structure
 
@@ -32,7 +34,7 @@
 
 the Shadcn UI components are in `src/components/ui`, they are UI library, you should modify `src/styles/globals.css` and `src/components` at first, until you make sure modifying Shadcn UI component is only way to fix some issues.
 
-## Essential Commands Quick Reference
+## Essential Commands
 
 ### Daily Development Workflow
 
@@ -45,9 +47,7 @@ pnpm upgrade                                  # Upgrade all dependencies
 pnpm build                                    # Build for production
 ```
 
-### Debugging & Verification Commands
-
-Only do it after you are sure all files are modified, and ready for user to commit
+### Debugging & Verification
 
 ```bash
 # When debugging issues
@@ -61,15 +61,12 @@ pnpm lint-staged                          # Run linter and prettier
 
 check package.json to get versions of packages before you start
 
-- **Node Version**: Node.js latest version, use "node -v" to check the version
+- **Node Version**: Node.js latest version (check with `node -v`)
 - **Framework**: Next.js latest version with App Router, React latest version
 - **Language**: TypeScript latest version (strict mode)
 - **Styling**: TailwindCSS latest version
 - **Package Manager**: PNPM latest version (not npm/yarn)
-- **Monorepo**: Turborepo latest version
 - **Unit test**: Vitest latest version
-
-> **React Patterns**: See `ai_docs/skills/vercel-react-best-practices` for state management, performance optimization, and rendering patterns (45+ rules)
 
 ## 🔄 Development Workflows
 
@@ -163,23 +160,7 @@ import { ComponentName } from "@repo/ui/ComponentName";
 
 ### Scenario 3: "Optimize component performance"
 
-**AI Analysis Approach**:
-
-```
-1. "I'll analyze the component for performance bottlenecks"
-2. Read component source and identify expensive operations
-3. Check for unnecessary re-renders using React DevTools patterns
-4. Look for missing useMemo/useCallback opportunities
-5. Verify if component should be controlled vs uncontrolled
-6. Implement optimizations with before/after benchmarks
-7. Add or update tests to prevent regression
-8. git add /path/to/your/file.ts
-9. Verify with pnpm lint-staged && pnpm build
-10. Fix all errors or warnings of linter
-11. Git un-stage all files
-12. Give me the suggested commit message matched Conventional Commits
-13. Never commit it for me
-```
+**AI Analysis Approach**: Reference `vercel-react-best-practices` skill for 45+ optimization rules, then follow standard verification workflow (lint-staged → build → suggest commit message).
 
 ## 🎯 AI Success Metrics
 
@@ -196,7 +177,5 @@ import { ComponentName } from "@repo/ui/ComponentName";
 
 - [ ] Read existing code before implementing changes
 - [ ] Verify dependencies in package.json before using
-- [ ] Follow controlled component patterns for UI
-- [ ] Use Zustand stores for cross-component state, but if it's a simple state, use useState / Context API
-- [ ] Implement proper loading/error states
 - [ ] Run verification commands before completion
+- [ ] Reference skills for patterns: `vercel-react-best-practices`, `vercel-composition-patterns`
