@@ -55,3 +55,6 @@ src/hooks/use-mobile.ts
 # database
 database/mongodb
 database/docker-compose.yml
+
+# ai skills
+ai_docs/skills
