@@ -60,7 +60,7 @@ function ComposerInput() {
   const {
     state,
     actions: { update },
-    meta,
+    meta
   } = use(ComposerContext)
 
   // This component works with ANY provider that implements the interface
@@ -88,7 +88,7 @@ function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
       value={{
         state,
         actions: { update: setState, submit },
-        meta: { inputRef },
+        meta: { inputRef }
       }}
     >
       {children}
@@ -106,7 +106,7 @@ function ChannelProvider({ channelId, children }: Props) {
       value={{
         state,
         actions: { update, submit },
-        meta: { inputRef },
+        meta: { inputRef }
       }}
     >
       {children}
@@ -171,7 +171,7 @@ function ForwardMessageDialog() {
 // This button lives OUTSIDE Composer.Frame but can still submit based on its context!
 function ForwardButton() {
   const {
-    actions: { submit },
+    actions: { submit }
   } = use(ComposerContext)
   return <Button onPress={submit}>Forward</Button>
 }
