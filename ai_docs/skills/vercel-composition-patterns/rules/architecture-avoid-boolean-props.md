@@ -21,7 +21,7 @@ function Composer({
   isDMThread,
   dmId,
   isEditing,
-  isForwarding,
+  isForwarding
 }: Props) {
   return (
     <form>
@@ -32,13 +32,7 @@ function Composer({
       ) : isThread ? (
         <AlsoSendToChannelField id={channelId} />
       ) : null}
-      {isEditing ? (
-        <EditActions />
-      ) : isForwarding ? (
-        <ForwardActions />
-      ) : (
-        <DefaultActions />
-      )}
+      {isEditing ? <EditActions /> : isForwarding ? <ForwardActions /> : <DefaultActions />}
       <Footer onSubmit={onSubmit} />
     </form>
   )
