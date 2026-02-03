@@ -45,7 +45,7 @@ function ForwardMessageDialog() {
 
 ```tsx
 function ForwardMessageDialog() {
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState("")
   return (
     <Dialog>
       <ForwardMessageComposer onInputChange={setInput} />
