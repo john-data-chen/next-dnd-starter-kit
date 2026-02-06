@@ -10,7 +10,7 @@
 
 > [!TIP]
 > Use skills: `vercel-react-best-practices` (performance), `web-design-guidelines` (UI/UX), `vercel-composition-patterns` (React patterns).
-> Use MCPs: `next-devtools-mcp`, `context7-mcp` if installed.
+> Use MCPs: `next-devtools-mcp`, `context7-mcp` if installed and enabled.
 
 ## Project Overview
 
