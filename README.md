@@ -103,12 +103,12 @@ This project demonstrates a "Human-in-the-Loop" architecture where AI tools are 
 
 I utilize a suite of specialized AI tools, each assigned specific roles to mimic a high-performing engineering team structure.
 
-| Role              | Tool                                                                    | Responsibility                      | Impact                                                                                                                                                           |
-| :---------------- | :---------------------------------------------------------------------- | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Architect**     | [Claude Code](https://github.com/anthropics/claude-code)                | System design & complex refactoring | Handles multi-file architectural changes with deep context awareness, perfect for making plans for other AI tools.                                               |
-| **Plan Executor** | [Kilo Code](https://github.com/Kilo-Org/kilocode)                       | Code writing                        | Follow the plan by Architect, implement functionality and refactor using a faster and cheaper model such as Grok Code Fast 1, MiniMax M2 and Mistral Devstral 2. |
-| **QA**            | [Gemini CLI](https://github.com/google-gemini/gemini-cli)               | Writing test cases                  | Gemini 3 Pro is the cheapest option in top models, perfect for writing test cases.                                                                               |
-| **PR Reviewer**   | [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | Automated PR Review                 | Enforces code standards and catches potential bugs before human reviewer.                                                                                        |
+| Role              | Tool                                                                    | Responsibility                      | Impact                                                                                                                                   |
+| :---------------- | :---------------------------------------------------------------------- | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+| **Architect**     | [Claude Code](https://github.com/anthropics/claude-code)                | System design & complex refactoring | Handles multi-file architectural changes with deep context awareness, perfect for making plans for other AI tools.                       |
+| **Plan Executor** | [Kilo Code](https://github.com/Kilo-Org/kilocode)                       | Code writing                        | Follow the plan by Architect, implement functionality and refactor using a faster and cheaper models coming from MiniMax, Z.AI and Kimi. |
+| **QA**            | [Gemini CLI](https://github.com/google-gemini/gemini-cli)               | Writing test cases                  | Gemini 3 Pro is the cheapest option in top models, perfect for writing test cases.                                                       |
+| **PR Reviewer**   | [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | Automated PR Review                 | Enforces code standards and catches potential bugs before human reviewer.                                                                |
 
 **MCP (Model Context Protocol) Servers**
 
@@ -126,11 +126,11 @@ MCP enables AI tools to interact directly with development infrastructure, elimi
 
 Skills extend AI capabilities for specialized tasks. Each skill contains instructions and resources that AI assistants can use.
 
-| Skill                         | Purpose                             | When to Use                                                                |
-| :---------------------------- | :---------------------------------- | :------------------------------------------------------------------------- |
-| `vercel-composition-patterns` | React composition patterns          | "Refactoring components", "Build reusable components", "Review components" |
-| `vercel-react-best-practices` | 45+ React/Next.js performance rules | Writing, reviewing, or refactoring React code                              |
-| `web-design-guidelines`       | UI/UX accessibility audits          | "Review my UI", "Check accessibility", "Audit design"                      |
+| Skill                         | Purpose                                        | When to Use                                                                |
+| :---------------------------- | :--------------------------------------------- | :------------------------------------------------------------------------- |
+| `vercel-composition-patterns` | React composition patterns                     | "Refactoring components", "Build reusable components", "Review components" |
+| `vercel-react-best-practices` | 40+ React/Next.js performance rules            | Writing, reviewing, or refactoring React code                              |
+| `web-design-guidelines`       | 100+ rules covering UI/UX accessibility audits | "Review my UI", "Check accessibility", "Audit design"                      |
 
 Based on [vercel agent-skills](https://github.com/vercel-labs/agent-skills)
 
@@ -144,9 +144,13 @@ This is an example of how to use prompts and skills in Claude Code, you should c
 
 - create a folder named `.claude`
 - then copy skills folder from `ai_docs/skills/` to `.claude`
-- Copy `ai_docs/PROMPTS.md` to root directory, then rename it to `CLAUDE.md`
+- Copy or symlink `PROMPTS.md` to your AI tool's context file location
+  | AI Tool | Target Path |
+  | ----------- | ------------------- |
+  | Claude Code | `.claude/CLAUDE.md` |
+  | Gemini CLI | `.gemini/GEMINI.md` |
 - restart the Claude Code
-- AI assistants will use the skills when they are needed
+- AI assistants should use the skills when they are needed
 
 ## 📈 Measurable Impact
 
