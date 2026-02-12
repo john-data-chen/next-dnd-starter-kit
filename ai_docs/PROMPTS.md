@@ -9,7 +9,7 @@
 - **Incremental Verification**: Run lint, type-check, test, and build commands after every significant change
 
 > [!TIP]
-> Use skills: `vercel-react-best-practices` (performance), `web-design-guidelines` (UI/UX), `vercel-composition-patterns` (React patterns).
+> Use skills: `vercel-react-best-practices` (performance), `web-design-guidelines` (UI/UX), `vercel-composition-patterns` (React patterns), `next-best-practices` (Next.js best practices), `next-cache-components` (Next.js cache components)
 > Use MCPs: `next-devtools-mcp`, `context7-mcp` if installed and enabled.
 
 ## Project Overview
@@ -160,7 +160,7 @@ import { ComponentName } from "@repo/ui/ComponentName";
 
 ### Scenario 3: "Optimize component performance"
 
-**AI Analysis Approach**: Reference `vercel-react-best-practices` skill for 45+ optimization rules, then follow standard verification workflow (lint-staged → build → suggest commit message).
+**AI Analysis Approach**: Reference `vercel-react-best-practices`, `next-best-practices` skill for optimization rules, then follow standard verification workflow (lint-staged → build → suggest commit message).
 
 ## 🎯 AI Success Metrics
 
@@ -178,4 +178,4 @@ import { ComponentName } from "@repo/ui/ComponentName";
 - [ ] Read existing code before implementing changes
 - [ ] Verify dependencies in package.json before using
 - [ ] Run verification commands before completion
-- [ ] Reference skills for patterns: `vercel-react-best-practices`, `vercel-composition-patterns`
+- [ ] Reference skills for patterns: `vercel-react-best-practices`, `vercel-composition-patterns`, `next-best-practices`
