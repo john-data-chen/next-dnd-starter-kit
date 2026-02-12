@@ -54,6 +54,7 @@
     "src/components/ui/**",
     "src/hooks/use-mobile.ts",
     "database/mongodb/**",
-    "database/docker-compose.yml"
+    "database/docker-compose.yml",
+    "ai_docs/**"
   ]
 }
