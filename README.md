@@ -7,7 +7,7 @@
 
 ## About This Project
 
-A production-grade Kanban board application I built independently to demonstrate full-stack ownership. This project reflects my engineering approach: **quality-first development with comprehensive testing, automated CI/CD, and maintainable architecture**.
+A production-grade Kanban board application. Showcases engineering practices, decision-making and AI-assisted optimization for senior full-stack roles.
 
 **[Live Demo](https://next-dnd-starter-kit.vercel.app)** | **[Monorepo Evolution](https://github.com/john-data-chen/turborepo-starter-kit)**
 
@@ -128,13 +128,13 @@ Skills extend AI capabilities for specialized tasks. Each skill contains instruc
 
 | Skill                         | Purpose                                        | When to Use                                                                |
 | :---------------------------- | :--------------------------------------------- | :------------------------------------------------------------------------- |
+| `next-best-practices`         | Next.js best practices                         | Writing, reviewing, or refactoring Next.js code                            |
+| `next-cache-components`       | Next.js cache components                       | Writing, reviewing, or refactoring cache components                        |
 | `vercel-composition-patterns` | React composition patterns                     | "Refactoring components", "Build reusable components", "Review components" |
 | `vercel-react-best-practices` | 40+ React performance rules                    | Writing, reviewing, or refactoring React code                              |
 | `web-design-guidelines`       | 100+ rules covering UI/UX accessibility audits | "Review my UI", "Check accessibility", "Audit design"                      |
-| `next-best-practices`         | Next.js best practices                         | Writing, reviewing, or refactoring Next.js code                            |
-| `next-cache-components`       | Next.js cache components                       | Writing, reviewing, or refactoring cache components                        |
 
-Based on [vercel agent-skills](https://github.com/vercel-labs/agent-skills)
+Based on [vercel agent-skills](https://github.com/vercel-labs/agent-skills) and [next-skills](https://github.com/vercel-labs/next-skills)
 
 **AI Guidelines** (`ai_docs/PROMPTS.md`)
 
