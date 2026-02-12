@@ -129,8 +129,10 @@ Skills extend AI capabilities for specialized tasks. Each skill contains instruc
 | Skill                         | Purpose                                        | When to Use                                                                |
 | :---------------------------- | :--------------------------------------------- | :------------------------------------------------------------------------- |
 | `vercel-composition-patterns` | React composition patterns                     | "Refactoring components", "Build reusable components", "Review components" |
-| `vercel-react-best-practices` | 40+ React/Next.js performance rules            | Writing, reviewing, or refactoring React code                              |
+| `vercel-react-best-practices` | 40+ React performance rules                    | Writing, reviewing, or refactoring React code                              |
 | `web-design-guidelines`       | 100+ rules covering UI/UX accessibility audits | "Review my UI", "Check accessibility", "Audit design"                      |
+| `next-best-practices`         | Next.js best practices                         | Writing, reviewing, or refactoring Next.js code                            |
+| `next-cache-components`       | Next.js cache components                       | Writing, reviewing, or refactoring cache components                        |
 
 Based on [vercel agent-skills](https://github.com/vercel-labs/agent-skills)
 
