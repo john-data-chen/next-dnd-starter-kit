@@ -20,7 +20,7 @@ function Composer({
   renderActions,
   showAttachments,
   showFormatting,
-  showEmojis
+  showEmojis,
 }: Props) {
   return (
     <form>
@@ -47,7 +47,11 @@ function Composer({
 const ComposerContext = createContext<ComposerContextValue | null>(null)
 
 function ComposerProvider({ children, state, actions, meta }: ProviderProps) {
-  return <ComposerContext value={{ state, actions, meta }}>{children}</ComposerContext>
+  return (
+    <ComposerContext value={{ state, actions, meta }}>
+      {children}
+    </ComposerContext>
+  )
 }
 
 function ComposerFrame({ children }: { children: React.ReactNode }) {
@@ -58,7 +62,7 @@ function ComposerInput() {
   const {
     state,
     actions: { update },
-    meta: { inputRef }
+    meta: { inputRef },
   } = use(ComposerContext)
   return (
     <TextInput
@@ -71,7 +75,7 @@ function ComposerInput() {
 
 function ComposerSubmit() {
   const {
-    actions: { submit }
+    actions: { submit },
   } = use(ComposerContext)
   return <Button onPress={submit}>Send</Button>
 }
@@ -86,7 +90,7 @@ const Composer = {
   Footer: ComposerFooter,
   Attachments: ComposerAttachments,
   Formatting: ComposerFormatting,
-  Emojis: ComposerEmojis
+  Emojis: ComposerEmojis,
 }
 ```
 
