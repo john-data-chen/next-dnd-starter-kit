@@ -1,4 +1,4 @@
-# Next.js Project Management Tool | Full-Stack Portfolio Project
+# Next.js Project Management Tool | Full-Stack Portfolio Project with AI-Assisted Engineering
 
 [![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
@@ -107,32 +107,31 @@ I utilize a suite of specialized AI tools, each assigned specific roles to mimic
 | :---------------- | :---------------------------------------------------------------------- | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
 | **Architect**     | [Claude Code](https://github.com/anthropics/claude-code)                | System design & complex refactoring | Handles multi-file architectural changes with deep context awareness, perfect for making plans for other AI tools.                       |
 | **Plan Executor** | [Kilo Code](https://github.com/Kilo-Org/kilocode)                       | Code writing                        | Follow the plan by Architect, implement functionality and refactor using a faster and cheaper models coming from MiniMax, Z.AI and Kimi. |
-| **QA**            | [Gemini CLI](https://github.com/google-gemini/gemini-cli)               | Writing test cases                  | Gemini 3 Pro is the cheapest option in top models, perfect for writing test cases.                                                       |
+| **QA**            | [Gemini CLI](https://github.com/google-gemini/gemini-cli)               | Writing test cases                  | Gemini flash is the cheapest option in top models, perfect for writing test cases.                                                       |
 | **PR Reviewer**   | [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | Automated PR Review                 | Enforces code standards and catches potential bugs before human reviewer.                                                                |
 
 **MCP (Model Context Protocol) Servers**
 
 MCP enables AI tools to interact directly with development infrastructure, eliminating context-switching overhead:
 
-| Server                                                                                                    | Integration Point     | Workflow Enhancement                                                |
-| --------------------------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------- |
-| [chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)                              | Browser state         | Debug without leaving the editor                                    |
-| [context7-mcp](https://github.com/upstash/context7)                                                       | Documentation         | Current library docs during development                             |
-| [nextjs-mcp](https://nextjs.org/docs/app/guides/mcp)                                                      | Framework diagnostics | Direct access to build errors and routes                            |
-| [sequential-thinking-mcp](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking) | Problem decomposition | Structured approach for complex decisions                           |
-| [playwright-mcp](https://github.com/microsoft/playwright-mcp)                                             | E2E testing           | Add e2e tests by AI based on Behavior-Driven Development guidelines |
+| Server                                                                       | Integration Point     | Workflow Enhancement                                                |
+| ---------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------- |
+| [chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | Browser state         | Debug without leaving the editor                                    |
+| [context7-mcp](https://github.com/upstash/context7)                          | Documentation         | Current library docs during development                             |
+| [nextjs-mcp](https://nextjs.org/docs/app/guides/mcp)                         | Framework diagnostics | Direct access to build errors and routes                            |
+| [playwright-mcp](https://github.com/microsoft/playwright-mcp)                | E2E testing           | Add e2e tests by AI based on Behavior-Driven Development guidelines |
 
 **AI Skills** (in `ai_docs/skills/`)
 
 Skills extend AI capabilities for specialized tasks. Each skill contains instructions and resources that AI assistants can use.
 
-| Skill                         | Purpose                                        | When to Use                                                                |
-| :---------------------------- | :--------------------------------------------- | :------------------------------------------------------------------------- |
-| `next-best-practices`         | Next.js best practices                         | Writing, reviewing, or refactoring Next.js code                            |
-| `next-cache-components`       | Next.js cache components                       | Writing, reviewing, or refactoring cache components                        |
-| `vercel-composition-patterns` | React composition patterns                     | "Refactoring components", "Build reusable components", "Review components" |
-| `vercel-react-best-practices` | 40+ React performance rules                    | Writing, reviewing, or refactoring React code                              |
-| `web-design-guidelines`       | 100+ rules covering UI/UX accessibility audits | "Review my UI", "Check accessibility", "Audit design"                      |
+| Skill                         | Purpose                                   | When to Use                                                                |
+| :---------------------------- | :---------------------------------------- | :------------------------------------------------------------------------- |
+| `next-best-practices`         | Next.js best practices                    | Writing, reviewing, or refactoring Next.js code                            |
+| `next-cache-components`       | Next.js cache components                  | Writing, reviewing, or refactoring Next.js cache components                |
+| `vercel-composition-patterns` | React composition patterns                | "Refactoring components", "Build reusable components", "Review components" |
+| `vercel-react-best-practices` | React performance rules                   | Writing, reviewing, or refactoring React code                              |
+| `web-design-guidelines`       | Rules covering UI/UX accessibility audits | "Review my UI", "Check accessibility", "Audit design"                      |
 
 Based on [vercel agent-skills](https://github.com/vercel-labs/agent-skills) and [next-skills](https://github.com/vercel-labs/next-skills)
 
@@ -144,15 +143,13 @@ Project-specific instructions for AI assistants including repository structure, 
 
 This is an example of how to use prompts and skills in Claude Code, you should check the documentation of other AI tools for more details.
 
-- create a folder named `.claude`
-- then copy skills folder from `ai_docs/skills/` to `.claude`
-- Copy or symlink `PROMPTS.md` to your AI tool's context file location
+- Create a folder named `.claude`
+- Copy skills you need from `ai_docs/skills/` to `.claude/skills/`
+- Copy or create a symbolic link of `PROMPTS.md` to your AI tool's context file location
   | AI Tool | Target Path |
   | ----------- | ------------------- |
   | Claude Code | `[root-folder]/CLAUDE.md` |
-  | Gemini CLI | `[root-folder]/GEMINI.md` |
-- restart the Claude Code
-- AI assistants should use the skills when they are needed
+- Restart the Claude Code
 
 ## 📈 Measurable Impact
 
