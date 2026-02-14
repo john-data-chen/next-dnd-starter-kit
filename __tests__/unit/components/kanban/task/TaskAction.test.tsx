@@ -46,7 +46,14 @@ vi.mock("@/components/ui/dialog", () => ({
   DialogTitle: (props: any) => <div {...props} />
 }))
 vi.mock("@/components/ui/dropdown-menu", () => ({
-  DropdownMenu: (props: any) => <div data-testid="dropdown-menu">{props.children}</div>,
+  DropdownMenu: (props: any) => (
+    <div data-testid="dropdown-menu">
+      {props.children}
+      <button data-testid="trigger-open-change" onClick={() => props.onOpenChange && props.onOpenChange(true)}>
+        Open
+      </button>
+    </div>
+  ),
   DropdownMenuContent: (props: any) => (
     <div data-testid="dropdown-menu-content">{props.children}</div>
   ),
@@ -95,11 +102,65 @@ describe("TaskActions", () => {
     vi.clearAllMocks()
     mockUpdateTask.mockResolvedValue({})
     mockRemoveTask.mockResolvedValue({})
+    // Default fetch mock for permissions and assignee
+    global.fetch = vi.fn((url: string) => {
+      if (url.includes("/permissions")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ canEdit: true, canDelete: true })
+        })
+      }
+      if (url.includes("/api/users/search")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([{ _id: "u1", name: "User 1" }])
+        })
+      }
+      return Promise.resolve({ ok: false })
+    }) as any
   })
 
   it("renders action trigger button", () => {
     render(<TaskActions id="1" title="Task" status="TODO" />)
     expect(screen.getByTestId("task-actions-trigger")).toBeInTheDocument()
+  })
+
+  it("fetches permissions when dropdown is opened", async () => {
+    render(<TaskActions id="1" title="Task" status="TODO" />)
+    const trigger = screen.getByTestId("trigger-open-change")
+    fireEvent.click(trigger)
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith("/api/tasks/1/permissions")
+    })
+  })
+
+  it("fetches assignee info on mount if assignee is provided", async () => {
+    render(<TaskActions id="1" title="Task" status="TODO" assignee="u1" />)
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith("/api/users/search?id=u1")
+    })
+  })
+
+  it("handles permissions fetch error", async () => {
+    global.fetch = vi.fn((url: string) => {
+      if (url.includes("/permissions")) {
+        return Promise.resolve({
+          ok: false,
+          json: () => Promise.resolve({ error: "Fetch failed" })
+        })
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) })
+    }) as any
+
+    render(<TaskActions id="1" title="Task" status="TODO" />)
+    const trigger = screen.getByTestId("trigger-open-change")
+    fireEvent.click(trigger)
+
+    await waitFor(() => {
+      // Should not crash and handle fallback
+      expect(global.fetch).toHaveBeenCalledWith("/api/tasks/1/permissions")
+    })
   })
 
   it("shows edit dialog when edit is enabled and canEdit is true", async () => {
