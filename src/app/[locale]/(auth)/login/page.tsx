@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
+import { cacheLife } from "next/cache"
 
 import SignInView from "@/components/auth/SignInView"
 
@@ -18,8 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // This page is statically generated at build time
-export const dynamic = "force-static"
-
-export default function LoginPage() {
+// oxlint-disable-next-line typescript-eslint/require-await
+export default async function LoginPage() {
+  "use cache"
+  cacheLife("max")
   return <SignInView />
 }

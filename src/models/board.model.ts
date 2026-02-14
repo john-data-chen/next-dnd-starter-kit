@@ -1,6 +1,6 @@
 import mongoose, { Model } from "mongoose"
 
-import { Board as BoardType } from "@/types/dbInterface"
+import { BoardDocument as BoardType } from "@/types/dbInterface"
 
 const boardSchema = new mongoose.Schema(
   {

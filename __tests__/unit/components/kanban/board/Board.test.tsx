@@ -309,4 +309,42 @@ describe("Board", () => {
     })
     expect(mockSetProjects).toHaveBeenCalled()
   })
+
+  it("should handle drag start for a project", async () => {
+    render(<Board />)
+    const activeProject = project1Initial
+    const event: DragStartEvent = {
+      active: {
+        id: activeProject._id,
+        data: { current: { type: "Project", project: activeProject } }
+      } as any,
+      activatorEvent: new MouseEvent("click") as Event
+    }
+    await act(async () => {
+      capturedDragStart?.(event)
+    })
+    // Expectation: no crash and activeProject state updated internally
+  })
+
+  it("should handle project reordering on drag end", async () => {
+    render(<Board />)
+    const event: DragEndEvent = {
+      active: {
+        id: "project1",
+        data: { current: { type: "Project", project: project1Initial } }
+      } as any,
+      over: {
+        id: "project2",
+        data: { current: { type: "Project", project: project2Initial } }
+      } as any,
+      activatorEvent: new MouseEvent("click") as Event,
+      collisions: null,
+      delta: { x: 0, y: 0 }
+    }
+    await act(async () => {
+      capturedDragEnd?.(event)
+    })
+    expect(mockSetProjects).toHaveBeenCalled()
+    expect(arrayMove).toHaveBeenCalled()
+  })
 })

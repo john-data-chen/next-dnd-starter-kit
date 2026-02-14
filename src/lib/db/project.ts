@@ -3,9 +3,9 @@
 import { Types } from "mongoose"
 
 import { BoardModel } from "@/models/board.model"
-import { ProjectModel, ProjectType } from "@/models/project.model"
+import { ProjectModel } from "@/models/project.model"
 import { TaskModel } from "@/models/task.model"
-import { Task } from "@/types/dbInterface"
+import { Project, Task } from "@/types/dbInterface"
 
 import { connectToDatabase } from "./connect"
 import { getUserByEmail, getUserById } from "./user"
@@ -22,13 +22,12 @@ interface ProjectBase {
   board: string
 }
 
-export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] | null> {
+export async function getProjectsFromDb(boardId: string): Promise<Project[] | null> {
   try {
     await connectToDatabase()
-    const boardObjectId = new Types.ObjectId(boardId)
 
     const projects = await ProjectModel.find({
-      board: boardObjectId
+      board: boardId
     }).lean()
 
     if (!projects || projects.length === 0) {
@@ -48,7 +47,7 @@ export async function getProjectsFromDb(boardId: string): Promise<ProjectType[] 
   }
 }
 
-async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<ProjectType> {
+async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Project> {
   // Handle the case where owner is already an object
   let ownerUser
   if (
@@ -145,7 +144,7 @@ export async function createProjectInDb(data: {
   description: string
   board: string
   userEmail: string
-}): Promise<ProjectType | null> {
+}): Promise<Project | null> {
   try {
     await connectToDatabase()
     const owner = await getUserByEmail(data.userEmail)
@@ -157,7 +156,7 @@ export async function createProjectInDb(data: {
       ...data,
       owner: owner.id,
       members: [owner.id],
-      board: new Types.ObjectId(data.board)
+      board: data.board
     })
 
     // add new project to board
@@ -188,7 +187,7 @@ export async function updateProjectInDb(data: {
   userEmail: string
   newTitle: string
   newDescription?: string
-}): Promise<ProjectType | null> {
+}): Promise<Project | null> {
   try {
     await connectToDatabase()
     const project = await ProjectModel.findById(data.projectId)

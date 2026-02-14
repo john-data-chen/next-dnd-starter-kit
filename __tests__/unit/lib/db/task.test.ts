@@ -9,6 +9,7 @@ import {
   updateTaskProjectInDb
 } from "@/lib/db/task"
 import { getUserByEmail, getUserById } from "@/lib/db/user"
+import { BoardModel } from "@/models/board.model"
 import { ProjectModel } from "@/models/project.model"
 import { TaskModel } from "@/models/task.model"
 
@@ -44,12 +45,16 @@ describe("Task DB functions", () => {
     ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
     ;(getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
     ;(getUserById as jest.Mock).mockImplementation((id) =>
-      Promise.resolve(id === mockUser.id ? mockUser : null)
+      Promise.resolve({ id, name: "Mock User", email: "mock@example.com" })
     )
     ;(ProjectModel.findById as jest.Mock).mockResolvedValue({
       board: mockBoardId,
       members: [mockUser.id],
       owner: mockUser.id
+    })
+    ;(BoardModel.findById as jest.Mock).mockResolvedValue({
+      _id: mockBoardId,
+      members: [mockUser.id]
     })
   })
 
@@ -89,6 +94,31 @@ describe("Task DB functions", () => {
       })
       const newTask = await createTaskInDb(mockProjectId, "Test Task", mockUser.email)
       expect(newTask.title).toBe("Test Task")
+    })
+
+    it("should create a new task with assignee and ensure membership", async () => {
+      const assigneeId = new Types.ObjectId().toHexString()
+      ;(TaskModel.create as jest.Mock).mockResolvedValue({
+        ...mockTask,
+        assignee: assigneeId,
+        toObject: () => ({
+          ...mockTask,
+          assignee: new Types.ObjectId(assigneeId),
+          creator: new Types.ObjectId(mockTask.creator),
+          lastModifier: new Types.ObjectId(mockTask.lastModifier)
+        })
+      })
+      ;(ProjectModel.findByIdAndUpdate as jest.Mock).mockResolvedValue({})
+
+      const newTask = await createTaskInDb(
+        mockProjectId,
+        "Test Task",
+        mockUser.email,
+        "",
+        undefined,
+        assigneeId
+      )
+      expect(newTask.assignee?.id).toBe(assigneeId)
     })
 
     it("should throw an error if creator is not found", async () => {

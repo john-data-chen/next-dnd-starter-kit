@@ -1,6 +1,6 @@
 import mongoose, { Model } from "mongoose"
 
-import { Task as TaskType } from "@/types/dbInterface"
+import { TaskModel as TaskModelType } from "@/types/dbInterface"
 
 const taskSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -37,18 +37,17 @@ const taskSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 })
 
-function isTaskModel(model: any): model is Model<TaskType> {
+function isTaskModel(model: any): model is Model<TaskModelType> {
   return model && model.modelName === "Task"
 }
 
-function getTaskModel(): Model<TaskType> {
+function getTaskModel(): Model<TaskModelType> {
   if (isTaskModel(mongoose.models.Task)) {
     return mongoose.models.Task
   }
-  return mongoose.model<TaskType>("Task", taskSchema)
+  return mongoose.model<TaskModelType>("Task", taskSchema)
 }
 
 const TaskModel = getTaskModel()
 
 export { TaskModel }
-export type { TaskType }

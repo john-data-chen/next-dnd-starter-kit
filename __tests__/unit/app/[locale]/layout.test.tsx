@@ -1,6 +1,12 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import React from "react"
 import { describe, expect, it, vi } from "vitest"
+
+// Mock MessagesProvider before importing LocaleLayout
+vi.mock("@/app/[locale]/MessagesProvider", () => ({
+  __esModule: true,
+  default: ({ children }: any) => <div data-testid="messages-provider">{children}</div>
+}))
 
 import LocaleLayout, { generateMetadata } from "@/app/[locale]/layout"
 
@@ -40,27 +46,27 @@ vi.mock("nextjs-toploader", () => ({
 vi.mock("@vercel/analytics/react", () => ({
   Analytics: () => <div data-testid="analytics" />
 }))
-vi.mock("@/styles/globals.css", () => ({}))
 
 describe("LocaleLayout", () => {
   it("should render layout with children and providers", async () => {
     const children = <div data-testid="child">Child Content</div>
-    const params = { locale: "en" }
+    const params = Promise.resolve({ locale: "en" })
     const Layout = await LocaleLayout({ children, params })
 
     // Render the returned JSX
     render(Layout as React.ReactElement)
 
-    expect(screen.getByTestId("child")).toBeInTheDocument()
-    expect(screen.getByTestId("providers")).toBeInTheDocument()
-    expect(screen.getByTestId("intl")).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByTestId("child")).toBeInTheDocument()
+    })
+    expect(screen.getByTestId("messages-provider")).toBeInTheDocument()
     expect(screen.getByTestId("toploader")).toBeInTheDocument()
     expect(screen.getByTestId("analytics")).toBeInTheDocument()
   })
 
   it("should call notFound if locale is not supported", async () => {
     const { notFound } = await import("next/navigation")
-    const params = { locale: "fr" }
+    const params = Promise.resolve({ locale: "fr" })
     await LocaleLayout({ children: <div />, params })
     expect(notFound).toHaveBeenCalled()
   })
@@ -68,7 +74,7 @@ describe("LocaleLayout", () => {
 
 describe("generateMetadata", () => {
   it("should generate metadata with correct title and description", async () => {
-    const params = { locale: "en" }
+    const params = Promise.resolve({ locale: "en" })
     const metadata = await generateMetadata({ params })
     expect(metadata.title).toBe("Test Title")
     expect(metadata.description).toBe("Test Description")

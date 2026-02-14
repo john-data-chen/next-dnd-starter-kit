@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin()
 
 const nextConfig: NextConfig = {
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: false
   },
   compiler: {
     relay: {
@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
   },
   // enable react compiler will increase build time 30~40%
   reactCompiler: false,
+  cacheComponents: true,
   experimental: {
     turbopackFileSystemCacheForBuild: true
   }
