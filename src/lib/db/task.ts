@@ -245,7 +245,7 @@ export async function updateTaskInDb(
         lastModifier: modifier.id,
         updatedAt: new Date()
       },
-      { new: true }
+      { returnDocument: "after" }
     )
 
     if (!updatedTask) {
@@ -312,7 +312,7 @@ export async function updateTaskProjectInDb(
         lastModifier: user.id,
         updatedAt: new Date()
       },
-      { new: true }
+      { returnDocument: "after" }
     )
 
     if (!updatedTask) {

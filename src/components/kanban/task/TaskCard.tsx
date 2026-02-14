@@ -16,6 +16,7 @@ import { TaskActions } from "./TaskAction"
 interface TaskCardProps {
   task: Task
   isOverlay?: boolean
+  canDrag?: boolean
 }
 
 export type TaskType = "Task"
@@ -46,7 +47,7 @@ function getLastField(task: Task): string {
   return visibleFields[visibleFields.length - 1] || ""
 }
 
-export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
+export function TaskCard({ task, isOverlay = false, canDrag = true }: TaskCardProps) {
   const t = useTranslations("kanban.task")
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: task._id,
@@ -56,7 +57,8 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
     } satisfies TaskDragData,
     attributes: {
       roleDescription: "Task"
-    }
+    },
+    disabled: !canDrag
   })
 
   const cardStyle = {
@@ -106,13 +108,15 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
       <CardHeader className="flex flex-row border-b-2 px-3 pb-2">
         <Button
           variant="ghost"
-          {...attributes}
-          {...listeners}
-          className="-ml-2 h-8 w-16 cursor-grab p-1 text-secondary-foreground/50"
+          {...(canDrag ? { ...attributes, ...listeners } : {})}
+          className={cn(
+            "-ml-2 h-8 w-16 p-1 text-secondary-foreground/50",
+            canDrag ? "cursor-grab" : "cursor-default"
+          )}
           data-testid="task-card-drag-button"
           aria-label={t("moveTask")}
         >
-          <PointerIcon />
+          {canDrag && <PointerIcon />}
         </Button>
         <div className="mx-2 flex flex-1 flex-col items-start gap-2">
           {task.title && (
@@ -139,7 +143,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <div className={getLastField(task) !== "creator" ? "border-b" : ""}>
             <CardContent className="px-3 py-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <UserIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                <UserIcon className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{t("createdBy", { name: task.creator.name })}</span>
               </div>
             </CardContent>
@@ -149,7 +153,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <div className={getLastField(task) !== "lastModifier" ? "border-b" : ""}>
             <CardContent className="px-3 py-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <UserIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                <UserIcon className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{t("lastModifiedBy", { name: task.lastModifier.name })}</span>
               </div>
             </CardContent>
@@ -159,7 +163,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <div className={getLastField(task) !== "assignee" ? "border-b" : ""}>
             <CardContent className="px-3 py-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <UserIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                <UserIcon className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{t("assignee", { name: task.assignee.name })}</span>
               </div>
             </CardContent>
@@ -169,7 +173,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <div className={getLastField(task) !== "dueDate" ? "border-b" : ""}>
             <CardContent className="px-3 py-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar1Icon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Calendar1Icon className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>
                   {t("dueDate")}: {format(new Date(task.dueDate), "yyyy/MM/dd")}
                 </span>
@@ -181,7 +185,7 @@ export function TaskCard({ task, isOverlay = false }: TaskCardProps) {
           <div>
             <CardContent className="px-3 py-2">
               <div className="flex items-start gap-2">
-                <FileTextIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                <FileTextIcon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                 <p
                   className="text-sm leading-relaxed text-muted-foreground"
                   data-testid="task-card-description"

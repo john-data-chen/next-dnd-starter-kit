@@ -31,6 +31,7 @@ interface BoardProjectProps {
 
 export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
   const { filter } = useTaskStore()
+  const userId = useTaskStore((state) => state.userId)
   const t = useTranslations("kanban.project")
 
   const filteredTasks = useMemo(() => {
@@ -122,9 +123,14 @@ export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
           <div className="flex-1 overflow-y-auto px-2 pb-2">
             <SortableContext items={tasksIds}>
               <div className="space-y-2">
-                {filteredTasks.map((task) => (
-                  <TaskCard key={task._id} task={task} />
-                ))}
+                {filteredTasks.map((task) => {
+                  const canDrag =
+                    !!userId &&
+                    (project.owner.id === userId ||
+                      task.creator.id === userId ||
+                      task.assignee?.id === userId)
+                  return <TaskCard key={task._id} task={task} canDrag={canDrag} />
+                })}
               </div>
             </SortableContext>
           </div>

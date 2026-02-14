@@ -206,7 +206,11 @@ export async function updateBoardInDb(
       throw new Error("Unauthorized: Only board owner can update the board")
     }
 
-    const board = await BoardModel.findByIdAndUpdate(boardId, { ...data }, { new: true }).lean()
+    const board = await BoardModel.findByIdAndUpdate(
+      boardId,
+      { ...data },
+      { returnDocument: "after" }
+    ).lean()
 
     if (!board) {
       return null
