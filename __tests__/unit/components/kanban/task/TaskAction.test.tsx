@@ -49,7 +49,10 @@ vi.mock("@/components/ui/dropdown-menu", () => ({
   DropdownMenu: (props: any) => (
     <div data-testid="dropdown-menu">
       {props.children}
-      <button data-testid="trigger-open-change" onClick={() => props.onOpenChange && props.onOpenChange(true)}>
+      <button
+        data-testid="trigger-open-change"
+        onClick={() => props.onOpenChange && props.onOpenChange(true)}
+      >
         Open
       </button>
     </div>
