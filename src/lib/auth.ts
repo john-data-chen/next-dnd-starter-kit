@@ -34,6 +34,7 @@ export const authConfig = {
  * Replaces next-auth's auth() function
  */
 export async function auth(): Promise<Session | null> {
+  "use cache: private"
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get("better-auth.session_token")?.value

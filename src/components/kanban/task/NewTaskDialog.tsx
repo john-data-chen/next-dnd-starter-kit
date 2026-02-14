@@ -31,7 +31,7 @@ export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
     await addTask(
       projectId,
       values.title,
-      values.status,
+      values.status ?? "TODO",
       values.description ?? "",
       values.dueDate ?? undefined,
       values.assignee?._id ?? undefined

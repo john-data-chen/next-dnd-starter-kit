@@ -66,3 +66,12 @@ vi.mock("next/navigation", () => {
     })
   }
 })
+
+vi.mock("next/cache", () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+  revalidateTag: vi.fn(),
+  revalidatePath: vi.fn(),
+  unstable_cache: vi.fn((fn) => fn),
+  unstable_noStore: vi.fn()
+}))
