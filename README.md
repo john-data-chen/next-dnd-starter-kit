@@ -19,7 +19,7 @@ A production-grade Kanban board application. Showcases engineering practices, de
 
 | Metric         | Result                                                        |
 | -------------- | ------------------------------------------------------------- |
-| Test Coverage  | **70%+** via Vitest (unit + integration)                      |
+| Test Coverage  | **80%+** via Vitest (unit + integration)                      |
 | Code Quality   | **SonarQube A** across Security, Reliability, Maintainability |
 | Performance    | **Lighthouse 90+** on all categories                          |
 | E2E Validation | Cross-browser (Chrome, Safari, Edge) via Playwright           |
@@ -304,7 +304,7 @@ Type-aware rules are available but kept in evaluation for this project. [Oxlint 
 | Performance | Near-instant HMR, incremental compilation  |
 | Caching     | Filesystem caching persists artifacts      |
 
-[Turbopack Docs](https://nextjs.org/docs/app/api-reference/turbopack) | [FS Caching](https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache)
+[Turbopack](https://nextjs.org/docs/app/api-reference/turbopack) | [FS Caching](https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache)
 
 ### React Compiler
 
@@ -314,7 +314,7 @@ Type-aware rules are available but kept in evaluation for this project. [Oxlint 
 | Trade-off | +5-10% Lighthouse score vs +30-40% build time                              |
 | Decision  | Build time cost outweighs marginal performance gain for this project scope |
 
-[React Compiler Docs](https://react.dev/learn/react-compiler)
+[React Compiler](https://react.dev/learn/react-compiler)
 
 ---
 

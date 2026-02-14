@@ -1,5 +1,3 @@
-"use client"
-
 import { Toaster } from "sonner"
 
 import { TOAST_DURATION_MS } from "@/constants/ui"

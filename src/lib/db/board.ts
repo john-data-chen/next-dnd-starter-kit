@@ -18,9 +18,11 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
       return []
     }
 
-    const boardsFromDb = await BoardModel.find({
+    const query: any = {
       $or: [{ owner: user.id }, { members: user.id }]
-    })
+    }
+
+    const boardsFromDb = await BoardModel.find(query)
       .populate("owner", "name")
       .populate("members", "name")
       .populate({
@@ -248,8 +250,9 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
     }
 
     const { TaskModel } = await import("@/models/task.model")
+    const projectIds = board.projects.map((p: any) => (typeof p === "string" ? p : p._id))
     await TaskModel.deleteMany({
-      project: { $in: board.projects }
+      project: { $in: projectIds }
     })
 
     await ProjectModel.deleteMany({ board: boardId })

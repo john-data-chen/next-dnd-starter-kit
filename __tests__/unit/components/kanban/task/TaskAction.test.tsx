@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react"
+import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -69,10 +69,16 @@ vi.mock("next-intl", () => ({
 vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn() }
 }))
+const mockUpdateTask = vi.fn()
+const mockRemoveTask = vi.fn()
+
 vi.mock("@/lib/store", () => ({
-  useTaskStore: () => ({
-    updateTask: vi.fn(),
-    removeTask: vi.fn()
+  useTaskStore: vi.fn((selector) => {
+    const state = {
+      updateTask: mockUpdateTask,
+      removeTask: mockRemoveTask
+    }
+    return selector ? selector(state) : state
   })
 }))
 
@@ -87,6 +93,8 @@ global.fetch = vi.fn(() =>
 describe("TaskActions", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUpdateTask.mockResolvedValue({})
+    mockRemoveTask.mockResolvedValue({})
   })
 
   it("renders action trigger button", () => {
@@ -102,5 +110,25 @@ describe("TaskActions", () => {
   it("shows delete dialog when delete is enabled and canDelete is true", async () => {
     render(<TaskActions id="1" title="Task" status="TODO" />)
     expect(screen.getByTestId("alert-dialog")).toBeInTheDocument()
+  })
+
+  it("calls updateTask when form is submitted", async () => {
+    render(<TaskActions id="1" title="Task" status="TODO" />)
+    const form = screen.getByTestId("task-form")
+    fireEvent.submit(form)
+
+    await waitFor(() => {
+      expect(mockUpdateTask).toHaveBeenCalled()
+    })
+  })
+
+  it("calls removeTask when delete is confirmed", async () => {
+    render(<TaskActions id="1" title="Task" status="TODO" />)
+    const deleteButton = screen.getByTestId("confirm-delete-button")
+    fireEvent.click(deleteButton)
+
+    await waitFor(() => {
+      expect(mockRemoveTask).toHaveBeenCalledWith("1")
+    })
   })
 })

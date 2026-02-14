@@ -1,6 +1,6 @@
 import mongoose, { Model } from "mongoose"
 
-import { Project as ProjectType } from "@/types/dbInterface"
+import { ProjectModel as ProjectModelType } from "@/types/dbInterface"
 
 const projectSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -12,12 +12,11 @@ const projectSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 })
 
-let ProjectModel: Model<ProjectType>
+let ProjectModel: Model<ProjectModelType>
 try {
-  ProjectModel = mongoose.model<ProjectType>("Project")
+  ProjectModel = mongoose.model<ProjectModelType>("Project")
 } catch {
-  ProjectModel = mongoose.model<ProjectType>("Project", projectSchema)
+  ProjectModel = mongoose.model<ProjectModelType>("Project", projectSchema)
 }
 
 export { ProjectModel }
-export type { ProjectType }

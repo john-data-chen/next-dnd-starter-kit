@@ -4,7 +4,7 @@ import { Types } from "mongoose"
 
 import { BoardModel } from "@/models/board.model"
 import { ProjectModel } from "@/models/project.model"
-import { TaskModel, TaskType } from "@/models/task.model"
+import { TaskModel } from "@/models/task.model"
 import { Task, TaskStatus } from "@/types/dbInterface"
 
 import { connectToDatabase } from "./connect"
@@ -27,7 +27,7 @@ interface TaskBase {
   __v?: number
 }
 
-async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<TaskType> {
+async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<Task> {
   if (!taskDoc) {
     throw new Error("Task document is undefined")
   }
@@ -139,7 +139,7 @@ async function ensureUserIsMember(projectId: string, userId: string): Promise<vo
     throw new Error("Board not found")
   }
 
-  const getObjectIdString = (id: Types.ObjectId): string => {
+  const getObjectIdString = (id: any): string => {
     if (id instanceof Types.ObjectId) {
       return id.toHexString()
     }
@@ -282,7 +282,7 @@ export async function updateTaskProjectInDb(
       throw new Error("Task not found")
     }
 
-    const getObjectIdString = (id: Types.ObjectId | undefined): string => {
+    const getObjectIdString = (id: any): string => {
       if (!id) {
         return ""
       }
@@ -308,7 +308,7 @@ export async function updateTaskProjectInDb(
     const updatedTask = await TaskModel.findByIdAndUpdate(
       taskId,
       {
-        project: new Types.ObjectId(newProjectId),
+        project: newProjectId,
         lastModifier: user.id,
         updatedAt: new Date()
       },
