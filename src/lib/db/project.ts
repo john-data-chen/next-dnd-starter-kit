@@ -176,7 +176,7 @@ export async function createProjectInDb(data: {
       {
         $push: { projects: projectDoc._id }
       },
-      { new: true }
+      { returnDocument: "after" }
     )
 
     if (!updatedBoard) {
@@ -224,7 +224,7 @@ export async function updateProjectInDb(data: {
         description: data.newDescription,
         updatedAt: new Date()
       },
-      { new: true }
+      { returnDocument: "after" }
     )
 
     if (!updatedProjectDoc) {
