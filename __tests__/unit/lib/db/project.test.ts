@@ -1,11 +1,13 @@
 import { Types } from "mongoose"
+import { type Mock } from "vitest"
 
 import { connectToDatabase } from "@/lib/db/connect"
 import {
   createProjectInDb,
   deleteProjectInDb,
   getProjectsFromDb,
-  updateProjectInDb
+  updateProjectInDb,
+  updateProjectOrderInDb
 } from "@/lib/db/project"
 import { getUserByEmail, getUserById } from "@/lib/db/user"
 import { BoardModel } from "@/models/board.model"
@@ -40,19 +42,21 @@ describe("Project DB functions", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
-    ;(getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
-    ;(getUserById as jest.Mock).mockImplementation((id) =>
+    ;(connectToDatabase as Mock).mockResolvedValue(undefined)
+    ;(getUserByEmail as Mock).mockResolvedValue(mockUser)
+    ;(getUserById as Mock).mockImplementation((id: string) =>
       Promise.resolve(id === mockUser.id ? mockUser : null)
     )
   })
 
   describe("getProjectsFromDb", () => {
     it("should fetch projects for a board", async () => {
-      ;(ProjectModel.find as jest.Mock).mockReturnValue({
-        lean: vi
-          .fn()
-          .mockResolvedValue([{ ...mockProject, owner: new Types.ObjectId(mockProject.owner) }])
+      ;(ProjectModel.find as Mock).mockReturnValue({
+        sort: vi.fn().mockReturnValue({
+          lean: vi
+            .fn()
+            .mockResolvedValue([{ ...mockProject, owner: new Types.ObjectId(mockProject.owner) }])
+        })
       })
       const projects = await getProjectsFromDb(mockBoardId)
       expect(projects).toHaveLength(1)
@@ -60,8 +64,10 @@ describe("Project DB functions", () => {
     })
 
     it("should return an empty array when no projects are found", async () => {
-      ;(ProjectModel.find as jest.Mock).mockReturnValue({
-        lean: vi.fn().mockResolvedValue([])
+      ;(ProjectModel.find as Mock).mockReturnValue({
+        sort: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue([])
+        })
       })
       const projects = await getProjectsFromDb(mockBoardId)
       expect(projects).toEqual([])
@@ -70,14 +76,19 @@ describe("Project DB functions", () => {
 
   describe("createProjectInDb", () => {
     it("should create a new project", async () => {
-      ;(ProjectModel.create as jest.Mock).mockResolvedValue({
+      ;(ProjectModel.findOne as Mock).mockReturnValue({
+        sort: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue(null)
+        })
+      })
+      ;(ProjectModel.create as Mock).mockResolvedValue({
         ...mockProject,
         toObject: () => ({
           ...mockProject,
           owner: new Types.ObjectId(mockProject.owner)
         })
       })
-      ;(BoardModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(true)
+      ;(BoardModel.findByIdAndUpdate as Mock).mockResolvedValue(true)
 
       const newProject = await createProjectInDb({
         title: "Test Project",
@@ -90,7 +101,7 @@ describe("Project DB functions", () => {
     })
 
     it("should return null if user is not found", async () => {
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(getUserByEmail as Mock).mockResolvedValue(null)
       const newProject = await createProjectInDb({
         title: "Test Project",
         description: "Test Description",
@@ -101,14 +112,19 @@ describe("Project DB functions", () => {
     })
 
     it("should return null if board update fails", async () => {
-      ;(ProjectModel.create as jest.Mock).mockResolvedValue({
+      ;(ProjectModel.findOne as Mock).mockReturnValue({
+        sort: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue(null)
+        })
+      })
+      ;(ProjectModel.create as Mock).mockResolvedValue({
         ...mockProject,
         toObject: () => ({
           ...mockProject,
           owner: new Types.ObjectId(mockProject.owner)
         })
       })
-      ;(BoardModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(null)
+      ;(BoardModel.findByIdAndUpdate as Mock).mockResolvedValue(null)
       const newProject = await createProjectInDb({
         title: "Test Project",
         description: "Test Description",
@@ -121,8 +137,8 @@ describe("Project DB functions", () => {
 
   describe("updateProjectInDb", () => {
     it("should update a project", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject)
-      ;(ProjectModel.findByIdAndUpdate as jest.Mock).mockReturnValue({
+      ;(ProjectModel.findById as Mock).mockResolvedValue(mockProject)
+      ;(ProjectModel.findByIdAndUpdate as Mock).mockReturnValue({
         lean: vi.fn().mockResolvedValue({ ...mockProject, title: "Updated Project" }),
         toObject: () => ({
           ...mockProject,
@@ -140,7 +156,7 @@ describe("Project DB functions", () => {
     })
 
     it("should return null if project is not found", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(null)
+      ;(ProjectModel.findById as Mock).mockResolvedValue(null)
       const updatedProject = await updateProjectInDb({
         projectId: mockProjectId,
         userEmail: mockUser.email,
@@ -150,8 +166,8 @@ describe("Project DB functions", () => {
     })
 
     it("should return null if user is not found", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject)
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(ProjectModel.findById as Mock).mockResolvedValue(mockProject)
+      ;(getUserByEmail as Mock).mockResolvedValue(null)
       const updatedProject = await updateProjectInDb({
         projectId: mockProjectId,
         userEmail: mockUser.email,
@@ -161,7 +177,7 @@ describe("Project DB functions", () => {
     })
 
     it("should return null if user is not the owner", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue({
+      ;(ProjectModel.findById as Mock).mockResolvedValue({
         ...mockProject,
         owner: new Types.ObjectId()
       })
@@ -176,37 +192,55 @@ describe("Project DB functions", () => {
 
   describe("deleteProjectInDb", () => {
     it("should delete a project", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject)
-      ;(BoardModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(true)
-      ;(TaskModel.deleteMany as jest.Mock).mockResolvedValue({
+      ;(ProjectModel.findById as Mock).mockResolvedValue(mockProject)
+      ;(BoardModel.findByIdAndUpdate as Mock).mockResolvedValue(true)
+      ;(TaskModel.deleteMany as Mock).mockResolvedValue({
         acknowledged: true,
         deletedCount: 0
       })
-      ;(ProjectModel.findByIdAndDelete as jest.Mock).mockResolvedValue(mockProject)
+      ;(ProjectModel.findByIdAndDelete as Mock).mockResolvedValue(mockProject)
 
       const result = await deleteProjectInDb(mockProjectId, mockUser.email)
       expect(result).toBe(true)
     })
 
     it("should return false if project is not found", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(null)
+      ;(ProjectModel.findById as Mock).mockResolvedValue(null)
       const result = await deleteProjectInDb(mockProjectId, mockUser.email)
       expect(result).toBe(false)
     })
 
     it("should return false if user is not found", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(mockProject)
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(ProjectModel.findById as Mock).mockResolvedValue(mockProject)
+      ;(getUserByEmail as Mock).mockResolvedValue(null)
       const result = await deleteProjectInDb(mockProjectId, mockUser.email)
       expect(result).toBe(false)
     })
 
     it("should return false if user is not the owner", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue({
+      ;(ProjectModel.findById as Mock).mockResolvedValue({
         ...mockProject,
         owner: new Types.ObjectId()
       })
       const result = await deleteProjectInDb(mockProjectId, mockUser.email)
+      expect(result).toBe(false)
+    })
+  })
+
+  describe("updateProjectOrderInDb", () => {
+    it("should update project order", async () => {
+      ;(ProjectModel.bulkWrite as Mock).mockResolvedValue({ ok: 1 })
+      const result = await updateProjectOrderInDb(
+        [mockProjectId, new Types.ObjectId().toHexString()],
+        mockUser.email
+      )
+      expect(result).toBe(true)
+      expect(ProjectModel.bulkWrite).toHaveBeenCalled()
+    })
+
+    it("should return false if user is not found", async () => {
+      ;(getUserByEmail as Mock).mockResolvedValue(null)
+      const result = await updateProjectOrderInDb([mockProjectId], mockUser.email)
       expect(result).toBe(false)
     })
   })

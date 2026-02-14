@@ -15,7 +15,7 @@ import {
   type DragOverEvent,
   type DragStartEvent
 } from "@dnd-kit/core"
-import { arrayMove, SortableContext } from "@dnd-kit/sortable"
+import { SortableContext } from "@dnd-kit/sortable"
 import { Fragment, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 
@@ -35,6 +35,7 @@ export function Board() {
   const filter = useTaskStore((state) => state.filter)
   const setProjects = useTaskStore((state) => state.setProjects)
   const dragTaskOnProject = useTaskStore((state) => state.dragTaskOnProject)
+  const updateProjectOrder = useTaskStore((state) => state.updateProjectOrder)
   const projectsId = useMemo(() => projects.map((project: Project) => project._id), [projects])
 
   const [activeProject, setActiveProject] = useState<Project | null>(null)
@@ -211,11 +212,15 @@ export function Board() {
     if (!isActiveAProject) {
       return
     }
-    const activeProjectIndex = projects.findIndex((project: Project) => project._id === activeId)
-
-    const overProjectIndex = projects.findIndex((project: Project) => project._id === overId)
-
-    setProjects(arrayMove(projects, activeProjectIndex, overProjectIndex))
+    updateProjectOrder(activeId as string, overId as string)
+      .then(() => {
+        toast.success("Project order updated")
+      })
+      .catch((error: unknown) => {
+        console.error("Failed to update project order:", error)
+        const message = error instanceof Error ? error.message : "unknown error"
+        toast.error(`Failed to update project order: ${message}`)
+      })
   }
 
   const pickedUpTaskProject = useRef<string | null>(null)

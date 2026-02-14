@@ -8,6 +8,7 @@ const projectSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   board: { type: mongoose.Schema.Types.ObjectId, ref: "Board", required: true },
+  orderInBoard: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 })
