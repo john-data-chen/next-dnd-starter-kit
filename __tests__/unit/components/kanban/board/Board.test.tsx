@@ -1,7 +1,6 @@
-import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core"
-import { arrayMove } from "@dnd-kit/sortable"
-import { act, render, screen } from "@testing-library/react"
 // Added act
+import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core"
+import { act, render, screen } from "@testing-library/react"
 import React from "react"
 import { vi } from "vitest"
 
@@ -11,6 +10,7 @@ import { Project, Task, TaskStatus, UserInfo } from "@/types/dbInterface"
 // --- Hoisted Mocks & Variables ---
 const mockSetProjects = vi.fn()
 const mockDragTaskOnProject = vi.fn()
+const mockUpdateProjectOrder = vi.fn()
 let mockProjectsData: Project[] = []
 let mockIsLoadingProjectsData = false
 let mockFilterData: { status?: TaskStatus | null; search?: string } = {}
@@ -22,7 +22,8 @@ vi.mock("@/lib/store", () => ({
       isLoadingProjects: mockIsLoadingProjectsData,
       filter: mockFilterData,
       setProjects: mockSetProjects,
-      dragTaskOnProject: mockDragTaskOnProject
+      dragTaskOnProject: mockDragTaskOnProject,
+      updateProjectOrder: mockUpdateProjectOrder
     }
     return selector(state)
   }
@@ -198,9 +199,9 @@ describe("Board", () => {
     mockFilterData = {}
     mockSetProjects.mockClear()
     mockDragTaskOnProject.mockClear().mockResolvedValue(undefined)
+    mockUpdateProjectOrder.mockClear().mockResolvedValue(undefined)
     hoistedToastMocks.mockToastSuccess.mockClear() // Updated
     hoistedToastMocks.mockToastError.mockClear() // Updated
-    vi.mocked(arrayMove).mockClear()
 
     capturedDragStart = undefined
     capturedDragOver = undefined
@@ -344,7 +345,6 @@ describe("Board", () => {
     await act(async () => {
       capturedDragEnd?.(event)
     })
-    expect(mockSetProjects).toHaveBeenCalled()
-    expect(arrayMove).toHaveBeenCalled()
+    expect(mockUpdateProjectOrder).toHaveBeenCalledWith("project1", "project2")
   })
 })
