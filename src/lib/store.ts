@@ -1,3 +1,4 @@
+import { arrayMove } from "@dnd-kit/sortable"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
@@ -9,7 +10,8 @@ import {
   createProjectInDb,
   deleteProjectInDb,
   getProjectsFromDb,
-  updateProjectInDb
+  updateProjectInDb,
+  updateProjectOrderInDb
 } from "./db/project"
 import {
   createTaskInDb,
@@ -31,6 +33,7 @@ interface State {
   addProject: (title: string, description: string) => Promise<string>
   updateProject: (id: string, newTitle: string, newDescription?: string) => Promise<void>
   removeProject: (id: string) => Promise<void>
+  updateProjectOrder: (activeId: string, overId: string) => Promise<void>
   addTask: (
     projectId: string,
     title: string,
@@ -176,6 +179,40 @@ export const useTaskStore = create<State>()(
           }))
         } catch (error) {
           console.error("Error removing project:", error)
+          throw error
+        }
+      },
+      updateProjectOrder: async (activeId: string, overId: string) => {
+        const state = useTaskStore.getState()
+        const userEmail = state.userEmail
+        if (!userEmail) {
+          throw new Error("User email not found")
+        }
+
+        const oldProjects = [...state.projects]
+        const activeIndex = oldProjects.findIndex((p) => p._id === activeId)
+        const overIndex = oldProjects.findIndex((p) => p._id === overId)
+
+        if (activeIndex === -1 || overIndex === -1) {
+          return
+        }
+
+        // Optimistic update
+        const newProjects = arrayMove(oldProjects, activeIndex, overIndex)
+        set({ projects: newProjects })
+
+        try {
+          const projectIds = newProjects.map((p) => p._id)
+          const success = await updateProjectOrderInDb(projectIds, userEmail)
+          if (!success) {
+            // Revert on failure
+            set({ projects: oldProjects })
+            console.error("Failed to update project order")
+          }
+        } catch (error) {
+          // Revert on error
+          set({ projects: oldProjects })
+          console.error("Error updating project order:", error)
           throw error
         }
       },

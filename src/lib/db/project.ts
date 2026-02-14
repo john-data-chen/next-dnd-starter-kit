@@ -20,6 +20,7 @@ interface ProjectBase {
   updatedAt?: Date | string
   tasks?: Task[]
   board: string
+  orderInBoard?: number
 }
 
 export async function getProjectsFromDb(boardId: string): Promise<Project[] | null> {
@@ -28,7 +29,9 @@ export async function getProjectsFromDb(boardId: string): Promise<Project[] | nu
 
     const projects = await ProjectModel.find({
       board: boardId
-    }).lean()
+    })
+      .sort({ orderInBoard: 1 })
+      .lean()
 
     if (!projects || projects.length === 0) {
       console.log("No projects found for board:", boardId)
@@ -135,7 +138,8 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
       createdAt: new Date(task.createdAt), // Changed: return Date object instead of ISO string
       updatedAt: new Date(task.updatedAt) // Changed: return Date object instead of ISO string
     })),
-    board: projectDoc.board.toString()
+    board: projectDoc.board.toString(),
+    orderInBoard: projectDoc.orderInBoard ?? 0
   }
 }
 
@@ -152,11 +156,18 @@ export async function createProjectInDb(data: {
       console.error("User not found")
       return null
     }
+    // Auto-assign orderInBoard to the end
+    const maxOrderProject = await ProjectModel.findOne({ board: data.board })
+      .sort({ orderInBoard: -1 })
+      .lean()
+    const nextOrder = (maxOrderProject?.orderInBoard ?? -1) + 1
+
     const projectDoc = await ProjectModel.create({
       ...data,
       owner: owner.id,
       members: [owner.id],
-      board: data.board
+      board: data.board,
+      orderInBoard: nextOrder
     })
 
     // add new project to board
@@ -259,6 +270,33 @@ export async function deleteProjectInDb(id: string, userEmail: string): Promise<
     return deletedProject !== null
   } catch (error) {
     console.error("Error deleting project:", error)
+    return false
+  }
+}
+
+export async function updateProjectOrderInDb(
+  projectIds: string[],
+  userEmail: string
+): Promise<boolean> {
+  try {
+    await connectToDatabase()
+    const user = await getUserByEmail(userEmail)
+    if (!user) {
+      console.error("User not found")
+      return false
+    }
+
+    const bulkOps = projectIds.map((id, index) => ({
+      updateOne: {
+        filter: { _id: id },
+        update: { $set: { orderInBoard: index, updatedAt: new Date() } }
+      }
+    }))
+
+    await ProjectModel.bulkWrite(bulkOps)
+    return true
+  } catch (error) {
+    console.error("Error updating project order:", error)
     return false
   }
 }

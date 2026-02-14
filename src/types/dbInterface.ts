@@ -8,6 +8,7 @@ export interface Project {
   updatedAt: string
   tasks: Task[]
   board: string
+  orderInBoard?: number
 }
 
 export interface User {
@@ -63,6 +64,7 @@ export interface ProjectModel {
   members: string[]
   tasks: Task[]
   board: string
+  orderInBoard?: number
   createdAt: Date
   updatedAt: Date
 }
