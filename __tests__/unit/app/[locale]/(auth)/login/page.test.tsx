@@ -23,8 +23,9 @@ vi.mock("@/components/auth/SignInView", () => ({
 }))
 
 describe("LoginPage", () => {
-  it("should render SignInView component", () => {
-    render(<LoginPage />)
+  it("should render SignInView component", async () => {
+    const Component = await LoginPage()
+    render(Component)
     expect(screen.getByTestId("sign-in-view")).toBeInTheDocument()
   })
 

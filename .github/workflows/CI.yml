@@ -29,12 +29,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: init db
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NODE_ENV: ${{ vars.NODE_ENV }} # Or 'test' if preferred for testing
-        run: pnpm init-db --force
-
       - name: Run Unit Tests by Vitest
         # highlight-start
         env:

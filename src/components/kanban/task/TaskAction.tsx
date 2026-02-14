@@ -104,18 +104,23 @@ export function TaskActions({
     assignee: assigneeInfo ?? undefined
   }
 
-  const handleSubmit = (values: z.infer<typeof TaskFormSchema>) => {
+  const handleSubmit = async (values: z.infer<typeof TaskFormSchema>) => {
     const assigneeId = values.assignee?._id
-    updateTask(
-      id,
-      values.title,
-      values.status ?? "TODO",
-      values.description,
-      values.dueDate,
-      assigneeId
-    ).catch(console.error)
-    toast.success(t("updateSuccess", { title: values.title }))
-    setEditEnable(false)
+    try {
+      await updateTask(
+        id,
+        values.title,
+        values.status ?? "TODO",
+        values.description,
+        values.dueDate,
+        assigneeId
+      )
+      toast.success(t("updateSuccess", { title: values.title }))
+      setEditEnable(false)
+    } catch (error) {
+      console.error(error)
+      toast.error(t("updateFailed"))
+    }
   }
 
   const handleDelete = () => {

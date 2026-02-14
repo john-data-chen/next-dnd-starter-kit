@@ -2,14 +2,20 @@ import "@/styles/globals.css"
 
 import { Analytics } from "@vercel/analytics/react"
 import { Metadata } from "next"
-import { hasLocale, NextIntlClientProvider } from "next-intl"
-import { getMessages, getTranslations } from "next-intl/server"
+import { hasLocale } from "next-intl"
+import { getTranslations } from "next-intl/server"
 import { Roboto } from "next/font/google"
 import { notFound } from "next/navigation"
 import NextTopLoader from "nextjs-toploader"
+import { Suspense } from "react"
 
-import Providers from "@/components/layout/Providers"
 import { routing } from "@/i18n/routing"
+
+import MessagesProvider from "./MessagesProvider"
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -20,11 +26,11 @@ const roboto = Roboto({
 
 interface Props {
   children: React.ReactNode
-  params: { locale: string }
+  params: Promise<{ locale: string }>
 }
 
 export async function generateMetadata({ params }: Omit<Props, "children">): Promise<Metadata> {
-  const { locale } = await Promise.resolve(params)
+  const { locale } = await params
   const t = await getTranslations({ locale, namespace: "metadata" })
 
   return {
@@ -34,19 +40,18 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
 }
 
 export default async function LocaleLayout({ children, params }: Readonly<Props>) {
-  const { locale } = await Promise.resolve(params)
+  const { locale } = await params
   if (!hasLocale(routing.locales, locale)) {
     notFound()
   }
-  const messages = await getMessages()
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={roboto.className}>
         <NextTopLoader showSpinner={false} />
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers>{children}</Providers>
-        </NextIntlClientProvider>
+        <Suspense fallback={null}>
+          <MessagesProvider locale={locale}>{children}</MessagesProvider>
+        </Suspense>
         <Analytics />
       </body>
     </html>

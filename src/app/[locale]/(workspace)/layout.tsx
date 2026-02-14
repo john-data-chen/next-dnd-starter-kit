@@ -1,10 +1,6 @@
-import { getTranslations } from "next-intl/server"
-import { redirect } from "next/navigation"
 import { Suspense } from "react"
 
-import RootWrapper from "@/components/layout/RootWrapper"
-import { ROUTES } from "@/constants/routes"
-import { auth } from "@/lib/auth"
+import AuthenticatedLayout from "./AuthenticatedLayout"
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -13,18 +9,11 @@ interface AppLayoutProps {
 
 export default async function AppLayout(props: Readonly<AppLayoutProps>) {
   const { children, params } = props
-  const resolvedParams = await params
-  const { locale } = resolvedParams
-  const session = await auth()
-  const t = await getTranslations({ locale, namespace: "sidebar" })
-
-  if (!session) {
-    redirect(ROUTES.AUTH.LOGIN)
-  }
+  const { locale } = await params
 
   return (
-    <Suspense fallback={<div>{t("loading")}</div>}>
-      <RootWrapper>{children}</RootWrapper>
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthenticatedLayout locale={locale}>{children}</AuthenticatedLayout>
     </Suspense>
   )
 }

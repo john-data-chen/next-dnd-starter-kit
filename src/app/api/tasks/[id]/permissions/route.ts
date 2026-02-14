@@ -36,13 +36,14 @@ export async function GET(req: NextRequest) {
     if (!board || !project) {
       return NextResponse.json({ error: "Resource not found" }, { status: 404 })
     }
-    const canDelete =
-      (board.owner as { id: string }).id === userId ||
-      (project.owner as { id: string }).id === userId ||
-      (task.creator as { id: string }).id === userId
+    const getUserId = (obj: any) => (obj?._id ? obj._id.toString() : obj?.toString())
 
-    /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
-    const canEdit = canDelete || (task.assignee && (task.assignee as any).toString() === userId)
+    const canDelete =
+      getUserId(board.owner) === userId ||
+      getUserId(project.owner) === userId ||
+      getUserId(task.creator) === userId
+
+    const canEdit = canDelete || (task.assignee && getUserId(task.assignee) === userId)
 
     return NextResponse.json({ canDelete, canEdit })
   } catch (error) {
