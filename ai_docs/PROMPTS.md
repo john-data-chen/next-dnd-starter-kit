@@ -2,6 +2,7 @@
 
 ## AI Assistant Behavioral Framework
 
+- **MANDATORY**: Check for `karpathy-guidelines` skill for ANY coding task.
 - **Check MCP/skills before execution**:
   - Verify available and enabled tools
   - Suggest and confirm with the user which MCP/skill to use
@@ -12,9 +13,28 @@
 - **Incremental Verification**: Run lint, type-check, test, and build commands after every significant change
 
 > [!TIP]
-> Use skills: `vercel-react-best-practices` (performance), `web-design-guidelines` (UI/UX), `vercel-composition-patterns` (React patterns), `next-best-practices` (Next.js best practices), `next-cache-components` (Next.js cache components)
 > If need to check package info, use `context7-mcp` if installed and enabled.
 > When starting work on a Next.js project, call the `init` tool from next-devtools-mcp FIRST to set up proper context and establish documentation requirements. Ask user for confirmation before calling the tool.
+
+## Skill Dispatch Guide
+
+When a task matches conditions below, load the corresponding skill **before writing code**.
+
+### 🚨 Universal Optimization Skills (CHECK FIRST, in `ai_docs/skills/ai-optimization/`)
+
+| Condition (when the task involves...)                                                                                               | Skill to Use          |
+| :---------------------------------------------------------------------------------------------------------------------------------- | :-------------------- |
+| **ANY coding task** (writing, refactoring, fixing bugs). **ALWAYS** load this skill first to ensure high-quality, surgical changes. | `karpathy-guidelines` |
+
+### Web Skills (`ai_docs/skills/web/`)
+
+| Condition (when the task involves...)                                              | Skill to Use                  |
+| :--------------------------------------------------------------------------------- | :---------------------------- |
+| Next.js file conventions, RSC, data fetching, metadata, route handlers, async APIs | `next-best-practices`         |
+| `use cache` directive, PPR, cacheLife, cacheTag, updateTag, static/dynamic mix     | `next-cache-components`       |
+| Component API design, compound components, boolean prop cleanup, render props      | `vercel-composition-patterns` |
+| React/Next.js performance: re-renders, bundle size, waterfalls, memoization        | `vercel-react-best-practices` |
+| UI review, accessibility audit, UX compliance, design guidelines                   | `web-design-guidelines`       |
 
 ## Project Overview
 
