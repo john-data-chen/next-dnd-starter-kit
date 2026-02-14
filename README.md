@@ -127,11 +127,15 @@ Skills extend AI capabilities for specialized tasks. Each skill contains instruc
 
 **AI Optimization Skills** (`ai_docs/skills/ai-optimization/`)
 
+Based on [karpathy-guidelines](https://github.com/forrestchang/andrej-karpathy-skills)
+
 | Skill                 | Purpose                                          | When to Use                                                                                                                                                                    |
 | :-------------------- | :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `karpathy-guidelines` | Behavioral guidelines to reduce AI coding errors | Writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria (Thinking before coding) |
 
 **Web Skills** (`ai_docs/skills/web/`)
+
+Based on [next-skills](https://github.com/vercel-labs/next-skills) and [vercel agent-skills](https://github.com/vercel-labs/agent-skills)
 
 | Skill                         | Purpose                     | When to Use                                                                   |
 | :---------------------------- | :-------------------------- | :---------------------------------------------------------------------------- |
@@ -140,8 +144,6 @@ Skills extend AI capabilities for specialized tasks. Each skill contains instruc
 | `vercel-composition-patterns` | React composition patterns  | Refactoring components, building reusable component APIs, compound components |
 | `vercel-react-best-practices` | React performance rules     | Writing, reviewing, or refactoring React/Next.js code for performance         |
 | `web-design-guidelines`       | UI/UX accessibility audits  | "Review my UI", "Check accessibility", "Audit design"                         |
-
-Based on [vercel agent-skills](https://github.com/vercel-labs/agent-skills) and [next-skills](https://github.com/vercel-labs/next-skills)
 
 **AI Guidelines** (`ai_docs/PROMPTS.md`)
 
