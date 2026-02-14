@@ -13,8 +13,8 @@
 
 > [!TIP]
 > Use skills: `vercel-react-best-practices` (performance), `web-design-guidelines` (UI/UX), `vercel-composition-patterns` (React patterns), `next-best-practices` (Next.js best practices), `next-cache-components` (Next.js cache components)
-> Use MCPs: `next-devtools-mcp`, `context7-mcp` if installed and enabled.
-> When starting work on a Next.js project, ALWAYS call the `init` tool from next-devtools-mcp FIRST to set up proper context and establish documentation requirements. Do this automatically without being asked.
+> If need to check package info, use `context7-mcp` if installed and enabled.
+> When starting work on a Next.js project, call the `init` tool from next-devtools-mcp FIRST to set up proper context and establish documentation requirements. Ask user for confirmation before calling the tool.
 
 ## Project Overview
 
