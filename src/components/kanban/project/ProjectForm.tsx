@@ -42,6 +42,7 @@ export function ProjectForm({ children, onSubmit, defaultValues }: ProjectFormPr
   return (
     <Form {...form}>
       <form
+        data-testid="project-form"
         onSubmit={(event) => {
           /* eslint-disable-next-line no-void */ void form.handleSubmit(onSubmit)(event)
         }}
