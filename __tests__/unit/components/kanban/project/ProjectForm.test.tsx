@@ -6,7 +6,7 @@ import { ProjectForm } from "@/components/kanban/project/ProjectForm"
 
 // Mock UI components
 vi.mock("@/components/ui/form", () => ({
-  Form: ({ children }: any) => <form data-testid="form">{children}</form>,
+  Form: ({ children }: any) => <div data-testid="form-provider">{children}</div>,
   FormControl: ({ children }: any) => <div data-testid="form-control">{children}</div>,
   FormField: ({ render, ...props }: any) => render({ field: { value: "", onChange: () => {} } }),
   FormItem: ({ children }: any) => <div data-testid="form-item">{children}</div>,
@@ -47,7 +47,7 @@ describe("ProjectForm", () => {
   it("should handle form submission", () => {
     const onSubmit = vi.fn()
     render(<ProjectForm onSubmit={onSubmit} />)
-    const form = screen.getByTestId("form")
+    const form = screen.getByTestId("project-form")
     fireEvent.submit(form)
     // The form submission handler is called
     expect(form).toBeInTheDocument()
