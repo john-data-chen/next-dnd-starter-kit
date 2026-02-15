@@ -95,11 +95,11 @@ A production-grade Kanban board application. Showcases engineering practices, de
 
 ---
 
-## 🤖 AI-Augmented Engineering Workflow
+## AI-Augmented Engineering Workflow
 
 This project demonstrates a "Human-in-the-Loop" architecture where AI tools are orchestrated to amplify engineering impact. The focus is not just on code generation, but on **architectural leverage, rigorous quality assurance, and accelerated velocity**.
 
-### 🚀 Orchestration & Agency
+### Orchestration & Agency
 
 I utilize a suite of specialized AI tools, each assigned specific roles to mimic a high-performing engineering team structure.
 
@@ -161,7 +161,7 @@ This is an example of how to use prompts and skills in Claude Code, you should c
   | Claude Code | `[root-folder]/CLAUDE.md` |
 - Restart the Claude Code
 
-## 📈 Measurable Impact
+### Measurable Impact
 
 By treating AI as an integrated part of the stack, this project achieves:
 
@@ -170,12 +170,6 @@ By treating AI as an integrated part of the stack, this project achieves:
 - **Learning**: Rapid mastery of new tools (Vitest, Playwright...and more) via AI-guided implementation.
 - **Cost**: Lower costs by using AI agents skills to reduce tokens and match the best practice in frontend.
 - **Focus**: Shifted engineering time from syntax to system architecture and user experience.
-
-**CI/CD Integration**
-
-| Tool                                                                    | Stage     | Purpose                                |
-| ----------------------------------------------------------------------- | --------- | -------------------------------------- |
-| [Gemini Code Assist](https://github.com/marketplace/gemini-code-assist) | PR Review | Automated code review and PR summaries |
 
 ---
 
