@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 
 import { ROUTES } from "@/constants/routes"
 import { fetchBoardsFromDb } from "@/lib/db/board"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore } from "@/lib/stores"
 import { Board } from "@/types/dbInterface"
 
 interface BreadcrumbItem {
@@ -20,7 +20,7 @@ export function useBreadcrumbs() {
   const t = useTranslations("sidebar")
   const boardId = params.boardId as string
   const [board, setBoard] = useState<Board | null>(null)
-  const userEmail = useTaskStore((state) => state.userEmail)
+  const userEmail = useAuthStore((state) => state.userEmail)
 
   useEffect(() => {
     async function fetchBoard() {

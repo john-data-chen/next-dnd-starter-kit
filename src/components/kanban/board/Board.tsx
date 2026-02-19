@@ -20,7 +20,7 @@ import { Fragment, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 
 import { Skeleton } from "@/components/ui/skeleton"
-import { useTaskStore } from "@/lib/store"
+import { useProjectStore } from "@/lib/stores"
 import { Project, Task, TaskStatus } from "@/types/dbInterface"
 import DraggableData from "@/types/drag&drop"
 
@@ -30,12 +30,12 @@ import { TaskCard } from "../task/TaskCard"
 import { TaskFilter } from "../task/TaskFilter"
 
 export function Board() {
-  const projects = useTaskStore((state) => state.projects)
-  const isLoadingProjects = useTaskStore((state) => state.isLoadingProjects) // Get loading state
-  const filter = useTaskStore((state) => state.filter)
-  const setProjects = useTaskStore((state) => state.setProjects)
-  const dragTaskOnProject = useTaskStore((state) => state.dragTaskOnProject)
-  const updateProjectOrder = useTaskStore((state) => state.updateProjectOrder)
+  const projects = useProjectStore((state) => state.projects)
+  const isLoadingProjects = useProjectStore((state) => state.isLoadingProjects)
+  const filter = useProjectStore((state) => state.filter)
+  const setProjects = useProjectStore((state) => state.setProjects)
+  const dragTaskOnProject = useProjectStore((state) => state.dragTaskOnProject)
+  const updateProjectOrder = useProjectStore((state) => state.updateProjectOrder)
   const projectsId = useMemo(() => projects.map((project: Project) => project._id), [projects])
 
   const [activeProject, setActiveProject] = useState<Project | null>(null)
