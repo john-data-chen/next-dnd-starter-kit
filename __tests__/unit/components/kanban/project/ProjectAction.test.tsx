@@ -3,29 +3,40 @@ import React from "react"
 import { vi } from "vitest"
 
 import { ProjectActions } from "@/components/kanban/project/ProjectAction"
+import { useAuthStore } from "@/lib/stores/auth-store"
+import { useBoardStore } from "@/lib/stores/board-store"
+import { useProjectStore } from "@/lib/stores/project-store"
 
-// Mock zustand store
 const updateProjectMock = vi.fn().mockResolvedValue(undefined)
 const removeProjectMock = vi.fn().mockResolvedValue(undefined)
 const fetchProjectsMock = vi.fn().mockResolvedValue(undefined)
-vi.mock("@/lib/store", () => ({
-  useTaskStore: (selector: any) =>
+
+vi.mock("@/lib/stores/project-store", () => ({
+  useProjectStore: (selector: any) =>
     selector({
       updateProject: updateProjectMock,
       removeProject: removeProjectMock,
-      fetchProjects: fetchProjectsMock,
-      currentBoardId: "b1"
+      fetchProjects: fetchProjectsMock
     })
 }))
 
-// Mock next-intl
+vi.mock("@/lib/stores/board-store", () => ({
+  useBoardStore: () => ({
+    currentBoardId: "b1"
+  })
+}))
+
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: () => ({
+    userEmail: "test@example.com"
+  })
+}))
+
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string, values?: any) =>
     values ? `${key} ${JSON.stringify(values)}` : key
 }))
 
-// Mock toast
-// Use vi.hoisted to define mocks before vi.mock
 const { toastSuccessMock, toastErrorMock } = vi.hoisted(() => ({
   toastSuccessMock: vi.fn(),
   toastErrorMock: vi.fn()
@@ -38,7 +49,6 @@ vi.mock("sonner", () => ({
   }
 }))
 
-// Mock ProjectForm
 vi.mock("@/components/kanban/project/ProjectForm", () => ({
   ProjectForm: ({ onSubmit, children }: any) => (
     <form
@@ -53,7 +63,6 @@ vi.mock("@/components/kanban/project/ProjectForm", () => ({
   )
 }))
 
-// Mock UI components
 vi.mock("@/components/ui/button", () => ({
   Button: ({ children, ...props }: any) => <button {...props}>{children}</button>
 }))
@@ -84,7 +93,6 @@ vi.mock("@/components/ui/dropdown-menu", () => ({
   DropdownMenuSeparator: () => <hr />
 }))
 
-// Mock fetch for permissions
 global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,

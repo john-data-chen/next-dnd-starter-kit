@@ -13,10 +13,12 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import { useTaskStore } from "@/lib/store"
+import { useProjectStore } from "@/lib/stores"
 
 export function TaskFilter() {
-  const { filter, setFilter, projects } = useTaskStore()
+  const filter = useProjectStore((state) => state.filter)
+  const setFilter = useProjectStore((state) => state.setFilter)
+  const projects = useProjectStore((state) => state.projects)
   const t = useTranslations("kanban.task")
 
   const statusCounts = React.useMemo(() => {

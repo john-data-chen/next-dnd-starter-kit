@@ -5,9 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 import { ROUTES } from "@/constants/routes"
 import { useBreadcrumbs } from "@/hooks/useBreadcrumbs"
 import { fetchBoardsFromDb } from "@/lib/db/board"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore } from "@/lib/stores/auth-store"
 
-// Mock dependencies
 vi.mock("next/navigation", () => ({
   useParams: vi.fn()
 }))
@@ -20,8 +19,8 @@ vi.mock("@/lib/db/board", () => ({
   fetchBoardsFromDb: vi.fn().mockResolvedValue([])
 }))
 
-vi.mock("@/lib/store", () => ({
-  useTaskStore: vi.fn()
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: vi.fn()
 }))
 
 describe("useBreadcrumbs Hook", () => {
@@ -42,7 +41,14 @@ describe("useBreadcrumbs Hook", () => {
     vi.clearAllMocks()
     vi.mocked(fetchBoardsFromDb).mockResolvedValue([])
     vi.mocked(useParams).mockReturnValue({ boardId: mockBoardId })
-    vi.mocked(useTaskStore).mockReturnValue(mockUserEmail)
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({
+        userEmail: mockUserEmail,
+        userId: "user123",
+        setUserInfo: vi.fn(),
+        clearUser: vi.fn()
+      })
+    )
   })
 
   it("should initialize with root breadcrumb", () => {
@@ -106,7 +112,9 @@ describe("useBreadcrumbs Hook", () => {
   })
 
   it("should not fetch board when userEmail is missing", async () => {
-    vi.mocked(useTaskStore).mockReturnValue("")
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({ userEmail: "", userId: "user123", setUserInfo: vi.fn(), clearUser: vi.fn() })
+    )
 
     renderHook(() => useBreadcrumbs())
 

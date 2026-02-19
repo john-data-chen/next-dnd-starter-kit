@@ -5,8 +5,9 @@ import { toast } from "sonner"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import NewTaskDialog from "@/components/kanban/task/NewTaskDialog"
+import { useAuthStore } from "@/lib/stores/auth-store"
+import { useProjectStore } from "@/lib/stores/project-store"
 
-// Mock toast
 vi.mock("sonner", () => ({
   toast: {
     success: vi.fn(),
@@ -14,22 +15,26 @@ vi.mock("sonner", () => ({
   }
 }))
 
-// Mock zustand store
 const mockAddTask = vi.fn()
-vi.mock("@/lib/store", () => ({
-  useTaskStore: (selector: (state: any) => any) =>
+vi.mock("@/lib/stores/project-store", () => ({
+  useProjectStore: (selector: (state: any) => any) =>
     selector({
       addTask: mockAddTask
     })
 }))
 
-// Mock next-intl
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: (selector: (state: any) => any) =>
+    selector({
+      userEmail: "test@example.com"
+    })
+}))
+
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string, values?: any) =>
     values ? `${key} ${JSON.stringify(values)}` : key
 }))
 
-// Mock TaskForm
 vi.mock("@/components/kanban/task/TaskForm", () => ({
   TaskForm: ({ onSubmit, onCancel, submitLabel }: any) => (
     <form
@@ -50,7 +55,6 @@ vi.mock("@/components/kanban/task/TaskForm", () => ({
   )
 }))
 
-// Mock UI components
 vi.mock("@/components/ui/dialog", () => ({
   Dialog: ({ children, onOpenChange }: any) => (
     <div onClick={() => onOpenChange(true)} data-testid="mock-dialog-wrapper">
@@ -114,8 +118,6 @@ describe("NewTaskDialog", () => {
     const cancelButton = await screen.findByRole("button", { name: "cancel" })
     await userEvent.click(cancelButton)
 
-    // The dialog should still be in the DOM but the state should update
-    // Since we're testing the onCancel callback is called
     expect(cancelButton).toBeInTheDocument()
   })
 })

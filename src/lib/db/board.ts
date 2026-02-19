@@ -234,6 +234,26 @@ export async function updateBoardInDb(
   }
 }
 
+export async function getBoardById(
+  boardId: string
+): Promise<{ _id: string; title: string; description?: string } | null> {
+  try {
+    await connectToDatabase()
+    const board = await BoardModel.findById(boardId).select("title description").lean()
+    if (!board) {
+      return null
+    }
+    return {
+      _id: board._id.toString(),
+      title: board.title,
+      description: board.description
+    }
+  } catch (error) {
+    console.error("Error in getBoardById:", error)
+    return null
+  }
+}
+
 export async function deleteBoardInDb(boardId: string, userEmail: string): Promise<boolean> {
   try {
     await connectToDatabase()

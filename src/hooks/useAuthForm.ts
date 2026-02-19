@@ -12,7 +12,7 @@ import { ROUTES } from "@/constants/routes"
 import { NAVIGATION_DELAY_MS } from "@/constants/ui"
 import { useRouter } from "@/i18n/navigation"
 import { authClient } from "@/lib/auth/client"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore } from "@/lib/stores"
 import { SignInFormValue, SignInValidation } from "@/types/authUserForm"
 
 interface AuthFormState {
@@ -22,7 +22,7 @@ interface AuthFormState {
 
 export default function useAuthForm() {
   const [isNavigating, startNavigationTransition] = useTransition()
-  const { setUserInfo } = useTaskStore()
+  const setUserInfo = useAuthStore((state) => state.setUserInfo)
   const router = useRouter()
   const params = useParams()
   const [status, setStatus] = useState<AuthFormState>({ status: "idle" })
