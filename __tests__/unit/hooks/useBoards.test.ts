@@ -3,15 +3,19 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { useBoards } from "@/hooks/useBoards"
 import { fetchBoardsFromDb } from "@/lib/db/board"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore } from "@/lib/stores/auth-store"
+import { useBoardStore } from "@/lib/stores/board-store"
 
-// Mock dependencies
 vi.mock("@/lib/db/board", () => ({
   fetchBoardsFromDb: vi.fn()
 }))
 
-vi.mock("@/lib/store", () => ({
-  useTaskStore: vi.fn()
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: vi.fn()
+}))
+
+vi.mock("@/lib/stores/board-store", () => ({
+  useBoardStore: vi.fn()
 }))
 
 describe("useBoards Hook", () => {
@@ -22,14 +26,30 @@ describe("useBoards Hook", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(useTaskStore).mockReturnValue({
-      userEmail: mockUserEmail,
-      userId: mockUserId,
-      myBoards: [],
-      teamBoards: [],
-      setMyBoards: mockSetMyBoards,
-      setTeamBoards: mockSetTeamBoards
-    })
+
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({
+        userEmail: mockUserEmail,
+        userId: mockUserId,
+        setUserInfo: vi.fn(),
+        clearUser: vi.fn()
+      })
+    )
+
+    vi.mocked(useBoardStore).mockImplementation((selector) =>
+      selector({
+        myBoards: [],
+        teamBoards: [],
+        setMyBoards: mockSetMyBoards,
+        setTeamBoards: mockSetTeamBoards,
+        currentBoardId: null,
+        setCurrentBoardId: vi.fn(),
+        addBoard: vi.fn(),
+        updateBoard: vi.fn(),
+        removeBoard: vi.fn(),
+        resetBoards: vi.fn()
+      })
+    )
   })
 
   it("should initialize with loading state", () => {
@@ -106,14 +126,9 @@ describe("useBoards Hook", () => {
   })
 
   it("should not fetch if userEmail is not available", async () => {
-    vi.mocked(useTaskStore).mockReturnValue({
-      userEmail: "",
-      userId: mockUserId,
-      myBoards: [],
-      teamBoards: [],
-      setMyBoards: mockSetMyBoards,
-      setTeamBoards: mockSetTeamBoards
-    })
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({ userEmail: "", userId: mockUserId, setUserInfo: vi.fn(), clearUser: vi.fn() })
+    )
 
     renderHook(() => useBoards())
 

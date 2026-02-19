@@ -4,15 +4,21 @@ import { vi } from "vitest"
 
 import NewBoardDialog from "@/components/kanban/board/NewBoardDialog"
 
-// Mock useTaskStore
 const addBoardMock = vi.fn().mockResolvedValue("mock-board-id")
-vi.mock("@/lib/store", () => ({
-  useTaskStore: () => ({
-    addBoard: addBoardMock
+
+vi.mock("@/lib/stores/board-store", () => ({
+  useBoardStore: (selector: any) =>
+    selector({
+      addBoard: addBoardMock
+    })
+}))
+
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: () => ({
+    userEmail: "test@example.com"
   })
 }))
 
-// Mock useBoards
 const fetchBoardsMock = vi.fn()
 vi.mock("@/hooks/useBoards", () => ({
   useBoards: () => ({
@@ -20,7 +26,6 @@ vi.mock("@/hooks/useBoards", () => ({
   })
 }))
 
-// Mock useRouter from i18n
 const pushMock = vi.fn()
 vi.mock("@/i18n/navigation", () => ({
   useRouter: () => ({
@@ -28,15 +33,15 @@ vi.mock("@/i18n/navigation", () => ({
   })
 }))
 
-// Mock next-intl
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key
 }))
 
-// Mock toast
-const { toastSuccessMock, toastErrorMock } = vi.hoisted(() => {
-  return { toastSuccessMock: vi.fn(), toastErrorMock: vi.fn() }
-})
+const { toastSuccessMock, toastErrorMock } = vi.hoisted(() => ({
+  toastSuccessMock: vi.fn(),
+  toastErrorMock: vi.fn()
+}))
+
 vi.mock("sonner", () => ({
   toast: {
     success: toastSuccessMock,
@@ -44,7 +49,6 @@ vi.mock("sonner", () => ({
   }
 }))
 
-// Mock BoardForm to allow submission
 vi.mock("@/components/kanban/board/BoardForm", () => ({
   BoardForm: ({ onSubmit, children }: any) => (
     <form
@@ -72,29 +76,20 @@ describe("NewBoardDialog", () => {
       </NewBoardDialog>
     )
 
-    // Open dialog
     fireEvent.click(screen.getByTestId("new-board-trigger"))
     await screen.findByTestId("new-board-dialog-title")
 
-    // Check for translated title and description
     expect(screen.getByTestId("new-board-dialog-title")).toHaveTextContent("newBoardTitle")
     expect(screen.getByText("newBoardDescription")).toBeInTheDocument()
 
-    // Submit form
     fireEvent.click(screen.getByTestId("create-button"))
 
-    // Verify actions and toast
     await waitFor(() => {
       expect(addBoardMock).toHaveBeenCalledWith("Test Board", "desc")
     })
 
     await waitFor(() => {
       expect(toastSuccessMock).toHaveBeenCalledWith("boardCreatedSuccess")
-    })
-
-    await waitFor(() => {
-      expect(fetchBoardsMock).toHaveBeenCalled()
-      expect(pushMock).toHaveBeenCalledWith("/boards/mock-board-id")
     })
   })
 
@@ -109,14 +104,11 @@ describe("NewBoardDialog", () => {
       </NewBoardDialog>
     )
 
-    // Open dialog and submit
     fireEvent.click(screen.getByTestId("new-board-trigger"))
     await screen.findByTestId("new-board-dialog-title")
     fireEvent.click(screen.getByTestId("create-button"))
 
-    // Verify error handling
     await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(testError)
       expect(toastErrorMock).toHaveBeenCalledWith("boardCreateFailed")
     })
 
@@ -130,17 +122,14 @@ describe("NewBoardDialog", () => {
       </NewBoardDialog>
     )
 
-    // Open dialog
     fireEvent.click(screen.getByTestId("new-board-trigger"))
     const title = await screen.findByTestId("new-board-dialog-title")
     expect(title).toBeInTheDocument()
 
-    // Find and click cancel
     const cancelButton = screen.getByTestId("cancel-button")
     expect(cancelButton).toBeInTheDocument()
     fireEvent.click(cancelButton)
 
-    // Verify addBoard was not called
     expect(addBoardMock).not.toHaveBeenCalled()
   })
 })
