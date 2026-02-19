@@ -4,19 +4,17 @@
 import { useCallback, useEffect, useState } from "react"
 
 import { fetchBoardsFromDb } from "@/lib/db/board"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore, useBoardStore } from "@/lib/stores"
 import { Board } from "@/types/dbInterface"
 
 export function useBoards() {
   const [loading, setLoading] = useState(true)
-  const {
-    userEmail,
-    userId,
-    myBoards, // Zustand state
-    teamBoards, // Zustand state
-    setMyBoards, // Zustand action
-    setTeamBoards // Zustand action
-  } = useTaskStore()
+  const userEmail = useAuthStore((state) => state.userEmail)
+  const userId = useAuthStore((state) => state.userId)
+  const myBoards = useBoardStore((state) => state.myBoards)
+  const teamBoards = useBoardStore((state) => state.teamBoards)
+  const setMyBoards = useBoardStore((state) => state.setMyBoards)
+  const setTeamBoards = useBoardStore((state) => state.setTeamBoards)
 
   const fetchBoards = useCallback(async () => {
     if (!userEmail || !userId) {

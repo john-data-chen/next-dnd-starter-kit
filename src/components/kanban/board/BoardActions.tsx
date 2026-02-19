@@ -32,7 +32,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { useBoards } from "@/hooks/useBoards"
-import { useTaskStore } from "@/lib/store"
+import { useBoardStore } from "@/lib/stores"
 import { boardSchema } from "@/types/boardForm"
 import { Board } from "@/types/dbInterface"
 
@@ -50,7 +50,8 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
     const [editEnable, setEditEnable] = React.useState(false)
     const [isSubmitting, setIsSubmitting] = React.useState(false)
-    const { updateBoard, removeBoard } = useTaskStore()
+    const updateBoard = useBoardStore((state) => state.updateBoard)
+    const removeBoard = useBoardStore((state) => state.removeBoard)
     const router = useRouter()
     const { fetchBoards } = useBoards()
     const t = useTranslations("kanban.actions")

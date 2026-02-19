@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import { Toaster } from "sonner"
 
 import AppSidebar from "@/components/layout/AppSidebar"
@@ -8,13 +8,18 @@ import Header from "@/components/layout/Header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { TOAST_DURATION_MS } from "@/constants/ui"
 import { authClient } from "@/lib/auth/client"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore } from "@/lib/stores"
 
 export default function RootWrapper({ children }: { children: React.ReactNode }) {
-  const { setUserInfo } = useTaskStore()
+  const setUserInfo = useAuthStore((state) => state.setUserInfo)
+  const sessionSynced = useRef(false)
 
   useEffect(() => {
-    // Sync session on mount to ensure store has fresh ID (e.g. after DB reset)
+    if (sessionSynced.current) {
+      return
+    }
+    sessionSynced.current = true
+
     const syncSession = async () => {
       try {
         const { data } = await authClient.getSession()

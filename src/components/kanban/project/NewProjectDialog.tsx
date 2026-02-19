@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
-import { useTaskStore } from "@/lib/store"
+import { useProjectStore } from "@/lib/stores"
 import { projectSchema } from "@/types/projectForm"
 
 import { ProjectForm } from "./ProjectForm"
@@ -29,7 +29,7 @@ export interface NewProjectDialogProps {
 type ProjectFormData = z.infer<typeof projectSchema>
 
 export default function NewProjectDialog({ onProjectAdd }: NewProjectDialogProps) {
-  const addProject = useTaskStore((state) => state.addProject)
+  const addProject = useProjectStore((state) => state.addProject)
   const [isOpen, setIsOpen] = React.useState(false)
   const t = useTranslations("kanban.project")
 

@@ -24,7 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { useTaskStore } from "@/lib/store"
+import { useBoardStore, useProjectStore } from "@/lib/stores"
 import { projectSchema } from "@/types/projectForm"
 
 import { ProjectForm } from "./ProjectForm"
@@ -38,10 +38,10 @@ interface ProjectActionsProps {
 export function ProjectActions({ id, title, description }: ProjectActionsProps) {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
   const [editEnable, setEditEnable] = React.useState(false)
-  const updateProject = useTaskStore((state) => state.updateProject)
-  const removeProject = useTaskStore((state) => state.removeProject)
-  const currentBoardId = useTaskStore((state) => state.currentBoardId)
-  const fetchProjects = useTaskStore((state) => state.fetchProjects)
+  const updateProject = useProjectStore((state) => state.updateProject)
+  const removeProject = useProjectStore((state) => state.removeProject)
+  const currentBoardId = useBoardStore((state) => state.currentBoardId)
+  const fetchProjects = useProjectStore((state) => state.fetchProjects)
   const t = useTranslations("kanban.project")
 
   // State for permissions

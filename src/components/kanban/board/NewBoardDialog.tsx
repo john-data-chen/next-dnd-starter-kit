@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { useBoards } from "@/hooks/useBoards"
 import { useRouter } from "@/i18n/navigation"
-import { useTaskStore } from "@/lib/store"
+import { useBoardStore } from "@/lib/stores"
 import { boardSchema } from "@/types/boardForm"
 
 import { BoardForm } from "./BoardForm"
@@ -30,7 +30,7 @@ type BoardFormData = z.infer<typeof boardSchema>
 
 export default function NewBoardDialog({ children }: NewBoardDialogProps) {
   const [open, setOpen] = useState(false)
-  const { addBoard } = useTaskStore()
+  const addBoard = useBoardStore((state) => state.addBoard)
   const { fetchBoards } = useBoards()
   const router = useRouter()
   const t = useTranslations("kanban.actions")

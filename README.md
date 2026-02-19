@@ -196,7 +196,7 @@ NODE_ENV=development
 # Required: A secure random string for JWT token encryption
 # Generate: openssl rand -base64 32
 # Warning: Keep this value private and unique per environment
-NEXTAUTH_SECRET=[your_secret]
+AUTH_SECRET=[your_secret]
 
 # Database Connection
 # Format: mongodb://[username]:[password]@[host]:[port]/[database]?[options]
@@ -218,7 +218,7 @@ pnpm install
 # Environment
 cp env.example .env
 
-# Generate Secret and replace NEXTAUTH_SECRET in .env
+# Generate Secret and replace AUTH_SECRET in .env
 openssl rand -base64 32
 
 # Database
@@ -248,15 +248,21 @@ messages/ # i18n translations
 public/ # Static files such as images
 src/
 ├── app/ # Next.js App routes
+│   ├── global-error.tsx # Global error boundary
 │   └── [locale] # i18n locale routers
 │        ├── page.tsx # Root page
 │        ├── layout.tsx # Layout component
 │        ├── not-found.tsx # 404 page
 │        ├── (auth)/ # Authentication routes
-│             └── login/ # Login page
+│        │    └── login/ # Login page
 │        └── (workspace)/ # Workspace routes
+│             ├── error.tsx # Workspace error boundary
 │             └── boards/ # Kanban Overview routes
-│                 └── [boardId]/ # Board
+│                  ├── loading.tsx # Boards loading skeleton
+│                  └── [boardId]/ # Board
+│                       ├── layout.tsx # Board metadata
+│                       ├── loading.tsx # Board loading skeleton
+│                       └── error.tsx # Board error boundary
 ├── components/ # Reusable React components
 │   └── ui/ # Shadcn UI components
 ├── constants/ # Application-wide constants
@@ -265,7 +271,8 @@ src/
 ├── lib/
 │   ├── db/ # Database functions
 │   ├── auth/ # Authentication functions
-│   ├── store.ts # State management functions
+│   ├── stores/ # Zustand stores (auth, board, project)
+│   ├── store.ts # Backward-compatible re-export
 │   └── utils.ts # tailwindcss utils
 ├── proxy.ts # the middleware for handling API requests
 ├── models/ # Database models
