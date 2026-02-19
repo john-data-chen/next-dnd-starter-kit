@@ -30,11 +30,11 @@ jobs:
         run: pnpm install
 
       - name: Run Unit Tests by Vitest
-        # highlight-start
+        # Add environment variables needed specifically for tests
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NODE_ENV: test # Or 'test' if preferred for testing
-          # Add any other environment variables needed specifically for tests
+          NODE_ENV: test
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
         run: pnpm test
 
       - name: Upload coverage to Codecov
