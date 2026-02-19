@@ -6,13 +6,12 @@ import { vi } from "vitest"
 import { Board } from "@/components/kanban/board/Board"
 import { Project, Task, TaskStatus, UserInfo } from "@/types/dbInterface"
 
-// --- Hoisted Mocks & Variables ---
 let mockProjectsData: Project[] = []
 let mockIsLoadingProjectsData = false
 let mockFilterData: { status?: TaskStatus | null; search?: string } = {}
 
-vi.mock("@/lib/store", () => ({
-  useTaskStore: (selector: (state: any) => any) => {
+vi.mock("@/lib/stores/project-store", () => ({
+  useProjectStore: (selector: (state: any) => any) => {
     const state = {
       projects: mockProjectsData,
       isLoadingProjects: mockIsLoadingProjectsData,
@@ -23,6 +22,16 @@ vi.mock("@/lib/store", () => ({
     }
     return selector(state)
   }
+}))
+
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: () => ({
+    userId: "u1"
+  })
+}))
+
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key
 }))
 
 let capturedAccessibility: any | undefined
@@ -45,6 +54,21 @@ vi.mock("@dnd-kit/core", async (importOriginal: () => Promise<any>) => {
   }
 })
 
+vi.mock("@dnd-kit/sortable", async (importOriginal: () => Promise<any>) => {
+  const actual = (await importOriginal()) as typeof import("@dnd-kit/sortable")
+  return {
+    ...actual,
+    arrayMove: vi.fn((array, from, to) => {
+      const newArray = [...array]
+      if (from >= 0 && from < newArray.length && to >= 0 && to <= newArray.length) {
+        const [element] = newArray.splice(from, 1)
+        newArray.splice(to, 0, element)
+      }
+      return newArray
+    })
+  }
+})
+
 vi.mock("@/components/kanban/project/NewProjectDialog", () => ({
   default: () => <div data-testid="new-project-dialog" />
 }))
@@ -64,7 +88,10 @@ vi.mock("@/components/kanban/task/TaskFilter", () => ({
   TaskFilter: () => <div data-testid="task-filter" />
 }))
 
-// --- Test Data ---
+vi.mock("@/components/ui/skeleton", () => ({
+  Skeleton: (props: any) => <div data-testid="skeleton" {...props} />
+}))
+
 const user1: UserInfo = { id: "u1", name: "User1" }
 const task1P1: Task = {
   _id: "task1-p1",
@@ -158,7 +185,6 @@ describe("Board Announcements", () => {
     render(<Board />)
     const announcements = capturedAccessibility.announcements
 
-    // Set pickedUpTaskProject by calling onDragStart
     announcements.onDragStart({
       active: {
         id: "task1-p1",
