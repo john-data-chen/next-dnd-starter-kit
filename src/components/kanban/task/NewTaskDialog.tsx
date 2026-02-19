@@ -15,7 +15,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
-import { useTaskStore } from "@/lib/store"
+import { useProjectStore } from "@/lib/stores"
 import { TaskFormSchema } from "@/types/taskForm"
 
 export interface NewTaskDialogProps {
@@ -23,7 +23,7 @@ export interface NewTaskDialogProps {
 }
 
 export default function NewTaskDialog({ projectId }: NewTaskDialogProps) {
-  const addTask = useTaskStore((state) => state.addTask)
+  const addTask = useProjectStore((state) => state.addTask)
   const [addTaskOpen, setAddTaskOpen] = React.useState(false)
   const t = useTranslations("kanban.task")
 

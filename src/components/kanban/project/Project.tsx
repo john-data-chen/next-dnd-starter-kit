@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore, useProjectStore } from "@/lib/stores"
 import { cn } from "@/lib/utils"
 import { Project, Task } from "@/types/dbInterface"
 
@@ -30,8 +30,8 @@ interface BoardProjectProps {
 }
 
 export function BoardProject({ project, tasks, isOverlay }: BoardProjectProps) {
-  const { filter } = useTaskStore()
-  const userId = useTaskStore((state) => state.userId)
+  const filter = useProjectStore((state) => state.filter)
+  const userId = useAuthStore((state) => state.userId)
   const t = useTranslations("kanban.project")
 
   const filteredTasks = useMemo(() => {

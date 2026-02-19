@@ -1,4 +1,3 @@
-// Added act
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core"
 import { act, render, screen } from "@testing-library/react"
 import React from "react"
@@ -7,7 +6,6 @@ import { vi } from "vitest"
 import { Board } from "@/components/kanban/board/Board"
 import { Project, Task, TaskStatus, UserInfo } from "@/types/dbInterface"
 
-// --- Hoisted Mocks & Variables ---
 const mockSetProjects = vi.fn()
 const mockDragTaskOnProject = vi.fn()
 const mockUpdateProjectOrder = vi.fn()
@@ -15,8 +13,8 @@ let mockProjectsData: Project[] = []
 let mockIsLoadingProjectsData = false
 let mockFilterData: { status?: TaskStatus | null; search?: string } = {}
 
-vi.mock("@/lib/store", () => ({
-  useTaskStore: (selector: (state: any) => any) => {
+vi.mock("@/lib/stores/project-store", () => ({
+  useProjectStore: (selector: (state: any) => any) => {
     const state = {
       projects: mockProjectsData,
       isLoadingProjects: mockIsLoadingProjectsData,
@@ -29,12 +27,16 @@ vi.mock("@/lib/store", () => ({
   }
 }))
 
-const hoistedToastMocks = vi.hoisted(() => {
-  return {
-    mockToastSuccess: vi.fn(),
-    mockToastError: vi.fn()
-  }
-})
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: () => ({
+    userId: "u1"
+  })
+}))
+
+const hoistedToastMocks = vi.hoisted(() => ({
+  mockToastSuccess: vi.fn(),
+  mockToastError: vi.fn()
+}))
 
 vi.mock("sonner", () => ({
   toast: {
@@ -44,8 +46,7 @@ vi.mock("sonner", () => ({
 }))
 
 vi.mock("@dnd-kit/sortable", async (importOriginal: () => Promise<any>) => {
-  // Optional: Improved type for importOriginal
-  const actual = (await importOriginal()) as typeof import("@dnd-kit/sortable") // FIXED
+  const actual = (await importOriginal()) as typeof import("@dnd-kit/sortable")
   return {
     ...actual,
     arrayMove: vi.fn((array, from, to) => {
@@ -64,8 +65,7 @@ let capturedDragOver: ((event: DragOverEvent) => void) | undefined
 let capturedDragEnd: ((event: DragEndEvent) => void) | undefined
 
 vi.mock("@dnd-kit/core", async (importOriginal: () => Promise<any>) => {
-  // Optional: Improved type for importOriginal
-  const actual = (await importOriginal()) as typeof import("@dnd-kit/core") // FIXED
+  const actual = (await importOriginal()) as typeof import("@dnd-kit/core")
   return {
     ...actual,
     DndContext: vi.fn(
@@ -132,7 +132,10 @@ vi.mock("@/components/ui/skeleton", () => ({
   Skeleton: (props: any) => <div data-testid="skeleton" {...props} />
 }))
 
-// --- Test Data ---
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key
+}))
+
 const user1: UserInfo = { id: "u1", name: "User1" }
 const task1P1: Task = {
   _id: "task1-p1",
@@ -200,8 +203,8 @@ describe("Board", () => {
     mockSetProjects.mockClear()
     mockDragTaskOnProject.mockClear().mockResolvedValue(undefined)
     mockUpdateProjectOrder.mockClear().mockResolvedValue(undefined)
-    hoistedToastMocks.mockToastSuccess.mockClear() // Updated
-    hoistedToastMocks.mockToastError.mockClear() // Updated
+    hoistedToastMocks.mockToastSuccess.mockClear()
+    hoistedToastMocks.mockToastError.mockClear()
 
     capturedDragStart = undefined
     capturedDragOver = undefined
@@ -274,10 +277,7 @@ describe("Board", () => {
       } as any,
       activatorEvent: new MouseEvent("click") as Event,
       collisions: null,
-      delta: {
-        x: 0,
-        y: 0
-      }
+      delta: { x: 0, y: 0 }
     }
     await act(async () => {
       capturedDragOver?.(event)
@@ -300,10 +300,7 @@ describe("Board", () => {
       } as any,
       activatorEvent: new MouseEvent("click") as Event,
       collisions: null,
-      delta: {
-        x: 0,
-        y: 0
-      }
+      delta: { x: 0, y: 0 }
     }
     await act(async () => {
       capturedDragOver?.(event)
@@ -324,7 +321,6 @@ describe("Board", () => {
     await act(async () => {
       capturedDragStart?.(event)
     })
-    // Expectation: no crash and activeProject state updated internally
   })
 
   it("should handle project reordering on drag end", async () => {

@@ -3,8 +3,9 @@ import React from "react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { TaskActions } from "@/components/kanban/task/TaskAction"
+import { useAuthStore } from "@/lib/stores/auth-store"
+import { useProjectStore } from "@/lib/stores/project-store"
 
-// Mock UI components
 vi.mock("@/components/kanban/task/TaskForm", () => ({
   TaskForm: (props: any) => (
     <form
@@ -79,11 +80,12 @@ vi.mock("next-intl", () => ({
 vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn() }
 }))
+
 const mockUpdateTask = vi.fn()
 const mockRemoveTask = vi.fn()
 
-vi.mock("@/lib/store", () => ({
-  useTaskStore: vi.fn((selector) => {
+vi.mock("@/lib/stores/project-store", () => ({
+  useProjectStore: vi.fn((selector) => {
     const state = {
       updateTask: mockUpdateTask,
       removeTask: mockRemoveTask
@@ -92,7 +94,12 @@ vi.mock("@/lib/store", () => ({
   })
 }))
 
-// Mock fetch
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: () => ({
+    userEmail: "test@example.com"
+  })
+}))
+
 global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
@@ -105,7 +112,6 @@ describe("TaskActions", () => {
     vi.clearAllMocks()
     mockUpdateTask.mockResolvedValue({})
     mockRemoveTask.mockResolvedValue({})
-    // Default fetch mock for permissions and assignee
     global.fetch = vi.fn((url: string) => {
       if (url.includes("/permissions")) {
         return Promise.resolve({
@@ -161,7 +167,6 @@ describe("TaskActions", () => {
     fireEvent.click(trigger)
 
     await waitFor(() => {
-      // Should not crash and handle fallback
       expect(global.fetch).toHaveBeenCalledWith("/api/tasks/1/permissions")
     })
   })

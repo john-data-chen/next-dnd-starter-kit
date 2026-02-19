@@ -51,7 +51,7 @@ When a task matches conditions below, load the corresponding skill **before writ
 | Constants  | `src/constants/`     | Constants            |
 | Hooks      | `src/hooks/`         | Custom hooks         |
 | Library    | `src/lib/db`         | Database functions   |
-| State      | `src/lib/store.ts`   | Zustand store        |
+| State      | `src/lib/stores/`    | Zustand stores (auth, board, project) |
 | Styles     | `src/styles/`        | Global css           |
 
 #### more details of packages/ui

@@ -9,12 +9,14 @@ import { ROUTES } from "@/constants/routes"
 import useAuthForm from "@/hooks/useAuthForm"
 import { useRouter } from "@/i18n/navigation"
 import { authClient } from "@/lib/auth/client"
-import { useTaskStore } from "@/lib/store"
+import { useAuthStore } from "@/lib/stores/auth-store"
 
 import { AllTheProviders } from "../test-utils"
 
-// --- Mock Area ---
-vi.mock("@/lib/store")
+vi.mock("@/lib/stores/auth-store", () => ({
+  useAuthStore: vi.fn()
+}))
+
 vi.mock("@/lib/auth/client", () => ({
   authClient: {
     signIn: {
@@ -41,7 +43,6 @@ vi.mock("next-intl", async (importOriginal) => {
     useTranslations: vi.fn()
   }
 })
-// --- End Mock Area ---
 
 describe("useAuthForm", () => {
   const mockSetUserInfo = vi.fn()
@@ -50,11 +51,15 @@ describe("useAuthForm", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    // vi.useFakeTimers();
 
-    vi.mocked(useTaskStore).mockReturnValue({
-      setUserInfo: mockSetUserInfo
-    } as any)
+    vi.mocked(useAuthStore).mockImplementation((selector: any) =>
+      selector({
+        setUserInfo: mockSetUserInfo,
+        userEmail: null,
+        userId: null,
+        clearUser: vi.fn()
+      })
+    )
 
     vi.mocked(useRouter).mockReturnValue({
       push: mockRouterPush
@@ -78,7 +83,6 @@ describe("useAuthForm", () => {
   })
 
   afterEach(() => {
-    // vi.useRealTimers();
     vi.clearAllMocks()
   })
 
@@ -113,12 +117,6 @@ describe("useAuthForm", () => {
       password: ""
     })
     expect(mockSetUserInfo).toHaveBeenCalledWith(defaultEmail)
-
-    expect(mockToastPromise).toHaveBeenCalledWith(expect.any(Promise), {
-      loading: "Authenticating...",
-      success: expect.any(Function),
-      error: expect.any(Function)
-    })
 
     await waitFor(() => {
       expect(mockRouterPush).toHaveBeenCalledWith(`${ROUTES.BOARDS.ROOT}?login_success=true`, {

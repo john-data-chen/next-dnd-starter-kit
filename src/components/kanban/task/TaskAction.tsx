@@ -31,7 +31,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { useTaskStore } from "@/lib/store"
+import { useProjectStore } from "@/lib/stores"
 import { TaskFormSchema } from "@/types/taskForm"
 
 export interface TaskActionsProps {
@@ -61,8 +61,8 @@ export function TaskActions({
   status,
   onDelete
 }: TaskActionsProps) {
-  const updateTask = useTaskStore((state) => state.updateTask)
-  const removeTask = useTaskStore((state) => state.removeTask)
+  const updateTask = useProjectStore((state) => state.updateTask)
+  const removeTask = useProjectStore((state) => state.removeTask)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [editEnable, setEditEnable] = useState(false)
   const t = useTranslations("kanban.task")
