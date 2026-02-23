@@ -20,7 +20,7 @@
 
 When a task matches conditions below, load the corresponding skill **before writing code**.
 
-### 🚨 Universal Optimization Skills (CHECK FIRST, in `ai_docs/skills/ai-optimization/`)
+### Universal Optimization Skills (CHECK FIRST, in `ai_docs/skills/ai-optimization/`)
 
 | Condition (when the task involves...)                                                                                               | Skill to Use          |
 | :---------------------------------------------------------------------------------------------------------------------------------- | :-------------------- |
@@ -40,166 +40,48 @@ When a task matches conditions below, load the corresponding skill **before writ
 
 ### Repository Structure
 
-| Type       | Path.                | Description          |
-| ---------- | -------------------- | -------------------- |
-| Tests      | `__tests__`          | Unit and E2E tests   |
-| Database   | `database`           | docker-compose       |
-| i18n       | `messages`           | i18n translations    |
-| Router     | `src/app/`           | Next.js App Router   |
-| Components | `src/components/`    | React components     |
-| Components | `src/components/ui/` | Shadcn UI components |
-| Constants  | `src/constants/`     | Constants            |
-| Hooks      | `src/hooks/`         | Custom hooks         |
-| Library    | `src/lib/db`         | Database functions   |
+| Type       | Path                 | Description                           |
+| ---------- | -------------------- | ------------------------------------- |
+| Tests      | `__tests__`          | Unit and E2E tests                    |
+| Database   | `database`           | docker-compose                        |
+| i18n       | `messages`           | i18n translations                     |
+| Router     | `src/app/`           | Next.js App Router                    |
+| Components | `src/components/`    | React components                      |
+| Components | `src/components/ui/` | Shadcn UI components                  |
+| Constants  | `src/constants/`     | Constants                             |
+| Hooks      | `src/hooks/`         | Custom hooks                          |
+| Library    | `src/lib/db`         | Database functions                    |
 | State      | `src/lib/stores/`    | Zustand stores (auth, board, project) |
-| Styles     | `src/styles/`        | Global css           |
+| Styles     | `src/styles/`        | Global css                            |
 
-#### more details of packages/ui
-
-the Shadcn UI components are in `src/components/ui`, they are UI library, you should modify `src/styles/globals.css` and `src/components` at first, until you make sure modifying Shadcn UI component is only way to fix some issues.
+Shadcn UI components are in `src/components/ui`. Modify `src/styles/globals.css` and `src/components` first; only modify Shadcn UI components as a last resort.
 
 ## Essential Commands
 
-### Daily Development Workflow
-
-I have executed `pnpm dev` to start dev server, so you don't do it again.
+Dev server is already running (`pnpm dev`). Do not start it again.
 
 ```bash
-# Project setup
-pnpm install                                  # Install all dependencies
-pnpm upgrade                                  # Upgrade all dependencies
-pnpm build                                    # Build for production
+pnpm install          # Install all dependencies
+pnpm build            # Build for production
 ```
 
-### Debugging & Verification
+### Verification Workflow
 
 ```bash
-# When debugging issues
-git add /path/to/your/file.ts             # Stage file for linting
-pnpm lint-staged                          # Run linter and prettier
+git add /path/to/your/file.ts    # Stage file for linting
+pnpm lint-staged                 # Run linter and prettier
 ```
 
-## 🏗️ Technology Stack & Dependencies
+After every task: verify with `pnpm lint-staged` → fix errors → unstage files → suggest a Conventional Commit message. Never commit for the user.
 
-### Core Technologies
+## Tech Stack
 
-check package.json to get versions of packages before you start
+Check `package.json` for exact versions. Key stack: Next.js (App Router), React, TypeScript (strict), TailwindCSS, Vitest, PNPM.
 
-- **Node Version**: Node.js latest version (check with `node -v`)
-- **Framework**: Next.js latest version with App Router, React latest version
-- **Language**: TypeScript latest version (strict mode)
-- **Styling**: TailwindCSS latest version
-- **Package Manager**: PNPM latest version (not npm/yarn)
-- **Unit test**: Vitest latest version
-
-## 🔄 Development Workflows
-
-### Debugging React Components & State Issues
-
-**AI Assistant Debugging Checklist**:
-
-1. **Read Actual Source**: Always read component source before assumptions
-2. **Trace Data Flow**: User interaction → component state → props → parent state
-3. **Check useEffect**: Look for state resets or conflicting side effects
-4. **Controlled vs Uncontrolled**: Identify hybrid components with internal + prop state
-5. **State Location**: Verify if issue is in child component logic vs parent state
-
-**Common Debugging Commands**:
-
-```bash
-# Check component usage patterns
-grep -r "ComponentName" ./src/components/ComponentName.tsx
-git add /path/to/your/file.ts
-pnpm lint-staged
-pnpm dev
-```
-
-## 📁 File Structure & Naming Conventions
-
-### Naming Rules
+## Naming Conventions
 
 - **Components**: PascalCase (`DatePicker.tsx`)
 - **Utilities**: camelCase (`dateUtils.ts`)
 - **Constants**: UPPER_SNAKE_CASE (`API_ENDPOINTS.ts`)
 - **Types**: PascalCase interfaces (`UserData`, `ApiResponse`)
-
-### Export Patterns
-
-```typescript
-// packages/ui/package.json
-{
-  "exports": {
-    "./ComponentName": "./src/ComponentName/index.ts"
-  }
-}
-
-// Usage in apps
-import { ComponentName } from "@repo/ui/ComponentName";
-```
-
-### Commit message suggestion
-
-- **Specification**: [Conventional Commits](https://conventionalcommits.org/)
-- **Format**: `feat(scope): description` / `fix(scope): description`
-
-## 🔧 AI Assistant Example Scenarios
-
-### Scenario 1: "Add a DatePicker component"
-
-**AI Response Pattern**:
-
-```
-1. "I'll add a DatePicker component following the UI component workflow"
-2. Check existing date-related components in packages/ui/src/
-3. Create src/components/DatePicker/DatePicker.tsx
-4. Write corresponding test in __tests__/units/DatePicker/DatePicker.test.tsx
-5. git add /path/to/your/file
-6. Verify with pnpm lint-staged && pnpm build
-7. Fix all errors or warnings of linter
-8. Git un-stage all files
-9. Give me the suggested commit message matched Conventional Commits
-10. Never commit it for me
-```
-
-### Scenario 2: "The form validation isn't working"
-
-**AI Debugging Process**:
-
-```
-1. "Let me investigate the form validation issue systematically"
-2. Read the form component source code
-3. Check React Hook Form + Zod schema setup
-4. Look for existing tests related to validation
-5. Run tests to reproduce the issue
-6. Trace data flow: user input → validation → error display
-7. Identify root cause (schema, component, or state issue)
-8. Propose targeted fix with test verification
-9. git add /path/to/your/file.ts
-10. Verify with pnpm lint-staged && pnpm build
-11. Fix all errors or warnings of linter
-12. Git un-stage  all files
-13. Give me the suggested commit message matched Conventional Commits
-14. Never commit it for me
-```
-
-### Scenario 3: "Optimize component performance"
-
-**AI Analysis Approach**: Reference `vercel-react-best-practices`, `next-best-practices` skill for optimization rules, then follow standard verification workflow (lint-staged → build → suggest commit message).
-
-## 🎯 AI Success Metrics
-
-**Quality Indicators**:
-
-- ✅ All commands run without errors
-- ✅ TypeScript strict mode compliance
-- ✅ Follows existing code patterns
-- ✅ Proper component export structure
-- ✅ Conventional commit messages
-- ✅ No lint warnings or build errors
-
-**Best Practices Checklist**:
-
-- [ ] Read existing code before implementing changes
-- [ ] Verify dependencies in package.json before using
-- [ ] Run verification commands before completion
-- [ ] Reference skills for patterns: `vercel-react-best-practices`, `vercel-composition-patterns`, `next-best-practices`
+- **Commits**: [Conventional Commits](https://conventionalcommits.org/) — `feat(scope): description` / `fix(scope): description`
