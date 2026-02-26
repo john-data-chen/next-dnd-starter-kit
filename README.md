@@ -1,29 +1,41 @@
-# Next.js Project Management Tool | Full-Stack Portfolio Project with AI-Assisted Engineering
+# Next.js Kanban Board | Full-Stack Portfolio with AI-Assisted Engineering
 
 [![codecov](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit/graph/badge.svg?token=VM0ZK1S8U5)](https://codecov.io/gh/john-data-chen/next-dnd-starter-kit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=john-data-chen_next-dnd-starter-kit&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=john-data-chen_next-dnd-starter-kit)
 [![CI](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/john-data-chen/next-board/actions/workflows/CI.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## About This Project
+A production-grade Kanban board built with Next.js, demonstrating technical decision-making, quality engineering, and AI-assisted development practices. This is the monolithic origin — see below for how it evolved into a multi-platform monorepo.
 
-A production-grade Kanban board application. Showcases engineering practices, decision-making and AI-assisted optimization for senior full-stack roles.
-
-**[Live Demo](https://next-dnd-starter-kit.vercel.app)** | **[Monorepo Evolution](https://github.com/john-data-chen/turborepo-starter-kit)**
+**[Live Demo](https://next-dnd-starter-kit.vercel.app)**
 
 <img src="./public/assets/Screen_Recording.gif" alt="Demo" width="270" height="579">
 
 ---
 
+## Monorepo Evolution
+
+This project was strategically re-architected through three stages, each driven by a clear engineering rationale:
+
+| Stage | Architecture | Key Decision |
+| :---- | :----------- | :----------- |
+| **1. Monolith** | Next.js full-stack (this repo) | Ship fast, validate product-market fit with a single deployable unit |
+| **2. Decoupled** | Next.js frontend + Nest.js backend | Separate concerns for independent team scaling and deployment cycles |
+| **3. Multi-Platform** | [Turborepo monorepo](https://github.com/john-data-chen/turborepo-starter-kit) | Share business logic (state, types, i18n, validation) across Web and Mobile |
+
+The monorepo evolution introduces shared packages (`@repo/store`, `@repo/i18n`, `@repo/ui`) that enable a write-once approach for state management, validation, and types — while each platform (Next.js web, Expo mobile, Nest.js API) maintains full control over its UI and deployment. This mirrors the architectural pattern used by teams scaling from a single product to a platform.
+
+---
+
 ## Engineering Metrics
 
-| Metric         | Result                                                        |
-| -------------- | ------------------------------------------------------------- |
-| Test Coverage  | **80%+** via Vitest (unit + integration)                      |
-| Code Quality   | **SonarQube A** across Security, Reliability, Maintainability |
-| Performance    | **Lighthouse 90+** on all categories                          |
-| E2E Validation | Cross-browser (Chrome, Safari, Edge) via Playwright           |
-| CI/CD Pipeline | GitHub Actions → SonarQube + Codecov → Vercel                 |
+| Metric | Result |
+| ------ | ------ |
+| Test Coverage | **80%+** via Vitest (unit + integration) |
+| Code Quality | **SonarQube A** across Security, Reliability, Maintainability |
+| Performance | **Lighthouse 90+** on all categories |
+| E2E Validation | Cross-browser (Chrome, Safari, Edge) via Playwright |
+| CI/CD Pipeline | GitHub Actions → SonarQube + Codecov → Vercel |
 
 <img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
@@ -31,14 +43,27 @@ A production-grade Kanban board application. Showcases engineering practices, de
 
 ## Technical Decisions
 
+### Architecture
+
+| Type | Choice | Rationale |
+| ---- | ------ | --------- |
+| Framework | Next.js (App Router) | SSG for static pages, SSR for dynamic content |
+| State | Zustand | 40% less boilerplate than Redux, simpler testing |
+| Forms | React Hook Form + Zod | Type-safe validation, composable schemas |
+| Database | MongoDB + Mongoose | Document model fits board/project/task hierarchy |
+| Auth | Better Auth | OAuth support |
+| DnD | dnd-kit | Lightweight, accessible, extensible |
+| i18n | next-intl | App Router native support |
+| UI | Tailwind CSS + Shadcn/ui | Consistent design system, rapid iteration |
+
 ### Quality Assurance
 
-| Type              | Tool       | Rationale                                    |
-| ----------------- | ---------- | -------------------------------------------- |
-| Unit/Integration  | Vitest     | Faster than Jest, native ESM, simpler config |
-| E2E               | Playwright | Cross-browser support, lighter than Cypress  |
-| Static Analysis   | SonarQube  | Enterprise-grade quality gates in CI         |
-| Coverage Tracking | Codecov    | Automated PR integration                     |
+| Type | Tool | Rationale |
+| ---- | ---- | --------- |
+| Unit/Integration | Vitest | Faster than Jest, native ESM, simpler config |
+| E2E | Playwright | Cross-browser support, lighter than Cypress |
+| Static Analysis | SonarQube | Enterprise-grade quality gates in CI |
+| Coverage Tracking | Codecov | Automated PR integration |
 
 **Testing Strategy:**
 
@@ -46,28 +71,15 @@ A production-grade Kanban board application. Showcases engineering practices, de
 - E2E tests validate critical flows (auth)
 - Every PR triggers the full pipeline before merge
 
-### Architecture
-
-| Type      | Choice                   | Rationale                                        |
-| --------- | ------------------------ | ------------------------------------------------ |
-| Framework | Next.js (App Router)     | SSG for static pages, SSR for dynamic content    |
-| State     | Zustand                  | 40% less boilerplate than Redux, simpler testing |
-| Forms     | React Hook Form + Zod    | Type-safe validation, composable schemas         |
-| Database  | MongoDB + Mongoose       | Document model fits board/project/task hierarchy |
-| Auth      | Better Auth              | OAuth support                                    |
-| DnD       | dnd-kit                  | Lightweight, accessible, extensible              |
-| i18n      | next-intl                | App Router native support                        |
-| UI        | Tailwind CSS + Shadcn/ui | Consistent design system, rapid iteration        |
-
 ### Developer Experience
 
-| Tool       | Purpose                                           |
-| ---------- | ------------------------------------------------- |
-| Turbopack  | Rust bundler with filesystem caching for fast HMR |
-| Oxlint     | 50-100x faster than ESLint, clearer diagnostics   |
-| Oxfmt      | 30x faster formatter than Prettier                |
-| Husky      | Pre-commit quality enforcement                    |
-| Commitizen | Conventional commits for clean history            |
+| Tool | Purpose |
+| ---- | ------- |
+| Turbopack | Rust bundler with filesystem caching for fast HMR |
+| Oxlint | 50-100x faster than ESLint, clearer diagnostics |
+| Oxfmt | 30x faster formatter than Prettier |
+| Husky | Pre-commit quality enforcement |
+| Commitizen | Conventional commits for clean history |
 
 ---
 
@@ -85,13 +97,13 @@ A production-grade Kanban board application. Showcases engineering practices, de
 
 ## Permission Model
 
-| Capability          | Owner | Member |
-| ------------------- | ----- | ------ |
-| Manage Board        | Yes   | No     |
-| Create Project/Task | Yes   | Yes    |
-| Edit All Content    | Yes   | No     |
-| Edit Own Content    | Yes   | Yes    |
-| View All Content    | Yes   | Yes    |
+| Capability | Owner | Member |
+| ---------- | ----- | ------ |
+| Manage Board | Yes | No |
+| Create Project/Task | Yes | Yes |
+| Edit All Content | Yes | No |
+| Edit Own Content | Yes | Yes |
+| View All Content | Yes | Yes |
 
 ---
 
