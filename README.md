@@ -17,10 +17,10 @@ A production-grade Kanban board built with Next.js, demonstrating technical deci
 
 This project was strategically re-architected through three stages, each driven by a clear engineering rationale:
 
-| Stage | Architecture | Key Decision |
-| :---- | :----------- | :----------- |
-| **1. Monolith** | Next.js full-stack (this repo) | Ship fast, validate product-market fit with a single deployable unit |
-| **2. Decoupled** | Next.js frontend + Nest.js backend | Separate concerns for independent team scaling and deployment cycles |
+| Stage                 | Architecture                                                                  | Key Decision                                                                |
+| :-------------------- | :---------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
+| **1. Monolith**       | Next.js full-stack (this repo)                                                | Ship fast, validate product-market fit with a single deployable unit        |
+| **2. Decoupled**      | Next.js frontend + Nest.js backend                                            | Separate concerns for independent team scaling and deployment cycles        |
 | **3. Multi-Platform** | [Turborepo monorepo](https://github.com/john-data-chen/turborepo-starter-kit) | Share business logic (state, types, i18n, validation) across Web and Mobile |
 
 The monorepo evolution introduces shared packages (`@repo/store`, `@repo/i18n`, `@repo/ui`) that enable a write-once approach for state management, validation, and types — while each platform (Next.js web, Expo mobile, Nest.js API) maintains full control over its UI and deployment. This mirrors the architectural pattern used by teams scaling from a single product to a platform.
@@ -29,13 +29,13 @@ The monorepo evolution introduces shared packages (`@repo/store`, `@repo/i18n`, 
 
 ## Engineering Metrics
 
-| Metric | Result |
-| ------ | ------ |
-| Test Coverage | **80%+** via Vitest (unit + integration) |
-| Code Quality | **SonarQube A** across Security, Reliability, Maintainability |
-| Performance | **Lighthouse 90+** on all categories |
-| E2E Validation | Cross-browser (Chrome, Safari, Edge) via Playwright |
-| CI/CD Pipeline | GitHub Actions → SonarQube + Codecov → Vercel |
+| Metric         | Result                                                        |
+| -------------- | ------------------------------------------------------------- |
+| Test Coverage  | **80%+** via Vitest (unit + integration)                      |
+| Code Quality   | **SonarQube A** across Security, Reliability, Maintainability |
+| Performance    | **Lighthouse 90+** on all categories                          |
+| E2E Validation | Cross-browser (Chrome, Safari, Edge) via Playwright           |
+| CI/CD Pipeline | GitHub Actions → SonarQube + Codecov → Vercel                 |
 
 <img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
@@ -45,25 +45,25 @@ The monorepo evolution introduces shared packages (`@repo/store`, `@repo/i18n`, 
 
 ### Architecture
 
-| Type | Choice | Rationale |
-| ---- | ------ | --------- |
-| Framework | Next.js (App Router) | SSG for static pages, SSR for dynamic content |
-| State | Zustand | 40% less boilerplate than Redux, simpler testing |
-| Forms | React Hook Form + Zod | Type-safe validation, composable schemas |
-| Database | MongoDB + Mongoose | Document model fits board/project/task hierarchy |
-| Auth | Better Auth | OAuth support |
-| DnD | dnd-kit | Lightweight, accessible, extensible |
-| i18n | next-intl | App Router native support |
-| UI | Tailwind CSS + Shadcn/ui | Consistent design system, rapid iteration |
+| Type      | Choice                   | Rationale                                               |
+| --------- | ------------------------ | ------------------------------------------------------- |
+| Framework | Next.js (App Router)     | Cache Components (PPR) for mixed static/dynamic content |
+| State     | Zustand                  | 40% less boilerplate than Redux, simpler testing        |
+| Forms     | React Hook Form + Zod    | Type-safe validation, composable schemas                |
+| Database  | MongoDB + Mongoose       | Document model fits board/project/task hierarchy        |
+| Auth      | Better Auth              | OAuth support                                           |
+| DnD       | dnd-kit                  | Lightweight, accessible, extensible                     |
+| i18n      | next-intl                | App Router native support                               |
+| UI        | Tailwind CSS + Shadcn/ui | Consistent design system, rapid iteration               |
 
 ### Quality Assurance
 
-| Type | Tool | Rationale |
-| ---- | ---- | --------- |
-| Unit/Integration | Vitest | Faster than Jest, native ESM, simpler config |
-| E2E | Playwright | Cross-browser support, lighter than Cypress |
-| Static Analysis | SonarQube | Enterprise-grade quality gates in CI |
-| Coverage Tracking | Codecov | Automated PR integration |
+| Type              | Tool       | Rationale                                    |
+| ----------------- | ---------- | -------------------------------------------- |
+| Unit/Integration  | Vitest     | Faster than Jest, native ESM, simpler config |
+| E2E               | Playwright | Cross-browser support, lighter than Cypress  |
+| Static Analysis   | SonarQube  | Enterprise-grade quality gates in CI         |
+| Coverage Tracking | Codecov    | Automated PR integration                     |
 
 **Testing Strategy:**
 
@@ -73,13 +73,13 @@ The monorepo evolution introduces shared packages (`@repo/store`, `@repo/i18n`, 
 
 ### Developer Experience
 
-| Tool | Purpose |
-| ---- | ------- |
-| Turbopack | Rust bundler with filesystem caching for fast HMR |
-| Oxlint | 50-100x faster than ESLint, clearer diagnostics |
-| Oxfmt | 30x faster formatter than Prettier |
-| Husky | Pre-commit quality enforcement |
-| Commitizen | Conventional commits for clean history |
+| Tool       | Purpose                                           |
+| ---------- | ------------------------------------------------- |
+| Turbopack  | Rust bundler with filesystem caching for fast HMR |
+| Oxlint     | 50-100x faster than ESLint, clearer diagnostics   |
+| Oxfmt      | 30x faster formatter than Prettier                |
+| Husky      | Pre-commit quality enforcement                    |
+| Commitizen | Conventional commits for clean history            |
 
 ---
 
@@ -97,13 +97,13 @@ The monorepo evolution introduces shared packages (`@repo/store`, `@repo/i18n`, 
 
 ## Permission Model
 
-| Capability | Owner | Member |
-| ---------- | ----- | ------ |
-| Manage Board | Yes | No |
-| Create Project/Task | Yes | Yes |
-| Edit All Content | Yes | No |
-| Edit Own Content | Yes | Yes |
-| View All Content | Yes | Yes |
+| Capability          | Owner | Member |
+| ------------------- | ----- | ------ |
+| Manage Board        | Yes   | No     |
+| Create Project/Task | Yes   | Yes    |
+| Edit All Content    | Yes   | No     |
+| Edit Own Content    | Yes   | Yes    |
+| View All Content    | Yes   | Yes    |
 
 ---
 
