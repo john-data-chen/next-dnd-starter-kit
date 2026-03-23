@@ -38,16 +38,16 @@ describe("Board DB functions", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
-    ;(getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
-    ;(getUserById as jest.Mock).mockImplementation((id) =>
+    ;(connectToDatabase as import("vitest").Mock<any>).mockResolvedValue(undefined)
+    ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(mockUser)
+    ;(getUserById as import("vitest").Mock<any>).mockImplementation((id) =>
       Promise.resolve(id === mockUser.id ? mockUser : null)
     )
   })
 
   describe("fetchBoardsFromDb", () => {
     it("should fetch boards for a user", async () => {
-      ;(BoardModel.find as jest.Mock).mockReturnValue({
+      ;(BoardModel.find as import("vitest").Mock<any>).mockReturnValue({
         populate: vi.fn().mockReturnThis(),
         lean: vi.fn().mockResolvedValue([mockBoard])
       })
@@ -58,7 +58,7 @@ describe("Board DB functions", () => {
     })
 
     it("should return empty array if user not found", async () => {
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(null)
       const boards = await fetchBoardsFromDb("unknown@example.com")
       expect(boards).toEqual([])
     })
@@ -66,7 +66,7 @@ describe("Board DB functions", () => {
 
   describe("createBoardInDb", () => {
     it("should create a new board", async () => {
-      ;(BoardModel.create as jest.Mock).mockResolvedValue({
+      ;(BoardModel.create as import("vitest").Mock<any>).mockResolvedValue({
         ...mockBoard,
         toObject: () => mockBoard
       })
@@ -79,7 +79,7 @@ describe("Board DB functions", () => {
     })
 
     it("should return null if user not found", async () => {
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(null)
       const newBoard = await createBoardInDb({
         title: "Test Board",
         userEmail: "unknown@example.com"
@@ -90,13 +90,13 @@ describe("Board DB functions", () => {
 
   describe("updateBoardInDb", () => {
     it("should update a board", async () => {
-      ;(BoardModel.findById as jest.Mock).mockReturnValue({
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockReturnValue({
         lean: vi.fn().mockReturnValue(mockBoard)
       })
       const mockUpdatedDoc = {
         lean: vi.fn().mockReturnValue({ ...mockBoard, title: "Updated Board" })
       }
-      ;(BoardModel.findByIdAndUpdate as jest.Mock).mockReturnValue(mockUpdatedDoc)
+      ;(BoardModel.findByIdAndUpdate as import("vitest").Mock<any>).mockReturnValue(mockUpdatedDoc)
 
       const updatedBoard = await updateBoardInDb(
         mockBoardId,
@@ -107,7 +107,7 @@ describe("Board DB functions", () => {
     })
 
     it("should throw error if user is not owner", async () => {
-      ;(BoardModel.findById as jest.Mock).mockReturnValue({
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockReturnValue({
         lean: vi.fn().mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       })
       await expect(
@@ -118,18 +118,18 @@ describe("Board DB functions", () => {
 
   describe("deleteBoardInDb", () => {
     it("should delete a board and its contents", async () => {
-      ;(BoardModel.findById as jest.Mock).mockReturnValue({
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockReturnValue({
         lean: vi.fn().mockReturnValue(mockBoard)
       })
-      ;(ProjectModel.deleteMany as jest.Mock).mockResolvedValue({
+      ;(ProjectModel.deleteMany as import("vitest").Mock<any>).mockResolvedValue({
         acknowledged: true,
         deletedCount: 1
       })
-      ;(TaskModel.deleteMany as jest.Mock).mockResolvedValue({
+      ;(TaskModel.deleteMany as import("vitest").Mock<any>).mockResolvedValue({
         acknowledged: true,
         deletedCount: 1
       })
-      ;(BoardModel.findByIdAndDelete as jest.Mock).mockResolvedValue(mockBoard)
+      ;(BoardModel.findByIdAndDelete as import("vitest").Mock<any>).mockResolvedValue(mockBoard)
 
       const result = await deleteBoardInDb(mockBoardId, mockUser.email)
       expect(result).toBe(true)
@@ -139,7 +139,7 @@ describe("Board DB functions", () => {
     })
 
     it("should throw error if user is not owner", async () => {
-      ;(BoardModel.findById as jest.Mock).mockReturnValue({
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockReturnValue({
         lean: vi.fn().mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       })
       await expect(deleteBoardInDb(mockBoardId, mockUser.email)).resolves.toBe(false)

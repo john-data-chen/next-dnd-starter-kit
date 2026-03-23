@@ -3,7 +3,7 @@ import { connect } from "mongoose"
 vi.mock("mongoose", async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...Object(actual),
     connect: vi.fn(),
     connection: {
       db: {
@@ -17,7 +17,7 @@ vi.mock("mongoose", async (importOriginal) => {
 
 describe("connectToDatabase", () => {
   const originalEnv = process.env
-  let isConnectedModule: { __esModule: true; connectToDatabase: any }
+  let isConnectedModule: { __esModule?: boolean; connectToDatabase: any }
 
   beforeEach(async () => {
     vi.resetModules()
@@ -39,14 +39,14 @@ describe("connectToDatabase", () => {
 
   it("should connect to database successfully", async () => {
     process.env.DATABASE_URL = "mongodb://localhost:27017/test"
-    ;(connect as jest.Mock).mockResolvedValueOnce(true)
+    ;(connect as import("vitest").Mock<any>).mockResolvedValueOnce(true)
     await isConnectedModule.connectToDatabase()
     expect(connect).toHaveBeenCalled()
   })
 
   it("should not connect if already connected", async () => {
     process.env.DATABASE_URL = "mongodb://localhost:27017/test"
-    ;(connect as jest.Mock).mockResolvedValue(true)
+    ;(connect as import("vitest").Mock<any>).mockResolvedValue(true)
     await isConnectedModule.connectToDatabase()
     await isConnectedModule.connectToDatabase()
     expect(connect).toHaveBeenCalledTimes(1)
@@ -56,7 +56,7 @@ describe("connectToDatabase", () => {
     process.env.DATABASE_URL = "mongodb://localhost:27017/test"
     const error = new Error("Server selection error")
     error.name = "MongoServerSelectionError"
-    ;(connect as jest.Mock).mockRejectedValue(error)
+    ;(connect as import("vitest").Mock<any>).mockRejectedValue(error)
     await expect(isConnectedModule.connectToDatabase()).rejects.toThrow(
       "Database server is not running or unreachable. Please verify MongoDB service is running properly."
     )
@@ -66,7 +66,7 @@ describe("connectToDatabase", () => {
     process.env.DATABASE_URL = "mongodb://localhost:27017/test"
     const error = new Error("Network error")
     error.name = "MongoNetworkError"
-    ;(connect as jest.Mock).mockRejectedValue(error)
+    ;(connect as import("vitest").Mock<any>).mockRejectedValue(error)
     await expect(isConnectedModule.connectToDatabase()).rejects.toThrow(
       "Database network connection error. Please check network settings and database address."
     )
@@ -75,7 +75,7 @@ describe("connectToDatabase", () => {
   it("should handle generic error", async () => {
     process.env.DATABASE_URL = "mongodb://localhost:27017/test"
     const error = new Error("Generic error")
-    ;(connect as jest.Mock).mockRejectedValue(error)
+    ;(connect as import("vitest").Mock<any>).mockRejectedValue(error)
     await expect(isConnectedModule.connectToDatabase()).rejects.toThrow("Generic error")
   })
 })
