@@ -42,17 +42,17 @@ describe("Task DB functions", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
-    ;(getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
-    ;(getUserById as jest.Mock).mockImplementation((id) =>
+    ;(connectToDatabase as import("vitest").Mock<any>).mockResolvedValue(undefined)
+    ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(mockUser)
+    ;(getUserById as import("vitest").Mock<any>).mockImplementation((id) =>
       Promise.resolve({ id, name: "Mock User", email: "mock@example.com" })
     )
-    ;(ProjectModel.findById as jest.Mock).mockResolvedValue({
+    ;(ProjectModel.findById as import("vitest").Mock<any>).mockResolvedValue({
       board: mockBoardId,
       members: [mockUser.id],
       owner: mockUser.id
     })
-    ;(BoardModel.findById as jest.Mock).mockResolvedValue({
+    ;(BoardModel.findById as import("vitest").Mock<any>).mockResolvedValue({
       _id: mockBoardId,
       members: [mockUser.id]
     })
@@ -60,7 +60,7 @@ describe("Task DB functions", () => {
 
   describe("getTasksByProjectId", () => {
     it("should fetch tasks for a project", async () => {
-      ;(TaskModel.find as jest.Mock).mockReturnValue({
+      ;(TaskModel.find as import("vitest").Mock<any>).mockReturnValue({
         lean: vi.fn().mockResolvedValue([
           {
             ...mockTask,
@@ -75,7 +75,7 @@ describe("Task DB functions", () => {
     })
 
     it("should throw an error if fetching tasks fails", async () => {
-      ;(TaskModel.find as jest.Mock).mockReturnValue({
+      ;(TaskModel.find as import("vitest").Mock<any>).mockReturnValue({
         lean: vi.fn().mockRejectedValue(new Error("DB error"))
       })
       await expect(getTasksByProjectId(mockProjectId)).rejects.toThrow("DB error")
@@ -84,7 +84,7 @@ describe("Task DB functions", () => {
 
   describe("createTaskInDb", () => {
     it("should create a new task", async () => {
-      ;(TaskModel.create as jest.Mock).mockResolvedValue({
+      ;(TaskModel.create as import("vitest").Mock<any>).mockResolvedValue({
         ...mockTask,
         toObject: () => ({
           ...mockTask,
@@ -98,7 +98,7 @@ describe("Task DB functions", () => {
 
     it("should create a new task with assignee and ensure membership", async () => {
       const assigneeId = new Types.ObjectId().toHexString()
-      ;(TaskModel.create as jest.Mock).mockResolvedValue({
+      ;(TaskModel.create as import("vitest").Mock<any>).mockResolvedValue({
         ...mockTask,
         assignee: assigneeId,
         toObject: () => ({
@@ -108,7 +108,7 @@ describe("Task DB functions", () => {
           lastModifier: new Types.ObjectId(mockTask.lastModifier)
         })
       })
-      ;(ProjectModel.findByIdAndUpdate as jest.Mock).mockResolvedValue({})
+      ;(ProjectModel.findByIdAndUpdate as import("vitest").Mock<any>).mockResolvedValue({})
 
       const newTask = await createTaskInDb(
         mockProjectId,
@@ -122,14 +122,14 @@ describe("Task DB functions", () => {
     })
 
     it("should throw an error if creator is not found", async () => {
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(createTaskInDb(mockProjectId, "Test Task", mockUser.email)).rejects.toThrow(
         "Creator not found"
       )
     })
 
     it("should throw an error if board is not found", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(null)
+      ;(ProjectModel.findById as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(createTaskInDb(mockProjectId, "Test Task", mockUser.email)).rejects.toThrow(
         "Board not found"
       )
@@ -138,8 +138,8 @@ describe("Task DB functions", () => {
 
   describe("updateTaskInDb", () => {
     it("should update a task", async () => {
-      ;(TaskModel.findById as jest.Mock).mockResolvedValue(mockTask)
-      ;(TaskModel.findByIdAndUpdate as jest.Mock).mockResolvedValue({
+      ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(mockTask)
+      ;(TaskModel.findByIdAndUpdate as import("vitest").Mock<any>).mockResolvedValue({
         ...mockTask,
         title: "Updated Task",
         status: "IN_PROGRESS",
@@ -162,14 +162,14 @@ describe("Task DB functions", () => {
     })
 
     it("should throw an error if modifier is not found", async () => {
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(
         updateTaskInDb(mockTaskId, "Updated Task", mockUser.email, "IN_PROGRESS")
       ).rejects.toThrow("Modifier not found")
     })
 
     it("should throw an error if task is not found", async () => {
-      ;(TaskModel.findById as jest.Mock).mockResolvedValue(null)
+      ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(
         updateTaskInDb(mockTaskId, "Updated Task", mockUser.email, "IN_PROGRESS")
       ).rejects.toThrow("Task not found")
@@ -180,13 +180,13 @@ describe("Task DB functions", () => {
     const newProjectId = new Types.ObjectId().toHexString()
 
     it("should update the project of a task", async () => {
-      ;(TaskModel.findById as jest.Mock).mockResolvedValue(mockTask)
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue({
+      ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(mockTask)
+      ;(ProjectModel.findById as import("vitest").Mock<any>).mockResolvedValue({
         _id: newProjectId,
         owner: mockUser.id,
         members: [mockUser.id]
       })
-      ;(TaskModel.findByIdAndUpdate as jest.Mock).mockReturnValue({
+      ;(TaskModel.findByIdAndUpdate as import("vitest").Mock<any>).mockReturnValue({
         toObject: () => ({
           ...mockTask,
           project: newProjectId,
@@ -200,29 +200,29 @@ describe("Task DB functions", () => {
     })
 
     it("should throw an error if user is not found", async () => {
-      ;(getUserByEmail as jest.Mock).mockResolvedValue(null)
+      ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(updateTaskProjectInDb(mockUser.email, mockTaskId, newProjectId)).rejects.toThrow(
         "User not found"
       )
     })
 
     it("should throw an error if target project is not found", async () => {
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue(null)
+      ;(ProjectModel.findById as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(updateTaskProjectInDb(mockUser.email, mockTaskId, newProjectId)).rejects.toThrow(
         "Target project not found"
       )
     })
 
     it("should throw an error if task is not found", async () => {
-      ;(TaskModel.findById as jest.Mock).mockResolvedValue(null)
+      ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(updateTaskProjectInDb(mockUser.email, mockTaskId, newProjectId)).rejects.toThrow(
         "Task not found"
       )
     })
 
     it("should throw a permission error", async () => {
-      ;(TaskModel.findById as jest.Mock).mockResolvedValue(mockTask)
-      ;(ProjectModel.findById as jest.Mock).mockResolvedValue({
+      ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(mockTask)
+      ;(ProjectModel.findById as import("vitest").Mock<any>).mockResolvedValue({
         _id: newProjectId,
         owner: "anotherOwner",
         members: []
@@ -235,14 +235,14 @@ describe("Task DB functions", () => {
 
   describe("deleteTaskInDb", () => {
     it("should delete a task", async () => {
-      ;(TaskModel.findById as jest.Mock).mockResolvedValue(mockTask)
-      ;(TaskModel.findByIdAndDelete as jest.Mock).mockResolvedValue(mockTask)
+      ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(mockTask)
+      ;(TaskModel.findByIdAndDelete as import("vitest").Mock<any>).mockResolvedValue(mockTask)
       await expect(deleteTaskInDb(mockTaskId)).resolves.toBeUndefined()
       expect(TaskModel.findByIdAndDelete).toHaveBeenCalledWith(mockTaskId)
     })
 
     it("should throw an error if task is not found", async () => {
-      ;(TaskModel.findById as jest.Mock).mockResolvedValue(null)
+      ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(deleteTaskInDb(mockTaskId)).rejects.toThrow(
         `Task with id ${mockTaskId} not found`
       )
