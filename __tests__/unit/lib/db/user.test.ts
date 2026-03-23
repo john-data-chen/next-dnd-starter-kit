@@ -25,8 +25,8 @@ describe("User DB Functions", () => {
 
   describe("getUserByEmail", () => {
     it("should return user data if user is found", async () => {
-      ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
-      ;(UserModel.findOne as jest.Mock).mockReturnValue({
+      ;(connectToDatabase as import("vitest").Mock<any>).mockResolvedValue(undefined)
+      ;(UserModel.findOne as import("vitest").Mock<any>).mockReturnValue({
         lean: () =>
           Promise.resolve({
             ...mockUser,
@@ -48,8 +48,8 @@ describe("User DB Functions", () => {
     })
 
     it("should return null if user is not found", async () => {
-      ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
-      ;(UserModel.findOne as jest.Mock).mockReturnValue({
+      ;(connectToDatabase as import("vitest").Mock<any>).mockResolvedValue(undefined)
+      ;(UserModel.findOne as import("vitest").Mock<any>).mockReturnValue({
         lean: () => Promise.resolve(null)
       })
 
@@ -59,7 +59,7 @@ describe("User DB Functions", () => {
     })
 
     it("should return null on error", async () => {
-      ;(connectToDatabase as jest.Mock).mockRejectedValue(new Error("DB error"))
+      ;(connectToDatabase as import("vitest").Mock<any>).mockRejectedValue(new Error("DB error"))
       const user = await getUserByEmail("john.doe@example.com")
       expect(user).toBeNull()
     })
@@ -67,8 +67,8 @@ describe("User DB Functions", () => {
 
   describe("getUserById", () => {
     it("should return user data if user is found", async () => {
-      ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
-      ;(UserModel.findOne as jest.Mock).mockReturnValue({
+      ;(connectToDatabase as import("vitest").Mock<any>).mockResolvedValue(undefined)
+      ;(UserModel.findOne as import("vitest").Mock<any>).mockReturnValue({
         lean: () =>
           Promise.resolve({
             ...mockUser,
@@ -88,8 +88,8 @@ describe("User DB Functions", () => {
     })
 
     it("should return null if user is not found", async () => {
-      ;(connectToDatabase as jest.Mock).mockResolvedValue(undefined)
-      ;(UserModel.findOne as jest.Mock).mockReturnValue({
+      ;(connectToDatabase as import("vitest").Mock<any>).mockResolvedValue(undefined)
+      ;(UserModel.findOne as import("vitest").Mock<any>).mockReturnValue({
         lean: () => Promise.resolve(null)
       })
 
@@ -99,7 +99,7 @@ describe("User DB Functions", () => {
     })
 
     it("should return null on error", async () => {
-      ;(connectToDatabase as jest.Mock).mockRejectedValue(new Error("DB error"))
+      ;(connectToDatabase as import("vitest").Mock<any>).mockRejectedValue(new Error("DB error"))
       const user = await getUserById("mockUserId")
       expect(user).toBeNull()
     })

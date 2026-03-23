@@ -15,7 +15,7 @@ describe("Environment Configuration", () => {
   })
 
   it("should have correct environment flags in production", async () => {
-    process.env.NODE_ENV = "production"
+    Object.defineProperty(process.env, "NODE_ENV", { value: "production", configurable: true })
     process.env.DATABASE_URL = "mongodb://prod"
     const { config } = await import("@/lib/config/env")
     expect(config.isProduction).toBe(true)
@@ -29,7 +29,7 @@ describe("Environment Configuration", () => {
   })
 
   it("should not throw when DATABASE_URL is missing in production", async () => {
-    process.env.NODE_ENV = "production"
+    Object.defineProperty(process.env, "NODE_ENV", { value: "production", configurable: true })
     delete process.env.DATABASE_URL
     const { config } = await import("@/lib/config/env")
     expect(config.databaseUrl).toBeUndefined()
