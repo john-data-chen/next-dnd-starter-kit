@@ -1,6 +1,4 @@
 import { render, screen } from "@testing-library/react"
-import { Session } from "next-auth"
-// Import Session type
 import React from "react"
 import { describe, expect, it } from "vitest"
 
@@ -22,7 +20,7 @@ describe("Providers Component", () => {
   const ChildComponent = () => <div>{childText}</div>
 
   // Create a mock session object satisfying the Session type
-  const mockSession: Session | null = {
+  const mockSession: any = {
     user: {
       name: "Test User",
       email: "test@example.com",
@@ -33,7 +31,7 @@ describe("Providers Component", () => {
 
   it("should render children wrapped by ThemeProvider and SessionProvider", () => {
     render(
-      <Providers session={mockSession}>
+      <Providers>
         <ChildComponent />
       </Providers>
     )
@@ -49,7 +47,7 @@ describe("Providers Component", () => {
 
   it("should handle null session correctly", () => {
     render(
-      <Providers session={null}>
+      <Providers>
         <ChildComponent />
       </Providers>
     )
