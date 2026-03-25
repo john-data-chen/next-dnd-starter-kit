@@ -1,165 +1,206 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
-import React from "react"
-import { vi } from "vitest"
+import { toast } from "sonner"
+import { describe, expect, it, vi, beforeEach } from "vitest"
 
 import { ProjectActions } from "@/components/kanban/project/ProjectAction"
-import { useAuthStore } from "@/lib/stores/auth-store"
-import { useBoardStore } from "@/lib/stores/board-store"
-import { useProjectStore } from "@/lib/stores/project-store"
-
-const updateProjectMock = vi.fn().mockResolvedValue(undefined)
-const removeProjectMock = vi.fn().mockResolvedValue(undefined)
-const fetchProjectsMock = vi.fn().mockResolvedValue(undefined)
-
-vi.mock("@/lib/stores/project-store", () => ({
-  useProjectStore: (selector: any) =>
-    selector({
-      updateProject: updateProjectMock,
-      removeProject: removeProjectMock,
-      fetchProjects: fetchProjectsMock
-    })
-}))
-
-vi.mock("@/lib/stores/board-store", () => ({
-  useBoardStore: () => ({
-    currentBoardId: "b1"
-  })
-}))
-
-vi.mock("@/lib/stores/auth-store", () => ({
-  useAuthStore: () => ({
-    userEmail: "test@example.com"
-  })
-}))
+import { useBoardStore, useProjectStore } from "@/lib/stores"
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string, values?: any) =>
-    values ? `${key} ${JSON.stringify(values)}` : key
-}))
-
-const { toastSuccessMock, toastErrorMock } = vi.hoisted(() => ({
-  toastSuccessMock: vi.fn(),
-  toastErrorMock: vi.fn()
+    values?.error ? `${key}: ${values.error}` : key
 }))
 
 vi.mock("sonner", () => ({
   toast: {
-    success: toastSuccessMock,
-    error: toastErrorMock
+    success: vi.fn(),
+    error: vi.fn()
   }
 }))
 
-vi.mock("@/components/kanban/project/ProjectForm", () => ({
-  ProjectForm: ({ onSubmit, children }: any) => (
-    <form
-      data-testid="mock-project-form"
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit({ title: "Edited Title", description: "Edited Desc" })
-      }}
-    >
-      {children}
-    </form>
-  )
+vi.mock("@/lib/stores", () => ({
+  useBoardStore: vi.fn(),
+  useProjectStore: vi.fn()
 }))
 
-vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, ...props }: any) => <button {...props}>{children}</button>
-}))
-vi.mock("@/components/ui/dialog", () => ({
-  Dialog: ({ children }: any) => <div>{children}</div>,
-  DialogContent: ({ children }: any) => <div>{children}</div>,
-  DialogHeader: ({ children }: any) => <div>{children}</div>,
-  DialogTitle: ({ children }: any) => <h2>{children}</h2>
-}))
-vi.mock("@/components/ui/alert-dialog", () => ({
-  AlertDialog: ({ children }: any) => <div>{children}</div>,
-  AlertDialogContent: ({ children }: any) => <div>{children}</div>,
-  AlertDialogHeader: ({ children }: any) => <div>{children}</div>,
-  AlertDialogTitle: ({ children }: any) => <h2>{children}</h2>,
-  AlertDialogDescription: ({ children }: any) => <p>{children}</p>,
-  AlertDialogFooter: ({ children }: any) => <div>{children}</div>,
-  AlertDialogCancel: ({ children, ...props }: any) => <button {...props}>{children}</button>
-}))
 vi.mock("@/components/ui/dropdown-menu", () => ({
-  DropdownMenu: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuTrigger: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, onSelect, ...props }: any) => (
-    <div role="menuitem" {...props} onClick={() => onSelect && onSelect(new Event("select"))}>
+  DropdownMenu: ({ children, onOpenChange }: any) => (
+    <div data-testid="mock-dropdown">
+      <button data-testid="mock-open-menu" onClick={() => onOpenChange(true)}>
+        Open
+      </button>
       {children}
     </div>
+  ),
+  DropdownMenuTrigger: ({ children }: any) => children,
+  DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuItem: ({ children, onSelect, disabled }: any) => (
+    <button onClick={onSelect} disabled={disabled} data-testid={`mock-item-${children}`}>
+      {children}
+    </button>
   ),
   DropdownMenuSeparator: () => <hr />
 }))
 
-global.fetch = vi.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ canEditProject: true, canDeleteProject: true })
-  })
-) as any
+const mockUpdateProject = vi.fn()
+const mockRemoveProject = vi.fn().mockResolvedValue(undefined)
+const mockFetchProjects = vi.fn()
 
 describe("ProjectActions", () => {
-  const baseProps = {
-    id: "p1",
-    title: "Project 1",
-    description: "desc"
-  }
-
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.mocked(useBoardStore).mockImplementation((selector: any) =>
+      selector({ currentBoardId: "board-1" })
+    )
+    vi.mocked(useProjectStore).mockImplementation((selector: any) =>
+      selector({
+        updateProject: mockUpdateProject,
+        removeProject: mockRemoveProject,
+        fetchProjects: mockFetchProjects
+      })
+    )
+    global.fetch = vi.fn()
   })
 
-  it("should render dropdown menu button", () => {
-    render(<ProjectActions {...baseProps} />)
+  it("renders trigger button", () => {
+    render(<ProjectActions id="1" title="Test Project" />)
     expect(screen.getByTestId("project-option-button")).toBeInTheDocument()
   })
 
-  it("should open edit dialog and handle successful submission", async () => {
-    updateProjectMock.mockResolvedValue(undefined)
-    render(<ProjectActions {...baseProps} />)
+  it("fetches permissions on menu open", async () => {
+    vi.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ canEditProject: true, canDeleteProject: true })
+    } as Response)
 
-    fireEvent.click(screen.getByTestId("project-option-button"))
-    fireEvent.click(screen.getByTestId("edit-project-button"))
-    await screen.findByText("editProjectTitle")
-
-    fireEvent.submit(screen.getByTestId("mock-project-form"))
+    render(<ProjectActions id="1" title="Test Project" />)
+    fireEvent.click(screen.getByTestId("mock-open-menu"))
 
     await waitFor(() => {
-      expect(updateProjectMock).toHaveBeenCalledWith("p1", "Edited Title", "Edited Desc")
-      expect(toastSuccessMock).toHaveBeenCalledWith("updateSuccess")
+      expect(global.fetch).toHaveBeenCalledWith("/api/projects/1/permissions")
     })
   })
 
-  it("should open delete dialog and handle successful deletion", async () => {
-    render(<ProjectActions {...baseProps} />)
+  it("handles fetch error gracefully", async () => {
+    vi.mocked(global.fetch).mockRejectedValueOnce(new Error("Network error"))
 
-    fireEvent.click(screen.getByTestId("project-option-button"))
-    fireEvent.click(screen.getByTestId("delete-project-button"))
-    await screen.findByText('confirmDeleteTitle {"title":"Project 1"}')
+    render(<ProjectActions id="1" title="Test Project" />)
+    fireEvent.click(screen.getByTestId("mock-open-menu"))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(expect.stringContaining("Network error"))
+    })
+  })
+
+  it("handles non-ok response from fetch", async () => {
+    vi.mocked(global.fetch).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Not allowed" })
+    } as Response)
+
+    render(<ProjectActions id="1" title="Test Project" />)
+    fireEvent.click(screen.getByTestId("mock-open-menu"))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(expect.stringContaining("Not allowed"))
+    })
+  })
+
+  it("allows edit when permission granted", async () => {
+    vi.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ canEditProject: true, canDeleteProject: false })
+    } as Response)
+
+    render(<ProjectActions id="1" title="Test Project" description="Desc" />)
+    fireEvent.click(screen.getByTestId("mock-open-menu"))
+
+    await waitFor(() => {
+      expect(screen.getByTestId("mock-item-edit")).not.toBeDisabled()
+    })
+
+    fireEvent.click(screen.getByTestId("mock-item-edit"))
+    expect(screen.getByText("editProjectTitle")).toBeInTheDocument()
+  })
+
+  it("allows delete when permission granted", async () => {
+    vi.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ canEditProject: false, canDeleteProject: true })
+    } as Response)
+
+    render(<ProjectActions id="1" title="Test Project" />)
+    fireEvent.click(screen.getByTestId("mock-open-menu"))
+
+    await waitFor(() => {
+      expect(screen.getByTestId("mock-item-delete")).not.toBeDisabled()
+    })
+
+    fireEvent.click(screen.getByTestId("mock-item-delete"))
+    expect(screen.getByText("confirmDeleteDescription")).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("button", { name: "delete" }))
+    expect(mockRemoveProject).toHaveBeenCalledWith("1")
+    expect(toast.success).toHaveBeenCalled()
+  })
+
+  it("handles form submit success", async () => {
+    vi.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ canEditProject: true, canDeleteProject: false })
+    } as Response)
+
+    render(<ProjectActions id="1" title="Test Project" />)
+    fireEvent.click(screen.getByTestId("mock-open-menu"))
 
     await waitFor(() => {
-      expect(removeProjectMock).toHaveBeenCalledWith("p1")
-      expect(toastSuccessMock).toHaveBeenCalledWith('deleteSuccess {"title":"Project 1"}')
+      expect(screen.getByTestId("mock-item-edit")).not.toBeDisabled()
+    })
+    fireEvent.click(screen.getByTestId("mock-item-edit"))
+
+    mockUpdateProject.mockResolvedValueOnce(undefined)
+    mockFetchProjects.mockResolvedValueOnce(undefined)
+
+    await waitFor(() => {
+      expect(screen.getByText("editProjectTitle")).toBeInTheDocument()
+    })
+
+    const titleInput = document.querySelector('input[name="title"]') as HTMLInputElement
+    fireEvent.change(titleInput, { target: { value: "Updated Title" } })
+    fireEvent.click(screen.getByRole("button", { name: "save" }))
+
+    await waitFor(() => {
+      expect(mockUpdateProject).toHaveBeenCalledWith("1", "Updated Title", undefined)
+      expect(mockFetchProjects).toHaveBeenCalledWith("board-1")
+      expect(toast.success).toHaveBeenCalledWith("updateSuccess")
     })
   })
 
-  it("should show error toast when edit fails", async () => {
-    const error = new Error("Update failed")
-    updateProjectMock.mockRejectedValue(error)
-    render(<ProjectActions {...baseProps} />)
+  it("handles form submit error", async () => {
+    vi.mocked(global.fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ canEditProject: true, canDeleteProject: false })
+    } as Response)
 
-    fireEvent.click(screen.getByTestId("project-option-button"))
-    fireEvent.click(screen.getByTestId("edit-project-button"))
-    await screen.findByText("editProjectTitle")
-
-    fireEvent.submit(screen.getByTestId("mock-project-form"))
+    render(<ProjectActions id="1" title="Test Project" />)
+    fireEvent.click(screen.getByTestId("mock-open-menu"))
 
     await waitFor(() => {
-      expect(toastErrorMock).toHaveBeenCalledWith(`updateFailed {"error":"${error.message}"}`)
+      expect(screen.getByTestId("mock-item-edit")).not.toBeDisabled()
+    })
+    fireEvent.click(screen.getByTestId("mock-item-edit"))
+
+    mockUpdateProject.mockRejectedValueOnce(new Error("Update failed"))
+
+    await waitFor(() => {
+      expect(screen.getByText("editProjectTitle")).toBeInTheDocument()
+    })
+
+    const titleInput = document.querySelector('input[name="title"]') as HTMLInputElement
+    fireEvent.change(titleInput, { target: { value: "Updated Title" } })
+    fireEvent.click(screen.getByRole("button", { name: "save" }))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(expect.stringContaining("Update failed"))
     })
   })
 })

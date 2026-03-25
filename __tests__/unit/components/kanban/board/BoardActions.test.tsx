@@ -1,191 +1,171 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
-import React from "react"
-import { vi } from "vitest"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { describe, expect, it, vi, beforeEach } from "vitest"
 
 import { BoardActions } from "@/components/kanban/board/BoardActions"
-
-const updateBoardMock = vi.fn().mockResolvedValue(undefined)
-const removeBoardMock = vi.fn().mockResolvedValue(undefined)
-
-vi.mock("@/lib/stores/board-store", () => ({
-  useBoardStore: (selector: any) =>
-    selector({
-      updateBoard: updateBoardMock,
-      removeBoard: removeBoardMock
-    })
-}))
-
-vi.mock("@/lib/stores/auth-store", () => ({
-  useAuthStore: () => ({
-    userEmail: "test@example.com"
-  })
-}))
-
-const fetchBoardsMock = vi.fn()
-vi.mock("@/hooks/useBoards", () => ({
-  useBoards: () => ({
-    fetchBoards: fetchBoardsMock
-  })
-}))
-
-const refreshMock = vi.fn()
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({
-    refresh: refreshMock
-  })
-}))
+import { useBoards } from "@/hooks/useBoards"
+import { useBoardStore } from "@/lib/stores"
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string, values?: any) =>
     values ? `${key} ${JSON.stringify(values)}` : key
 }))
 
-const toastMocks = vi.hoisted(() => ({
-  toastSuccessMock: vi.fn(),
-  toastErrorMock: vi.fn()
+vi.mock("next/navigation", () => ({
+  useRouter: vi.fn()
 }))
 
 vi.mock("sonner", () => ({
   toast: {
-    success: toastMocks.toastSuccessMock,
-    error: toastMocks.toastErrorMock
+    success: vi.fn(),
+    error: vi.fn()
   }
 }))
 
-vi.mock("@/components/kanban/board/BoardForm", () => ({
-  BoardForm: ({
-    onSubmit,
-    children,
-    defaultValues
-  }: {
-    onSubmit: (values: { title: string; description: string }) => void
-    children: React.ReactNode
-    defaultValues: { title: string; description: string }
-  }) => (
-    <form
-      data-testid="board-form"
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit({ title: "Edited Title", description: "Edited Desc" })
-      }}
-    >
-      <input defaultValue={defaultValues.title} data-testid="board-title-input" />
-      <textarea defaultValue={defaultValues.description} data-testid="board-description-input" />
+vi.mock("@/lib/stores", () => ({
+  useBoardStore: vi.fn()
+}))
+
+vi.mock("@/hooks/useBoards", () => ({
+  useBoards: vi.fn()
+}))
+
+vi.mock("@/components/ui/dropdown-menu", () => ({
+  DropdownMenu: ({ children }: any) => <div data-testid="mock-dropdown">{children}</div>,
+  DropdownMenuTrigger: ({ children }: any) => children,
+  DropdownMenuContent: ({ children, onClick }: any) => <div onClick={onClick}>{children}</div>,
+  DropdownMenuItem: ({ children, onSelect, "data-testid": testId }: any) => (
+    <button onClick={onSelect} data-testid={testId}>
       {children}
-    </form>
-  )
+    </button>
+  ),
+  DropdownMenuSeparator: () => <hr />
 }))
 
-vi.mock("@/components/ui/dropdown-menu", async (importOriginal) => {
-  const original = await importOriginal<typeof import("@/components/ui/dropdown-menu")>()
-  return {
-    ...original,
-    DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    DropdownMenuItem: ({
-      children,
-      onSelect,
-      ...props
-    }: {
-      children: React.ReactNode
-      onSelect?: (event: Event) => void
-      [key: string]: any
-    }) => (
-      <button {...props} onClick={(e) => onSelect?.(e as unknown as Event)}>
-        {children}
-      </button>
-    ),
-    DropdownMenuSeparator: () => <hr data-testid="mock-separator" />
-  }
-})
+const mockUpdateBoard = vi.fn()
+const mockRemoveBoard = vi.fn()
+const mockFetchBoards = vi.fn()
+const mockRouterRefresh = vi.fn()
+
+const mockBoard = {
+  _id: "board-1",
+  title: "Test Board",
+  description: "Test Desc",
+  owner: { id: "u1", name: "User" },
+  members: [],
+  createdAt: new Date(),
+  updatedAt: new Date()
+}
 
 describe("BoardActions", () => {
-  const board = {
-    _id: "b1",
-    title: "Test Board",
-    description: "desc",
-    owner: { id: "u1", name: "User1" },
-    members: [],
-    projects: [],
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }
-
   beforeEach(() => {
     vi.clearAllMocks()
-  })
-
-  it("should open edit dialog when edit item is clicked", async () => {
-    render(<BoardActions board={board} />)
-    const editButton = screen.getByTestId("edit-board-button")
-    fireEvent.click(editButton)
-
-    await screen.findByText("editBoardTitle")
-    expect(screen.getByText("editBoardDescription")).toBeInTheDocument()
-
-    const saveButton = screen.getByRole("button", { name: "saveChanges" })
-    fireEvent.click(saveButton)
-
-    await waitFor(() => {
-      expect(updateBoardMock).toHaveBeenCalledWith("b1", {
-        title: "Edited Title",
-        description: "Edited Desc"
+    vi.mocked(useBoardStore).mockImplementation((selector: any) =>
+      selector({
+        updateBoard: mockUpdateBoard,
+        removeBoard: mockRemoveBoard
       })
-    })
+    )
+    vi.mocked(useBoards).mockReturnValue({ fetchBoards: mockFetchBoards } as any)
+    vi.mocked(useRouter).mockReturnValue({ refresh: mockRouterRefresh } as any)
+  })
+
+  it("renders trigger button", () => {
+    render(<BoardActions board={mockBoard as any} />)
+    expect(screen.getByTestId("board-option-button")).toBeInTheDocument()
+  })
+
+  it("renders custom trigger if asChild is true", () => {
+    render(
+      <BoardActions board={mockBoard as any} asChild>
+        <button data-testid="custom-trigger">Custom</button>
+      </BoardActions>
+    )
+    expect(screen.getByTestId("custom-trigger")).toBeInTheDocument()
+  })
+
+  it("handles edit form success", async () => {
+    mockUpdateBoard.mockResolvedValueOnce(undefined)
+
+    render(<BoardActions board={mockBoard as any} />)
+
+    // Click edit in the mocked dropdown menu
+    fireEvent.click(screen.getByTestId("edit-board-button"))
 
     await waitFor(() => {
-      expect(toastMocks.toastSuccessMock).toHaveBeenCalled()
+      expect(screen.getByText("editBoardTitle")).toBeInTheDocument()
+    })
+
+    const titleInput = screen.getByLabelText(/titleLabel/i)
+    fireEvent.change(titleInput, { target: { value: "Updated Board Title" } })
+
+    fireEvent.click(screen.getByRole("button", { name: /saveChanges/i }))
+
+    await waitFor(() => {
+      expect(mockUpdateBoard).toHaveBeenCalledWith(
+        "board-1",
+        expect.objectContaining({ title: "Updated Board Title" })
+      )
+      expect(mockFetchBoards).toHaveBeenCalled()
+      expect(mockRouterRefresh).toHaveBeenCalled()
+      expect(toast.success).toHaveBeenCalled()
     })
   })
 
-  it("should open delete dialog when delete item is clicked", async () => {
-    render(<BoardActions board={board} />)
-    const deleteButtonDropdown = screen.getByTestId("delete-board-button")
-    fireEvent.click(deleteButtonDropdown)
+  it("handles edit form error", async () => {
+    mockUpdateBoard.mockRejectedValueOnce(new Error("Update Error"))
 
-    await screen.findByText('confirmDeleteTitle {"title":"Test Board"}')
-    expect(screen.getByText("confirmDeleteDescription")).toBeInTheDocument()
-
-    const confirmDeleteButton = screen.getByRole("button", { name: "delete" })
-    fireEvent.click(confirmDeleteButton)
+    render(<BoardActions board={mockBoard as any} />)
+    fireEvent.click(screen.getByTestId("edit-board-button"))
 
     await waitFor(() => {
-      expect(removeBoardMock).toHaveBeenCalledWith("b1")
+      expect(screen.getByText("editBoardTitle")).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByRole("button", { name: /saveChanges/i }))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalled()
     })
   })
 
-  it("should show error toast if updateBoard fails", async () => {
-    const error = new Error("Update failed")
-    updateBoardMock.mockRejectedValueOnce(error)
-    render(<BoardActions board={board} />)
+  it("handles delete success", async () => {
+    const mockOnDelete = vi.fn()
+    mockRemoveBoard.mockResolvedValueOnce(undefined)
 
-    const editButton = screen.getByTestId("edit-board-button")
-    fireEvent.click(editButton)
-
-    await screen.findByText("editBoardTitle")
-    const saveButton = screen.getByRole("button", { name: "saveChanges" })
-    fireEvent.click(saveButton)
+    render(<BoardActions board={mockBoard as any} onDelete={mockOnDelete} />)
+    fireEvent.click(screen.getByTestId("delete-board-button"))
 
     await waitFor(() => {
-      expect(toastMocks.toastErrorMock).toHaveBeenCalled()
+      expect(screen.getByText(/confirmDeleteTitle/i)).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByRole("button", { name: /delete/i }))
+
+    await waitFor(() => {
+      expect(mockRemoveBoard).toHaveBeenCalledWith("board-1")
+      expect(mockOnDelete).toHaveBeenCalled()
+      expect(mockFetchBoards).toHaveBeenCalled()
+      expect(mockRouterRefresh).toHaveBeenCalled()
+      expect(toast.success).toHaveBeenCalled()
     })
   })
 
-  it("should show error toast if removeBoard fails", async () => {
-    const error = new Error("Delete failed")
-    removeBoardMock.mockRejectedValueOnce(error)
-    render(<BoardActions board={board} />)
+  it("handles delete error", async () => {
+    mockRemoveBoard.mockRejectedValueOnce(new Error("Delete Error"))
 
-    const deleteButtonDropdown = screen.getByTestId("delete-board-button")
-    fireEvent.click(deleteButtonDropdown)
-
-    await screen.findByText('confirmDeleteTitle {"title":"Test Board"}')
-    const confirmDeleteButton = screen.getByRole("button", { name: "delete" })
-    fireEvent.click(confirmDeleteButton)
+    render(<BoardActions board={mockBoard as any} />)
+    fireEvent.click(screen.getByTestId("delete-board-button"))
 
     await waitFor(() => {
-      expect(toastMocks.toastErrorMock).toHaveBeenCalled()
+      expect(screen.getByText(/confirmDeleteTitle/i)).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByRole("button", { name: /delete/i }))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalled()
     })
   })
 })
