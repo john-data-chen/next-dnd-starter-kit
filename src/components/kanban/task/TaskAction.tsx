@@ -124,7 +124,11 @@ export function TaskActions({
   }
 
   const handleDelete = () => {
-    setTimeout(() => (document.body.style.pointerEvents = ""), 100)
+    setTimeout(() => {
+      if (typeof document !== "undefined") {
+        document.body.style.pointerEvents = ""
+      }
+    }, 100)
     setShowDeleteDialog(false)
     removeTask(id).catch(console.error)
     onDelete?.(id)

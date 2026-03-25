@@ -1,77 +1,123 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
-import React from "react"
-import { vi } from "vitest"
+import { toast } from "sonner"
+import { describe, expect, it, vi, beforeEach } from "vitest"
 
 import NewProjectDialog from "@/components/kanban/project/NewProjectDialog"
-import { useAuthStore } from "@/lib/stores/auth-store"
-import { useBoardStore } from "@/lib/stores/board-store"
-import { useProjectStore } from "@/lib/stores/project-store"
-
-const addProjectMock = vi.fn().mockResolvedValue("mock-project-id")
-vi.mock("@/lib/stores/project-store", () => ({
-  useProjectStore: (selector: any) =>
-    selector({
-      addProject: addProjectMock
-    })
-}))
-
-vi.mock("@/lib/stores/auth-store", () => ({
-  useAuthStore: () => ({
-    userEmail: "test@example.com"
-  })
-}))
-
-vi.mock("@/lib/stores/board-store", () => ({
-  useBoardStore: () => ({
-    currentBoardId: "test-board-id"
-  })
-}))
+import { useProjectStore } from "@/lib/stores"
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key
 }))
 
-const { toastSuccessMock } = vi.hoisted(() => {
-  return { toastSuccessMock: vi.fn() }
-})
 vi.mock("sonner", () => ({
   toast: {
-    success: toastSuccessMock,
+    success: vi.fn(),
     error: vi.fn()
   }
 }))
 
-vi.mock("@/components/kanban/project/ProjectForm", () => ({
-  ProjectForm: ({ onSubmit, children }: any) => (
-    <form
-      data-testid="mock-project-form"
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit({ title: "Test Project", description: "Test Description" })
-      }}
-    >
-      {children}
-    </form>
-  )
+vi.mock("@/lib/stores", () => ({
+  useProjectStore: vi.fn()
 }))
 
+const mockAddProject = vi.fn()
+
 describe("NewProjectDialog", () => {
-  it("should open dialog and submit new project", async () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(useProjectStore).mockImplementation((selector: any) =>
+      selector({ addProject: mockAddProject })
+    )
+  })
+
+  it("renders trigger button", () => {
+    render(<NewProjectDialog />)
+    expect(screen.getByTestId("new-project-trigger")).toBeInTheDocument()
+  })
+
+  it("opens dialog on click", async () => {
     render(<NewProjectDialog />)
     fireEvent.click(screen.getByTestId("new-project-trigger"))
-    await screen.findByTestId("new-project-dialog")
+    await waitFor(() => {
+      expect(screen.getByText("addNewProjectTitle")).toBeInTheDocument()
+    })
+  })
 
-    expect(screen.getByText("addNewProjectTitle")).toBeInTheDocument()
-    expect(screen.getByText("addNewProjectDescription")).toBeInTheDocument()
+  it("submits form successfully", async () => {
+    mockAddProject.mockResolvedValueOnce("new-project-id")
+    const mockOnAdd = vi.fn()
 
-    fireEvent.submit(screen.getByTestId("mock-project-form"))
+    render(<NewProjectDialog onProjectAdd={mockOnAdd} />)
+    fireEvent.click(screen.getByTestId("new-project-trigger"))
 
     await waitFor(() => {
-      expect(addProjectMock).toHaveBeenCalledWith("Test Project", "Test Description")
+      expect(screen.getByText("addNewProjectTitle")).toBeInTheDocument()
     })
 
+    const titleInput = screen.getByLabelText("titleLabel")
+    fireEvent.change(titleInput, { target: { value: "New Proj" } })
+
+    fireEvent.click(screen.getByRole("button", { name: "addProject" }))
+
     await waitFor(() => {
-      expect(toastSuccessMock).toHaveBeenCalledWith("createSuccess")
+      expect(mockAddProject).toHaveBeenCalledWith("New Proj", "")
+      expect(mockOnAdd).toHaveBeenCalledWith("New Proj", "")
+      expect(toast.success).toHaveBeenCalledWith("createSuccess")
+    })
+  })
+
+  it("handles empty projectId return", async () => {
+    mockAddProject.mockResolvedValueOnce(null)
+
+    render(<NewProjectDialog />)
+    fireEvent.click(screen.getByTestId("new-project-trigger"))
+
+    await waitFor(() => {
+      expect(screen.getByText("addNewProjectTitle")).toBeInTheDocument()
+    })
+
+    const titleInput = screen.getByLabelText("titleLabel")
+    fireEvent.change(titleInput, { target: { value: "New Proj" } })
+
+    fireEvent.click(screen.getByRole("button", { name: "addProject" }))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("createFailed")
+    })
+  })
+
+  it("handles exception during submit", async () => {
+    mockAddProject.mockRejectedValueOnce(new Error("Network error"))
+
+    render(<NewProjectDialog />)
+    fireEvent.click(screen.getByTestId("new-project-trigger"))
+
+    await waitFor(() => {
+      expect(screen.getByText("addNewProjectTitle")).toBeInTheDocument()
+    })
+
+    const titleInput = screen.getByLabelText("titleLabel")
+    fireEvent.change(titleInput, { target: { value: "New Proj" } })
+
+    fireEvent.click(screen.getByRole("button", { name: "addProject" }))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith("createFailed")
+    })
+  })
+
+  it("closes dialog on cancel", async () => {
+    render(<NewProjectDialog />)
+    fireEvent.click(screen.getByTestId("new-project-trigger"))
+
+    await waitFor(() => {
+      expect(screen.getByText("addNewProjectTitle")).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByRole("button", { name: "cancel" }))
+
+    await waitFor(() => {
+      expect(screen.queryByText("addNewProjectTitle")).not.toBeInTheDocument()
     })
   })
 })

@@ -29,6 +29,11 @@ console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL)
 
 // Example: Mocking matchMedia for testing hooks like useIsMobile or other browser APIs
 beforeAll(() => {
+  global.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
   Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: vi.fn().mockImplementation((query) => ({
