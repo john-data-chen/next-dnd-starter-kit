@@ -39,19 +39,27 @@ Check `package.json` for exact versions. Key stack: **Next.js (App Router), Reac
 
 ### Repository Structure
 
-| Type       | Path                 | Description                           |
-| ---------- | -------------------- | ------------------------------------- |
-| Tests      | `__tests__`          | Unit and E2E tests                    |
-| Database   | `database`           | docker-compose                        |
-| i18n       | `messages`           | i18n translations                     |
-| Router     | `src/app/`           | Next.js App Router                    |
-| Components | `src/components/`    | React components                      |
-| Components | `src/components/ui/` | Shadcn UI components                  |
-| Constants  | `src/constants/`     | Constants                             |
-| Hooks      | `src/hooks/`         | Custom hooks                          |
-| Library    | `src/lib/db`         | Database functions                    |
-| State      | `src/lib/stores/`    | Zustand stores (auth, board, project) |
-| Styles     | `src/styles/`        | Global css                            |
+| Type              | Path                        | Description                                    |
+| ----------------- | --------------------------- | ---------------------------------------------- |
+| Tests             | `__tests__`                 | Unit and E2E tests                             |
+| Database          | `database`                  | MongoDB docker-compose                         |
+| i18n              | `messages`                  | i18n translations (de.json, en.json)           |
+| Router            | `src/app/`                  | Next.js App Router                             |
+| Components        | `src/components/`           | React components                               |
+| Components        | `src/components/ui/`        | Shadcn UI components                           |
+| Components        | `src/components/kanban/`     | Kanban components (board, project, task)        |
+| Components        | `src/components/auth/`       | Authentication components                      |
+| Components        | `src/components/layout/`      | Layout components (sidebar, header, etc.)       |
+| Constants         | `src/constants/`             | Application constants                          |
+| Hooks             | `src/hooks/`                | Custom React hooks                              |
+| Library           | `src/lib/db`                | Database functions                              |
+| Library           | `src/lib/auth`              | Authentication functions (client/server)        |
+| State             | `src/lib/stores/`           | Zustand stores (auth, board, project)          |
+| Models            | `src/models/`               | MongoDB/Mongoose models                        |
+| Types             | `src/types/`                | TypeScript type definitions                    |
+| Styles            | `src/styles/`               | Global CSS                                     |
+| API Routes        | `src/app/api/`              | API route handlers                             |
+| i18n Config       | `src/i18n/`                 | next-intl configuration                        |
 
 Shadcn UI components are in `src/components/ui`. Modify `src/styles/globals.css` and `src/components` first; only modify Shadcn UI components as a last resort.
 
