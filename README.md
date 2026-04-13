@@ -256,15 +256,9 @@ pnpm build         # Production build
 ├── .husky/                       # Git hooks (pre-commit, commit-msg, etc.)
 ├── ai_docs/                      # AI documentation & skills
 │   ├── PROMPTS.md                # AI prompts & guidelines
-│   ├── task-template.md          # Task template for AI agents
 │   └── skills/                   # AI skills library
 │       ├── ai-optimization/      # karpathy-guidelines
 │       └── web/                  # Web-specific skills
-│           ├── next-best-practices/
-│           ├── next-cache-components/
-│           ├── vercel-composition-patterns/
-│           ├── vercel-react-best-practices/
-│           └── web-design-guidelines/
 ├── database/                     # MongoDB docker-compose & initialization
 ├── messages/                     # i18n translations (de.json, en.json)
 ├── public/assets/                # Static assets (images, GIFs)
