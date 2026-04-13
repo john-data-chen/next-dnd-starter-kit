@@ -4,10 +4,67 @@ import { Types } from "mongoose"
 
 import { BoardModel } from "@/models/board.model"
 import { ProjectModel } from "@/models/project.model"
-import { Board, BoardDocument, Project } from "@/types/dbInterface"
+import { Board, Project } from "@/types/dbInterface"
 
 import { connectToDatabase } from "./connect"
 import { getUserByEmail, getUserById } from "./user"
+import { getObjectIdString } from "./utils"
+
+// Type for populated owner document (from mongoose populate)
+interface PopulatedOwnerDoc {
+  _id: Types.ObjectId
+  name: string
+}
+
+// Type for non-populated owner document (UserInfo structure)
+interface PlainOwnerDoc {
+  id: string
+  name: string
+}
+
+// Type for populated member document
+interface PopulatedMemberDoc {
+  _id: Types.ObjectId
+  name: string
+}
+
+// Type for populated project document within a board
+interface PopulatedProjectDoc {
+  _id: Types.ObjectId
+  title: string
+  description?: string
+  board?: Types.ObjectId | { toString(): string }
+  owner: PopulatedOwnerDoc
+  members: PopulatedMemberDoc[]
+  createdAt: Date | string
+  updatedAt: Date | string
+}
+
+// Type for populated board document
+interface PopulatedBoardDocument {
+  _id: Types.ObjectId | string
+  title: string
+  description?: string
+  owner: Types.ObjectId | string | PopulatedOwnerDoc | PlainOwnerDoc
+  members: (Types.ObjectId | string | PopulatedMemberDoc | PlainOwnerDoc)[]
+  projects: (
+    | Types.ObjectId
+    | string
+    | PopulatedProjectDoc
+    | {
+        _id: string
+        title: string
+        description?: string
+        board?: string
+        owner?: { _id?: string; id?: string; name: string }
+        members?: { _id?: string; id?: string; name: string }[]
+        createdAt?: Date | string
+        updatedAt?: Date | string
+      }
+  )[]
+  createdAt: Date | string
+  updatedAt: Date | string
+}
 
 export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
   try {
@@ -18,7 +75,7 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
       return []
     }
 
-    const query: any = {
+    const query = {
       $or: [{ owner: user.id }, { members: user.id }]
     }
 
@@ -47,7 +104,9 @@ export async function fetchBoardsFromDb(userEmail: string): Promise<Board[]> {
     })
 
     const userMap = await getUserMap(Array.from(allUserIds))
-    return boardsFromDb.map((board) => convertBoardToPlainObject(board as BoardDocument, userMap))
+    return boardsFromDb.map((board) =>
+      convertBoardToPlainObject(board as PopulatedBoardDocument, userMap)
+    )
   } catch (error) {
     console.error("Error in getBoardsFromDb:", error)
     return []
@@ -65,20 +124,17 @@ async function getUserMap(userIds: string[]): Promise<Map<string, string>> {
   return userMap
 }
 
-const getObjectIdString = (id: any): string => {
-  if (id instanceof Types.ObjectId) {
-    return id.toHexString()
-  }
-  if (id && typeof id === "object" && id._id) {
-    return getObjectIdString(id._id)
-  }
-  return String(id)
-}
-
-function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string, string>): Board {
-  const owner = boardDoc.owner as any
-  const ownerId = owner._id ? owner._id.toString() : getObjectIdString(boardDoc.owner)
-  const ownerName = owner.name || userMap.get(ownerId) || "Unknown User"
+function convertBoardToPlainObject(
+  boardDoc: PopulatedBoardDocument,
+  userMap: Map<string, string>
+): Board {
+  const owner = boardDoc.owner
+  const ownerId =
+    typeof owner === "object" && "_id" in owner ? owner._id.toString() : getObjectIdString(owner)
+  const ownerName =
+    typeof owner === "object" && "name" in owner
+      ? owner.name
+      : userMap.get(ownerId) || "Unknown User"
 
   return {
     _id: boardDoc._id.toString(),
@@ -88,9 +144,15 @@ function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string,
       id: ownerId,
       name: ownerName
     },
-    members: boardDoc.members.filter(Boolean).map((member: any) => {
-      const id = member._id ? member._id.toString() : getObjectIdString(member)
-      const name = member.name || userMap.get(id) || "Unknown User"
+    members: boardDoc.members.filter(Boolean).map((member) => {
+      const id =
+        typeof member === "object" && "_id" in member
+          ? member._id.toString()
+          : getObjectIdString(member)
+      const name =
+        typeof member === "object" && "name" in member
+          ? member.name
+          : userMap.get(id) || "Unknown User"
       return {
         id,
         name
@@ -98,17 +160,8 @@ function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string,
     }),
     projects: (boardDoc.projects || [])
       .filter(Boolean)
-      .map((p: any): Project => {
-        const projectDoc = p as {
-          _id: Types.ObjectId
-          title: string
-          description?: string
-          board?: Types.ObjectId | { toString(): string }
-          owner: { _id: Types.ObjectId; name: string }
-          members: { _id: Types.ObjectId; name: string }[]
-          createdAt: Date | string
-          updatedAt: Date | string
-        }
+      .map((p): Project => {
+        const projectDoc = p as PopulatedProjectDoc
 
         // Safely handle the board reference
         let boardId = ""
@@ -130,19 +183,13 @@ function convertBoardToPlainObject(boardDoc: BoardDocument, userMap: Map<string,
                 name: projectDoc.owner?.name || "Unknown"
               }
             : { id: "", name: "Unknown" },
-          members: (projectDoc.members || [])
-            .filter(Boolean)
-            .map((m: { _id: Types.ObjectId | string; name: string }) => ({
-              id: typeof m._id === "object" ? m._id.toString() : String(m._id || ""),
-              name: m.name || "Unknown"
-            })),
+          members: (projectDoc.members || []).filter(Boolean).map((m) => ({
+            id: typeof m._id === "object" ? m._id.toString() : String(m._id || ""),
+            name: m.name || "Unknown"
+          })),
           tasks: [],
-          createdAt: projectDoc.createdAt
-            ? new Date(projectDoc.createdAt).toISOString()
-            : new Date().toISOString(),
-          updatedAt: projectDoc.updatedAt
-            ? new Date(projectDoc.updatedAt).toISOString()
-            : new Date().toISOString()
+          createdAt: projectDoc.createdAt ? new Date(projectDoc.createdAt) : new Date(),
+          updatedAt: projectDoc.updatedAt ? new Date(projectDoc.updatedAt) : new Date()
         }
       })
       .filter(Boolean),
@@ -227,7 +274,7 @@ export async function updateBoardInDb(
     })
     const userMap = await getUserMap(Array.from(allUserIds))
 
-    return convertBoardToPlainObject(board as BoardDocument, userMap)
+    return convertBoardToPlainObject(board as PopulatedBoardDocument, userMap)
   } catch (error) {
     console.error("Error in updateBoardInDb:", error)
     return null
@@ -274,7 +321,7 @@ export async function deleteBoardInDb(boardId: string, userEmail: string): Promi
     }
 
     const { TaskModel } = await import("@/models/task.model")
-    const projectIds = board.projects.map((p: any) => (typeof p === "string" ? p : p._id))
+    const projectIds = board.projects.map((p) => (typeof p === "string" ? p : p._id))
     await TaskModel.deleteMany({
       project: { $in: projectIds }
     })

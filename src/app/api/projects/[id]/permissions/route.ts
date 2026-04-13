@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { auth } from "@/lib/auth"
 import { connectToDatabase } from "@/lib/db/connect"
+import { getObjectIdString } from "@/lib/db/utils"
 import { BoardModel } from "@/models/board.model"
 import { ProjectModel } from "@/models/project.model"
 import { UserModel } from "@/models/user.model"
@@ -40,8 +41,8 @@ export async function GET(req: NextRequest) {
     }
 
     // Permission logic: User can modify if they are project owner or board owner
-    const projectOwnerId = (project.owner as any)?._id.toString()
-    const boardOwnerId = (board.owner as any)?._id.toString()
+    const projectOwnerId = getObjectIdString(project.owner)
+    const boardOwnerId = getObjectIdString(board.owner)
 
     const isProjectOwner = projectOwnerId === currentUserId
     const isBoardOwner = boardOwnerId === currentUserId

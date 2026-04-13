@@ -9,6 +9,7 @@ import { Project, Task } from "@/types/dbInterface"
 
 import { connectToDatabase } from "./connect"
 import { getUserByEmail, getUserById } from "./user"
+import { getObjectIdString } from "./utils"
 
 interface ProjectBase {
   _id: Types.ObjectId | string
@@ -114,12 +115,8 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
       id: member.id.toString(),
       name: member.name
     })),
-    createdAt: projectDoc.createdAt
-      ? new Date(projectDoc.createdAt).toISOString()
-      : new Date().toISOString(),
-    updatedAt: projectDoc.updatedAt
-      ? new Date(projectDoc.updatedAt).toISOString()
-      : new Date().toISOString(),
+    createdAt: projectDoc.createdAt ? new Date(projectDoc.createdAt) : new Date(),
+    updatedAt: projectDoc.updatedAt ? new Date(projectDoc.updatedAt) : new Date(),
     tasks: (projectDoc.tasks || []).map((task) => ({
       _id: task._id.toString(),
       title: task.title,
@@ -135,8 +132,8 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
         id: task.lastModifier.id,
         name: task.lastModifier.name
       },
-      createdAt: new Date(task.createdAt), // Changed: return Date object instead of ISO string
-      updatedAt: new Date(task.updatedAt) // Changed: return Date object instead of ISO string
+      createdAt: new Date(task.createdAt),
+      updatedAt: new Date(task.updatedAt)
     })),
     board: projectDoc.board.toString(),
     orderInBoard: projectDoc.orderInBoard ?? 0
@@ -211,7 +208,7 @@ export async function updateProjectInDb(data: {
       console.error("Owner not found")
       return null
     }
-    if ((project.owner as any).toString() !== owner.id.toString()) {
+    if (getObjectIdString(project.owner) !== owner.id.toString()) {
       console.error("Permission denied: User is not the project owner")
       return null
     }
@@ -256,7 +253,7 @@ export async function deleteProjectInDb(id: string, userEmail: string): Promise<
       console.error("User not found")
       return false
     }
-    if ((project.owner as any).toString() !== owner.id.toString()) {
+    if (getObjectIdString(project.owner) !== owner.id.toString()) {
       console.error("Permission denied: User is not the project owner")
       return false
     }

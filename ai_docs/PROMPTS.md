@@ -1,4 +1,4 @@
-# AI Guidelines
+# PROMPTS.md
 
 ## Before Every Task
 
@@ -17,21 +17,19 @@ When a task matches conditions below, load the corresponding skill **before writ
 
 ### Universal (always check first)
 
-| Condition | Skill |
-| :-------- | :---- |
+| Condition                                               | Skill                 |
+| :------------------------------------------------------ | :-------------------- |
 | **Any coding task** — writing, refactoring, fixing bugs | `karpathy-guidelines` |
 
 ### Web
 
-| Condition | Skill |
-| :-------- | :---- |
-| Next.js file conventions, RSC, data fetching, metadata, route handlers, async APIs | `next-best-practices` |
-| `use cache` directive, PPR, cacheLife, cacheTag, updateTag, static/dynamic mix | `next-cache-components` |
-| Component API design, compound components, boolean prop cleanup, render props | `vercel-composition-patterns` |
-| React/Next.js performance: re-renders, bundle size, waterfalls, memoization | `vercel-react-best-practices` |
-| UI review, accessibility audit, UX compliance, design guidelines | `web-design-guidelines` |
-
-Skills are in `ai_docs/skills/`. Copy the ones you need to your AI tool's skill directory (e.g., `.claude/skills/` for Claude Code).
+| Condition                                                                          | Skill                         |
+| :--------------------------------------------------------------------------------- | :---------------------------- |
+| Next.js file conventions, RSC, data fetching, metadata, route handlers, async APIs | `next-best-practices`         |
+| `use cache` directive, PPR, cacheLife, cacheTag, updateTag, static/dynamic mix     | `next-cache-components`       |
+| Component API design, compound components, boolean prop cleanup, render props      | `vercel-composition-patterns` |
+| React/Next.js performance: re-renders, bundle size, waterfalls, memoization        | `vercel-react-best-practices` |
+| UI review, accessibility audit, UX compliance, design guidelines                   | `web-design-guidelines`       |
 
 ## Project Context
 
@@ -41,19 +39,19 @@ Check `package.json` for exact versions. Key stack: **Next.js (App Router), Reac
 
 ### Repository Structure
 
-| Type | Path | Description |
-| ---- | ---- | ----------- |
-| Tests | `__tests__` | Unit and E2E tests |
-| Database | `database` | docker-compose |
-| i18n | `messages` | i18n translations |
-| Router | `src/app/` | Next.js App Router |
-| Components | `src/components/` | React components |
-| Components | `src/components/ui/` | Shadcn UI components |
-| Constants | `src/constants/` | Constants |
-| Hooks | `src/hooks/` | Custom hooks |
-| Library | `src/lib/db` | Database functions |
-| State | `src/lib/stores/` | Zustand stores (auth, board, project) |
-| Styles | `src/styles/` | Global css |
+| Type       | Path                 | Description                           |
+| ---------- | -------------------- | ------------------------------------- |
+| Tests      | `__tests__`          | Unit and E2E tests                    |
+| Database   | `database`           | docker-compose                        |
+| i18n       | `messages`           | i18n translations                     |
+| Router     | `src/app/`           | Next.js App Router                    |
+| Components | `src/components/`    | React components                      |
+| Components | `src/components/ui/` | Shadcn UI components                  |
+| Constants  | `src/constants/`     | Constants                             |
+| Hooks      | `src/hooks/`         | Custom hooks                          |
+| Library    | `src/lib/db`         | Database functions                    |
+| State      | `src/lib/stores/`    | Zustand stores (auth, board, project) |
+| Styles     | `src/styles/`        | Global css                            |
 
 Shadcn UI components are in `src/components/ui`. Modify `src/styles/globals.css` and `src/components` first; only modify Shadcn UI components as a last resort.
 
@@ -71,7 +69,6 @@ Dev server is already running (`pnpm dev`). Do not start it again.
 
 ```bash
 pnpm install          # Install all dependencies
-pnpm build            # Build for production
 ```
 
 ### After Every Task
@@ -79,6 +76,7 @@ pnpm build            # Build for production
 ```bash
 git add /path/to/your/file.ts    # Stage file for linting
 pnpm lint-staged                 # Run linter and formatter
+pnpm build                       # Build for production
 ```
 
 Fix all errors → unstage files → suggest a Conventional Commit message. **Never commit for the user.**
