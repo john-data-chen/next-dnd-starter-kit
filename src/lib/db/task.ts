@@ -9,6 +9,7 @@ import { Task, TaskStatus } from "@/types/dbInterface"
 
 import { connectToDatabase } from "./connect"
 import { getUserByEmail, getUserById } from "./user"
+import { getObjectIdString } from "./utils"
 
 // Define a base interface for both Mongoose documents and plain objects
 interface TaskBase {
@@ -30,20 +31,6 @@ interface TaskBase {
 async function convertTaskToPlainObject(taskDoc: TaskBase): Promise<Task> {
   if (!taskDoc) {
     throw new Error("Task document is undefined")
-  }
-  const getObjectIdString = (
-    id: Types.ObjectId | string | { id: string } | null | undefined
-  ): string => {
-    if (!id) {
-      return ""
-    }
-    if (id instanceof Types.ObjectId) {
-      return id.toHexString()
-    }
-    if (typeof id === "object" && "id" in id) {
-      return id.id
-    }
-    return String(id)
   }
 
   const creatorId = getObjectIdString(taskDoc.creator)
@@ -137,13 +124,6 @@ async function ensureUserIsMember(projectId: string, userId: string): Promise<vo
   const board = await BoardModel.findById(boardId)
   if (!board) {
     throw new Error("Board not found")
-  }
-
-  const getObjectIdString = (id: any): string => {
-    if (id instanceof Types.ObjectId) {
-      return id.toHexString()
-    }
-    return String(id)
   }
 
   const isProjectMember = project.members.some((member) => getObjectIdString(member) === userId)
@@ -280,16 +260,6 @@ export async function updateTaskProjectInDb(
     const task = await TaskModel.findById(taskId)
     if (!task) {
       throw new Error("Task not found")
-    }
-
-    const getObjectIdString = (id: any): string => {
-      if (!id) {
-        return ""
-      }
-      if (id instanceof Types.ObjectId) {
-        return id.toHexString()
-      }
-      return String(id)
     }
 
     const isTargetProjectOwner = getObjectIdString(targetProject.owner) === user.id.toString()

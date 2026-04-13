@@ -9,6 +9,7 @@ import { Project, Task } from "@/types/dbInterface"
 
 import { connectToDatabase } from "./connect"
 import { getUserByEmail, getUserById } from "./user"
+import { getObjectIdString } from "./utils"
 
 interface ProjectBase {
   _id: Types.ObjectId | string
@@ -211,7 +212,7 @@ export async function updateProjectInDb(data: {
       console.error("Owner not found")
       return null
     }
-    if ((project.owner as any).toString() !== owner.id.toString()) {
+    if (getObjectIdString(project.owner) !== owner.id.toString()) {
       console.error("Permission denied: User is not the project owner")
       return null
     }
@@ -256,7 +257,7 @@ export async function deleteProjectInDb(id: string, userEmail: string): Promise<
       console.error("User not found")
       return false
     }
-    if ((project.owner as any).toString() !== owner.id.toString()) {
+    if (getObjectIdString(project.owner) !== owner.id.toString()) {
       console.error("Permission denied: User is not the project owner")
       return false
     }
