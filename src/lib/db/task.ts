@@ -150,7 +150,7 @@ export async function createTaskInDb(
   description?: string,
   dueDate?: Date,
   assigneeId?: string,
-  status: "TODO" | "IN_PROGRESS" | "DONE" = "TODO"
+  status: TaskStatus = TaskStatus.TODO
 ): Promise<Task> {
   try {
     await connectToDatabase()
@@ -194,7 +194,7 @@ export async function updateTaskInDb(
   taskId: string,
   title: string,
   userEmail: string,
-  status: "TODO" | "IN_PROGRESS" | "DONE" = "TODO",
+  status: TaskStatus = TaskStatus.TODO,
   description?: string,
   dueDate?: Date,
   assigneeId?: string

@@ -188,12 +188,8 @@ function convertBoardToPlainObject(
             name: m.name || "Unknown"
           })),
           tasks: [],
-          createdAt: projectDoc.createdAt
-            ? new Date(projectDoc.createdAt).toISOString()
-            : new Date().toISOString(),
-          updatedAt: projectDoc.updatedAt
-            ? new Date(projectDoc.updatedAt).toISOString()
-            : new Date().toISOString()
+          createdAt: projectDoc.createdAt ? new Date(projectDoc.createdAt) : new Date(),
+          updatedAt: projectDoc.updatedAt ? new Date(projectDoc.updatedAt) : new Date()
         }
       })
       .filter(Boolean),

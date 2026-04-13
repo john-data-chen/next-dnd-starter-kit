@@ -12,6 +12,7 @@ import { getUserByEmail, getUserById } from "@/lib/db/user"
 import { BoardModel } from "@/models/board.model"
 import { ProjectModel } from "@/models/project.model"
 import { TaskModel } from "@/models/task.model"
+import { TaskStatus } from "@/types/dbInterface"
 
 vi.mock("@/lib/db/connect")
 vi.mock("@/lib/db/user")
@@ -155,7 +156,7 @@ describe("Task DB functions", () => {
         mockTaskId,
         "Updated Task",
         mockUser.email,
-        "IN_PROGRESS"
+        TaskStatus.IN_PROGRESS
       )
       expect(updatedTask.title).toBe("Updated Task")
       expect(updatedTask.status).toBe("IN_PROGRESS")
@@ -164,14 +165,14 @@ describe("Task DB functions", () => {
     it("should throw an error if modifier is not found", async () => {
       ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(
-        updateTaskInDb(mockTaskId, "Updated Task", mockUser.email, "IN_PROGRESS")
+        updateTaskInDb(mockTaskId, "Updated Task", mockUser.email, TaskStatus.IN_PROGRESS)
       ).rejects.toThrow("Modifier not found")
     })
 
     it("should throw an error if task is not found", async () => {
       ;(TaskModel.findById as import("vitest").Mock<any>).mockResolvedValue(null)
       await expect(
-        updateTaskInDb(mockTaskId, "Updated Task", mockUser.email, "IN_PROGRESS")
+        updateTaskInDb(mockTaskId, "Updated Task", mockUser.email, TaskStatus.IN_PROGRESS)
       ).rejects.toThrow("Task not found")
     })
   })

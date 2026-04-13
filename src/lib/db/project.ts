@@ -115,12 +115,8 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
       id: member.id.toString(),
       name: member.name
     })),
-    createdAt: projectDoc.createdAt
-      ? new Date(projectDoc.createdAt).toISOString()
-      : new Date().toISOString(),
-    updatedAt: projectDoc.updatedAt
-      ? new Date(projectDoc.updatedAt).toISOString()
-      : new Date().toISOString(),
+    createdAt: projectDoc.createdAt ? new Date(projectDoc.createdAt) : new Date(),
+    updatedAt: projectDoc.updatedAt ? new Date(projectDoc.updatedAt) : new Date(),
     tasks: (projectDoc.tasks || []).map((task) => ({
       _id: task._id.toString(),
       title: task.title,
@@ -136,8 +132,8 @@ async function convertProjectToPlainObject(projectDoc: ProjectBase): Promise<Pro
         id: task.lastModifier.id,
         name: task.lastModifier.name
       },
-      createdAt: new Date(task.createdAt), // Changed: return Date object instead of ISO string
-      updatedAt: new Date(task.updatedAt) // Changed: return Date object instead of ISO string
+      createdAt: new Date(task.createdAt),
+      updatedAt: new Date(task.updatedAt)
     })),
     board: projectDoc.board.toString(),
     orderInBoard: projectDoc.orderInBoard ?? 0
