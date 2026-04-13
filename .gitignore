@@ -49,6 +49,7 @@ node_modules/
 # AI files
 GEMINI.md
 CLAUDE.md
+AGENTS.md
 .agent
 .agents
 .claude
