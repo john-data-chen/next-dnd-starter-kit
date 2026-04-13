@@ -249,48 +249,90 @@ pnpm build         # Production build
 ## Project Structure
 
 ```text
-__tests__/
-│   ├── e2e/ # End-to-end tests (by Playwright)
-│   └── unit/ # Unit tests (by Vitest)
-.github/ # GitHub Actions workflows
-.husky/ # Husky configuration
-ai-docs/ # AI documentations including skills and prompts
-database/ # MongoDB docker-compose and initialization
-messages/ # i18n translations
-public/ # Static files such as images
-src/
-├── app/ # Next.js App routes
-│   ├── global-error.tsx # Global error boundary
-│   └── [locale] # i18n locale routers
-│        ├── page.tsx # Root page
-│        ├── layout.tsx # Layout component
-│        ├── not-found.tsx # 404 page
-│        ├── (auth)/ # Authentication routes
-│        │    └── login/ # Login page
-│        └── (workspace)/ # Workspace routes
-│             ├── error.tsx # Workspace error boundary
-│             └── boards/ # Kanban Overview routes
-│                  ├── loading.tsx # Boards loading skeleton
-│                  └── [boardId]/ # Board
-│                       ├── layout.tsx # Board metadata
-│                       ├── loading.tsx # Board loading skeleton
-│                       └── error.tsx # Board error boundary
-├── components/ # Reusable React components
-│   └── ui/ # Shadcn UI components
-├── constants/ # Application-wide constants
-├── hooks/ # Custom React hooks
-├── i18n/ # i18n configs
-├── lib/
-│   ├── db/ # Database functions
-│   ├── auth/ # Authentication functions
-│   ├── stores/ # Zustand stores (auth, board, project)
-│   ├── store.ts # Backward-compatible re-export
-│   └── utils.ts # tailwindcss utils
-├── proxy.ts # the middleware for handling API requests
-├── models/ # Database models
-├── styles/ # Global styles
-├── types/ # Type definitions
-└── env.example # Environment variables example
+├── __tests__/                    # Test suite
+│   ├── e2e/                      # End-to-end tests (Playwright)
+│   └── unit/                     # Unit tests (Vitest)
+├── .github/workflows/            # GitHub Actions CI/CD
+├── .husky/                       # Git hooks (pre-commit, commit-msg, etc.)
+├── ai_docs/                      # AI documentation & skills
+│   ├── PROMPTS.md                # AI prompts & guidelines
+│   ├── task-template.md          # Task template for AI agents
+│   └── skills/                   # AI skills library
+│       ├── ai-optimization/      # karpathy-guidelines
+│       └── web/                  # Web-specific skills
+│           ├── next-best-practices/
+│           ├── next-cache-components/
+│           ├── vercel-composition-patterns/
+│           ├── vercel-react-best-practices/
+│           └── web-design-guidelines/
+├── database/                     # MongoDB docker-compose & initialization
+├── messages/                     # i18n translations (de.json, en.json)
+├── public/assets/                # Static assets (images, GIFs)
+├── src/
+│   ├── app/                      # Next.js App Router
+│   │   ├── [locale]/            # i18n locale routing
+│   │   │   ├── (auth)/         # Authentication routes
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── login/page.tsx
+│   │   │   ├── (workspace)/    # Main workspace routes
+│   │   │   │   ├── boards/[boardId]/
+│   │   │   │   │   ├── error.tsx
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── boards/page.tsx
+│   │   │   │   ├── boards/loading.tsx
+│   │   │   │   ├── error.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── AuthenticatedLayout.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── MessagesProvider.tsx
+│   │   │   ├── not-found.tsx
+│   │   │   └── page.tsx
+│   │   ├── api/                 # API route handlers
+│   │   │   ├── auth/          # Auth: session, sign-in, sign-out
+│   │   │   ├── boards/route.ts
+│   │   │   ├── projects/[id]/permissions/route.ts
+│   │   │   ├── tasks/[id]/permissions/route.ts
+│   │   │   └── users/         # users, users/search
+│   │   └── global-error.tsx
+│   ├── components/
+│   │   ├── auth/               # SignInView, UserAuthForm
+│   │   ├── kanban/
+│   │   │   ├── board/         # Board, BoardActions, BoardForm, etc.
+│   │   │   ├── project/       # Project, ProjectAction, ProjectForm, etc.
+│   │   │   ├── task/          # TaskCard, TaskAction, TaskForm, etc.
+│   │   │   └── BoardOverview.tsx
+│   │   ├── layout/             # AppSidebar, Header, UserNav, etc.
+│   │   └── ui/                # Shadcn UI components
+│   ├── constants/              # common.ts, db.ts, routes.ts, ui.ts, demoData.ts
+│   ├── hooks/                  # useAuthForm, useBoards, useTaskForm, etc.
+│   ├── i18n/                   # navigation.ts, request.ts, routing.ts
+│   ├── lib/
+│   │   ├── auth/              # client.ts, server.ts, index.ts
+│   │   ├── config/            # env.ts
+│   │   ├── db/                # board.ts, project.ts, task.ts, user.ts, connect.ts
+│   │   ├── stores/             # auth-store.ts, board-store.ts, project-store.ts
+│   │   ├── store.ts           # Re-export for backward compatibility
+│   │   └── utils.ts           # Tailwind CSS utilities
+│   ├── models/                 # MongoDB/Mongoose models
+│   │   ├── board.model.ts
+│   │   ├── project.model.ts
+│   │   ├── task.model.ts
+│   │   └── user.model.ts
+│   ├── styles/                 # globals.css
+│   ├── types/                  # TypeScript type definitions
+│   └── proxy.ts                # API request proxy middleware
+├── env.example                  # Environment variables template
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+├── vitest.config.ts
+├── playwright.config.ts
+├── .oxlintrc.json              # Oxlint configuration
+├── .oxfmtrc.json               # Oxfmt configuration
+├── sonar-project.properties
+└── commitlint.config.mjs
 ```
 
 ---
