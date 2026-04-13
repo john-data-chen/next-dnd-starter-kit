@@ -32,12 +32,13 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { useProjectStore } from "@/lib/stores"
+import { TaskStatus } from "@/types/dbInterface"
 import { TaskFormSchema } from "@/types/taskForm"
 
 export interface TaskActionsProps {
   id: string
   title: string
-  status: "TODO" | "IN_PROGRESS" | "DONE"
+  status: TaskStatus
   description?: string
   dueDate?: Date | null
   assignee?: string
@@ -110,7 +111,7 @@ export function TaskActions({
       await updateTask(
         id,
         values.title,
-        values.status ?? "TODO",
+        values.status!,
         values.description,
         values.dueDate,
         assigneeId
@@ -216,7 +217,7 @@ export function TaskActions({
             className={`w-full text-left ${
               !permissions?.canDelete
                 ? "cursor-not-allowed text-muted-foreground line-through"
-                : "text-red-600 hover:!bg-destructive/10 hover:!text-red-600"
+                : "text-red-600 hover:bg-destructive/10! hover:text-red-600!"
             } `}
           >
             {t("delete")}

@@ -16,7 +16,7 @@ import {
   updateTaskInDb,
   updateTaskProjectInDb
 } from "@/lib/db/task"
-import { Project } from "@/types/dbInterface"
+import { Project, TaskStatus } from "@/types/dbInterface"
 
 import { useAuthStore } from "./auth-store"
 import { useBoardStore } from "./board-store"
@@ -39,7 +39,7 @@ interface ProjectState {
   addTask: (
     projectId: string,
     title: string,
-    status: "TODO" | "IN_PROGRESS" | "DONE",
+    status: TaskStatus,
     description?: string,
     dueDate?: Date,
     assigneeId?: string
@@ -47,7 +47,7 @@ interface ProjectState {
   updateTask: (
     taskId: string,
     title: string,
-    status: "TODO" | "IN_PROGRESS" | "DONE",
+    status: TaskStatus,
     description?: string,
     dueDate?: Date,
     assigneeId?: string

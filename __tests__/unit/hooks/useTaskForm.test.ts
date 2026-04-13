@@ -4,6 +4,7 @@ import { vi } from "vitest"
 import { z } from "zod"
 
 import { useTaskForm } from "@/hooks/useTaskForm"
+import { TaskStatus } from "@/types/dbInterface"
 import { TaskFormSchema } from "@/types/taskForm"
 
 vi.mock("@/hooks/useDebounce", () => ({
@@ -47,7 +48,7 @@ describe("useTaskForm Hook", () => {
     const defaultValues = {
       title: "Test Task",
       description: "Test Description",
-      status: "IN_PROGRESS" as const,
+      status: TaskStatus.IN_PROGRESS,
       dueDate: new Date("2024-01-01"),
       assignee: { _id: "user1", name: "User One" }
     }
@@ -124,7 +125,7 @@ describe("useTaskForm Hook", () => {
     const submitData = {
       title: "New Task",
       description: "Task Description",
-      status: "TODO" as const
+      status: TaskStatus.TODO
     }
 
     await act(async () => {
@@ -187,7 +188,7 @@ describe("useTaskForm Hook", () => {
       result.current.handleSubmit({
         title: "Test Task",
         description: "A task without defaults",
-        status: "TODO",
+        status: TaskStatus.TODO,
         assignee: { _id: "user3", name: "John Smith" }
       })
     })
@@ -196,7 +197,7 @@ describe("useTaskForm Hook", () => {
       expect(mockOnSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
           title: "Test Task",
-          status: "TODO",
+          status: TaskStatus.TODO,
           assignee: { _id: "user3", name: "John Smith" }
         })
       )

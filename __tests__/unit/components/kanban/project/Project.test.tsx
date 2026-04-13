@@ -21,8 +21,8 @@ const mockProject: Project = {
   members: [mockMember1, mockMember2],
   tasks: [],
   board: "b1",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString()
+  createdAt: new Date(),
+  updatedAt: new Date()
 }
 
 const mockTasks: Task[] = [

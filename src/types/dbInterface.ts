@@ -4,8 +4,8 @@ export interface Project {
   description?: string
   owner: UserInfo
   members: UserInfo[]
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
   tasks: Task[]
   board: string
   orderInBoard?: number

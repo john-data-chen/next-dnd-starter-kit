@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 import { TaskActions } from "@/components/kanban/task/TaskAction"
 import { useAuthStore } from "@/lib/stores/auth-store"
 import { useProjectStore } from "@/lib/stores/project-store"
+import { TaskStatus } from "@/types/dbInterface"
 
 vi.mock("@/components/kanban/task/TaskForm", () => ({
   TaskForm: (props: any) => (
@@ -12,7 +13,7 @@ vi.mock("@/components/kanban/task/TaskForm", () => ({
       data-testid="task-form"
       onSubmit={(e) => {
         e.preventDefault()
-        props.onSubmit && props.onSubmit({ title: "t", status: "TODO" })
+        props.onSubmit && props.onSubmit({ title: "t", status: TaskStatus.TODO })
       }}
     >
       {props.submitLabel}
@@ -130,12 +131,12 @@ describe("TaskActions", () => {
   })
 
   it("renders action trigger button", () => {
-    render(<TaskActions id="1" title="Task" status="TODO" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} />)
     expect(screen.getByTestId("task-actions-trigger")).toBeInTheDocument()
   })
 
   it("fetches permissions when dropdown is opened", async () => {
-    render(<TaskActions id="1" title="Task" status="TODO" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} />)
     const trigger = screen.getByTestId("trigger-open-change")
     fireEvent.click(trigger)
 
@@ -145,7 +146,7 @@ describe("TaskActions", () => {
   })
 
   it("fetches assignee info on mount if assignee is provided", async () => {
-    render(<TaskActions id="1" title="Task" status="TODO" assignee="u1" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} assignee="u1" />)
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith("/api/users/search?id=u1")
     })
@@ -162,7 +163,7 @@ describe("TaskActions", () => {
       return Promise.resolve({ ok: true, json: () => Promise.resolve([]) })
     }) as any
 
-    render(<TaskActions id="1" title="Task" status="TODO" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} />)
     const trigger = screen.getByTestId("trigger-open-change")
     fireEvent.click(trigger)
 
@@ -172,17 +173,17 @@ describe("TaskActions", () => {
   })
 
   it("shows edit dialog when edit is enabled and canEdit is true", async () => {
-    render(<TaskActions id="1" title="Task" status="TODO" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} />)
     expect(screen.getByTestId("dialog")).toBeInTheDocument()
   })
 
   it("shows delete dialog when delete is enabled and canDelete is true", async () => {
-    render(<TaskActions id="1" title="Task" status="TODO" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} />)
     expect(screen.getByTestId("alert-dialog")).toBeInTheDocument()
   })
 
   it("calls updateTask when form is submitted", async () => {
-    render(<TaskActions id="1" title="Task" status="TODO" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} />)
     const form = screen.getByTestId("task-form")
     fireEvent.submit(form)
 
@@ -192,7 +193,7 @@ describe("TaskActions", () => {
   })
 
   it("calls removeTask when delete is confirmed", async () => {
-    render(<TaskActions id="1" title="Task" status="TODO" />)
+    render(<TaskActions id="1" title="Task" status={TaskStatus.TODO} />)
     const deleteButton = screen.getByTestId("confirm-delete-button")
     fireEvent.click(deleteButton)
 
