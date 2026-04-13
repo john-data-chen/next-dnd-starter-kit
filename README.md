@@ -329,7 +329,7 @@ Part of my engineering approach involves continuously evaluating emerging tools 
 
 [Turbopack](https://nextjs.org/docs/app/api-reference/turbopack) | [FS Caching](https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache)
 
-### TypeScript 7
+### Type Script 7
 
 | Aspect    | Details                                                                                   |
 | --------- | ----------------------------------------------------------------------------------------- |
