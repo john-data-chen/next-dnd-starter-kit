@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
+import { config } from "@/lib/config/env"
 import { deleteBoardInDb, updateBoardInDb } from "@/lib/db/board"
 import { Board } from "@/types/dbInterface"
 
@@ -39,7 +40,7 @@ export const useBoardStore = create<BoardState>()(
       addBoard: async (title: string, description?: string) => {
         requireEmail() // Validate user is authenticated
         try {
-          const baseUrl = typeof window === "undefined" ? "http://localhost:3000" : ""
+          const baseUrl = config.baseUrl
           const response = await fetch(`${baseUrl}/api/boards`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

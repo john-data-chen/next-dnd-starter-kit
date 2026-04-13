@@ -47,6 +47,7 @@ node_modules/
 .vscode/
 
 # AI files
+AGENTS.md
 GEMINI.md
 CLAUDE.md
 .agent
@@ -56,3 +57,4 @@ CLAUDE.md
 .kilocode
 .ai
 coding-agents
+task-template.md

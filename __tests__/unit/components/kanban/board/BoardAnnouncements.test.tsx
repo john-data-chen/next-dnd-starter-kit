@@ -112,8 +112,8 @@ const project1Initial: Project = {
   owner: user1,
   members: [user1],
   board: "b1",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString()
+  createdAt: new Date(),
+  updatedAt: new Date()
 }
 
 const project2Initial: Project = {
@@ -123,8 +123,8 @@ const project2Initial: Project = {
   owner: user1,
   members: [user1],
   board: "b1",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString()
+  createdAt: new Date(),
+  updatedAt: new Date()
 }
 
 describe("Board Announcements", () => {

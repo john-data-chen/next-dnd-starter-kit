@@ -41,8 +41,8 @@ describe("Zustand Stores", () => {
     title: "Test Project",
     owner: mockUser,
     members: [mockUser],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     tasks: [],
     board: mockBoardId
   }
@@ -155,7 +155,7 @@ describe("Zustand Stores", () => {
           boardId = await useBoardStore.getState().addBoard("New Board", "Desc")
         })
 
-        expect(global.fetch).toHaveBeenCalledWith("/api/boards", {
+        expect(global.fetch).toHaveBeenCalledWith("http://localhost:3000/api/boards", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ title: "New Board", description: "Desc" })

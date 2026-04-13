@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { auth } from "@/lib/auth"
 import { connectToDatabase } from "@/lib/db/connect"
+import { getObjectIdString } from "@/lib/db/utils"
 import { BoardModel } from "@/models/board.model"
 import { ProjectModel } from "@/models/project.model"
 import { TaskModel } from "@/models/task.model"
@@ -36,14 +37,13 @@ export async function GET(req: NextRequest) {
     if (!board || !project) {
       return NextResponse.json({ error: "Resource not found" }, { status: 404 })
     }
-    const getUserId = (obj: any) => (obj?._id ? obj._id.toString() : obj?.toString())
 
     const canDelete =
-      getUserId(board.owner) === userId ||
-      getUserId(project.owner) === userId ||
-      getUserId(task.creator) === userId
+      getObjectIdString(board.owner) === userId ||
+      getObjectIdString(project.owner) === userId ||
+      getObjectIdString(task.creator) === userId
 
-    const canEdit = canDelete || (task.assignee && getUserId(task.assignee) === userId)
+    const canEdit = canDelete || (task.assignee && getObjectIdString(task.assignee) === userId)
 
     return NextResponse.json({ canDelete, canEdit })
   } catch (error) {

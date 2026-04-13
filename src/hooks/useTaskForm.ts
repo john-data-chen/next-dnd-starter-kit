@@ -8,7 +8,7 @@ import { z } from "zod"
 
 import { SEARCH_DEBOUNCE_DELAY_MS } from "@/constants/common"
 import { useDebounce } from "@/hooks/useDebounce"
-import { User } from "@/types/dbInterface"
+import { User, TaskStatus } from "@/types/dbInterface"
 import { TaskFormSchema } from "@/types/taskForm"
 
 interface UseTaskFormProps {
@@ -29,7 +29,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
     defaultValues: defaultValues || {
       title: "",
       description: "",
-      status: "TODO",
+      status: TaskStatus.TODO,
       dueDate: undefined,
       assignee: undefined
     }
