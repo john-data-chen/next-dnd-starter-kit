@@ -47,9 +47,9 @@ node_modules/
 .vscode/
 
 # AI files
+AGENTS.md
 GEMINI.md
 CLAUDE.md
-AGENTS.md
 .agent
 .agents
 .claude
