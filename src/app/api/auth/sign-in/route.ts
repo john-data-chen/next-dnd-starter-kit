@@ -1,14 +1,8 @@
 import * as jose from "jose"
 import { NextRequest, NextResponse } from "next/server"
 
+import { JWT_SECRET } from "@/lib/auth/constants"
 import { getUserByEmail } from "@/lib/db/user"
-
-// JWT secret - must match session route
-const AUTH_SECRET = process.env.AUTH_SECRET
-if (!AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required")
-}
-const JWT_SECRET = new TextEncoder().encode(AUTH_SECRET)
 
 export async function createSession(user: { id: string; email: string; name: string }) {
   const token = await new jose.SignJWT({ id: user.id, email: user.email, name: user.name })

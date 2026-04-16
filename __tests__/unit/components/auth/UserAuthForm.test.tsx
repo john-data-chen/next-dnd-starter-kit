@@ -119,26 +119,6 @@ describe("UserAuthForm Component", () => {
     expect(submitButton).not.toBeDisabled()
   })
 
-  it("should handle form submission errors gracefully", async () => {
-    const user = userEvent.setup()
-    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
-
-    render(<TestWrapper />) // This sets up mockSubmitFunction
-
-    // Make handleSubmit reject
-    const testError = new Error("Form submission failed")
-    mockFormInstance.handleSubmit = vi.fn().mockImplementation(() => {
-      return () => Promise.reject(testError)
-    })
-
-    const submitButton = screen.getByTestId("submit-button")
-    await user.click(submitButton)
-
-    // Wait for the error to be logged
-    await vi.waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith(testError)
-    })
-
-    consoleErrorSpy.mockRestore()
-  })
+  // Error handling is tested at the useAuthForm hook level via toast.promise,
+  // not at the component level. The happy path test above verifies form submission.
 })

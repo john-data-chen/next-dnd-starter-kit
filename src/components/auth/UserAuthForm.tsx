@@ -22,11 +22,8 @@ export default function UserAuthForm() {
     <Form {...form}>
       <form
         onSubmit={(e) => {
-          form
-            .handleSubmit(onSubmit)(e)
-            .catch((error: unknown) => {
-              console.error(error)
-            })
+          e.preventDefault()
+          void form.handleSubmit(onSubmit)(e)
         }}
         className="w-full space-y-2"
         aria-label="Sign in form"
