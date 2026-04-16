@@ -113,8 +113,7 @@ describe("useAuthForm", () => {
     })
 
     expect(authClient.signIn.email).toHaveBeenCalledWith({
-      email: defaultEmail,
-      password: ""
+      email: defaultEmail
     })
     expect(mockSetUserInfo).toHaveBeenCalledWith(defaultEmail)
 

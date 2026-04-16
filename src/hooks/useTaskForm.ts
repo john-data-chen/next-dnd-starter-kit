@@ -16,6 +16,14 @@ interface UseTaskFormProps {
   onSubmit: (values: z.infer<typeof TaskFormSchema>) => Promise<void>
 }
 
+interface UserSearchResponse {
+  users?: Array<{
+    _id: string
+    name: string
+    email?: string
+  }>
+}
+
 export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [users, setUsers] = useState<User[]>([])
@@ -38,7 +46,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
   const searchUsers = async (search = "") => {
     try {
       const response = await fetch(`/api/users/search?username=${search}`)
-      const data: Record<string, any> = await response.json()
+      const data: UserSearchResponse = await response.json()
       return data.users || []
     } catch (error) {
       console.error("Error searching users:", error)
@@ -55,7 +63,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
       setIsSearching(true)
       try {
         const results = await searchUsers(debouncedSearchQuery)
-        setUsers(results)
+        setUsers(results as User[])
       } catch (error) {
         console.error("Error searching users:", error)
       } finally {
@@ -70,7 +78,7 @@ export const useTaskForm = ({ defaultValues, onSubmit }: UseTaskFormProps) => {
     if (assignOpen) {
       searchUsers()
         .then((initialUsers) => {
-          setUsers(initialUsers)
+          setUsers(initialUsers as User[])
         })
         .catch((error: unknown) => {
           console.error(error)

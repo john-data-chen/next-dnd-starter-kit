@@ -2,14 +2,8 @@ import * as jose from "jose"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
+import { JWT_SECRET } from "@/lib/auth/constants"
 import { getUserByEmail } from "@/lib/db/user"
-
-// JWT secret - must match sign-in route
-const AUTH_SECRET = process.env.AUTH_SECRET
-if (!AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required")
-}
-const JWT_SECRET = new TextEncoder().encode(AUTH_SECRET)
 
 interface JWTPayload {
   id: string
