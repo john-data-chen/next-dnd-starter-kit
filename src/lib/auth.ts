@@ -3,13 +3,7 @@ import * as jose from "jose"
 import { cookies } from "next/headers"
 
 import { ROUTES } from "@/constants/routes"
-
-// JWT secret - must match sign-in route
-const AUTH_SECRET = process.env.AUTH_SECRET
-if (!AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required")
-}
-const JWT_SECRET = new TextEncoder().encode(AUTH_SECRET)
+import { JWT_SECRET } from "@/lib/auth/constants"
 
 interface User {
   id: string

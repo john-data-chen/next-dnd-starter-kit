@@ -192,7 +192,10 @@ export function ProjectActions({ id, title, description }: ProjectActionsProps) 
               variant="destructive"
               onClick={() => {
                 setShowDeleteDialog(false)
-                removeProject(id).catch(console.error)
+                removeProject(id).catch((error: unknown) => {
+                  console.error(error)
+                  toast.error("操作失敗，請稍後再試")
+                })
                 toast.success(t("deleteSuccess", { title }))
               }}
             >
