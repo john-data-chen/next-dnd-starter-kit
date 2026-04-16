@@ -52,7 +52,10 @@ export function BoardOverview() {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        fetchBoards().catch(console.error)
+        fetchBoards().catch((error: unknown) => {
+          console.error(error)
+          toast.error("載入看板失敗，請稍後再試")
+        })
       }
     }
 

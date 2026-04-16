@@ -38,8 +38,7 @@ export default function useAuthForm() {
   const onSubmit = (data: SignInFormValue) => {
     const signInProcessPromise = async () => {
       const result = await authClient.signIn.email({
-        email: data.email,
-        password: "" // Required by better-auth but not used in our password less flow
+        email: data.email
       })
 
       if (result.error) {

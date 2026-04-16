@@ -131,7 +131,10 @@ export function TaskActions({
       }
     }, 100)
     setShowDeleteDialog(false)
-    removeTask(id).catch(console.error)
+    removeTask(id).catch((error: unknown) => {
+      console.error(error)
+      toast.error("操作失敗，請稍後再試")
+    })
     onDelete?.(id)
     toast.success(t("deleteSuccess"))
   }

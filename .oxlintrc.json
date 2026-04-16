@@ -10,7 +10,7 @@
     "no-unused-vars": "warn",
     "no-debugger": "off",
     "no-var": "warn",
-    "no-void": "warn",
+    "no-void": ["warn", { "allowAsStatement": true }],
     "radix": "warn",
     "eqeqeq": [
       "warn",
