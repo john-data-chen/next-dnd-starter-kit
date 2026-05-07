@@ -37,9 +37,7 @@ describe("TaskForm Interactions", () => {
     const mockOnSubmit = vi.fn()
     render(<TaskForm onSubmit={mockOnSubmit} />)
 
-    // Command component with popover doesn't easily show items without interaction
-    // Let's just type into the search to trigger the fetch
-    const assigneeTrigger = screen.getByRole("combobox")
+    const assigneeTrigger = screen.getByRole("button", { name: /selectUser/i })
     fireEvent.click(assigneeTrigger)
 
     // Wait for the combobox to open and fetch to be called
