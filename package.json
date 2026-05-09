@@ -80,10 +80,10 @@
     "vitest": "^4.1.5"
   },
   "lint-staged": {
-    "./src/**/*.{js,jsx,ts,tsx,css,scss}": [
+    "{src/!(components)/**/*.{js,jsx,ts,tsx,css,scss},src/components/!(ui)/**/*.{js,jsx,ts,tsx,css,scss}}": [
       "oxfmt --no-error-on-unmatched-pattern --config ./.oxfmtrc.json"
     ],
-    "./src/**/*.{js,jsx,ts,tsx}": [
+    "{src/!(components)/**/*.{js,jsx,ts,tsx},src/components/!(ui)/**/*.{js,jsx,ts,tsx}}": [
       "oxlint --type-aware --fix"
     ]
   },
