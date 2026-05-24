@@ -94,6 +94,7 @@ export const BoardActions = React.forwardRef<HTMLButtonElement, BoardActionsProp
         >
           <button
             type="button"
+            aria-label={t("editBoardTitle")}
             onClick={(e) => {
               e.stopPropagation()
             }}
