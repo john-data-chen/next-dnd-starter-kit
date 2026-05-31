@@ -1,19 +1,18 @@
 allowBuilds:
   "@parcel/watcher": true
-  "@prisma/engines": true
   "@swc/core": true
   esbuild: true
-  prisma: true
   sharp: true
 minimumReleaseAgeExclude:
-  - "@vitest/coverage-v8@4.1.7"
-  - "@vitest/expect@4.1.7"
-  - "@vitest/mocker@4.1.7"
-  - "@vitest/pretty-format@4.1.7"
-  - "@vitest/runner@4.1.7"
-  - "@vitest/snapshot@4.1.7"
-  - "@vitest/spy@4.1.7"
-  - "@vitest/utils@4.1.7"
-  - vitest@4.1.7
-  - date-fns@4.3.0
-  - lint-staged@17.0.6
+  - "@better-auth/core@1.6.13"
+  - "@better-auth/drizzle-adapter@1.6.13"
+  - "@better-auth/kysely-adapter@1.6.13"
+  - "@better-auth/memory-adapter@1.6.13"
+  - "@better-auth/mongo-adapter@1.6.13"
+  - "@better-auth/prisma-adapter@1.6.13"
+  - "@better-auth/telemetry@1.6.13"
+  - better-auth@1.6.13
+  - lint-staged@17.0.7
+  - react-hook-form@7.77.0
+  - tinyexec@1.2.4
+  - tsx@4.22.4
