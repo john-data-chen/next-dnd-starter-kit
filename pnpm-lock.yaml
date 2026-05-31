@@ -3837,6 +3837,10 @@ packages:
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
+  tinyexec@1.2.3:
+    resolution: {integrity: sha512-g62dB+w1/OEFnPvmX0yd/HnetYITOL+1nJW7kitOycOeAvmbWC/nu0fwmmQ/kupNojqExzyC/T++pST/jRJ2mQ==}
+    engines: {node: '>=18'}
+
   tinyexec@1.2.4:
     resolution: {integrity: sha512-SHf/r48b7vOrjve9PxJo3MN5v5yuyjHvdUcrQffT3WXMUfnGmHDVbC4k3sHJaJTgZCwpUplIaAo5ANtMyp3YHg==}
     engines: {node: '>=18'}
@@ -4238,7 +4242,7 @@ snapshots:
       '@commitlint/load': 21.0.2(@types/node@24.12.4)(typescript@6.0.3)
       '@commitlint/read': 21.0.2(conventional-commits-parser@6.4.0)
       '@commitlint/types': 21.0.1
-      tinyexec: 1.2.4
+      tinyexec: 1.2.3
       yargs: 18.0.0
     transitivePeerDependencies:
       - '@types/node'
@@ -4322,7 +4326,7 @@ snapshots:
       '@commitlint/top-level': 21.0.2
       '@commitlint/types': 21.0.1
       git-raw-commits: 5.0.1(conventional-commits-parser@6.4.0)
-      tinyexec: 1.2.4
+      tinyexec: 1.2.3
     transitivePeerDependencies:
       - conventional-commits-filter
       - conventional-commits-parser
@@ -7402,6 +7406,8 @@ snapshots:
 
   tinybench@2.9.0: {}
 
+  tinyexec@1.2.3: {}
+
   tinyexec@1.2.4: {}
 
   tinyglobby@0.2.17:
@@ -7518,7 +7524,7 @@ snapshots:
       picomatch: 4.0.4
       std-env: 4.1.0
       tinybench: 2.9.0
-      tinyexec: 1.2.4
+      tinyexec: 1.2.3
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
       vite: 8.0.14(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
