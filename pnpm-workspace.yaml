@@ -17,3 +17,11 @@ minimumReleaseAgeExclude:
   - vitest@4.1.7
   - date-fns@4.3.0
   - lint-staged@17.0.6
+  - '@better-auth/core@1.6.14'
+  - '@better-auth/drizzle-adapter@1.6.14'
+  - '@better-auth/kysely-adapter@1.6.14'
+  - '@better-auth/memory-adapter@1.6.14'
+  - '@better-auth/mongo-adapter@1.6.14'
+  - '@better-auth/prisma-adapter@1.6.14'
+  - '@better-auth/telemetry@1.6.14'
+  - better-auth@1.6.14
