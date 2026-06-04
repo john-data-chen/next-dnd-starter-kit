@@ -167,7 +167,7 @@ This is an example of how to use prompts and skills in Claude Code, you should c
 
 - Create a folder named `.claude`
 - Copy skills you need from `ai_docs/skills/` to `.claude/skills/`
-- Copy or create a symbolic link of `PROMPTS.md` to your AI tool's context file location
+- Copy or create a symbolic link of `AGENTS.md` to your AI tool's context file location
   | AI Tool | Target Path |
   | ----------- | ------------------- |
   | Claude Code | `[root-folder]/CLAUDE.md` |
@@ -255,7 +255,7 @@ pnpm build         # Production build
 ├── .github/workflows/            # GitHub Actions CI/CD
 ├── .husky/                       # Git hooks (pre-commit, commit-msg, etc.)
 ├── ai_docs/                      # AI documentation & skills
-│   ├── PROMPTS.md                # AI prompts & guidelines
+│   ├── AGENTS.md                # AI guidelines (copy to root folder, or rename it when your tool needs specific file name such as CLAUDE.md)
 │   └── skills/                   # AI skills library
 │       ├── ai-optimization/      # karpathy-guidelines
 │       └── web/                  # Web-specific skills
