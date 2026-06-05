@@ -1,14 +1,12 @@
 allowBuilds:
-  '@parcel/watcher': true
-  '@swc/core': true
+  "@parcel/watcher": true
+  "@swc/core": true
   esbuild: true
   sharp: true
+# Supply-chain release cooldown (pnpm 11 default is 1440 = 1 day).
+# Declared explicitly because minimumReleaseAgeExclude is only honored when
+# minimumReleaseAge is set. Only packages we deliberately track at the
+# bleeding edge belong here — use name patterns, never name@version pins.
+minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
-  - '@better-auth/core@1.6.14'
-  - '@better-auth/drizzle-adapter@1.6.14'
-  - '@better-auth/kysely-adapter@1.6.14'
-  - '@better-auth/memory-adapter@1.6.14'
-  - '@better-auth/mongo-adapter@1.6.14'
-  - '@better-auth/prisma-adapter@1.6.14'
-  - '@better-auth/telemetry@1.6.14'
-  - better-auth@1.6.14
+  - "@typescript/native-preview*"
