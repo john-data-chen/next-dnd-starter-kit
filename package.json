@@ -14,11 +14,11 @@
     "init-db": "tsx database/init-db-data.ts",
     "init-db:force": "tsx database/init-db-data.ts --force",
     "lint": "oxlint src --type-aware --fix",
-    "playwright": "npx playwright test",
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
     "start": "next start",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "test:watch": "vitest",
     "typecheck": "tsgo --noEmit"
   },
@@ -31,13 +31,13 @@
     "@radix-ui/react-icons": "^1.3.2",
     "@tailwindcss/postcss": "^4.3.0",
     "@vercel/analytics": "^2.0.1",
-    "better-auth": "^1.6.16",
+    "better-auth": "^1.6.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.4.0",
     "jose": "^6.2.3",
-    "lucide-react": "^1.17.0",
+    "lucide-react": "^1.18.0",
     "mongoose": "^9.7.0",
     "next": "16.2.9",
     "next-intl": "^4.13.0",
@@ -51,7 +51,7 @@
     "react-hook-form": "^7.78.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.0",
+    "tailwindcss": "^4.3.1",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
@@ -69,7 +69,7 @@
     "@typescript/native-preview": "latest",
     "@vitejs/plugin-react-swc": "^4.3.1",
     "@vitest/coverage-v8": "^4.1.8",
-    "commitizen": "^4.3.1",
+    "commitizen": "^4.3.2",
     "dotenv": "^17.4.2",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
@@ -96,5 +96,5 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@11.5.3"
+  "packageManager": "pnpm@11.6.0"
 }

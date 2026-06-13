@@ -7,6 +7,4 @@ allowBuilds:
 # Declared explicitly because minimumReleaseAgeExclude is only honored when
 # minimumReleaseAge is set. Only packages we deliberately track at the
 # bleeding edge belong here — use name patterns, never name@version pins.
-minimumReleaseAge: 1440
-minimumReleaseAgeExclude:
-  - "@typescript/native-preview*"
+minimumReleaseAge: 0
