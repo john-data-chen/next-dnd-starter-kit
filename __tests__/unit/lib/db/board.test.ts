@@ -4,6 +4,7 @@ import {
   createBoardInDb,
   deleteBoardInDb,
   fetchBoardsFromDb,
+  getBoardById,
   updateBoardInDb
 } from "@/lib/db/board"
 import { connectToDatabase } from "@/lib/db/connect"
@@ -143,6 +144,53 @@ describe("Board DB functions", () => {
         lean: vi.fn().mockResolvedValue({ ...mockBoard, owner: new Types.ObjectId() })
       })
       await expect(deleteBoardInDb(mockBoardId, mockUser.email)).resolves.toBe(false)
+    })
+
+    it("returns false when the user is not found", async () => {
+      ;(getUserByEmail as import("vitest").Mock<any>).mockResolvedValue(null)
+      await expect(deleteBoardInDb(mockBoardId, "unknown@example.com")).resolves.toBe(false)
+    })
+
+    it("returns false when the board is not found", async () => {
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockReturnValue({
+        lean: vi.fn().mockResolvedValue(null)
+      })
+      await expect(deleteBoardInDb(mockBoardId, mockUser.email)).resolves.toBe(false)
+    })
+  })
+
+  describe("getBoardById", () => {
+    it("returns the board summary when found", async () => {
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue({
+            _id: new Types.ObjectId(mockBoardId),
+            title: "Test Board",
+            description: "Test Description"
+          })
+        })
+      })
+      const board = await getBoardById(mockBoardId)
+      expect(board?._id).toBe(mockBoardId)
+      expect(board?.title).toBe("Test Board")
+    })
+
+    it("returns null when the board is not found", async () => {
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue(null)
+        })
+      })
+      const board = await getBoardById(mockBoardId)
+      expect(board).toBeNull()
+    })
+
+    it("returns null when the query throws", async () => {
+      ;(BoardModel.findById as import("vitest").Mock<any>).mockImplementation(() => {
+        throw new Error("findById boom")
+      })
+      const board = await getBoardById(mockBoardId)
+      expect(board).toBeNull()
     })
   })
 })
