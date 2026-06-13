@@ -240,7 +240,7 @@ pnpm init-db
 # Run
 pnpm dev           # Development
 pnpm test          # Unit tests
-pnpm playwright    # E2E tests
+pnpm test:e2e      # E2E tests
 pnpm build         # Production build
 ```
 

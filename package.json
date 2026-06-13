@@ -14,11 +14,11 @@
     "init-db": "tsx database/init-db-data.ts",
     "init-db:force": "tsx database/init-db-data.ts --force",
     "lint": "oxlint src --type-aware --fix",
-    "playwright": "npx playwright test",
     "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
     "start": "next start",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "test:watch": "vitest",
     "typecheck": "tsgo --noEmit"
   },

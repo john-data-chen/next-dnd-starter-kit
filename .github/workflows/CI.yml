@@ -55,7 +55,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NODE_ENV: ${{ vars.NODE_ENV }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-        run: pnpm playwright
+        run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
