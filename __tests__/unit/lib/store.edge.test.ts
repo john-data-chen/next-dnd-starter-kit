@@ -122,7 +122,7 @@ describe("Store edge cases", () => {
       act(() => {
         useProjectStore.setState({ projects: [makeProject("p1", [makeTask("t1", "p1")])] })
       })
-      vi.mocked(dbTask.updateTaskInDb).mockResolvedValue(null)
+      vi.mocked(dbTask.updateTaskInDb).mockResolvedValue(null as never)
       await expect(
         useProjectStore.getState().updateTask("t1", "x", TaskStatus.TODO)
       ).rejects.toThrow("Failed to update task")
@@ -226,7 +226,7 @@ describe("Store edge cases", () => {
           projects: [makeProject("p1", [t1]), makeProject("p2")]
         })
       })
-      vi.mocked(dbTask.updateTaskProjectInDb).mockResolvedValue(null)
+      vi.mocked(dbTask.updateTaskProjectInDb).mockResolvedValue(null as never)
       await act(async () => {
         await useProjectStore.getState().dragTaskOnProject("t1", "p2")
       })
