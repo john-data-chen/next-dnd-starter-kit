@@ -34,4 +34,20 @@ describe("Environment Configuration", () => {
     const { config } = await import("@/lib/config/env")
     expect(config.databaseUrl).toBeUndefined()
   })
+
+  it("should throw in development when DATABASE_URL is missing", async () => {
+    // Prevent dotenv from repopulating DATABASE_URL from the local .env file
+    vi.doMock("dotenv", () => ({ config: vi.fn(() => ({ parsed: {} })) }))
+    // Simulate a server (Node) runtime so the DATABASE_URL guard is evaluated
+    // (in jsdom `window` is defined, which would otherwise skip the guard).
+    vi.stubGlobal("window", undefined)
+    Object.defineProperty(process.env, "NODE_ENV", { value: "development", configurable: true })
+    delete process.env.DATABASE_URL
+    delete process.env.VERCEL
+    await expect(import("@/lib/config/env")).rejects.toThrow(
+      "Local development DATABASE_URL is not defined"
+    )
+    vi.doUnmock("dotenv")
+    vi.unstubAllGlobals()
+  })
 })

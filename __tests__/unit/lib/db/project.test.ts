@@ -243,5 +243,50 @@ describe("Project DB functions", () => {
       const result = await updateProjectOrderInDb([mockProjectId], mockUser.email)
       expect(result).toBe(false)
     })
+
+    it("should return false when bulkWrite throws", async () => {
+      ;(ProjectModel.bulkWrite as Mock).mockRejectedValue(new Error("bulk boom"))
+      const result = await updateProjectOrderInDb([mockProjectId], mockUser.email)
+      expect(result).toBe(false)
+    })
+  })
+
+  describe("error handling", () => {
+    it("getProjectsFromDb returns [] when the query throws", async () => {
+      ;(ProjectModel.find as Mock).mockImplementation(() => {
+        throw new Error("find boom")
+      })
+      const projects = await getProjectsFromDb(mockBoardId)
+      expect(projects).toEqual([])
+    })
+
+    it("createProjectInDb returns null when a db call throws", async () => {
+      ;(ProjectModel.findOne as Mock).mockImplementation(() => {
+        throw new Error("findOne boom")
+      })
+      const result = await createProjectInDb({
+        title: "t",
+        description: "d",
+        board: mockBoardId,
+        userEmail: mockUser.email
+      })
+      expect(result).toBeNull()
+    })
+
+    it("updateProjectInDb returns null when a db call throws", async () => {
+      ;(ProjectModel.findById as Mock).mockRejectedValue(new Error("findById boom"))
+      const result = await updateProjectInDb({
+        projectId: mockProjectId,
+        userEmail: mockUser.email,
+        newTitle: "Updated Project"
+      })
+      expect(result).toBeNull()
+    })
+
+    it("deleteProjectInDb returns false when a db call throws", async () => {
+      ;(ProjectModel.findById as Mock).mockRejectedValue(new Error("findById boom"))
+      const result = await deleteProjectInDb(mockProjectId, mockUser.email)
+      expect(result).toBe(false)
+    })
   })
 })
