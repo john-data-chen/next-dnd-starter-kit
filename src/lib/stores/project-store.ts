@@ -272,7 +272,11 @@ export const useProjectStore = create<ProjectState>()(
               return { ...project, tasks: project.tasks.filter((t) => t._id !== taskId) }
             }
             if (project._id === targetProject._id) {
-              return { ...project, tasks: [...project.tasks, updatedTask] }
+              // filter first so a re-entrant call can't append the same task twice
+              return {
+                ...project,
+                tasks: [...project.tasks.filter((t) => t._id !== taskId), updatedTask]
+              }
             }
             return project
           })

@@ -15,7 +15,7 @@ import {
   type DragOverEvent,
   type DragStartEvent
 } from "@dnd-kit/core"
-import { SortableContext } from "@dnd-kit/sortable"
+import { arrayMove, SortableContext } from "@dnd-kit/sortable"
 import { Fragment, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 
@@ -40,6 +40,9 @@ export function Board() {
 
   const [activeProject, setActiveProject] = useState<Project | null>(null)
   const [activeTask, setActiveTask] = useState<Task | null>(null)
+  // Project the dragged task currently belongs to. Updated synchronously so repeated
+  // onDragOver fires (mouse held over a target) don't issue duplicate cross-project moves.
+  const draggingTaskProjectId = useRef<string | null>(null)
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor))
 
@@ -89,106 +92,76 @@ export function Board() {
       return
     }
     if (data?.type === "Task") {
+      draggingTaskProjectId.current = data.task.project.toString()
       setActiveTask(data?.task)
     }
   }
 
   function onDragOver(event: DragOverEvent) {
-    const updatedProjects = [...projects]
     const { active, over } = event
-    // stop if no over data
     if (!over) {
       return
     }
-    // stop if active and over are the same
-    const activeId = active.id
-    const overId = over.id
-    if (activeId === overId) {
+    if (active.id === over.id) {
       return
     }
-    // stop if no draggable data
     if (!hasDraggableData(active) || !hasDraggableData(over)) {
       return
     }
-    // stop if active is a project
     if (active.data.current!.type === "Project") {
       return
     }
-    // get active task
-    const activeTask = active.data.current!.task
-    const activeProject = updatedProjects.find(
-      (project: Project) => project._id === active.data.current!.task.project
-    )
-    const activeTaskIdx = activeProject!.tasks.findIndex(
-      (task: Task) => task._id === activeTask._id
-    )
-    // drag a task over a project
-    if (over.data.current!.type === "Project") {
-      const overProject = updatedProjects.find(
-        (project: Project) => project === over.data.current!.project
-      )
-      if (!overProject) {
-        console.error("Target project not found")
-        return
-      }
-      dragTaskOnProject(activeTask._id, overProject._id)
-        .then(() => {
-          activeTask.project = overProject._id
-          overProject.tasks.push(activeTask)
-          activeProject!.tasks.splice(activeTaskIdx, 1)
-          setProjects(updatedProjects)
 
-          if (activeTask.project !== overProject._id.toString()) {
-            toast.success(
-              `Task: "${activeTask.title}" is moved into Project: "${overProject.title}"`
-            )
-          }
+    const activeTask = active.data.current!.task
+    const overData = over.data.current!
+    const targetProjectId =
+      overData.type === "Project"
+        ? overData.project._id.toString()
+        : overData.task.project.toString()
+    const currentProjectId = draggingTaskProjectId.current ?? activeTask.project.toString()
+
+    // Cross-project move. The store owns the optimistic state update; we only persist here.
+    // The ref guard makes repeated onDragOver fires (mouse held over target) idempotent,
+    // so a task can't be appended to the target project more than once -> no duplicates.
+    if (targetProjectId !== currentProjectId) {
+      draggingTaskProjectId.current = targetProjectId
+      const targetTitle =
+        projects.find((project: Project) => project._id.toString() === targetProjectId)?.title ?? ""
+      dragTaskOnProject(activeTask._id, targetProjectId)
+        .then(() => {
+          toast.success(`Task: "${activeTask.title}" is moved into Project: "${targetTitle}"`)
         })
         .catch((error: unknown) => {
           console.error("Failed to move task:", error)
           const message = error instanceof Error ? error.message : "unknown error"
           toast.error(`Failed to move task: ${message}`)
         })
+      return
     }
-    // drag a task over a task
-    if (over.data.current!.type === "Task") {
-      const overTask = over.data.current!.task
-      const overProject = updatedProjects.find(
-        (project: Project) => project._id.toString() === overTask.project.toString()
-      )
-      const overTaskIdx = overProject!.tasks.findIndex((task: Task) => task._id === overTask._id)
-      // move task to a different project
-      if (overTask.project !== activeTask.project) {
-        dragTaskOnProject(activeTask._id, overTask.project)
-          .then(() => {
-            activeTask.project = overTask.project
-            overProject!.tasks.splice(overTaskIdx, 0, activeTask)
-            activeProject!.tasks.splice(activeTaskIdx, 1)
-            setProjects(updatedProjects)
-            toast.success(
-              `Task: "${activeTask.title}" is moved into Project: "${overProject!.title}"`
-            )
-          })
-          .catch((error: unknown) => {
-            console.error("Failed to move task:", error)
-            const message = error instanceof Error ? error.message : "unknown error"
-            toast.error(`Failed to move task: ${message}`)
-          })
-      }
-      // move task to the same project
-      else {
-        const tempTask = activeTask
-        activeProject!.tasks.splice(activeTaskIdx, 1)
-        overProject!.tasks.splice(overTaskIdx, 0, tempTask)
 
-        setProjects(updatedProjects)
+    // Same project: reorder over another task. Task order is local-only (not persisted).
+    if (overData.type === "Task" && overData.task._id !== activeTask._id) {
+      const next = projects.map((project: Project) => ({ ...project, tasks: [...project.tasks] }))
+      const targetProject = next.find(
+        (project: Project) => project._id.toString() === targetProjectId
+      )
+      if (!targetProject) {
+        return
       }
+      const from = targetProject.tasks.findIndex((task: Task) => task._id === activeTask._id)
+      const to = targetProject.tasks.findIndex((task: Task) => task._id === overData.task._id)
+      if (from === -1 || to === -1 || from === to) {
+        return
+      }
+      targetProject.tasks = arrayMove(targetProject.tasks, from, to)
+      setProjects(next)
     }
   }
 
   function onDragEnd(event: DragEndEvent) {
     setActiveProject(null)
     setActiveTask(null)
+    draggingTaskProjectId.current = null
 
     const { active, over } = event
     if (!over) {
