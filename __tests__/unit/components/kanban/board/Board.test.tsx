@@ -285,6 +285,37 @@ describe("Board", () => {
     expect(mockDragTaskOnProject).toHaveBeenCalledWith(activeTask._id, overTask.project)
   })
 
+  it("should move task only once when onDragOver fires repeatedly over the same project", async () => {
+    render(<Board />)
+    const activeTask = { ...task1P1, project: "project1" }
+    const overProject = { ...project2Initial }
+    const event: DragOverEvent = {
+      active: {
+        id: activeTask._id,
+        data: { current: { type: "Task", task: activeTask } }
+      } as any,
+      over: {
+        id: overProject._id,
+        data: { current: { type: "Project", project: overProject } }
+      } as any,
+      activatorEvent: new MouseEvent("click") as Event,
+      collisions: null,
+      delta: { x: 0, y: 0 }
+    }
+    // simulate holding the cursor over the target: many fires before the move resolves
+    await act(async () => {
+      capturedDragStart?.({
+        active: event.active,
+        activatorEvent: event.activatorEvent
+      } as DragStartEvent)
+      capturedDragOver?.(event)
+      capturedDragOver?.(event)
+      capturedDragOver?.(event)
+    })
+    expect(mockDragTaskOnProject).toHaveBeenCalledTimes(1)
+    expect(mockDragTaskOnProject).toHaveBeenCalledWith(activeTask._id, "project2")
+  })
+
   it("should call setProjects after drag over a task in the same project", async () => {
     render(<Board />)
     const activeTask = { ...task2P1, project: "project1" }

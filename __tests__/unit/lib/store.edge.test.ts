@@ -81,9 +81,7 @@ describe("Store edge cases", () => {
       global.fetch = vi.fn(() =>
         Promise.resolve({ ok: false, json: () => Promise.resolve({}) } as Response)
       )
-      await expect(useBoardStore.getState().addBoard("B")).rejects.toThrow(
-        "Failed to create board"
-      )
+      await expect(useBoardStore.getState().addBoard("B")).rejects.toThrow("Failed to create board")
     })
 
     it("updateBoard throws when the db returns a falsy result", async () => {
@@ -230,9 +228,7 @@ describe("Store edge cases", () => {
       await act(async () => {
         await useProjectStore.getState().dragTaskOnProject("t1", "p2")
       })
-      expect(
-        useProjectStore.getState().projects.find((p) => p._id === "p1")?.tasks
-      ).toHaveLength(1)
+      expect(useProjectStore.getState().projects.find((p) => p._id === "p1")?.tasks).toHaveLength(1)
     })
 
     it("leaves unrelated projects untouched when moving a task", async () => {
