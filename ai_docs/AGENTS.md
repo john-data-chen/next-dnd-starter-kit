@@ -15,7 +15,7 @@
 | Condition | Skill |
 | :-- | :-- |
 | Any coding task | `karpathy-guidelines` |
-| Any task | `caveman` (global ponytail — YAGNI, min code, no unrequested abstractions) |
+| Any task | `caveman` (makes agent talk like caveman — cuts ~75% of output tokens) |
 
 ### Workflow
 

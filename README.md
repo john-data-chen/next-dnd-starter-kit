@@ -139,12 +139,12 @@ Skills extend AI capabilities for specialized tasks. Each skill contains instruc
 
 **AI Optimization Skills** (`ai_docs/skills/ai-optimization/`)
 
-Based on [karpathy-guidelines](https://github.com/forrestchang/andrej-karpathy-skills)
+Based on [karpathy-guidelines](https://github.com/forrestchang/andrej-karpathy-skills) and [caveman](https://github.com/juliusbrussee/caveman)
 
-| Skill                 | Purpose                                          | When to Use                                                                                                                                                                    |
-| :-------------------- | :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `karpathy-guidelines` | Behavioral guidelines to reduce AI coding errors | Writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria (Thinking before coding) |
-| `caveman`             | YAGNI mode — minimum code, no unrequested abstractions | Every task. Global skill (not in repo) that enforces simplicity-first, reduces token consumption, and prevents over-engineering. |
+| Skill                 | Purpose                                                    | When to Use                                                                                                                                                                     |
+| :-------------------- | :--------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `karpathy-guidelines` | Behavioral guidelines to reduce AI coding errors           | Writing, reviewing, or refactoring code to avoid over-complication, make surgical changes, surface assumptions, and define verifiable success criteria (Thinking before coding) |
+| `caveman`             | makes agent talk like caveman — cuts ~75% of output tokens | Every task. Global skill (not in repo) that reduces token consumption.                                                                                                          |
 
 **Web Skills** (`ai_docs/skills/web/`)
 
@@ -160,9 +160,9 @@ Based on [Vercel Agent Skills](https://vercel.com/docs/agent-resources/skills)
 
 **Workflow Skills** (private, not open-sourced)
 
-| Skill              | Purpose                                    | When to Use                                                         |
-| :----------------- | :----------------------------------------- | :------------------------------------------------------------------ |
-| `session-handoff`  | Cross-session task tracking and continuity  | Multi-session tasks, handoffs, progress tracking across AI sessions |
+| Skill             | Purpose                                    | When to Use                                                         |
+| :---------------- | :----------------------------------------- | :------------------------------------------------------------------ |
+| `session-handoff` | Cross-session task tracking and continuity | Multi-session tasks, handoffs, progress tracking across AI sessions |
 
 **AI Guidelines** (`ai_docs/AGENTS.md`)
 
@@ -172,11 +172,11 @@ Project-specific instructions for AI assistants including repository structure, 
 
 - Copy skills you need from `ai_docs/skills/` to your AI tool's skill folder
 - Create a symbolic link from `ai_docs/AGENTS.md` to your AI tool's context file:
-  | AI Tool     | Symlink Target              |
+  | AI Tool | Symlink Target |
   | ----------- | --------------------------- |
-  | Claude Code | `[root]/CLAUDE.md`          |
-  | Gemini CLI  | `[root]/GEMINI.md`          |
-  | Copilot     | `[root]/AGENTS.md`          |
+  | Claude Code | `[root]/CLAUDE.md` |
+  | Gemini CLI | `[root]/GEMINI.md` |
+  | Copilot | `[root]/AGENTS.md` |
 - Restart the AI tool
 
 ### Measurable Impact
