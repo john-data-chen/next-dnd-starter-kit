@@ -522,6 +522,33 @@ describe("Zustand Stores", () => {
         )
       })
 
+      it("dragTaskOnProject should leave the task in exactly one project (no duplicates)", async () => {
+        // Simulate a mid-race state where the task is stale-present in two projects.
+        const taskInP1 = { ...mockTask, _id: mockTaskId, project: "p1" }
+        const taskInP2 = { ...mockTask, _id: mockTaskId, project: "p2" }
+        const project1 = { ...mockProject, _id: "p1", tasks: [taskInP1] }
+        const project2 = { ...mockProject, _id: "p2", tasks: [taskInP2] }
+        const project3 = { ...mockProject, _id: "p3", tasks: [] }
+        const updatedTask = { ...mockTask, _id: mockTaskId, project: "p3" }
+
+        act(() => {
+          useProjectStore.setState({ projects: [project1, project2, project3] })
+        })
+        vi.mocked(dbTask.updateTaskProjectInDb).mockResolvedValue(updatedTask)
+
+        await act(async () => {
+          await useProjectStore.getState().dragTaskOnProject(mockTaskId, "p3")
+        })
+
+        const state = useProjectStore.getState()
+        const occurrences = state.projects.reduce(
+          (sum, p) => sum + p.tasks.filter((t) => t._id === mockTaskId).length,
+          0
+        )
+        expect(occurrences).toBe(1)
+        expect(state.projects.find((p) => p._id === "p3")?.tasks).toHaveLength(1)
+      })
+
       it("dragTaskOnProject should reorder task within the same project", async () => {
         const task1 = { ...mockTask, _id: "t1", project: mockProjectId }
         const task2 = { ...mockTask, _id: "t2", project: mockProjectId }
