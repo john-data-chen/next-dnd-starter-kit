@@ -267,18 +267,15 @@ export const useProjectStore = create<ProjectState>()(
         }
 
         set((state) => ({
+          // Remove the task from every project, then add it to the target exactly once.
+          // Removing from all (not just the captured oldProject) is race-safe: concurrent
+          // in-flight moves can't leave the task behind in an intermediate project.
           projects: state.projects.map((project) => {
-            if (project._id === oldProject._id) {
-              return { ...project, tasks: project.tasks.filter((t) => t._id !== taskId) }
-            }
+            const tasks = project.tasks.filter((t) => t._id !== taskId)
             if (project._id === targetProject._id) {
-              // filter first so a re-entrant call can't append the same task twice
-              return {
-                ...project,
-                tasks: [...project.tasks.filter((t) => t._id !== taskId), updatedTask]
-              }
+              return { ...project, tasks: [...tasks, updatedTask] }
             }
-            return project
+            return { ...project, tasks }
           })
         }))
       },
