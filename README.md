@@ -144,6 +144,7 @@ Based on [karpathy-guidelines](https://github.com/forrestchang/andrej-karpathy-s
 | Skill                 | Purpose                                          | When to Use                                                                                                                                                                    |
 | :-------------------- | :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `karpathy-guidelines` | Behavioral guidelines to reduce AI coding errors | Writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria (Thinking before coding) |
+| `caveman`             | YAGNI mode — minimum code, no unrequested abstractions | Every task. Global skill (not in repo) that enforces simplicity-first, reduces token consumption, and prevents over-engineering. |
 
 **Web Skills** (`ai_docs/skills/web/`)
 
@@ -157,21 +158,26 @@ Based on [Vercel Agent Skills](https://vercel.com/docs/agent-resources/skills)
 | `vercel-react-best-practices` | React performance rules     | Writing, reviewing, or refactoring React/Next.js code for performance         |
 | `web-design-guidelines`       | UI/UX accessibility audits  | "Review my UI", "Check accessibility", "Audit design"                         |
 
-**AI Guidelines** (`ai_docs/PROMPTS.md`)
+**Workflow Skills** (private, not open-sourced)
 
-Project-specific instructions for AI assistants including repository structure, commands, file conventions, and example workflows. Adhering to these guidelines reduces AI hallucinations and increases the accurate utilization of skills and MCP servers by approximately 40-60%. AI tools should reference this file first when working on this project.
+| Skill              | Purpose                                    | When to Use                                                         |
+| :----------------- | :----------------------------------------- | :------------------------------------------------------------------ |
+| `session-handoff`  | Cross-session task tracking and continuity  | Multi-session tasks, handoffs, progress tracking across AI sessions |
+
+**AI Guidelines** (`ai_docs/AGENTS.md`)
+
+Project-specific instructions for AI assistants including repository structure, commands, file conventions, and skill dispatch. Adhering to these guidelines reduces AI hallucinations and increases the accurate utilization of skills and MCP servers by approximately 40-60%. AI tools should reference this file first when working on this project.
 
 **How to Use:**
 
-This is an example of how to use prompts and skills in Claude Code, you should check the documentation of other AI tools for more details.
-
-- Create a folder named `.claude`
-- Copy skills you need from `ai_docs/skills/` to `.claude/skills/`
-- Copy or create a symbolic link of `AGENTS.md` to your AI tool's context file location
-  | AI Tool | Target Path |
-  | ----------- | ------------------- |
-  | Claude Code | `[root-folder]/CLAUDE.md` |
-- Restart the Claude Code
+- Copy skills you need from `ai_docs/skills/` to your AI tool's skill folder
+- Create a symbolic link from `ai_docs/AGENTS.md` to your AI tool's context file:
+  | AI Tool     | Symlink Target              |
+  | ----------- | --------------------------- |
+  | Claude Code | `[root]/CLAUDE.md`          |
+  | Gemini CLI  | `[root]/GEMINI.md`          |
+  | Copilot     | `[root]/AGENTS.md`          |
+- Restart the AI tool
 
 ### Measurable Impact
 
@@ -255,7 +261,7 @@ pnpm build         # Production build
 ├── .github/workflows/            # GitHub Actions CI/CD
 ├── .husky/                       # Git hooks (pre-commit, commit-msg, etc.)
 ├── ai_docs/                      # AI documentation & skills
-│   ├── AGENTS.md                # AI guidelines (copy to root folder, or rename it when your tool needs specific file name such as CLAUDE.md)
+│   ├── AGENTS.md                # AI guidelines (symlink to root AGENTS.md/CLAUDE.md/GEMINI.md)
 │   └── skills/                   # AI skills library
 │       ├── ai-optimization/      # karpathy-guidelines
 │       └── web/                  # Web-specific skills
