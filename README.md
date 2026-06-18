@@ -13,6 +13,14 @@ A production-grade Kanban board built with Next.js, demonstrating technical deci
 
 ---
 
+## Other Portfolio Projects
+
+### [SvelteKit Expense Tracker](https://github.com/john-data-chen/sveltekit-starter-kit)
+
+AI build high-quality project fast. Framework switch easy. Multi-user ledger. Svelte 5 runes. Prisma ORM. PostgreSQL. Vitest 95%+ coverage. Playwright E2E. SonarQube A. Lighthouse 90+.
+
+---
+
 ## Monorepo Evolution
 
 This project was strategically re-architected through three stages, each driven by a clear engineering rationale:
