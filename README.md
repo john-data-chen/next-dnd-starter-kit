@@ -13,7 +13,7 @@ A production-grade Kanban board built with Next.js, demonstrating technical deci
 
 ---
 
-## Other Portfolio Projects
+## Another Project
 
 ### [SvelteKit Expense Tracker](https://github.com/john-data-chen/sveltekit-starter-kit)
 
