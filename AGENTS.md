@@ -94,3 +94,4 @@ pnpm build                   # Build check
 ```
 
 Fix all errors → unstage → suggest Conventional Commit message. **Never commit for user.**
+

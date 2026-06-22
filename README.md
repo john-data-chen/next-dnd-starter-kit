@@ -141,11 +141,11 @@ MCP enables AI tools to interact directly with development infrastructure, elimi
 | [nextjs-mcp](https://nextjs.org/docs/app/guides/mcp)                         | Framework diagnostics | Allow AI agents direct access to dev server logs and routes                                  |
 | [playwright-mcp](https://github.com/microsoft/playwright-mcp)                | E2E testing           | Allow AI agents direct access to run e2e tests                                               |
 
-**AI Skills** (in `ai_docs/skills/`)
+**AI Skills** (in `.agents/skills/`)
 
 Skills extend AI capabilities for specialized tasks. Each skill contains instructions and resources that AI assistants can use.
 
-**AI Optimization Skills** (`ai_docs/skills/ai-optimization/`)
+**AI Optimization Skills**
 
 Based on [karpathy-guidelines](https://github.com/forrestchang/andrej-karpathy-skills) and [caveman](https://github.com/juliusbrussee/caveman)
 
@@ -154,7 +154,7 @@ Based on [karpathy-guidelines](https://github.com/forrestchang/andrej-karpathy-s
 | `karpathy-guidelines` | Behavioral guidelines to reduce AI coding errors           | Writing, reviewing, or refactoring code to avoid over-complication, make surgical changes, surface assumptions, and define verifiable success criteria (Thinking before coding) |
 | `caveman`             | makes agent talk like caveman — cuts ~75% of output tokens | Every task. Global skill (not in repo) that reduces token consumption.                                                                                                          |
 
-**Web Skills** (`ai_docs/skills/web/`)
+**Web Skills**
 
 Based on [Vercel Agent Skills](https://vercel.com/docs/agent-resources/skills)
 
@@ -172,14 +172,14 @@ Based on [Vercel Agent Skills](https://vercel.com/docs/agent-resources/skills)
 | :---------------- | :----------------------------------------- | :------------------------------------------------------------------ |
 | `session-handoff` | Cross-session task tracking and continuity | Multi-session tasks, handoffs, progress tracking across AI sessions |
 
-**AI Guidelines** (`ai_docs/AGENTS.md`)
+**AI Guidelines** (`AGENTS.md`)
 
 Project-specific instructions for AI assistants including repository structure, commands, file conventions, and skill dispatch. Adhering to these guidelines reduces AI hallucinations and increases the accurate utilization of skills and MCP servers by approximately 40-60%. AI tools should reference this file first when working on this project.
 
 **How to Use:**
 
-- Copy skills you need from `ai_docs/skills/` to your AI tool's skill folder
-- Create a symbolic link from `ai_docs/AGENTS.md` to your AI tool's context file:
+- Copy skills you need from `.agents/skills/` to your AI tool's skill folder
+- Create a symbolic link from `AGENTS.md` to your AI tool's context file:
   | AI Tool | Symlink Target |
   | ----------- | --------------------------- |
   | Claude Code | `[root]/CLAUDE.md` |
@@ -268,11 +268,9 @@ pnpm build         # Production build
 │   └── unit/                     # Unit tests (Vitest)
 ├── .github/workflows/            # GitHub Actions CI/CD
 ├── .husky/                       # Git hooks (pre-commit, commit-msg, etc.)
-├── ai_docs/                      # AI documentation & skills
-│   ├── AGENTS.md                # AI guidelines (symlink to root AGENTS.md/CLAUDE.md/GEMINI.md)
+├── .agents/                      # AI documentation & skills
 │   └── skills/                   # AI skills library
-│       ├── ai-optimization/      # karpathy-guidelines
-│       └── web/                  # Web-specific skills
+├── AGENTS.md                     # AI guidelines (symlink to CLAUDE.md/GEMINI.md)
 ├── database/                     # MongoDB docker-compose & initialization
 ├── messages/                     # i18n translations (de.json, en.json)
 ├── public/assets/                # Static assets (images, GIFs)
