@@ -49,11 +49,4 @@ node_modules/
 # AI files
 GEMINI.md
 CLAUDE.md
-.agent
-.agents
 .claude
-.gemini
-.kilocode
-.ai
-coding-agents
-session-handoff
