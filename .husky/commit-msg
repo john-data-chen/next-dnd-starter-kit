@@ -1,1 +1,12 @@
+#!/usr/bin/env sh
+
+# Ensure fnm environment is loaded for GUI Git clients (like VSCode/Windsurf)
+if command -v fnm >/dev/null; then
+  eval "$(fnm env)"
+  fnm use
+elif [ -x "/opt/homebrew/bin/fnm" ]; then
+  eval "$(/opt/homebrew/bin/fnm env)"
+  /opt/homebrew/bin/fnm use
+fi
+
 pnpm dlx commitlint --edit $1 --config commitlint.config.mjs
