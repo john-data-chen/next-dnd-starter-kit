@@ -166,7 +166,9 @@ Based on [Vercel Agent Skills](https://vercel.com/docs/agent-resources/skills)
 | `vercel-react-best-practices` | React performance rules     | Writing, reviewing, or refactoring React/Next.js code for performance         |
 | `web-design-guidelines`       | UI/UX accessibility audits  | "Review my UI", "Check accessibility", "Audit design"                         |
 
-**Workflow Skills** (private, not open-sourced)
+**Workflow Skills**
+
+> **Note**: `session-handoff` is a personal, private global skill and is not open-sourced within this repository.
 
 | Skill             | Purpose                                    | When to Use                                                         |
 | :---------------- | :----------------------------------------- | :------------------------------------------------------------------ |
