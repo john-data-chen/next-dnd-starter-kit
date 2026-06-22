@@ -12,35 +12,35 @@
 
 ### Universal
 
-| Condition | Skill |
-| :-- | :-- |
-| Any coding task | `karpathy-guidelines` |
-| Any task | `caveman` (makes agent talk like caveman — cuts ~75% of output tokens) |
+| Condition       | Skill                                                                  |
+| :-------------- | :--------------------------------------------------------------------- |
+| Any coding task | `karpathy-guidelines`                                                  |
+| Any task        | `caveman` (makes agent talk like caveman — cuts ~75% of output tokens) |
 
 ### Workflow
 
-| Condition | Skill |
-| :-- | :-- |
+| Condition                                      | Skill             |
+| :--------------------------------------------- | :---------------- |
 | Multi-session task, handoff, progress tracking | `session-handoff` |
-| Writing docs, proposals, specs, decision docs | `doc-coauthoring` |
+| Writing docs, proposals, specs, decision docs  | `doc-coauthoring` |
 
 ### Web
 
-| Condition | Skill |
-| :-- | :-- |
-| Next.js file conventions, RSC, data fetching, metadata, route handlers, async APIs | `next-best-practices` |
-| `use cache`, PPR, cacheLife, cacheTag, updateTag | `next-cache-components` |
-| Component API design, compound components, boolean prop cleanup | `vercel-composition-patterns` |
-| React/Next.js performance: re-renders, bundle size, waterfalls | `vercel-react-best-practices` |
-| UI review, accessibility audit, UX compliance | `web-design-guidelines` |
+| Condition                                                                          | Skill                         |
+| :--------------------------------------------------------------------------------- | :---------------------------- |
+| Next.js file conventions, RSC, data fetching, metadata, route handlers, async APIs | `next-best-practices`         |
+| `use cache`, PPR, cacheLife, cacheTag, updateTag                                   | `next-cache-components`       |
+| Component API design, compound components, boolean prop cleanup                    | `vercel-composition-patterns` |
+| React/Next.js performance: re-renders, bundle size, waterfalls                     | `vercel-react-best-practices` |
+| UI review, accessibility audit, UX compliance                                      | `web-design-guidelines`       |
 
 ## MCP Servers
 
-| Server | Use When |
-| :-- | :-- |
-| `context7` | Need current library/package docs |
-| `next-devtools` | Dev server diagnostics, route inspection. Call `init` tool FIRST when starting Next.js work (confirm with user). |
-| `chrome-devtools` | Browser debugging, DOM inspection, performance analysis, network requests |
+| Server            | Use When                                                                                                         |
+| :---------------- | :--------------------------------------------------------------------------------------------------------------- |
+| `context7`        | Need current library/package docs                                                                                |
+| `next-devtools`   | Dev server diagnostics, route inspection. Call `init` tool FIRST when starting Next.js work (confirm with user). |
+| `chrome-devtools` | Browser debugging, DOM inspection, performance analysis, network requests                                        |
 
 ## Project Context
 
@@ -50,26 +50,26 @@ Check `package.json` for versions. Key: **Next.js (App Router), React, TypeScrip
 
 ### Repository Structure
 
-| Path | What |
-| :-- | :-- |
-| `__tests__` | Unit + E2E tests |
-| `database` | MongoDB docker-compose |
-| `messages` | i18n (de.json, en.json) |
-| `src/app/` | App Router + API routes |
-| `src/components/` | React components |
-| `src/components/ui/` | Shadcn UI (modify as last resort) |
-| `src/components/kanban/` | Board, project, task components |
-| `src/components/auth/` | Auth components |
-| `src/components/layout/` | Sidebar, header, nav |
-| `src/constants/` | App constants |
-| `src/hooks/` | Custom hooks |
-| `src/lib/db` | DB functions |
-| `src/lib/auth` | Auth (client/server) |
-| `src/lib/stores/` | Zustand stores |
-| `src/models/` | Mongoose models |
-| `src/types/` | TypeScript types |
-| `src/styles/` | Global CSS |
-| `src/i18n/` | next-intl config |
+| Path                     | What                              |
+| :----------------------- | :-------------------------------- |
+| `__tests__`              | Unit + E2E tests                  |
+| `database`               | MongoDB docker-compose            |
+| `messages`               | i18n (de.json, en.json)           |
+| `src/app/`               | App Router + API routes           |
+| `src/components/`        | React components                  |
+| `src/components/ui/`     | Shadcn UI (modify as last resort) |
+| `src/components/kanban/` | Board, project, task components   |
+| `src/components/auth/`   | Auth components                   |
+| `src/components/layout/` | Sidebar, header, nav              |
+| `src/constants/`         | App constants                     |
+| `src/hooks/`             | Custom hooks                      |
+| `src/lib/db`             | DB functions                      |
+| `src/lib/auth`           | Auth (client/server)              |
+| `src/lib/stores/`        | Zustand stores                    |
+| `src/models/`            | Mongoose models                   |
+| `src/types/`             | TypeScript types                  |
+| `src/styles/`            | Global CSS                        |
+| `src/i18n/`              | next-intl config                  |
 
 Modify `src/styles/globals.css` and `src/components` first; Shadcn UI components last resort.
 
@@ -94,4 +94,3 @@ pnpm build                   # Build check
 ```
 
 Fix all errors → unstage → suggest Conventional Commit message. **Never commit for user.**
-
