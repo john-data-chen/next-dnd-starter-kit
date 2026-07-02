@@ -17,7 +17,7 @@ A production-grade Kanban board built with Next.js, demonstrating technical deci
 
 ### [SvelteKit Expense Tracker](https://github.com/john-data-chen/sveltekit-starter-kit)
 
-AI build high-quality project fast. Framework switch easy. Multi-user ledger. Svelte 5 runes. Prisma ORM. PostgreSQL. Vitest 95%+ coverage. Playwright E2E. SonarQube A. Lighthouse 90+.
+AI build high-quality project fast. Framework switch easy. Multi-user ledger. Svelte 5 runes. Prisma ORM. PostgreSQL. Vitest 95%+ coverage. Playwright E2E. SonarQube A.
 
 ---
 
@@ -41,11 +41,8 @@ The monorepo evolution introduces shared packages (`@repo/store`, `@repo/i18n`, 
 | -------------- | ------------------------------------------------------------- |
 | Test Coverage  | **80%+** via Vitest (unit + integration)                      |
 | Code Quality   | **SonarQube A** across Security, Reliability, Maintainability |
-| Performance    | **Lighthouse 90+** on all categories                          |
 | E2E Validation | Cross-browser (Chrome, Safari, Edge) via Playwright           |
 | CI/CD Pipeline | GitHub Actions → SonarQube + Codecov → Vercel                 |
-
-<img src="./public/assets/lighthouse_scores.png" alt="Lighthouse Scores" width="380" height="125">
 
 ---
 
