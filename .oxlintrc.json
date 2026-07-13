@@ -86,5 +86,9 @@
     "src/components/ui/",
     "src/styles/globals.css",
     "src/hooks/use-mobile.ts"
-  ]
+  ],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  }
 }
