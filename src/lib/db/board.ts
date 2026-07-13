@@ -274,7 +274,7 @@ export async function updateBoardInDb(
     })
     const userMap = await getUserMap(Array.from(allUserIds))
 
-    return convertBoardToPlainObject(board as PopulatedBoardDocument, userMap)
+    return convertBoardToPlainObject(board, userMap)
   } catch (error) {
     console.error("Error in updateBoardInDb:", error)
     return null

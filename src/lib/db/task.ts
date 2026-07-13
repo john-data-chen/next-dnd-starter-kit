@@ -183,7 +183,7 @@ export async function createTaskInDb(
     }
 
     const newTask = await TaskModel.create(taskData)
-    return await convertTaskToPlainObject(newTask.toObject() as TaskBase)
+    return await convertTaskToPlainObject(newTask.toObject())
   } catch (error) {
     console.error("Error creating task:", error)
     throw error
@@ -232,7 +232,7 @@ export async function updateTaskInDb(
       throw new Error("Task not found")
     }
 
-    return await convertTaskToPlainObject(updatedTask.toObject() as TaskBase)
+    return await convertTaskToPlainObject(updatedTask.toObject())
   } catch (error) {
     console.error("Error updating task:", error)
     throw error
@@ -289,7 +289,7 @@ export async function updateTaskProjectInDb(
       throw new Error("Failed to update task")
     }
 
-    return await convertTaskToPlainObject(updatedTask.toObject() as TaskBase)
+    return await convertTaskToPlainObject(updatedTask.toObject())
   } catch (error) {
     console.error("Error updating task project:", error)
     throw error

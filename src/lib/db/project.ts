@@ -182,7 +182,7 @@ export async function createProjectInDb(data: {
     }
 
     // Convert to plain object using toObject()
-    const project = await convertProjectToPlainObject(projectDoc.toObject() as ProjectBase)
+    const project = await convertProjectToPlainObject(projectDoc.toObject())
     return project
   } catch (error) {
     console.error("Error creating project:", error)
@@ -229,9 +229,7 @@ export async function updateProjectInDb(data: {
     }
 
     // Convert to plain object using toObject() and cast to ProjectBase type
-    const updatedProject = await convertProjectToPlainObject(
-      updatedProjectDoc.toObject() as ProjectBase
-    )
+    const updatedProject = await convertProjectToPlainObject(updatedProjectDoc.toObject())
 
     return updatedProject
   } catch (error) {
